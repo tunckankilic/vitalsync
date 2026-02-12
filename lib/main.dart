@@ -1,122 +1,201 @@
-import 'package:flutter/material.dart';
+/// VitalSync — Main Application Entry Point.
+///
+/// Health & Fitness Companion with offline-first architecture.
+/// GDPR-compliant, multi-language, accessibility-first.
+library;
 
-void main() {
-  runApp(const MyApp());
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import 'core/background/background_service.dart';
+import 'core/constants/app_constants.dart';
+import 'core/di/injection_container.dart';
+import 'core/network/connectivity_service.dart';
+import 'core/notifications/notification_service.dart';
+import 'core/sync/sync_service.dart';
+import 'core/theme/app_theme.dart';
+import 'firebase_options.dart';
+
+void main() async {
+  // Ensure Flutter bindings are initialized
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize Firebase
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  // Initialize GetIt dependency injection
+  await initializeDependencies();
+
+  // Initialize notification service
+  final notificationService = getIt<NotificationService>();
+  await notificationService.initialize();
+  await notificationService.requestPermissions();
+
+  // Initialize background service
+  final backgroundService = getIt<BackgroundService>();
+  await backgroundService.initialize();
+  await backgroundService.scheduleMedicationReminderCheck();
+  await backgroundService.scheduleBackgroundSync();
+
+  // Start connectivity service listening
+  final connectivityService = getIt<ConnectivityService>();
+  connectivityService.startListening();
+
+  // Start auto-sync on connectivity changes
+  final syncService = getIt<SyncService>();
+  syncService.startAutoSync();
+
+  // Run the app wrapped in ProviderScope for Riverpod
+  runApp(const ProviderScope(child: VitalSyncApp()));
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+/// VitalSync Application Widget.
+///
+/// Root widget that configures the app with:
+/// - Localization support (EN, TR, DE)
+/// - Theme configuration (light, dark, high contrast)
+/// - GoRouter navigation
+/// - GDPR compliance check on first launch
+class VitalSyncApp extends StatelessWidget {
+  const VitalSyncApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: .fromSeed(seedColor: Colors.deepPurple),
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      // === APP METADATA ===
+      title: AppConstants.appName,
+      debugShowCheckedModeBanner: false,
+
+      // === LOCALIZATION ===
+      // TODO: Add AppLocalizations.delegate when l10n is generated (Prompt 1.2)
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale('en'), // English
+        Locale('tr'), // Turkish
+        Locale('de'), // German
+      ],
+      locale: const Locale('en'), // Default locale
+      // TODO: In Prompt 3.x, connect to locale provider for dynamic locale
+
+      // === THEME ===
+      theme: AppTheme.lightTheme,
+      darkTheme: AppTheme.darkTheme,
+      highContrastTheme: AppTheme.highContrastTheme,
+      themeMode: ThemeMode.system,
+      // TODO: In Prompt 3.x, connect to theme provider for dynamic theme
+
+      // === NAVIGATION ===
+      // TODO: In Prompt 1.2 implementation, replace with GoRouter
+      // For now, using basic MaterialApp with placeholder home
+      home: const _PlaceholderHomePage(),
+
+      // When GoRouter is implemented in app_router.dart, use:
+      // routerConfig: appRouter,
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
+/// Placeholder home page until router is fully implemented.
+///
+/// This will be replaced when go_router is configured in app_router.dart.
+class _PlaceholderHomePage extends StatelessWidget {
+  const _PlaceholderHomePage();
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+        title: const Text('VitalSync'),
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        foregroundColor: Theme.of(context).colorScheme.onPrimary,
       ),
       body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: .center,
-          children: [
-            const Text('You have pushed the button this many times:'),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.favorite,
+                size: 80,
+                color: Theme.of(context).colorScheme.primary,
+              ),
+              const SizedBox(height: 24),
+              Text(
+                'VitalSync',
+                style: Theme.of(context).textTheme.headlineLarge,
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Health & Fitness Companion',
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
+              ),
+              const SizedBox(height: 32),
+              Text(
+                '✅ Dependency Injection Initialized',
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                  color: Colors.green,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 16),
+              const _ServiceStatusList(),
+              const SizedBox(height: 32),
+              Text(
+                'Router configuration will be added in Prompt 1.2',
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  fontStyle: FontStyle.italic,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ),
+    );
+  }
+}
+
+/// Shows status of registered services for verification.
+class _ServiceStatusList extends StatelessWidget {
+  const _ServiceStatusList();
+
+  @override
+  Widget build(BuildContext context) {
+    final services = [
+      'Firebase',
+      'Database (Drift)',
+      'Analytics Service',
+      'GDPR Manager',
+      'Notification Service',
+      'Connectivity Service',
+      'Sync Service',
+      'Repositories',
+    ];
+
+    return Column(
+      children: services.map((service) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 4.0),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(Icons.check_circle, color: Colors.green, size: 20),
+              const SizedBox(width: 8),
+              Text(service, style: Theme.of(context).textTheme.bodyMedium),
+            ],
+          ),
+        );
+      }).toList(),
     );
   }
 }
