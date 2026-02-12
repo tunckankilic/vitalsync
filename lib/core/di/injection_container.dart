@@ -15,14 +15,35 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:workmanager/workmanager.dart';
 
 import '../../data/local/database.dart';
-import '../../data/repositories/fitness/workout_repository_impl.dart';
+import '../../data/repositories/fitness/achievement_repository_impl.dart';
+import '../../data/repositories/fitness/exercise_repository_impl.dart';
+import '../../data/repositories/fitness/personal_record_repository_impl.dart';
+import '../../data/repositories/fitness/streak_repository_impl.dart';
+import '../../data/repositories/fitness/workout_session_repository_impl.dart';
+import '../../data/repositories/fitness/workout_template_repository_impl.dart';
+import '../../data/repositories/health/medication_log_repository_impl.dart';
+// Repositories Implementations
 import '../../data/repositories/health/medication_repository_impl.dart';
+import '../../data/repositories/health/symptom_repository_impl.dart';
 import '../../data/repositories/insights/insight_repository_impl.dart';
+import '../../data/repositories/shared/auth_repository_impl.dart'; // Assuming this exists or will be created
+import '../../data/repositories/shared/sync_repository_impl.dart';
 import '../../data/repositories/shared/user_repository_impl.dart';
-import '../../domain/repositories/fitness/workout_repository.dart';
+import '../../domain/repositories/fitness/achievement_repository.dart';
+import '../../domain/repositories/fitness/exercise_repository.dart';
+import '../../domain/repositories/fitness/personal_record_repository.dart';
+import '../../domain/repositories/fitness/streak_repository.dart';
+import '../../domain/repositories/fitness/workout_session_repository.dart';
+import '../../domain/repositories/fitness/workout_template_repository.dart';
+import '../../domain/repositories/health/medication_log_repository.dart';
+// Repository Interfaces
 import '../../domain/repositories/health/medication_repository.dart';
+import '../../domain/repositories/health/symptom_repository.dart';
 import '../../domain/repositories/insights/insight_repository.dart';
+import '../../domain/repositories/shared/auth_repository.dart'; // Assuming this exists
+import '../../domain/repositories/shared/sync_repository.dart';
 import '../../domain/repositories/shared/user_repository.dart';
+// Services
 import '../../features/fitness/domain/services/achievement_service.dart';
 import '../../features/fitness/domain/services/streak_service.dart';
 import '../../features/health/domain/services/medication_reminder_service.dart';
@@ -39,22 +60,12 @@ import '../sync/sync_service.dart';
 final getIt = GetIt.instance;
 
 /// Initializes all dependencies asynchronously.
-///
-/// Must be called once before running the app, typically in main().
-/// Registers all services, repositories, and external dependencies
-/// in the correct order (dependencies before dependents).
-///
-/// Returns a Future that completes when initialization is done.
 Future<void> initializeDependencies() async {
-  // ========================================================================
   // CORE DEPENDENCIES (External)
-  // ========================================================================
 
-  // SharedPreferences - Async singleton
   final sharedPreferences = await SharedPreferences.getInstance();
   getIt.registerSingleton<SharedPreferences>(sharedPreferences);
 
-  // Firebase instances - Lazy singletons
   getIt.registerLazySingleton<FirebaseAuth>(() => FirebaseAuth.instance);
   getIt.registerLazySingleton<FirebaseFirestore>(
     () => FirebaseFirestore.instance,
@@ -62,31 +73,18 @@ Future<void> initializeDependencies() async {
   getIt.registerLazySingleton<FirebaseAnalytics>(
     () => FirebaseAnalytics.instance,
   );
-
-  // Connectivity - Lazy singleton
   getIt.registerLazySingleton<Connectivity>(Connectivity.new);
-
-  // FlutterLocalNotificationsPlugin - Lazy singleton
   getIt.registerLazySingleton<FlutterLocalNotificationsPlugin>(
     FlutterLocalNotificationsPlugin.new,
   );
-
-  // Workmanager - Lazy singleton
   getIt.registerLazySingleton<Workmanager>(Workmanager.new);
 
-  // ========================================================================
   // DATABASE
-  // ========================================================================
 
-  // Drift AppDatabase - Singleton
-  // Database is created immediately to ensure it's ready for use
   getIt.registerSingleton<AppDatabase>(AppDatabase.connect());
 
-  // ========================================================================
   // SHARED SERVICES
-  // ========================================================================
 
-  // GDPRManager - Lazy singleton
   getIt.registerLazySingleton<GDPRManager>(
     () => GDPRManager(
       prefs: getIt<SharedPreferences>(),
@@ -95,7 +93,6 @@ Future<void> initializeDependencies() async {
     ),
   );
 
-  // AnalyticsService - Lazy singleton
   getIt.registerLazySingleton<AnalyticsService>(
     () => AnalyticsService(
       analytics: getIt<FirebaseAnalytics>(),
@@ -103,24 +100,22 @@ Future<void> initializeDependencies() async {
     ),
   );
 
-  // NotificationService - Lazy singleton
   getIt.registerLazySingleton<NotificationService>(
     () => NotificationService(
       notifications: getIt<FlutterLocalNotificationsPlugin>(),
     ),
   );
 
-  // BackgroundService - Lazy singleton
   getIt.registerLazySingleton<BackgroundService>(
     () => BackgroundService(workmanager: getIt<Workmanager>()),
   );
 
-  // ConnectivityService - Lazy singleton
   getIt.registerLazySingleton<ConnectivityService>(
     () => ConnectivityService(connectivity: getIt<Connectivity>()),
   );
 
-  // SyncService - Lazy singleton
+  // SyncService likely depends on SyncRepository, so register after repos
+  // But here we register lazy singleton so order doesn't strictly matter for definition
   getIt.registerLazySingleton<SyncService>(
     () => SyncService(
       database: getIt<AppDatabase>(),
@@ -130,11 +125,8 @@ Future<void> initializeDependencies() async {
     ),
   );
 
-  // ========================================================================
   // SHARED REPOSITORIES
-  // ========================================================================
 
-  // AuthRepository - Lazy singleton
   getIt.registerLazySingleton<AuthRepository>(
     () => AuthRepositoryImpl(
       auth: getIt<FirebaseAuth>(),
@@ -142,165 +134,122 @@ Future<void> initializeDependencies() async {
     ),
   );
 
-  // UserRepository - Lazy singleton
   getIt.registerLazySingleton<UserRepository>(
-    () => UserRepositoryImpl(
-      database: getIt<AppDatabase>(),
-      firestore: getIt<FirebaseFirestore>(),
-      auth: getIt<FirebaseAuth>(),
-      gdprManager: getIt<GDPRManager>(),
+    () =>
+        UserRepositoryImpl(getIt<AppDatabase>().userDao, getIt<AppDatabase>()),
+  );
+
+  getIt.registerLazySingleton<SyncRepository>(
+    () => SyncRepositoryImpl(
+      getIt<AppDatabase>().syncDao,
+      getIt<FirebaseFirestore>(),
     ),
   );
 
-  // ========================================================================
   // HEALTH MODULE - Repositories
-  // ========================================================================
 
-  // MedicationRepository - Lazy singleton
   getIt.registerLazySingleton<MedicationRepository>(
-    () => MedicationRepositoryImpl(database: getIt<AppDatabase>()),
+    () => MedicationRepositoryImpl(getIt<AppDatabase>().medicationDao),
   );
 
-  // MedicationLogRepository - Lazy singleton
   getIt.registerLazySingleton<MedicationLogRepository>(
-    () => MedicationLogRepositoryImpl(database: getIt<AppDatabase>()),
+    () => MedicationLogRepositoryImpl(getIt<AppDatabase>().medicationLogDao),
   );
 
-  // SymptomRepository - Lazy singleton
   getIt.registerLazySingleton<SymptomRepository>(
-    () => SymptomRepositoryImpl(database: getIt<AppDatabase>()),
+    () => SymptomRepositoryImpl(getIt<AppDatabase>().symptomDao),
   );
 
-  // ========================================================================
-  // HEALTH MODULE - Services
-  // ========================================================================
+  // FITNESS MODULE - Repositories
 
-  // MedicationReminderService - Lazy singleton
+  getIt.registerLazySingleton<ExerciseRepository>(
+    () => ExerciseRepositoryImpl(getIt<AppDatabase>().exerciseDao),
+  );
+
+  getIt.registerLazySingleton<WorkoutTemplateRepository>(
+    () =>
+        WorkoutTemplateRepositoryImpl(getIt<AppDatabase>().workoutTemplateDao),
+  );
+
+  getIt.registerLazySingleton<WorkoutSessionRepository>(
+    () => WorkoutSessionRepositoryImpl(getIt<AppDatabase>().workoutSessionDao),
+  );
+
+  getIt.registerLazySingleton<PersonalRecordRepository>(
+    () => PersonalRecordRepositoryImpl(getIt<AppDatabase>().personalRecordDao),
+  );
+
+  getIt.registerLazySingleton<StreakRepository>(
+    () => StreakRepositoryImpl(
+      getIt<AppDatabase>().userStatsDao,
+      getIt<AppDatabase>().workoutSessionDao,
+    ),
+  );
+
+  getIt.registerLazySingleton<AchievementRepository>(
+    () => AchievementRepositoryImpl(getIt<AppDatabase>().achievementDao),
+  );
+
+  // INSIGHTS MODULE - Repository
+
+  getIt.registerLazySingleton<InsightRepository>(
+    () => InsightRepositoryImpl(getIt<AppDatabase>().insightDao),
+  );
+
+  // SERVICES (Dependent on Repositories)
+
   getIt.registerLazySingleton<MedicationReminderService>(
     () => MedicationReminderService(
       notificationService: getIt<NotificationService>(),
-      medicationRepository:
-          getIt<MedicationRepository>() as MedicationRepositoryImpl,
+      medicationRepository: getIt<MedicationRepository>(),
     ),
   );
 
-  // ========================================================================
-  // FITNESS MODULE - Repositories
-  // ========================================================================
-
-  // ExerciseRepository - Lazy singleton
-  getIt.registerLazySingleton<ExerciseRepository>(
-    () => ExerciseRepositoryImpl(database: getIt<AppDatabase>()),
-  );
-
-  // WorkoutTemplateRepository - Lazy singleton
-  getIt.registerLazySingleton<WorkoutTemplateRepository>(
-    () => WorkoutTemplateRepositoryImpl(database: getIt<AppDatabase>()),
-  );
-
-  // WorkoutSessionRepository - Lazy singleton
-  getIt.registerLazySingleton<WorkoutSessionRepository>(
-    () => WorkoutSessionRepositoryImpl(database: getIt<AppDatabase>()),
-  );
-
-  // PersonalRecordRepository - Lazy singleton
-  getIt.registerLazySingleton<PersonalRecordRepository>(
-    () => PersonalRecordRepositoryImpl(database: getIt<AppDatabase>()),
-  );
-
-  // StreakRepository - Lazy singleton
-  getIt.registerLazySingleton<StreakRepository>(
-    () => StreakRepositoryImpl(database: getIt<AppDatabase>()),
-  );
-
-  // AchievementRepository - Lazy singleton
-  getIt.registerLazySingleton<AchievementRepository>(
-    () => AchievementRepositoryImpl(database: getIt<AppDatabase>()),
-  );
-
-  // ========================================================================
-  // FITNESS MODULE - Services
-  // ========================================================================
-
-  // StreakService - Lazy singleton
   getIt.registerLazySingleton<StreakService>(
     () => StreakService(
-      streakRepository: getIt<StreakRepository>() as StreakRepositoryImpl,
-      workoutRepository:
-          getIt<WorkoutSessionRepository>() as WorkoutSessionRepositoryImpl,
+      streakRepository: getIt<StreakRepository>(),
+      workoutRepository: getIt<WorkoutSessionRepository>(),
     ),
   );
 
-  // AchievementService - Lazy singleton
   getIt.registerLazySingleton<AchievementService>(
     () => AchievementService(
-      achievementRepository:
-          getIt<AchievementRepository>() as AchievementRepositoryImpl,
-      workoutRepository:
-          getIt<WorkoutSessionRepository>() as WorkoutSessionRepositoryImpl,
-      medicationLogRepository:
-          getIt<MedicationLogRepository>() as MedicationLogRepositoryImpl,
+      achievementRepository: getIt<AchievementRepository>(),
+      workoutRepository: getIt<WorkoutSessionRepository>(),
+      medicationLogRepository: getIt<MedicationLogRepository>(),
       notificationService: getIt<NotificationService>(),
       analyticsService: getIt<AnalyticsService>(),
     ),
   );
 
-  // ========================================================================
-  // INSIGHTS MODULE - Repository
-  // ========================================================================
-
-  // InsightRepository - Lazy singleton
-  getIt.registerLazySingleton<InsightRepository>(
-    () => InsightRepositoryImpl(database: getIt<AppDatabase>()),
-  );
-
-  // ========================================================================
-  // INSIGHTS MODULE - Services
-  // ========================================================================
-
-  // InsightEngine - Lazy singleton
   getIt.registerLazySingleton<InsightEngine>(
     () => InsightEngine(
-      medicationLogRepository:
-          getIt<MedicationLogRepository>() as MedicationLogRepositoryImpl,
-      workoutRepository:
-          getIt<WorkoutSessionRepository>() as WorkoutSessionRepositoryImpl,
-      symptomRepository: getIt<SymptomRepository>() as SymptomRepositoryImpl,
-      insightRepository: getIt<InsightRepository>() as InsightRepositoryImpl,
+      medicationLogRepository: getIt<MedicationLogRepository>(),
+      workoutRepository: getIt<WorkoutSessionRepository>(),
+      symptomRepository: getIt<SymptomRepository>(),
+      insightRepository: getIt<InsightRepository>(),
     ),
   );
 
-  // WeeklyReportService - Lazy singleton
   getIt.registerLazySingleton<WeeklyReportService>(
     () => WeeklyReportService(
-      medicationLogRepository:
-          getIt<MedicationLogRepository>() as MedicationLogRepositoryImpl,
-      workoutRepository:
-          getIt<WorkoutSessionRepository>() as WorkoutSessionRepositoryImpl,
-      symptomRepository: getIt<SymptomRepository>() as SymptomRepositoryImpl,
-      insightRepository: getIt<InsightRepository>() as InsightRepositoryImpl,
+      medicationLogRepository: getIt<MedicationLogRepository>(),
+      workoutRepository: getIt<WorkoutSessionRepository>(),
+      symptomRepository: getIt<SymptomRepository>(),
+      insightRepository: getIt<InsightRepository>(),
     ),
   );
 
-  print('✅ All dependencies initialized successfully');
+  print(' All dependencies initialized successfully');
 }
 
-/// Disposes all registered dependencies.
-///
-/// Useful for testing or when reinitializing the DI container.
 Future<void> disposeDependencies() async {
-  // Close database connection
   if (getIt.isRegistered<AppDatabase>()) {
     await getIt<AppDatabase>().closeConnection();
   }
-
-  // Stop connectivity service listening
   if (getIt.isRegistered<ConnectivityService>()) {
     await getIt<ConnectivityService>().dispose();
   }
-
-  // Reset GetIt
   await getIt.reset();
-
-  print('✅ All dependencies disposed');
+  print(' All dependencies disposed');
 }
