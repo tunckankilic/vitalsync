@@ -1,0 +1,1 @@
+{"flutter":{"platforms":{"ios":{"default":{"projectId":"vitalsynch","appId":"1:892187264894:ios:b54b989fec3c151cb1152f","uploadDebugSymbols":false,"fileOutput":"ios/Runner/GoogleService-Info.plist"}},"dart":{"lib/firebase_options.dart":{"projectId":"vitalsynch","configurations":{"ios":"1:892187264894:ios:b54b989fec3c151cb1152f"}}}}}}
