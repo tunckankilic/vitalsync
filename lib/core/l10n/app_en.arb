@@ -1,0 +1,5 @@
+{
+  "@@locale": "en",
+  "appTitle": "VitalSync",
+  "@appTitle": { "description": "Application title" }
+}
