@@ -4,6 +4,7 @@
 /// GDPR-compliant, multi-language, accessibility-first.
 library;
 
+import 'package:dynamic_color/dynamic_color.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -14,6 +15,7 @@ import 'core/constants/app_constants.dart';
 import 'core/di/injection_container.dart';
 import 'core/network/connectivity_service.dart';
 import 'core/notifications/notification_service.dart';
+import 'core/router/app_router.dart';
 import 'core/sync/sync_service.dart';
 import 'core/theme/app_theme.dart';
 import 'firebase_options.dart';
@@ -56,145 +58,66 @@ void main() async {
 /// - Localization support (EN, TR, DE)
 /// - Theme configuration (light, dark, high contrast)
 /// - GoRouter navigation
+/// - Material You support (Android 12+)
 /// - GDPR compliance check on first launch
-class VitalSyncApp extends StatelessWidget {
+class VitalSyncApp extends ConsumerWidget {
   const VitalSyncApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      // === APP METADATA ===
-      title: AppConstants.appName,
-      debugShowCheckedModeBanner: false,
+  Widget build(BuildContext context, WidgetRef ref) {
+    // TODO: Connect to theme provider for dynamic theme selection in Prompt 3.x
+    // TODO: Connect to locale provider for dynamic locale in Prompt 3.x
 
-      // === LOCALIZATION ===
-      // TODO: Add AppLocalizations.delegate when l10n is generated (Prompt 1.2)
-      localizationsDelegates: const [
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      supportedLocales: const [
-        Locale('en'), // English
-        Locale('tr'), // Turkish
-        Locale('de'), // German
-      ],
-      locale: const Locale('en'), // Default locale
-      // TODO: In Prompt 3.x, connect to locale provider for dynamic locale
+    return DynamicColorBuilder(
+      builder: (ColorScheme? lightDynamic, ColorScheme? darkDynamic) {
+        // Material You color schemes (Android 12+)
+        // If not available, fallback to default themes
 
-      // === THEME ===
-      theme: AppTheme.lightTheme,
-      darkTheme: AppTheme.darkTheme,
-      highContrastTheme: AppTheme.highContrastTheme,
-      themeMode: ThemeMode.system,
-      // TODO: In Prompt 3.x, connect to theme provider for dynamic theme
+        // TODO: In Prompt 4.5, add settings toggle to enable/disable Material You
+        // For now, use dynamic colors if available
+        final useDynamicColors = lightDynamic != null && darkDynamic != null;
 
-      // === NAVIGATION ===
-      // TODO: In Prompt 1.2 implementation, replace with GoRouter
-      // For now, using basic MaterialApp with placeholder home
-      home: const _PlaceholderHomePage(),
+        ThemeData lightTheme;
+        ThemeData darkTheme;
 
-      // When GoRouter is implemented in app_router.dart, use:
-      // routerConfig: appRouter,
-    );
-  }
-}
+        if (useDynamicColors) {
+          // Use Material You colors from wallpaper
+          lightTheme = AppTheme.lightTheme.copyWith(colorScheme: lightDynamic);
+          darkTheme = AppTheme.darkTheme.copyWith(colorScheme: darkDynamic);
+        } else {
+          // Fallback to default themes
+          lightTheme = AppTheme.lightTheme;
+          darkTheme = AppTheme.darkTheme;
+        }
 
-/// Placeholder home page until router is fully implemented.
-///
-/// This will be replaced when go_router is configured in app_router.dart.
-class _PlaceholderHomePage extends StatelessWidget {
-  const _PlaceholderHomePage();
+        return MaterialApp.router(
+          // === APP METADATA ===
+          title: AppConstants.appName,
+          debugShowCheckedModeBanner: false,
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('VitalSync'),
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        foregroundColor: Theme.of(context).colorScheme.onPrimary,
-      ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                Icons.favorite,
-                size: 80,
-                color: Theme.of(context).colorScheme.primary,
-              ),
-              const SizedBox(height: 24),
-              Text(
-                'VitalSync',
-                style: Theme.of(context).textTheme.headlineLarge,
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'Health & Fitness Companion',
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                ),
-              ),
-              const SizedBox(height: 32),
-              Text(
-                '✅ Dependency Injection Initialized',
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color: Colors.green,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 16),
-              const _ServiceStatusList(),
-              const SizedBox(height: 32),
-              Text(
-                'Router configuration will be added in Prompt 1.2',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  fontStyle: FontStyle.italic,
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
+          // === ROUTING ===
+          routerConfig: appRouter,
 
-/// Shows status of registered services for verification.
-class _ServiceStatusList extends StatelessWidget {
-  const _ServiceStatusList();
-
-  @override
-  Widget build(BuildContext context) {
-    final services = [
-      'Firebase',
-      'Database (Drift)',
-      'Analytics Service',
-      'GDPR Manager',
-      'Notification Service',
-      'Connectivity Service',
-      'Sync Service',
-      'Repositories',
-    ];
-
-    return Column(
-      children: services.map((service) {
-        return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 4.0),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Icon(Icons.check_circle, color: Colors.green, size: 20),
-              const SizedBox(width: 8),
-              Text(service, style: Theme.of(context).textTheme.bodyMedium),
-            ],
-          ),
+          // === LOCALIZATION ===
+          // TODO: Add AppLocalizations.delegate when l10n is generated (Prompt 1.2)
+          localizationsDelegates: const [
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: const [
+            Locale('en'), // English
+            Locale('tr'), // Turkish
+            Locale('de'), // German
+          ],
+          locale: const Locale('en'), // Default locale
+          // === THEME ===
+          theme: lightTheme,
+          darkTheme: darkTheme,
+          highContrastTheme: AppTheme.highContrastTheme,
+          themeMode: ThemeMode.system,
         );
-      }).toList(),
+      },
     );
   }
 }
