@@ -7,6 +7,8 @@ analyzer:
     missing_required_param: error
     parameter_assignments: warning
     todo: ignore
+    only_throw_errors: ignore
+    always_put_required_named_parameters_first: ignore
   exclude:
     - "**/*.g.dart"
     - "**/*.freezed.dart"

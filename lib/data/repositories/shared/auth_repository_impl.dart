@@ -49,6 +49,14 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
+  Future<UserCredential> signInWithApple() {
+    // Implementing Apple Sign-In requires sign_in_with_apple package dependency.
+    // Platform-specific setup required for iOS/macOS.
+    // For now, assume it's properly handled or defer implementation.
+    throw UnimplementedError('Apple Sign-In requires additional setup.');
+  }
+
+  @override
   Future<void> signOut() {
     return _auth.signOut();
   }
