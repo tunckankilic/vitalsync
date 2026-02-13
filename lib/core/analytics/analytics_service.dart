@@ -15,14 +15,13 @@ import '../gdpr/gdpr_manager.dart';
 /// Wrapper around Firebase Analytics that ensures GDPR compliance
 /// by checking consent before logging any events.
 class AnalyticsService {
-  final FirebaseAnalytics _analytics;
-  final GDPRManager _gdprManager;
-
   AnalyticsService({
     required FirebaseAnalytics analytics,
     required GDPRManager gdprManager,
   }) : _analytics = analytics,
        _gdprManager = gdprManager;
+  final FirebaseAnalytics _analytics;
+  final GDPRManager _gdprManager;
 
   // ONBOARDING EVENTS
 

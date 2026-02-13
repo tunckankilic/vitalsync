@@ -8,6 +8,7 @@
 library;
 
 import 'dart:convert';
+import 'dart:developer' show log;
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -247,7 +248,7 @@ class GDPRManager {
       }
     } catch (e) {
       // Log error but continue with deletion process
-      print('Error deleting Firestore data: $e');
+      log('Error deleting Firestore data: $e');
     }
 
     // Step 4: Clear SharedPreferences
