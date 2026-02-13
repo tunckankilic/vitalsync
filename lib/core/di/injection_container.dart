@@ -105,6 +105,7 @@ Future<void> initializeDependencies() async {
   getIt.registerLazySingleton<NotificationService>(
     () => NotificationService(
       notifications: getIt<FlutterLocalNotificationsPlugin>(),
+      analyticsService: getIt<AnalyticsService>(),
     ),
   );
 
@@ -230,6 +231,9 @@ Future<void> initializeDependencies() async {
       workoutRepository: getIt<WorkoutSessionRepository>(),
       symptomRepository: getIt<SymptomRepository>(),
       insightRepository: getIt<InsightRepository>(),
+      personalRecordRepository: getIt<PersonalRecordRepository>(),
+      streakRepository: getIt<StreakRepository>(),
+      exerciseRepository: getIt<ExerciseRepository>(),
     ),
   );
 
@@ -239,6 +243,8 @@ Future<void> initializeDependencies() async {
       workoutRepository: getIt<WorkoutSessionRepository>(),
       symptomRepository: getIt<SymptomRepository>(),
       insightRepository: getIt<InsightRepository>(),
+      personalRecordRepository: getIt<PersonalRecordRepository>(),
+      streakRepository: getIt<StreakRepository>(),
     ),
   );
 
