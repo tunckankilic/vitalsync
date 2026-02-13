@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:drift/drift.dart';
 import 'package:vitalsync/core/enums/sync_enums.dart';
 import 'package:vitalsync/data/local/daos/shared/user_profile_dao.dart';
 import 'package:vitalsync/data/local/database.dart';

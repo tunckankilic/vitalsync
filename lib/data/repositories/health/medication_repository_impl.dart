@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:drift/drift.dart';
 import 'package:vitalsync/data/local/daos/health/medication_dao.dart';
 import 'package:vitalsync/data/local/database.dart';
 import 'package:vitalsync/data/models/health/medication_model.dart';

@@ -3,7 +3,8 @@
 /// Handles periodic medication reminder checks and sync operations.
 library;
 
-import 'package:flutter/foundation.dart';
+import 'dart:developer' show log;
+
 import 'package:workmanager/workmanager.dart';
 
 /// Background Service for VitalSync.
@@ -20,10 +21,7 @@ class BackgroundService {
   Future<void> initialize() async {
     // WorkManager callback is imported from notification_service.dart
     // since it needs to access notification scheduling logic
-    await _workmanager.initialize(
-      callbackDispatcher,
-      isInDebugMode: kDebugMode,
-    );
+    await _workmanager.initialize(callbackDispatcher);
   }
 
   /// Schedules periodic medication reminder checks.
@@ -70,7 +68,7 @@ void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
     // TODO: Implement full background task logic
     // For now, this is a minimal placeholder
-    print('Background task executed: $task');
+    log('Background task executed: $task');
     return Future.value(true);
   });
 }

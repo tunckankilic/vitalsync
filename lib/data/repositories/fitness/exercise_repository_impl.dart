@@ -1,7 +1,5 @@
-import 'package:drift/drift.dart';
 import 'package:vitalsync/core/enums/exercise_category.dart';
 import 'package:vitalsync/data/local/daos/fitness/workout_dao.dart';
-import 'package:vitalsync/data/local/database.dart';
 import 'package:vitalsync/data/models/fitness/exercise_model.dart';
 import 'package:vitalsync/domain/entities/fitness/exercise.dart';
 import 'package:vitalsync/domain/repositories/fitness/exercise_repository.dart';

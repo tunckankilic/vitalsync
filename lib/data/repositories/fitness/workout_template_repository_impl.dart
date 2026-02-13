@@ -1,4 +1,3 @@
-import 'package:drift/drift.dart';
 import 'package:vitalsync/data/local/daos/fitness/workout_dao.dart';
 import 'package:vitalsync/data/local/database.dart';
 import 'package:vitalsync/data/models/fitness/template_exercise_model.dart';

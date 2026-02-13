@@ -1,6 +1,4 @@
-import 'package:drift/drift.dart';
 import 'package:vitalsync/data/local/daos/fitness/workout_dao.dart';
-import 'package:vitalsync/data/local/database.dart';
 import 'package:vitalsync/data/models/fitness/achievement_model.dart';
 import 'package:vitalsync/domain/entities/fitness/achievement.dart';
 import 'package:vitalsync/domain/repositories/fitness/achievement_repository.dart';
