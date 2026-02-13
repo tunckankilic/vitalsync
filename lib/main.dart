@@ -36,8 +36,7 @@ void main() async {
   // Initialize background service
   final backgroundService = getIt<BackgroundService>();
   await backgroundService.initialize();
-  await backgroundService.scheduleMedicationReminderCheck();
-  await backgroundService.scheduleBackgroundSync();
+  await backgroundService.scheduleAllPeriodicTasks();
 
   // Start connectivity service listening
   final connectivityService = getIt<ConnectivityService>();

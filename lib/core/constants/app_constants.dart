@@ -354,6 +354,47 @@ abstract class AppConstants {
   /// Network request timeout (seconds)
   static const int networkTimeoutSeconds = 30;
 
+  // NOTIFICATION SCHEDULING
+
+  /// Snooze duration for medication reminders (minutes)
+  static const int snoozeDurationMinutes = 15;
+
+  /// Daily summary notification hour (24h)
+  static const int dailySummaryHour = 21;
+
+  /// Insight generation hour (24h)
+  static const int insightGenerationHour = 6;
+
+  /// Weekly report day of week (DateTime.monday = 1)
+  static const int weeklyReportDayOfWeek = DateTime.monday;
+
+  /// Weekly report notification hour (24h)
+  static const int weeklyReportHour = 7;
+
+  /// Streak warning notification hour (24h)
+  static const int streakWarningHour = 20;
+
+  // WORKMANAGER TASK NAMES
+
+  /// Background task: check missed medications (hourly)
+  static const String taskCheckMissedMedications =
+      'com.vitalsync.checkMissedMedications';
+
+  /// Background task: generate insights (daily at 06:00)
+  static const String taskGenerateInsights = 'com.vitalsync.generateInsights';
+
+  /// Background task: sync pending data (every 15 min)
+  static const String taskSyncPendingData = 'com.vitalsync.syncPendingData';
+
+  /// Background task: weekly report generation (Monday 07:00)
+  static const String taskWeeklyReport = 'com.vitalsync.weeklyReport';
+
+  /// Background task: daily summary notification (21:00)
+  static const String taskDailySummary = 'com.vitalsync.dailySummary';
+
+  /// Background task: streak warning check (20:00)
+  static const String taskStreakWarning = 'com.vitalsync.streakWarning';
+
   // UI CONSTANTS
 
   /// Default animation duration (milliseconds)

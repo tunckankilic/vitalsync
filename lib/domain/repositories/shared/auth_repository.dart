@@ -6,6 +6,7 @@ abstract class AuthRepository {
   Future<UserCredential> signIn(String email, String password);
   Future<UserCredential> signUp(String email, String password, String name);
   Future<UserCredential> signInWithGoogle();
+  Future<UserCredential> signInWithApple();
   Future<void> signOut();
   Future<void> resetPassword(String email);
   Future<void> createInitialProfile(User user, String name);
