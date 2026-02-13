@@ -5,6 +5,8 @@
 /// DI = GetIt, State = Riverpod (separation of concerns).
 library;
 
+import 'dart:developer' show log;
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
@@ -240,7 +242,7 @@ Future<void> initializeDependencies() async {
     ),
   );
 
-  print(' All dependencies initialized successfully');
+  log(' All dependencies initialized successfully');
 }
 
 Future<void> disposeDependencies() async {
@@ -251,5 +253,5 @@ Future<void> disposeDependencies() async {
     await getIt<ConnectivityService>().dispose();
   }
   await getIt.reset();
-  print(' All dependencies disposed');
+  log(' All dependencies disposed');
 }

@@ -4,6 +4,8 @@
 /// Handles conflict resolution via lastModifiedAt timestamps.
 library;
 
+import 'dart:developer' show log;
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -37,20 +39,20 @@ class SyncService {
   Future<void> sync() async {
     // Check if already syncing
     if (_isSyncing) {
-      print('Sync already in progress, skipping...');
+      log('Sync already in progress, skipping...');
       return;
     }
 
     // Check connectivity
     if (!await _connectivity.isConnected()) {
-      print('No internet connection, sync skipped');
+      log('No internet connection, sync skipped');
       return;
     }
 
     // Check authentication
     final user = _auth.currentUser;
     if (user == null) {
-      print('User not authenticated, sync skipped');
+      log('User not authenticated, sync skipped');
       return;
     }
 
@@ -59,7 +61,7 @@ class SyncService {
     try {
       // TODO: Implement full sync logic in Prompt 2.x
       // This is a placeholder implementation
-      print('Starting sync for user: ${user.uid}');
+      log('Starting sync for user: ${user.uid}');
 
       // Step 1: Push pending local changes to Firestore
       await _pushPendingChanges(user.uid);
@@ -67,9 +69,9 @@ class SyncService {
       // Step 2: Pull remote changes from Firestore
       await _pullRemoteChanges(user.uid);
 
-      print('Sync completed successfully');
+      log('Sync completed successfully');
     } catch (e) {
-      print('Sync failed: $e');
+      log('Sync failed: $e');
       rethrow;
     } finally {
       _isSyncing = false;
@@ -85,7 +87,7 @@ class SyncService {
     //    - Upload to Firestore
     //    - Mark as synced in sync_queue
     //    - Handle conflicts (lastModifiedAt comparison)
-    print('Pushing pending changes (placeholder)');
+    log('Pushing pending changes (placeholder)');
   }
 
   /// Pulls remote changes from Firestore.
@@ -96,7 +98,7 @@ class SyncService {
     // 2. Compare lastModifiedAt timestamps
     // 3. Update local database with newer records
     // 4. Handle conflicts (server wins by default, or prompt user)
-    print('Pulling remote changes (placeholder)');
+    log('Pulling remote changes (placeholder)');
   }
 
   /// Performs initial sync when user first signs in.
@@ -113,7 +115,7 @@ class SyncService {
 
     // TODO: Implement initial sync in Prompt 2.x
     // Download all user data collections from Firestore
-    print('Initial sync (placeholder) for user: ${user.uid}');
+    log('Initial sync (placeholder) for user: ${user.uid}');
   }
 
   /// Checks if sync is currently in progress.
@@ -126,7 +128,7 @@ class SyncService {
       if (isConnected && !_isSyncing) {
         // Trigger sync when coming online
         sync().catchError((error) {
-          print('Auto-sync failed: $error');
+          log('Auto-sync failed: $error');
         });
       }
     });

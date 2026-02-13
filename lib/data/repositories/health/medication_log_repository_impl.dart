@@ -81,7 +81,7 @@ class MedicationLogRepositoryImpl implements MedicationLogRepository {
     final logs = await _dao.getByDateRange(start, now);
 
     final map = <int, List<MedicationLogData>>{}; // Weekday -> Logs
-    for (var log in logs) {
+    for (final log in logs) {
       final weekday = log.scheduledTime.weekday;
       map.putIfAbsent(weekday, () => []).add(log);
     }

@@ -1,7 +1,5 @@
-import 'package:drift/drift.dart';
 import 'package:vitalsync/core/enums/insight_category.dart';
 import 'package:vitalsync/data/local/daos/insights/insight_dao.dart';
-import 'package:vitalsync/data/local/database.dart';
 import 'package:vitalsync/data/models/insights/insight_model.dart';
 import 'package:vitalsync/domain/entities/insights/insight.dart';
 import 'package:vitalsync/domain/repositories/insights/insight_repository.dart';
