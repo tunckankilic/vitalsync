@@ -1,63 +1,64 @@
 import '../../../domain/entities/insights/weekly_report.dart';
-import 'insight_model.dart';
 
 /// WeeklyReport Model.
 class WeeklyReportModel extends WeeklyReport {
   const WeeklyReportModel({
     required super.startDate,
     required super.endDate,
+    required super.generatedAt,
+    // Health Summary
     required super.medicationCompliance,
+    required super.complianceTrendVsPrevious,
+    required super.missedMedicationsCount,
+    super.mostProblematicTimeSlot,
+    required super.symptomsLoggedCount,
+    super.mostFrequentSymptom,
+    // Fitness Summary
     required super.workoutCount,
     required super.totalVolume,
+    required super.volumeTrendVsPrevious,
+    required super.totalWorkoutDuration,
+    required super.newPRs,
+    required super.currentStreak,
+    // Cross-Module Highlights
+    super.bestDay,
+    required super.healthScore,
     required super.topInsights,
-    required super.symptomSummary,
-    required super.generatedAt,
+    // Next Week Suggestions
+    required super.suggestions,
   });
 
   factory WeeklyReportModel.fromEntity(WeeklyReport entity) {
     return WeeklyReportModel(
       startDate: entity.startDate,
       endDate: entity.endDate,
+      generatedAt: entity.generatedAt,
       medicationCompliance: entity.medicationCompliance,
+      complianceTrendVsPrevious: entity.complianceTrendVsPrevious,
+      missedMedicationsCount: entity.missedMedicationsCount,
+      mostProblematicTimeSlot: entity.mostProblematicTimeSlot,
+      symptomsLoggedCount: entity.symptomsLoggedCount,
+      mostFrequentSymptom: entity.mostFrequentSymptom,
       workoutCount: entity.workoutCount,
       totalVolume: entity.totalVolume,
+      volumeTrendVsPrevious: entity.volumeTrendVsPrevious,
+      totalWorkoutDuration: entity.totalWorkoutDuration,
+      newPRs: entity.newPRs,
+      currentStreak: entity.currentStreak,
+      bestDay: entity.bestDay,
+      healthScore: entity.healthScore,
       topInsights: entity.topInsights,
-      symptomSummary: entity.symptomSummary,
-      generatedAt: entity.generatedAt,
+      suggestions: entity.suggestions,
     );
   }
 
   factory WeeklyReportModel.fromJson(Map<String, dynamic> json) {
-    return WeeklyReportModel(
-      startDate: DateTime.parse(json['startDate'] as String),
-      endDate: DateTime.parse(json['endDate'] as String),
-      medicationCompliance: (json['medicationCompliance'] as num).toDouble(),
-      workoutCount: json['workoutCount'] as int,
-      totalVolume: (json['totalVolume'] as num).toDouble(),
-      topInsights: (json['topInsights'] as List)
-          .map((e) => InsightModel.fromJson(e))
-          .toList(),
-      symptomSummary: json['symptomSummary'] as String,
-      generatedAt: DateTime.parse(json['generatedAt'] as String),
-    );
+    return WeeklyReport.fromJson(json) as WeeklyReportModel;
   }
 
+  @override
   Map<String, dynamic> toJson() {
-    return {
-      'startDate': startDate.toIso8601String(),
-      'endDate': endDate.toIso8601String(),
-      'medicationCompliance': medicationCompliance,
-      'workoutCount': workoutCount,
-      'totalVolume': totalVolume,
-      'topInsights': topInsights.map((e) {
-        if (e is InsightModel) {
-          return e.toJson();
-        } else {
-          return InsightModel.fromEntity(e).toJson();
-        }
-      }).toList(),
-      'symptomSummary': symptomSummary,
-      'generatedAt': generatedAt.toIso8601String(),
-    };
+    // Delegate to parent class which has comprehensive JSON serialization
+    return super.toJson();
   }
 }
