@@ -30,6 +30,9 @@ abstract class AppConstants {
   /// User preferences key prefix
   static const String prefKeyPrefix = 'vitalsync_';
 
+  /// First launch flag (for onboarding)
+  static const String keyFirstLaunch = '${prefKeyPrefix}first_launch';
+
   /// Onboarding completion flag
   static const String prefKeyOnboardingCompleted =
       '${prefKeyPrefix}onboarding_completed';

@@ -47,6 +47,29 @@ class _AppShellState extends ConsumerState<AppShell> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _updateCurrentIndexFromRoute();
+  }
+
+  /// Updates the current tab index based on the current route.
+  void _updateCurrentIndexFromRoute() {
+    final location = GoRouterState.of(context).uri.toString();
+    final newIndex = _getIndexFromLocation(location);
+    if (newIndex != _currentIndex) {
+      setState(() => _currentIndex = newIndex);
+    }
+  }
+
+  /// Gets the tab index from the current route location.
+  int _getIndexFromLocation(String location) {
+    if (location.startsWith('/dashboard')) return 0;
+    if (location.startsWith('/health')) return 1;
+    if (location.startsWith('/fitness')) return 2;
+    return 0; // Default to dashboard
+  }
+
+  @override
   void dispose() {
     _scrollController.removeListener(_onScroll);
     _scrollController.dispose();

@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../features/fitness/presentation/screens/exercise_library_screen.dart';
+import '../../features/fitness/presentation/screens/workout_home_screen.dart';
 import '../../features/health/presentation/screens/add_edit_medication_screen.dart';
 import '../../features/health/presentation/screens/add_symptom_screen.dart';
 import '../../features/health/presentation/screens/health_timeline_screen.dart';
@@ -199,7 +200,7 @@ final GoRouter appRouter = GoRouter(
           pageBuilder: (context, state) => _buildPageWithFadeThroughTransition(
             context,
             state,
-            const Placeholder(), // TODO: Create FitnessPage
+            const WorkoutHomeScreen(),
           ),
           routes: [
             GoRoute(
