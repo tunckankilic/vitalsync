@@ -7,14 +7,16 @@
 /// - Nested navigation per tab
 library;
 
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../core/l10n/app_localizations.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/utils/accessibility_helper.dart';
+import '../../features/fitness/presentation/providers/workout_provider.dart';
+import '../widgets/active_workout_mini_bar.dart';
 import '../widgets/context_aware_fab.dart';
 import '../widgets/glassmorphic_app_bar.dart';
 
@@ -85,16 +87,17 @@ class _AppShellState extends ConsumerState<AppShell> {
     }
   }
 
-  String _getAppBarTitle() {
+  String _getAppBarTitle(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     switch (_currentIndex) {
       case 0:
-        return 'Dashboard';
+        return l10n.dashboard;
       case 1:
-        return 'Health';
+        return l10n.health;
       case 2:
-        return 'Fitness';
+        return l10n.fitness;
       default:
-        return 'VitalSync';
+        return l10n.appTitle;
     }
   }
 
@@ -107,7 +110,7 @@ class _AppShellState extends ConsumerState<AppShell> {
 
       // GLASSMORPHIC APP BAR
       appBar: GlassmorphicAppBar(
-        title: _getAppBarTitle(),
+        title: _getAppBarTitle(context),
         onProfileTap: () => context.push('/profile'),
         onSettingsTap: () => context.push('/settings'),
       ),
@@ -115,17 +118,67 @@ class _AppShellState extends ConsumerState<AppShell> {
       // BODY (Nested Navigator Content)
       body: widget.child,
 
-      // CONTEXT-AWARE FAB
-      floatingActionButton: AnimatedSlide(
-        offset: _isFabVisible ? Offset.zero : const Offset(0, 2),
-        duration: const Duration(milliseconds: 200),
-        curve: Curves.easeInOut,
-        child: AnimatedOpacity(
-          opacity: _isFabVisible ? 1.0 : 0.0,
-          duration: const Duration(milliseconds: 200),
-          child: ContextAwareFab(currentTabIndex: _currentIndex),
-        ),
-      ),
+      // CONTEXT-AWARE FAB OR ACTIVE WORKOUT MINI-BAR
+      floatingActionButton: ref
+          .watch(activeSessionProvider)
+          .when(
+            data: (activeSession) {
+              // If workout is active, show mini-bar instead of FAB
+              if (activeSession != null) {
+                return const ActiveWorkoutMiniBar();
+              }
+
+              // Otherwise show FAB with scroll-based visibility
+              return AnimatedSlide(
+                offset: _isFabVisible ? Offset.zero : const Offset(0, 2),
+                duration: AccessibilityHelper.getDuration(
+                  context,
+                  const Duration(milliseconds: 200),
+                ),
+                curve: AccessibilityHelper.getCurve(context, Curves.easeInOut),
+                child: AnimatedOpacity(
+                  opacity: _isFabVisible ? 1.0 : 0.0,
+                  duration: AccessibilityHelper.getDuration(
+                    context,
+                    const Duration(milliseconds: 200),
+                  ),
+                  child: ContextAwareFab(currentTabIndex: _currentIndex),
+                ),
+              );
+            },
+            loading: () => AnimatedSlide(
+              offset: _isFabVisible ? Offset.zero : const Offset(0, 2),
+              duration: AccessibilityHelper.getDuration(
+                context,
+                const Duration(milliseconds: 200),
+              ),
+              curve: AccessibilityHelper.getCurve(context, Curves.easeInOut),
+              child: AnimatedOpacity(
+                opacity: _isFabVisible ? 1.0 : 0.0,
+                duration: AccessibilityHelper.getDuration(
+                  context,
+                  const Duration(milliseconds: 200),
+                ),
+                child: ContextAwareFab(currentTabIndex: _currentIndex),
+              ),
+            ),
+            error: (_, _) => AnimatedSlide(
+              offset: _isFabVisible ? Offset.zero : const Offset(0, 2),
+              duration: AccessibilityHelper.getDuration(
+                context,
+                const Duration(milliseconds: 200),
+              ),
+              curve: AccessibilityHelper.getCurve(context, Curves.easeInOut),
+              child: AnimatedOpacity(
+                opacity: _isFabVisible ? 1.0 : 0.0,
+                duration: AccessibilityHelper.getDuration(
+                  context,
+                  const Duration(milliseconds: 200),
+                ),
+                child: ContextAwareFab(currentTabIndex: _currentIndex),
+              ),
+            ),
+          ),
       floatingActionButtonLocation: _currentIndex == 0
           ? FloatingActionButtonLocation.endFloat
           : FloatingActionButtonLocation.endFloat,
@@ -166,45 +219,45 @@ class _AppShellState extends ConsumerState<AppShell> {
         items: [
           BottomNavigationBarItem(
             icon: Semantics(
-              label: 'Dashboard tab',
+              label: AppLocalizations.of(context).dashboardTabSemantics,
               button: true,
               child: const Icon(Icons.dashboard_rounded),
             ),
             activeIcon: Semantics(
-              label: 'Dashboard tab, selected',
+              label: AppLocalizations.of(context).dashboardTabSelectedSemantics,
               button: true,
               child: const Icon(Icons.dashboard_rounded),
             ),
-            label: 'Dashboard',
-            tooltip: 'View your unified health and fitness dashboard',
+            label: AppLocalizations.of(context).dashboard,
+            tooltip: AppLocalizations.of(context).dashboardTabTooltip,
           ),
           BottomNavigationBarItem(
             icon: Semantics(
-              label: 'Health tab',
+              label: AppLocalizations.of(context).healthTabSemantics,
               button: true,
               child: const Icon(Icons.medical_services_rounded),
             ),
             activeIcon: Semantics(
-              label: 'Health tab, selected',
+              label: AppLocalizations.of(context).healthTabSelectedSemantics,
               button: true,
               child: const Icon(Icons.medical_services_rounded),
             ),
-            label: 'Health',
-            tooltip: 'Manage medications and symptoms',
+            label: AppLocalizations.of(context).health,
+            tooltip: AppLocalizations.of(context).healthTabTooltip,
           ),
           BottomNavigationBarItem(
             icon: Semantics(
-              label: 'Fitness tab',
+              label: AppLocalizations.of(context).fitnessTabSemantics,
               button: true,
               child: const Icon(Icons.fitness_center_rounded),
             ),
             activeIcon: Semantics(
-              label: 'Fitness tab, selected',
+              label: AppLocalizations.of(context).fitnessTabSelectedSemantics,
               button: true,
               child: const Icon(Icons.fitness_center_rounded),
             ),
-            label: 'Fitness',
-            tooltip: 'Track workouts and progress',
+            label: AppLocalizations.of(context).fitness,
+            tooltip: AppLocalizations.of(context).fitnessTabTooltip,
           ),
         ],
       ),

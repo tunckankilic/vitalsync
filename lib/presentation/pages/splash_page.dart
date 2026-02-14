@@ -69,7 +69,7 @@ class _SplashPageState extends State<SplashPage> {
             Text(
               'Health & Fitness Companion',
               style: theme.textTheme.titleMedium?.copyWith(
-                color: theme.colorScheme.onPrimary.withOpacity(0.8),
+                color: theme.colorScheme.onPrimary.withValues(alpha: 0.8),
               ),
             ),
             const SizedBox(height: 48),

@@ -47,10 +47,58 @@ class ProgressStats {
   final double averageVolumePerWorkout;
 }
 
+/// Weekly statistics model with comparison to previous week
+class WeeklyStats {
+  const WeeklyStats({
+    required this.totalVolume,
+    required this.workoutCount,
+    required this.volumeChangePercent,
+  });
+
+  final double totalVolume;
+  final int workoutCount;
+  final double volumeChangePercent;
+}
+
 /// Provider for the WorkoutSessionRepository instance
 @Riverpod(keepAlive: true)
 WorkoutSessionRepository progressWorkoutRepository(Ref ref) {
   return getIt<WorkoutSessionRepository>();
+}
+
+/// Provider for weekly statistics with comparison to previous week
+@riverpod
+Future<WeeklyStats> weeklyStats(Ref ref) async {
+  final repository = ref.watch(progressWorkoutRepositoryProvider);
+
+  // Get current week data (last 7 days)
+  final currentWeekCount = await repository.getWorkoutCount(days: 7);
+  final currentWeekVolume = await repository.getTotalVolume(days: 7);
+
+  // Get previous week data (days 8-14)
+  final endDate = DateTime.now().subtract(const Duration(days: 7));
+  final startDate = endDate.subtract(const Duration(days: 7));
+  final previousWeekSessions = await repository.getByDateRange(
+    startDate,
+    endDate,
+  );
+
+  // Calculate previous week volume
+  var previousWeekVolume = 0.0;
+  for (final session in previousWeekSessions) {
+    previousWeekVolume += session.totalVolume;
+  }
+
+  // Calculate volume change percentage
+  final volumeChangePercent = previousWeekVolume > 0
+      ? ((currentWeekVolume - previousWeekVolume) / previousWeekVolume) * 100
+      : 0.0;
+
+  return WeeklyStats(
+    totalVolume: currentWeekVolume,
+    workoutCount: currentWeekCount,
+    volumeChangePercent: volumeChangePercent,
+  );
 }
 
 /// Family provider for progress statistics

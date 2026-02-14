@@ -1,4 +1,129 @@
 {
   "@@locale": "tr",
-  "appTitle": "VitalSync"
+  "appTitle": "VitalSync",
+  
+  "dashboard": "Gösterge Paneli",
+  "health": "Sağlık",
+  "fitness": "Fitness",
+  
+  "settings": "Ayarlar",
+  "profile": "Profil",
+  
+  "syncOnline": "Çevrimiçi",
+  "syncOffline": "Çevrimdışı",
+  "syncing": "Senkronize Ediliyor",
+  "syncOnlineTooltip": "Çevrimiçi - Veriler senkronize edildi",
+  "syncOfflineTooltip": "Çevrimdışı - Değişiklikler çevrimiçi olunca senkronize edilecek",
+  "syncingTooltip": "Senkronize ediliyor...",
+  "syncSemanticsOnline": "Çevrimiçi",
+  "syncSemanticsOffline": "Çevrimdışı",
+  "syncSemanticsSyncing": "Veriler senkronize ediliyor",
+  
+  "insights": "İçgörüler",
+  "insightsCountSemantics": "İçgörüler, {count} okunmamış",
+  "insightsCountTooltip": "{count} yeni {count, plural, =1{içgörü} other{içgörü}}",
+  
+  "addMedication": "İlaç Ekle",
+  "logSymptom": "Semptom Kaydet",
+  "startWorkout": "Antrenman Başlat",
+  
+  "quickAddMenuOpen": "Hızlı ekleme menüsünü aç",
+  "quickAddMenuClose": "Hızlı ekleme menüsünü kapat",
+  
+  "dashboardTabSemantics": "Gösterge paneli sekmesi",
+  "dashboardTabSelectedSemantics": "Gösterge paneli sekmesi, seçili",
+  "dashboardTabTooltip": "Birleşik sağlık ve fitness gösterge panelinizi görüntüleyin",
+  
+  "healthTabSemantics": "Sağlık sekmesi",
+  "healthTabSelectedSemantics": "Sağlık sekmesi, seçili",
+  "healthTabTooltip": "İlaçları ve semptomları yönetin",
+  
+  "fitnessTabSemantics": "Fitness sekmesi",
+  "fitnessTabSelectedSemantics": "Fitness sekmesi, seçili",
+  "fitnessTabTooltip": "Antrenmanları ve ilerlemeyi takip edin",
+  
+  "settingsSemantics": "Ayarlar",
+  "settingsTooltip": "Ayarları aç",
+  
+  "profileSemantics": "Profil",
+  
+  "returnToWorkout": "Antrenman'a Dön",
+  "timeElapsed": "Geçen süre",
+  
+  "goodMorning": "Günaydın",
+  "goodAfternoon": "İyi günler",
+  "goodEvening": "İyi akşamlar",
+  "goodNight": "İyi geceler",
+  
+  "todaysMedications": "Bugünün İlaçları",
+  "nextMedicationIn": "Sonraki: {time}",
+  "noUpcomingMedications": "Yaklaşan ilaç yok",
+  "hoursShort": "s",
+  "minutesShort": "dk",
+  
+  "currentStreak": "gün serisi",
+  "inProgress": "Devam ediyor",
+  
+  "weeklyOverview": "Haftalık Genel Bakış",
+  "thisWeek": "Bu Hafta",
+  "last30Days": "Son 30 Gün",
+  "medicationCompliance": "İlaç",
+  "workoutVolume": "Antrenman",
+  
+  "viewReport": "Rapor Görüntüle",
+  
+  "recentActivity": "Son Aktiviteler",
+  "viewAll": "Tümünü Gör",
+  "noRecentActivity": "Son aktivite yok",
+  
+  "dataCollecting": "Veri toplandıkça öneriler burada görünecek",
+  "startFirstWorkout": "İlk antrenmanını yap",
+  "addFirstMedication": "İlk ilacını ekle",
+  
+  "dismissInsightTitle": "Önerimi Kapat",
+  "dismissInsightMessage": "Bu öneriyi kapatmak istediğinizden emin misiniz?",
+  "cancel": "İptal",
+  "dismiss": "Kapat",
+  
+  "errorLoadingDashboard": "Gösterge paneli yüklenirken hata",
+  "retry": "Tekrar Dene",
+
+  "active": "Aktif",
+  "all": "Tümü",
+  "completed": "Tamamlanan",
+  "searchMedication": "İlaç ara...",
+  "noMedicationsFound": "İlaç bulunamadı",
+  "editMedication": "İlacı Düzenle",
+  "medicationName": "İlaç Adı",
+  "dosage": "Dozaj",
+  "requiredField": "Bu alan zorunludur",
+  "frequency": "Sıklık",
+  "scheduledTimes": "Planlanan Zamanlar",
+  "color": "Renk",
+  "saving": "Kaydediliyor...",
+  "save": "Kaydet",
+  "medicationDetails": "İlaç Detayları",
+  "deleteMedication": "İlacı Sil",
+  "deleteConfirmation": "Bu ilacı silmek istediğinizden emin misiniz?",
+  "delete": "Sil",
+  "complianceHistory": "Uyum Geçmişi",
+  "history": "Geçmiş",
+  "noLogsYet": "Henüz kayıt yok",
+  "takenAt": "Alındı:",
+  "shareReport": "Raporu Paylaş",
+  "symptoms": "Semptomlar",
+  "mostFrequent": "En Sık Görülen",
+  "recentTimeline": "Son Zaman Çizelgesi",
+  "noSymptomsLogged": "Kaydedilmiş semptom yok",
+  "symptomName": "Semptom Adı",
+  "severity": "Şiddet",
+  "date": "Tarih",
+  "time": "Saat",
+  "notes": "Notlar",
+  "healthTimeline": "Sağlık Zaman Çizelgesi",
+  "compliance": "Uyum",
+  "medications": "İlaçlar",
+  "complianceTrend": "Uyum Eğilimi",
+  "skip": "Atla",
+  "take": "Al"
 }

@@ -6,6 +6,8 @@ library;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/l10n/app_localizations.dart';
+
 /// Insight badge widget with unread count.
 ///
 /// Features:
@@ -17,6 +19,8 @@ class InsightBadge extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
+
     // TODO: Replace with actual provider once it exists
     const unreadCount = 0; // ref.watch(unreadInsightsCountProvider)
 
@@ -25,10 +29,11 @@ class InsightBadge extends ConsumerWidget {
     }
 
     return Semantics(
-      label: 'Insights, $unreadCount unread',
+      label: l10n.insightsCountSemantics(unreadCount),
       button: true,
       child: _PulsingBadge(
         count: unreadCount,
+        tooltip: l10n.insightsCountTooltip(unreadCount),
         onTap: () {
           // TODO: Navigate to insights list
           debugPrint('Navigate to insights');
@@ -40,9 +45,14 @@ class InsightBadge extends ConsumerWidget {
 
 /// Pulsing badge animation for new insights.
 class _PulsingBadge extends StatefulWidget {
-  const _PulsingBadge({required this.count, required this.onTap});
+  const _PulsingBadge({
+    required this.count,
+    required this.tooltip,
+    required this.onTap,
+  });
 
   final int count;
+  final String tooltip;
   final VoidCallback onTap;
 
   @override
@@ -100,8 +110,7 @@ class _PulsingBadgeState extends State<_PulsingBadge>
               ),
             ),
             onPressed: widget.onTap,
-            tooltip:
-                '${widget.count} new ${widget.count == 1 ? 'insight' : 'insights'}',
+            tooltip: widget.tooltip,
           ),
         );
       },

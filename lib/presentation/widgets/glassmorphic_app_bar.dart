@@ -12,6 +12,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/l10n/app_localizations.dart';
+import '../../core/utils/accessibility_helper.dart';
 import '../widgets/insight_badge.dart';
 import '../widgets/sync_indicator.dart';
 
@@ -27,12 +29,14 @@ class GlassmorphicAppBar extends ConsumerWidget implements PreferredSizeWidget {
     required this.title,
     this.onProfileTap,
     this.onSettingsTap,
+    this.actions,
     super.key,
   });
 
   final String title;
   final VoidCallback? onProfileTap;
   final VoidCallback? onSettingsTap;
+  final List<Widget>? actions;
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
@@ -44,13 +48,13 @@ class GlassmorphicAppBar extends ConsumerWidget implements PreferredSizeWidget {
 
     // Glassmorphic background opacity
     final backgroundColor = isDark
-        ? Colors.black.withOpacity(0.15)
-        : Colors.white.withOpacity(0.7);
+        ? Colors.black.withValues(alpha: 0.15)
+        : Colors.white.withValues(alpha: 0.7);
 
     // Border color with subtle opacity
     final borderColor = isDark
-        ? Colors.white.withOpacity(0.1)
-        : Colors.black.withOpacity(0.1);
+        ? Colors.white.withValues(alpha: 0.1)
+        : Colors.black.withValues(alpha: 0.1);
 
     return ClipRRect(
       child: BackdropFilter(
@@ -61,7 +65,7 @@ class GlassmorphicAppBar extends ConsumerWidget implements PreferredSizeWidget {
             border: Border(bottom: BorderSide(color: borderColor, width: 1)),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.05),
+                color: Colors.black.withValues(alpha: 0.05),
                 blurRadius: 20,
                 spreadRadius: -5,
                 offset: const Offset(0, 4),
@@ -70,8 +74,16 @@ class GlassmorphicAppBar extends ConsumerWidget implements PreferredSizeWidget {
           ),
           child: AppBar(
             title: AnimatedSwitcher(
-              duration: const Duration(milliseconds: 200),
+              duration: AccessibilityHelper.getDuration(
+                context,
+                const Duration(milliseconds: 200),
+              ),
               transitionBuilder: (child, animation) {
+                // Skip transition animation if reduce motion is enabled
+                if (AccessibilityHelper.shouldReduceMotion(context)) {
+                  return child;
+                }
+
                 return FadeTransition(
                   opacity: animation,
                   child: SlideTransition(
@@ -108,35 +120,38 @@ class GlassmorphicAppBar extends ConsumerWidget implements PreferredSizeWidget {
                 child: InsightBadge(),
               ),
 
+              // Actions
+              if (actions != null) ...actions!,
+
+              const SizedBox(width: 8),
+
+              // Profile Icon
+              if (onProfileTap != null)
+                IconButton(
+                  icon: const Icon(Icons.person_rounded),
+                  onPressed: onProfileTap,
+                ),
               // Settings Icon
-              Semantics(
-                label: 'Settings',
-                button: true,
-                child: IconButton(
+              if (onSettingsTap != null)
+                IconButton(
                   icon: const Icon(Icons.settings_rounded),
                   onPressed: onSettingsTap,
-                  tooltip: 'Open settings',
+                  tooltip: AppLocalizations.of(context).settingsTooltip,
                 ),
-              ),
-
-              // Profile Avatar
-              Padding(
-                padding: const EdgeInsets.only(right: 8, left: 4),
-                child: Semantics(
-                  label: 'Profile',
-                  button: true,
-                  child: Hero(
-                    tag: 'profile_avatar',
-                    child: GestureDetector(
-                      onTap: onProfileTap,
-                      child: CircleAvatar(
-                        radius: 18,
-                        backgroundColor: theme.colorScheme.primaryContainer,
-                        child: Icon(
-                          Icons.person,
-                          size: 20,
-                          color: theme.colorScheme.onPrimaryContainer,
-                        ),
+              Semantics(
+                label: AppLocalizations.of(context).profileSemantics,
+                button: true,
+                child: Hero(
+                  tag: 'profile_avatar',
+                  child: GestureDetector(
+                    onTap: onProfileTap,
+                    child: CircleAvatar(
+                      radius: 18,
+                      backgroundColor: theme.colorScheme.primaryContainer,
+                      child: Icon(
+                        Icons.person,
+                        size: 20,
+                        color: theme.colorScheme.onPrimaryContainer,
                       ),
                     ),
                   ),
