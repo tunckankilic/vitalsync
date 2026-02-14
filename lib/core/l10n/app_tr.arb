@@ -620,12 +620,89 @@
   "resetEmailSent": "Şifre sıfırlama e-postası gönderildi. Gelen kutunuzu kontrol edin.",
   "@resetEmailSent": { "description": "Reset email sent message" },
   "resetPasswordError": "Hata: {error}",
-  "@resetPasswordError": { 
+  "@resetPasswordError": {
     "description": "Reset password error",
     "placeholders": {
       "error": {
         "type": "Object"
       }
     }
-  }
+  },
+
+  "onboardingWelcomeTitle": "VitalSync'e Hoş Geldiniz",
+  "@onboardingWelcomeTitle": { "description": "Onboarding welcome title" },
+  "onboardingWelcomeSubtitle": "Hepsi bir arada sağlık ve fitness yardımcınız",
+  "@onboardingWelcomeSubtitle": { "description": "Onboarding welcome subtitle" },
+  "onboardingPrivacyNote": "Verileriniz cihazınızda kalır. Gizliliğinize saygı duyuyoruz.",
+  "@onboardingPrivacyNote": { "description": "Onboarding privacy note" },
+
+  "onboardingHealthTitle": "Sağlığınızı Takip Edin",
+  "@onboardingHealthTitle": { "description": "Onboarding health feature title" },
+  "onboardingHealthDescription": "İlaçları, semptomları ve sağlık zaman çizelgesini yönetin",
+  "@onboardingHealthDescription": { "description": "Onboarding health feature description" },
+  "onboardingHealthFeature1": "Akıllı hatırlatıcılarla hiçbir ilacı kaçırmayın",
+  "@onboardingHealthFeature1": { "description": "Onboarding health feature 1" },
+  "onboardingHealthFeature2": "Semptomları kaydedin ve kalıpları takip edin",
+  "@onboardingHealthFeature2": { "description": "Onboarding health feature 2" },
+  "onboardingHealthFeature3": "Eksiksiz sağlık zaman çizelgenizi görüntüleyin",
+  "@onboardingHealthFeature3": { "description": "Onboarding health feature 3" },
+
+  "onboardingFitnessTitle": "Fitness Seviyenizi Yükseltin",
+  "@onboardingFitnessTitle": { "description": "Onboarding fitness feature title" },
+  "onboardingFitnessDescription": "Antrenmanları kaydedin, ilerlemeyi takip edin, hedeflerinizi ezin",
+  "@onboardingFitnessDescription": { "description": "Onboarding fitness feature description" },
+  "onboardingFitnessFeature1": "Detaylı egzersiz kaydı ile antrenmanları takip edin",
+  "@onboardingFitnessFeature1": { "description": "Onboarding fitness feature 1" },
+  "onboardingFitnessFeature2": "Görsel grafiklerle ilerlemenizi izleyin",
+  "@onboardingFitnessFeature2": { "description": "Onboarding fitness feature 2" },
+  "onboardingFitnessFeature3": "Başarıların kilidini açın ve seriler oluşturun",
+  "@onboardingFitnessFeature3": { "description": "Onboarding fitness feature 3" },
+
+  "onboardingPrivacyTitle": "Gizliliğiniz, Kontrolünüz",
+  "@onboardingPrivacyTitle": { "description": "Onboarding privacy screen title" },
+  "onboardingPrivacyDescription": "Hangi verileri paylaşmak istediğinizi seçin",
+  "@onboardingPrivacyDescription": { "description": "Onboarding privacy screen description" },
+
+  "onboardingPreferencesTitle": "Deneyiminizi Kişiselleştirin",
+  "@onboardingPreferencesTitle": { "description": "Onboarding preferences screen title" },
+  "onboardingPreferencesDescription": "Dil ve tema tercihlerinizi ayarlayın",
+  "@onboardingPreferencesDescription": { "description": "Onboarding preferences screen description" },
+  "onboardingPreferencesNote": "Bu ayarları istediğiniz zaman değiştirebilirsiniz",
+  "@onboardingPreferencesNote": { "description": "Onboarding preferences note" },
+
+  "gdprAnalyticsTitle": "Analitik ve İçgörüler",
+  "@gdprAnalyticsTitle": { "description": "GDPR analytics consent title" },
+  "gdprAnalyticsDescription": "Anonim kullanım verileriyle uygulamayı geliştirmemize yardımcı olun",
+  "@gdprAnalyticsDescription": { "description": "GDPR analytics consent description" },
+  "gdprHealthDataTitle": "Sağlık Verisi Depolama",
+  "@gdprHealthDataTitle": { "description": "GDPR health data consent title" },
+  "gdprHealthDataDescription": "İlaç ve semptom verilerinizi saklayın (gerekli)",
+  "@gdprHealthDataDescription": { "description": "GDPR health data consent description" },
+  "gdprFitnessDataTitle": "Fitness Verisi Depolama",
+  "@gdprFitnessDataTitle": { "description": "GDPR fitness data consent title" },
+  "gdprFitnessDataDescription": "Antrenman ve ilerleme verilerinizi saklayın (gerekli)",
+  "@gdprFitnessDataDescription": { "description": "GDPR fitness data consent description" },
+  "gdprCloudBackupTitle": "Bulut Yedekleme",
+  "@gdprCloudBackupTitle": { "description": "GDPR cloud backup consent title" },
+  "gdprCloudBackupDescription": "Cihazlar arasında senkronizasyon için verilerinizi Firebase'e yedekleyin",
+  "@gdprCloudBackupDescription": { "description": "GDPR cloud backup consent description" },
+  "gdprNote": "Gerekli onaylar, temel uygulama işlevselliği için gereklidir. Onayları istediğiniz zaman Ayarlar'dan yönetebilirsiniz.",
+  "@gdprNote": { "description": "GDPR consent note" },
+
+  "back": "Geri",
+  "@back": { "description": "Back button" },
+  "next": "İleri",
+  "@next": { "description": "Next button" },
+  "getStarted": "Başla",
+  "@getStarted": { "description": "Get started button" },
+  "language": "Dil",
+  "@language": { "description": "Language label" },
+  "theme": "Tema",
+  "@theme": { "description": "Theme label" },
+  "themeSystem": "Sistem",
+  "@themeSystem": { "description": "System theme option" },
+  "themeLight": "Açık",
+  "@themeLight": { "description": "Light theme option" },
+  "themeDark": "Koyu",
+  "@themeDark": { "description": "Dark theme option" }
 }

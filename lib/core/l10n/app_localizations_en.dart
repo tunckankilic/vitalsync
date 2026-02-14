@@ -732,13 +732,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get theme => 'Theme';
 
   @override
-  String get themeSystem => 'System Default';
+  String get themeSystem => 'System';
 
   @override
-  String get themeLight => 'Light Mode';
+  String get themeLight => 'Light';
 
   @override
-  String get themeDark => 'Dark Mode';
+  String get themeDark => 'Dark';
 
   @override
   String get materialYou => 'Material You';
@@ -1036,4 +1036,101 @@ class AppLocalizationsEn extends AppLocalizations {
   String resetPasswordError(Object error) {
     return 'Error: $error';
   }
+
+  @override
+  String get onboardingWelcomeTitle => 'Welcome to VitalSync';
+
+  @override
+  String get onboardingWelcomeSubtitle =>
+      'Your all-in-one health & fitness companion';
+
+  @override
+  String get onboardingPrivacyNote =>
+      'Your data stays on your device. We respect your privacy.';
+
+  @override
+  String get onboardingHealthTitle => 'Track Your Health';
+
+  @override
+  String get onboardingHealthDescription =>
+      'Manage medications, symptoms, and health timeline';
+
+  @override
+  String get onboardingHealthFeature1 =>
+      'Never miss a medication with smart reminders';
+
+  @override
+  String get onboardingHealthFeature2 => 'Log symptoms and track patterns';
+
+  @override
+  String get onboardingHealthFeature3 => 'View your complete health timeline';
+
+  @override
+  String get onboardingFitnessTitle => 'Elevate Your Fitness';
+
+  @override
+  String get onboardingFitnessDescription =>
+      'Log workouts, track progress, crush your goals';
+
+  @override
+  String get onboardingFitnessFeature1 =>
+      'Track workouts with detailed exercise logging';
+
+  @override
+  String get onboardingFitnessFeature2 =>
+      'Monitor your progress with visual charts';
+
+  @override
+  String get onboardingFitnessFeature3 =>
+      'Unlock achievements and build streaks';
+
+  @override
+  String get onboardingPrivacyTitle => 'Your Privacy, Your Control';
+
+  @override
+  String get onboardingPrivacyDescription =>
+      'Choose what data you want to share';
+
+  @override
+  String get onboardingPreferencesTitle => 'Personalize Your Experience';
+
+  @override
+  String get onboardingPreferencesDescription =>
+      'Set your language and theme preferences';
+
+  @override
+  String get onboardingPreferencesNote =>
+      'You can change these settings anytime';
+
+  @override
+  String get gdprAnalyticsTitle => 'Analytics & Insights';
+
+  @override
+  String get gdprAnalyticsDescription =>
+      'Help us improve the app with anonymous usage data';
+
+  @override
+  String get gdprHealthDataTitle => 'Health Data Storage';
+
+  @override
+  String get gdprHealthDataDescription =>
+      'Store your medication and symptom data (required)';
+
+  @override
+  String get gdprFitnessDataTitle => 'Fitness Data Storage';
+
+  @override
+  String get gdprFitnessDataDescription =>
+      'Store your workout and progress data (required)';
+
+  @override
+  String get gdprCloudBackupTitle => 'Cloud Backup';
+
+  @override
+  String get gdprCloudBackupDescription =>
+      'Backup your data to Firebase for sync across devices';
+
+  @override
+  String get gdprNote =>
+      'Required consents are necessary for core app functionality. You can manage consents anytime in Settings.';
 }

@@ -620,12 +620,89 @@
   "resetEmailSent": "E-Mail zum Zurücksetzen des Passworts gesendet. Überprüfen Sie Ihren Posteingang.",
   "@resetEmailSent": { "description": "Reset email sent message" },
   "resetPasswordError": "Fehler: {error}",
-  "@resetPasswordError": { 
+  "@resetPasswordError": {
     "description": "Reset password error",
     "placeholders": {
       "error": {
         "type": "Object"
       }
     }
-  }
+  },
+
+  "onboardingWelcomeTitle": "Willkommen bei VitalSync",
+  "@onboardingWelcomeTitle": { "description": "Onboarding welcome title" },
+  "onboardingWelcomeSubtitle": "Ihr All-in-One-Begleiter für Gesundheit & Fitness",
+  "@onboardingWelcomeSubtitle": { "description": "Onboarding welcome subtitle" },
+  "onboardingPrivacyNote": "Ihre Daten bleiben auf Ihrem Gerät. Wir respektieren Ihre Privatsphäre.",
+  "@onboardingPrivacyNote": { "description": "Onboarding privacy note" },
+
+  "onboardingHealthTitle": "Verfolgen Sie Ihre Gesundheit",
+  "@onboardingHealthTitle": { "description": "Onboarding health feature title" },
+  "onboardingHealthDescription": "Verwalten Sie Medikamente, Symptome und Gesundheitsverlauf",
+  "@onboardingHealthDescription": { "description": "Onboarding health feature description" },
+  "onboardingHealthFeature1": "Verpassen Sie kein Medikament mit intelligenten Erinnerungen",
+  "@onboardingHealthFeature1": { "description": "Onboarding health feature 1" },
+  "onboardingHealthFeature2": "Protokollieren Sie Symptome und verfolgen Sie Muster",
+  "@onboardingHealthFeature2": { "description": "Onboarding health feature 2" },
+  "onboardingHealthFeature3": "Sehen Sie Ihren vollständigen Gesundheitsverlauf",
+  "@onboardingHealthFeature3": { "description": "Onboarding health feature 3" },
+
+  "onboardingFitnessTitle": "Steigern Sie Ihre Fitness",
+  "@onboardingFitnessTitle": { "description": "Onboarding fitness feature title" },
+  "onboardingFitnessDescription": "Protokollieren Sie Workouts, verfolgen Sie Fortschritte, erreichen Sie Ihre Ziele",
+  "@onboardingFitnessDescription": { "description": "Onboarding fitness feature description" },
+  "onboardingFitnessFeature1": "Verfolgen Sie Workouts mit detaillierter Übungsprotokollierung",
+  "@onboardingFitnessFeature1": { "description": "Onboarding fitness feature 1" },
+  "onboardingFitnessFeature2": "Überwachen Sie Ihren Fortschritt mit visuellen Diagrammen",
+  "@onboardingFitnessFeature2": { "description": "Onboarding fitness feature 2" },
+  "onboardingFitnessFeature3": "Schalten Sie Erfolge frei und bauen Sie Serien auf",
+  "@onboardingFitnessFeature3": { "description": "Onboarding fitness feature 3" },
+
+  "onboardingPrivacyTitle": "Ihre Privatsphäre, Ihre Kontrolle",
+  "@onboardingPrivacyTitle": { "description": "Onboarding privacy screen title" },
+  "onboardingPrivacyDescription": "Wählen Sie aus, welche Daten Sie teilen möchten",
+  "@onboardingPrivacyDescription": { "description": "Onboarding privacy screen description" },
+
+  "onboardingPreferencesTitle": "Personalisieren Sie Ihre Erfahrung",
+  "@onboardingPreferencesTitle": { "description": "Onboarding preferences screen title" },
+  "onboardingPreferencesDescription": "Legen Sie Ihre Sprach- und Themenpräferenzen fest",
+  "@onboardingPreferencesDescription": { "description": "Onboarding preferences screen description" },
+  "onboardingPreferencesNote": "Sie können diese Einstellungen jederzeit ändern",
+  "@onboardingPreferencesNote": { "description": "Onboarding preferences note" },
+
+  "gdprAnalyticsTitle": "Analytik & Einblicke",
+  "@gdprAnalyticsTitle": { "description": "GDPR analytics consent title" },
+  "gdprAnalyticsDescription": "Helfen Sie uns, die App mit anonymen Nutzungsdaten zu verbessern",
+  "@gdprAnalyticsDescription": { "description": "GDPR analytics consent description" },
+  "gdprHealthDataTitle": "Gesundheitsdatenspeicherung",
+  "@gdprHealthDataTitle": { "description": "GDPR health data consent title" },
+  "gdprHealthDataDescription": "Speichern Sie Ihre Medikamenten- und Symptomdaten (erforderlich)",
+  "@gdprHealthDataDescription": { "description": "GDPR health data consent description" },
+  "gdprFitnessDataTitle": "Fitnessdatenspeicherung",
+  "@gdprFitnessDataTitle": { "description": "GDPR fitness data consent title" },
+  "gdprFitnessDataDescription": "Speichern Sie Ihre Workout- und Fortschrittsdaten (erforderlich)",
+  "@gdprFitnessDataDescription": { "description": "GDPR fitness data consent description" },
+  "gdprCloudBackupTitle": "Cloud-Backup",
+  "@gdprCloudBackupTitle": { "description": "GDPR cloud backup consent title" },
+  "gdprCloudBackupDescription": "Sichern Sie Ihre Daten in Firebase für die Synchronisierung zwischen Geräten",
+  "@gdprCloudBackupDescription": { "description": "GDPR cloud backup consent description" },
+  "gdprNote": "Erforderliche Zustimmungen sind für die Kernfunktionalität der App notwendig. Sie können Zustimmungen jederzeit in den Einstellungen verwalten.",
+  "@gdprNote": { "description": "GDPR consent note" },
+
+  "back": "Zurück",
+  "@back": { "description": "Back button" },
+  "next": "Weiter",
+  "@next": { "description": "Next button" },
+  "getStarted": "Loslegen",
+  "@getStarted": { "description": "Get started button" },
+  "language": "Sprache",
+  "@language": { "description": "Language label" },
+  "theme": "Thema",
+  "@theme": { "description": "Theme label" },
+  "themeSystem": "System",
+  "@themeSystem": { "description": "System theme option" },
+  "themeLight": "Hell",
+  "@themeLight": { "description": "Light theme option" },
+  "themeDark": "Dunkel",
+  "@themeDark": { "description": "Dark theme option" }
 }
