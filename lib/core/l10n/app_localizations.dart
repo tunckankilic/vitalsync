@@ -1942,11 +1942,11 @@ abstract class AppLocalizations {
   /// **'OR'**
   String get orSeparator;
 
-  /// Continue with Google button
+  /// Continue with Apple button
   ///
   /// In en, this message translates to:
-  /// **'Continue with Google'**
-  String get continueWithGoogle;
+  /// **'Continue with Apple'**
+  String get continueWithApple;
 
   /// Don't have account text
   ///
@@ -1978,11 +1978,11 @@ abstract class AppLocalizations {
   /// **'Login failed: {error}'**
   String loginFailed(Object error);
 
-  /// Google login failed error
+  /// Apple login failed error
   ///
   /// In en, this message translates to:
-  /// **'Google Login failed: {error}'**
-  String googleLoginFailed(Object error);
+  /// **'Apple Login failed: {error}'**
+  String appleLoginFailed(Object error);
 
   /// Create account title
   ///

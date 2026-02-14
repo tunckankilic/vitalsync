@@ -972,7 +972,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get orSeparator => 'VEYA';
 
   @override
-  String get continueWithGoogle => 'Google ile Devam Et';
+  String get continueWithApple => 'Apple ile Devam Et';
 
   @override
   String get dontHaveAccount => 'Hesabınız yok mu?';
@@ -992,8 +992,8 @@ class AppLocalizationsTr extends AppLocalizations {
   }
 
   @override
-  String googleLoginFailed(Object error) {
-    return 'Google girişi başarısız: $error';
+  String appleLoginFailed(Object error) {
+    return 'Apple girişi başarısız: $error';
   }
 
   @override
