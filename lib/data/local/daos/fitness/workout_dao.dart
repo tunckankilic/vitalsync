@@ -5,6 +5,7 @@
 library;
 
 import 'package:drift/drift.dart';
+import 'package:vitalsync/core/enums/sync_status.dart';
 
 import 'package:vitalsync/data/local/database.dart';
 import '../../tables/fitness/achievements_table.dart';
@@ -124,6 +125,20 @@ class WorkoutTemplateDao extends DatabaseAccessor<AppDatabase>
         .go();
   }
 
+  /// Update exercise order in template.
+  Future<int> updateTemplateExerciseOrder(
+    int templateId,
+    int exerciseId,
+    int orderIndex,
+  ) {
+    return (update(templateExercises)..where(
+          (tbl) =>
+              tbl.templateId.equals(templateId) &
+              tbl.exerciseId.equals(exerciseId),
+        ))
+        .write(TemplateExercisesCompanion(orderIndex: Value(orderIndex)));
+  }
+
   /// Watch all templates.
   Stream<List<WorkoutTemplateData>> watchAll() {
     return select(workoutTemplates).watch();
@@ -226,6 +241,14 @@ class WorkoutSessionDao extends DatabaseAccessor<AppDatabase>
     )..where((tbl) => tbl.endTime.isNull())).watchSingleOrNull();
   }
 
+  /// Watch sets for a session.
+  Stream<List<WorkoutSetData>> watchSessionSets(int sessionId) {
+    return (select(workoutSets)
+          ..where((tbl) => tbl.sessionId.equals(sessionId))
+          ..orderBy([(tbl) => OrderingTerm.asc(tbl.completedAt)]))
+        .watch();
+  }
+
   /// Get list of workout dates.
   Future<List<DateTime>> getWorkoutDates({int days = 30}) {
     final start = DateTime.now().subtract(Duration(days: days));
@@ -234,6 +257,29 @@ class WorkoutSessionDao extends DatabaseAccessor<AppDatabase>
       ..orderBy([(tbl) => OrderingTerm.desc(tbl.startTime)]);
 
     return query.map((row) => row.startTime).get();
+  }
+
+  /// Inserts or updates a workout session from Firestore remote data.
+  Future<void> upsertFromRemote(int id, Map<String, dynamic> data) async {
+    await into(workoutSessions).insertOnConflictUpdate(
+      WorkoutSessionsCompanion(
+        id: Value(id),
+        templateId: Value(data['templateId'] as int?),
+        name: Value(data['name'] as String),
+        startTime: Value(DateTime.parse(data['startTime'] as String)),
+        endTime: Value(
+          data['endTime'] != null
+              ? DateTime.parse(data['endTime'] as String)
+              : null,
+        ),
+        totalVolume: Value((data['totalVolume'] as num?)?.toDouble() ?? 0.0),
+        notes: Value(data['notes'] as String?),
+        rating: Value(data['rating'] as int?),
+        syncStatus: const Value(SyncStatus.synced),
+        lastModifiedAt: Value(DateTime.parse(data['lastModifiedAt'] as String)),
+        createdAt: Value(DateTime.parse(data['createdAt'] as String)),
+      ),
+    );
   }
 }
 

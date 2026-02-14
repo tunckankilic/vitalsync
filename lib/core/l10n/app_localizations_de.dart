@@ -241,6 +241,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get editMedication => 'Medikament bearbeiten';
 
   @override
+  String get exerciseName => 'Übungsname';
+
+  @override
   String get medicationName => 'Medikamentenname';
 
   @override
@@ -338,166 +341,166 @@ class AppLocalizationsDe extends AppLocalizations {
   String get take => 'Einnehmen';
 
   @override
-  String get workoutHome => 'Workouts';
+  String get workoutHome => 'Trainings';
 
   @override
-  String get recentWorkouts => 'Recent Workouts';
+  String get recentWorkouts => 'Letzte Trainings';
 
   @override
-  String get workoutTemplates => 'Templates';
+  String get workoutTemplates => 'Vorlagen';
 
   @override
-  String get createNewTemplate => 'Create New Template';
+  String get createNewTemplate => 'Neue Vorlage erstellen';
 
   @override
-  String get quickStats => 'Quick Stats';
+  String get quickStats => 'Schnellstatistik';
 
   @override
-  String get thisWeeksVolume => 'This Week\'s Volume';
+  String get thisWeeksVolume => 'Volumen dieser Woche';
 
   @override
-  String get thisWeeksWorkouts => 'This Week\'s Workouts';
+  String get thisWeeksWorkouts => 'Trainings dieser Woche';
 
   @override
-  String get vsLastWeek => 'vs last week';
+  String get vsLastWeek => 'vs. letzte Woche';
 
   @override
-  String get activeWorkout => 'Active Workout';
+  String get activeWorkout => 'Aktives Training';
 
   @override
-  String get finishWorkout => 'Finish';
+  String get finishWorkout => 'Beenden';
 
   @override
-  String get discardWorkout => 'Discard Workout';
+  String get discardWorkout => 'Training verwerfen';
 
   @override
   String get discardWorkoutMessage =>
-      'Are you sure? Your workout won\'t be saved.';
+      'Bist du sicher? Dein Training wird nicht gespeichert.';
 
   @override
-  String get previousSession => 'Previous';
+  String get previousSession => 'Vorherige';
 
   @override
   String setNumber(int number) {
-    return 'Set $number';
+    return 'Satz $number';
   }
 
   @override
-  String get weight => 'Weight';
+  String get weight => 'Gewicht';
 
   @override
-  String get reps => 'Reps';
+  String get reps => 'Wiederholungen';
 
   @override
-  String get warmup => 'Warmup';
+  String get warmup => 'Aufwärmen';
 
   @override
-  String get completeSet => 'Complete';
+  String get completeSet => 'Abschließen';
 
   @override
-  String get restTimer => 'Rest Timer';
+  String get restTimer => 'Pausentimer';
 
   @override
-  String get skipRest => 'Skip Rest';
+  String get skipRest => 'Pause überspringen';
 
   @override
-  String get readyForNextSet => 'Ready for next set?';
+  String get readyForNextSet => 'Bereit für den nächsten Satz?';
 
   @override
-  String get addExercise => 'Add Exercise';
+  String get addExercise => 'Übung hinzufügen';
 
   @override
-  String get seconds => 'seconds';
+  String get seconds => 'Sekunden';
 
   @override
-  String get workoutSummary => 'Workout Summary';
+  String get workoutSummary => 'Trainingszusammenfassung';
 
   @override
-  String get duration => 'Duration';
+  String get duration => 'Dauer';
 
   @override
-  String get totalVolume => 'Total Volume';
+  String get totalVolume => 'Gesamtvolumen';
 
   @override
-  String get totalSets => 'Total Sets';
+  String get totalSets => 'Gesamtsätze';
 
   @override
-  String get exerciseCount => 'Exercises';
+  String get exerciseCount => 'Übungen';
 
   @override
-  String get newPRs => 'New PRs';
+  String get newPRs => 'Neue PRs';
 
   @override
-  String get rateWorkout => 'Rate Your Workout';
+  String get rateWorkout => 'Training bewerten';
 
   @override
-  String get workoutNotes => 'Workout Notes';
+  String get workoutNotes => 'Trainingsnotizen';
 
   @override
-  String get shareWorkout => 'Share Workout';
+  String get shareWorkout => 'Training teilen';
 
   @override
-  String get storyFormat => 'Story Format';
+  String get storyFormat => 'Story-Format';
 
   @override
-  String get compactCard => 'Compact Card';
+  String get compactCard => 'Kompakte Karte';
 
   @override
-  String get exportJSON => 'Export JSON';
+  String get exportJSON => 'JSON exportieren';
 
   @override
-  String get trackedWithVitalSync => 'Tracked with VitalSync';
+  String get trackedWithVitalSync => 'Verfolgt mit VitalSync';
 
   @override
-  String get exerciseLibrary => 'Exercise Library';
+  String get exerciseLibrary => 'Übungsbibliothek';
 
   @override
-  String get searchExercises => 'Search exercises...';
+  String get searchExercises => 'Übungen suchen...';
 
   @override
-  String get allCategories => 'All';
+  String get allCategories => 'Alle';
 
   @override
-  String get chest => 'Chest';
+  String get chest => 'Brust';
 
   @override
-  String get back => 'Back';
+  String get back => 'Rücken';
 
   @override
-  String get shoulders => 'Shoulders';
+  String get shoulders => 'Schultern';
 
   @override
-  String get arms => 'Arms';
+  String get arms => 'Arme';
 
   @override
-  String get legs => 'Legs';
+  String get legs => 'Beine';
 
   @override
   String get core => 'Core';
 
   @override
-  String get cardio => 'Cardio';
+  String get cardio => 'Kardio';
 
   @override
-  String get exerciseDetails => 'Exercise Details';
+  String get exerciseDetails => 'Übungsdetails';
 
   @override
-  String get instructions => 'Instructions';
+  String get instructions => 'Anweisungen';
 
   @override
-  String get exerciseHistory => 'History';
+  String get exerciseHistory => 'Verlauf';
 
   @override
-  String get personalRecord => 'Personal Record';
+  String get personalRecord => 'Persönlicher Rekord';
 
   @override
-  String get weightProgression => 'Weight Progression';
+  String get weightProgression => 'Gewichtsprogression';
 
   @override
-  String get createCustomExercise => 'Create Custom Exercise';
+  String get createCustomExercise => 'Benutzerdefinierte Übung erstellen';
 
   @override
-  String get progress => 'Progress';
+  String get progress => 'Fortschritt';
 
   @override
   String get oneWeek => '1W';
@@ -512,52 +515,52 @@ class AppLocalizationsDe extends AppLocalizations {
   String get sixMonths => '6M';
 
   @override
-  String get oneYear => '1Y';
+  String get oneYear => '1J';
 
   @override
-  String get volumeProgression => 'Volume Progression';
+  String get volumeProgression => 'Volumenprogression';
 
   @override
-  String get workoutFrequency => 'Workout Frequency';
+  String get workoutFrequency => 'Trainingshäufigkeit';
 
   @override
-  String get personalRecords => 'Personal Records';
+  String get personalRecords => 'Persönliche Rekorde';
 
   @override
   String get oneRepMax => '1RM';
 
   @override
-  String get selectExercise => 'Select Exercise';
+  String get selectExercise => 'Übung auswählen';
 
   @override
-  String get calendar => 'Calendar';
+  String get calendar => 'Kalender';
 
   @override
-  String get monthlyStats => 'Monthly Stats';
+  String get monthlyStats => 'Monatsstatistik';
 
   @override
-  String get totalWorkouts => 'Total Workouts';
+  String get totalWorkouts => 'Gesamttrainings';
 
   @override
-  String get streak => 'Streak';
+  String get streak => 'Serie';
 
   @override
-  String get vsPreviousMonth => 'vs previous month';
+  String get vsPreviousMonth => 'vs. vorheriger Monat';
 
   @override
-  String get workoutDetails => 'Workout Details';
+  String get workoutDetails => 'Trainingsdetails';
 
   @override
-  String get achievements => 'Achievements';
+  String get achievements => 'Erfolge';
 
   @override
-  String get unlocked => 'Unlocked';
+  String get unlocked => 'Freigeschaltet';
 
   @override
-  String get locked => 'Locked';
+  String get locked => 'Gesperrt';
 
   @override
-  String get nearCompletion => 'Almost there!';
+  String get nearCompletion => 'Fast geschafft!';
 
   @override
   String achievementProgress(int current, int total) {
@@ -568,81 +571,83 @@ class AppLocalizationsDe extends AppLocalizations {
   String get fitnessCategory => 'Fitness';
 
   @override
-  String get healthCategory => 'Health';
+  String get healthCategory => 'Gesundheit';
 
   @override
-  String get crossModuleCategory => 'Cross-Module';
+  String get crossModuleCategory => 'Modulübergreifend';
 
   @override
-  String get templateName => 'Template Name';
+  String get templateName => 'Vorlagenname';
 
   @override
-  String get estimatedDuration => 'Estimated Duration';
+  String get estimatedDuration => 'Geschätzte Dauer';
 
   @override
-  String get exercises => 'Exercises';
+  String get exercises => 'Übungen';
 
   @override
-  String get editTemplate => 'Edit Template';
+  String get editTemplate => 'Vorlage bearbeiten';
 
   @override
-  String get deleteTemplate => 'Delete Template';
+  String get deleteTemplate => 'Vorlage löschen';
 
   @override
   String get deleteTemplateConfirmation =>
-      'Are you sure you want to delete this template?';
+      'Bist du sicher, dass du diese Vorlage löschen möchtest?';
 
   @override
-  String get sets => 'Sets';
+  String get sets => 'Sätze';
 
   @override
-  String get restTime => 'Rest Time';
+  String get restTime => 'Pausenzeit';
 
   @override
-  String get addExerciseToTemplate => 'Add Exercise';
+  String get addExerciseToTemplate => 'Übung hinzufügen';
 
   @override
-  String get noWorkoutsYet => 'No workouts yet';
+  String get noWorkoutsYet => 'Noch keine Trainings';
 
   @override
   String get startYourFirstWorkout =>
-      'Start your first workout to begin tracking your progress';
+      'Starte dein erstes Training, um deinen Fortschritt zu verfolgen';
 
   @override
-  String get noTemplatesYet => 'No templates yet';
+  String get noTemplatesYet => 'Noch keine Vorlagen';
 
   @override
   String get createYourFirstTemplate =>
-      'Create a template to quickly start workouts';
+      'Erstelle eine Vorlage, um schnell Trainings zu starten';
 
   @override
-  String get noExercisesFound => 'No exercises found';
+  String get noExercisesFound => 'Keine Übungen gefunden';
 
   @override
-  String get noAchievementsYet => 'No achievements yet';
+  String get noAchievementsYet => 'Noch keine Erfolge';
 
   @override
-  String get keepWorkingToUnlock => 'Keep working out to unlock achievements';
+  String get keepWorkingToUnlock =>
+      'Trainiere weiter, um Erfolge freizuschalten';
 
   @override
-  String get firstWorkoutComplete => 'First workout complete! 🔥';
+  String get firstWorkoutComplete => 'Erstes Training abgeschlossen! 🔥';
 
   @override
-  String get consistencyIsKey => 'Consistency is key! Keep your streak going';
+  String get consistencyIsKey =>
+      'Beständigkeit ist der Schlüssel! Halte deine Serie aufrecht';
 
   @override
-  String get newPRCelebration => 'New Personal Record! 🏆';
+  String get newPRCelebration => 'Neuer persönlicher Rekord! 🏆';
 
   @override
-  String get shareYourPR => 'Share your achievement';
+  String get shareYourPR => 'Teile deine Leistung';
 
   @override
   String streakMilestone(int days) {
-    return '$days Day Streak! 🔥';
+    return '$days Tage Serie! 🔥';
   }
 
   @override
-  String get shareYourStreak => 'Share your streak?';
+  String get shareYourStreak => 'Deine Serie teilen?';
 
   @override
   String get kg => 'kg';
@@ -652,4 +657,16 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get min => 'min';
+
+  @override
+  String get noExercises => 'No exercises in this workout';
+
+  @override
+  String get muscleGroup => 'Muskelgruppe';
+
+  @override
+  String get equipment => 'Ausrüstung';
+
+  @override
+  String get exerciseAdded => 'Übung erfolgreich hinzugefügt';
 }

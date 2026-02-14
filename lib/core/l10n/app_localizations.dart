@@ -532,6 +532,12 @@ abstract class AppLocalizations {
   /// **'Edit Medication'**
   String get editMedication;
 
+  /// Exercise name label
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise Name'**
+  String get exerciseName;
+
   /// Medication name label
   ///
   /// In en, this message translates to:
@@ -1335,6 +1341,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'min'**
   String get min;
+
+  /// No exercises found in workout session
+  ///
+  /// In en, this message translates to:
+  /// **'No exercises in this workout'**
+  String get noExercises;
+
+  /// Muscle group label
+  ///
+  /// In en, this message translates to:
+  /// **'Muscle Group'**
+  String get muscleGroup;
+
+  /// Equipment label
+  ///
+  /// In en, this message translates to:
+  /// **'Equipment'**
+  String get equipment;
+
+  /// Exercise added success message
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise added successfully'**
+  String get exerciseAdded;
 }
 
 class _AppLocalizationsDelegate

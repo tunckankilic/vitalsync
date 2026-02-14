@@ -180,6 +180,8 @@
   "@noMedicationsFound": { "description": "No medications found message" },
   "editMedication": "Edit Medication",
   "@editMedication": { "description": "Edit medication title" },
+  "exerciseName": "Exercise Name",
+  "@exerciseName": { "description": "Exercise name label" },
   "medicationName": "Medication Name",
   "@medicationName": { "description": "Medication name label" },
   "dosage": "Dosage",
@@ -482,5 +484,13 @@
   "lbs": "lbs",
   "@lbs": { "description": "Pounds unit" },
   "min": "min",
-  "@min": { "description": "Minutes abbreviation" }
+  "@min": { "description": "Minutes abbreviation" },
+  "noExercises": "No exercises in this workout",
+  "@noExercises": { "description": "No exercises found in workout session" },
+  "muscleGroup": "Muscle Group",
+  "@muscleGroup": { "description": "Muscle group label" },
+  "equipment": "Equipment",
+  "@equipment": { "description": "Equipment label" },
+  "exerciseAdded": "Exercise added successfully",
+  "@exerciseAdded": { "description": "Exercise added success message" }
 }

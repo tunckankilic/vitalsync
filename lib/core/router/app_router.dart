@@ -12,6 +12,7 @@ library;
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../features/fitness/presentation/screens/exercise_library_screen.dart';
 import '../../features/health/presentation/screens/add_edit_medication_screen.dart';
 import '../../features/health/presentation/screens/add_symptom_screen.dart';
 import '../../features/health/presentation/screens/health_timeline_screen.dart';
@@ -199,8 +200,21 @@ final GoRouter appRouter = GoRouter(
             state,
             const Placeholder(), // TODO: Create FitnessPage
           ),
-          routes: const [
-            // Fitness nested routes will be added
+          routes: [
+            GoRoute(
+              path: 'exercises',
+              name: 'exercise_library',
+              parentNavigatorKey: _rootNavigatorKey,
+              pageBuilder: (context, state) {
+                final isSelectionMode =
+                    state.uri.queryParameters['selection'] == 'true';
+                return _buildPageWithSlideTransition(
+                  context,
+                  state,
+                  ExerciseLibraryScreen(isSelectionMode: isSelectionMode),
+                );
+              },
+            ),
           ],
         ),
       ],
@@ -223,7 +237,7 @@ final GoRouter appRouter = GoRouter(
           _buildPageWithSlideTransition(context, state, const SettingsScreen()),
     ),
   ],
-  // TODO: Add redirect logic for auth 
+  // TODO: Add redirect logic for auth
   // redirect: (context, state) { ... }
 );
 

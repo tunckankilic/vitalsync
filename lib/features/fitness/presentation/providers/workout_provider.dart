@@ -5,14 +5,17 @@
 library;
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+
 import '../../../../core/analytics/analytics_service.dart';
 import '../../../../core/di/injection_container.dart';
 import '../../../../core/enums/workout_rating.dart';
+import '../../../../domain/entities/fitness/exercise.dart';
 import '../../../../domain/entities/fitness/workout_session.dart';
 import '../../../../domain/entities/fitness/workout_set.dart';
 import '../../../../domain/entities/fitness/workout_template.dart';
 import '../../../../domain/repositories/fitness/workout_session_repository.dart';
 import '../../../../domain/repositories/fitness/workout_template_repository.dart';
+import '../providers/exercise_provider.dart';
 
 part 'workout_provider.g.dart';
 
@@ -59,6 +62,64 @@ Future<List<WorkoutSession>> recentWorkouts(Ref ref) async {
     ..sort((a, b) => b.startTime.compareTo(a.startTime));
 
   return sorted.take(5).toList();
+}
+
+/// Stream provider for sets of the active session
+@riverpod
+Stream<List<WorkoutSet>> activeSessionSets(Ref ref) {
+  final activeSessionAsync = ref.watch(activeSessionProvider);
+
+  return activeSessionAsync.when(
+    data: (session) {
+      if (session == null) return Stream.value([]);
+      final repository = ref.watch(workoutSessionRepositoryProvider);
+      return repository.watchSessionSets(session.id);
+    },
+    loading: () => Stream.value([]),
+    error: (_, _) => Stream.value([]),
+  );
+}
+
+/// Stream provider for exercises in the active session
+/// Combines exercises from the template (if any) and exercises from logged sets
+@riverpod
+Future<List<Exercise>> activeSessionExercises(Ref ref) async {
+  final activeSession = await ref.watch(activeSessionProvider.future);
+  if (activeSession == null) return [];
+
+  final repository = ref.watch(exerciseRepositoryProvider);
+  final exerciseIds = <int>{};
+
+  // 1. Get exercises from template
+  if (activeSession.templateId != null) {
+    final templateRepo = ref.watch(workoutTemplateRepositoryProvider);
+    final templateExercises = await templateRepo.getTemplateExercises(
+      activeSession.templateId!,
+    );
+    exerciseIds.addAll(templateExercises.map((e) => e.exerciseId));
+  }
+
+  // 2. Get exercises from logged sets
+  final sets = await ref.watch(activeSessionSetsProvider.future);
+  exerciseIds.addAll(sets.map((s) => s.exerciseId));
+
+  if (exerciseIds.isEmpty) return [];
+
+  // 3. Fetch exercise details
+  // Ideally repository should have getByIds, but we'll loop for now or use getAll if feasible
+  // For better performance, we should add getByIds to repo, but let's stick to existing methods.
+  // efficient way: fetch all and filter? Or fetch one by one?
+  // If list is small (it is for a workout), one by one is fine.
+
+  final exercises = <Exercise>[];
+  for (final id in exerciseIds) {
+    final exercise = await repository.getById(id);
+    if (exercise != null) {
+      exercises.add(exercise);
+    }
+  }
+
+  return exercises;
 }
 
 /// Notifier for workout session lifecycle management

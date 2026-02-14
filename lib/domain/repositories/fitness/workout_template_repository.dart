@@ -12,4 +12,5 @@ abstract class WorkoutTemplateRepository {
   Future<void> removeExerciseFromTemplate(int templateId, int exerciseId);
   Future<void> reorderExercises(int templateId, List<int> exerciseIds);
   Stream<List<WorkoutTemplate>> watchAll();
+  Future<List<TemplateExercise>> getTemplateExercises(int templateId);
 }

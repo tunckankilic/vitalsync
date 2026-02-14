@@ -157,4 +157,11 @@ class WorkoutSessionRepositoryImpl implements WorkoutSessionRepository {
       (data) => data != null ? WorkoutSessionModel.fromDrift(data) : null,
     );
   }
+
+  @override
+  Stream<List<WorkoutSet>> watchSessionSets(int sessionId) {
+    return _dao
+        .watchSessionSets(sessionId)
+        .map((rows) => rows.map(WorkoutSetModel.fromDrift).toList());
+  }
 }

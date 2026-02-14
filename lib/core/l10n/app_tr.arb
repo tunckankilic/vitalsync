@@ -1,14 +1,11 @@
 {
   "@@locale": "tr",
   "appTitle": "VitalSync",
-  
   "dashboard": "Gösterge Paneli",
   "health": "Sağlık",
   "fitness": "Fitness",
-  
   "settings": "Ayarlar",
   "profile": "Profil",
-  
   "syncOnline": "Çevrimiçi",
   "syncOffline": "Çevrimdışı",
   "syncing": "Senkronize Ediliyor",
@@ -18,82 +15,64 @@
   "syncSemanticsOnline": "Çevrimiçi",
   "syncSemanticsOffline": "Çevrimdışı",
   "syncSemanticsSyncing": "Veriler senkronize ediliyor",
-  
   "insights": "İçgörüler",
   "insightsCountSemantics": "İçgörüler, {count} okunmamış",
   "insightsCountTooltip": "{count} yeni {count, plural, =1{içgörü} other{içgörü}}",
-  
   "addMedication": "İlaç Ekle",
   "logSymptom": "Semptom Kaydet",
   "startWorkout": "Antrenman Başlat",
-  
   "quickAddMenuOpen": "Hızlı ekleme menüsünü aç",
   "quickAddMenuClose": "Hızlı ekleme menüsünü kapat",
-  
   "dashboardTabSemantics": "Gösterge paneli sekmesi",
   "dashboardTabSelectedSemantics": "Gösterge paneli sekmesi, seçili",
   "dashboardTabTooltip": "Birleşik sağlık ve fitness gösterge panelinizi görüntüleyin",
-  
   "healthTabSemantics": "Sağlık sekmesi",
   "healthTabSelectedSemantics": "Sağlık sekmesi, seçili",
   "healthTabTooltip": "İlaçları ve semptomları yönetin",
-  
   "fitnessTabSemantics": "Fitness sekmesi",
   "fitnessTabSelectedSemantics": "Fitness sekmesi, seçili",
   "fitnessTabTooltip": "Antrenmanları ve ilerlemeyi takip edin",
-  
   "settingsSemantics": "Ayarlar",
   "settingsTooltip": "Ayarları aç",
-  
   "profileSemantics": "Profil",
-  
   "returnToWorkout": "Antrenman'a Dön",
   "timeElapsed": "Geçen süre",
-  
   "goodMorning": "Günaydın",
   "goodAfternoon": "İyi günler",
   "goodEvening": "İyi akşamlar",
   "goodNight": "İyi geceler",
-  
   "todaysMedications": "Bugünün İlaçları",
   "nextMedicationIn": "Sonraki: {time}",
   "noUpcomingMedications": "Yaklaşan ilaç yok",
   "hoursShort": "s",
   "minutesShort": "dk",
-  
   "currentStreak": "gün serisi",
   "inProgress": "Devam ediyor",
-  
   "weeklyOverview": "Haftalık Genel Bakış",
   "thisWeek": "Bu Hafta",
   "last30Days": "Son 30 Gün",
   "medicationCompliance": "İlaç",
   "workoutVolume": "Antrenman",
-  
   "viewReport": "Rapor Görüntüle",
-  
   "recentActivity": "Son Aktiviteler",
   "viewAll": "Tümünü Gör",
   "noRecentActivity": "Son aktivite yok",
-  
   "dataCollecting": "Veri toplandıkça öneriler burada görünecek",
   "startFirstWorkout": "İlk antrenmanını yap",
   "addFirstMedication": "İlk ilacını ekle",
-  
   "dismissInsightTitle": "Önerimi Kapat",
   "dismissInsightMessage": "Bu öneriyi kapatmak istediğinizden emin misiniz?",
   "cancel": "İptal",
   "dismiss": "Kapat",
-  
   "errorLoadingDashboard": "Gösterge paneli yüklenirken hata",
   "retry": "Tekrar Dene",
-
   "active": "Aktif",
   "all": "Tümü",
   "completed": "Tamamlanan",
   "searchMedication": "İlaç ara...",
   "noMedicationsFound": "İlaç bulunamadı",
   "editMedication": "İlacı Düzenle",
+  "exerciseName": "Egzersiz Adı",
   "medicationName": "İlaç Adı",
   "dosage": "Dozaj",
   "requiredField": "Bu alan zorunludur",
@@ -125,5 +104,443 @@
   "medications": "İlaçlar",
   "complianceTrend": "Uyum Eğilimi",
   "skip": "Atla",
-  "take": "Al"
+  "take": "Al",
+  "achievementProgress": "{current} / {total}",
+  "@achievementProgress": {
+    "description": "Achievement progress format",
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "achievements": "Başarılar",
+  "@achievements": {
+    "description": "Achievements screen title"
+  },
+  "activeWorkout": "Aktif Antrenman",
+  "@activeWorkout": {
+    "description": "Active workout screen title"
+  },
+  "addExercise": "Egzersiz Ekle",
+  "@addExercise": {
+    "description": "Add exercise button"
+  },
+  "addExerciseToTemplate": "Egzersiz Ekle",
+  "@addExerciseToTemplate": {
+    "description": "Add exercise to template button"
+  },
+  "allCategories": "Tümü",
+  "@allCategories": {
+    "description": "All categories filter"
+  },
+  "arms": "Kollar",
+  "@arms": {
+    "description": "Arms muscle group"
+  },
+  "back": "Sırt",
+  "@back": {
+    "description": "Back muscle group"
+  },
+  "calendar": "Takvim",
+  "@calendar": {
+    "description": "Calendar screen title"
+  },
+  "cardio": "Kardio",
+  "@cardio": {
+    "description": "Cardio category"
+  },
+  "chest": "Göğüs",
+  "@chest": {
+    "description": "Chest muscle group"
+  },
+  "compactCard": "Kompakt Kart",
+  "@compactCard": {
+    "description": "Compact card share option"
+  },
+  "completeSet": "Tamamla",
+  "@completeSet": {
+    "description": "Complete set button"
+  },
+  "consistencyIsKey": "Tutarlılık anahtardır! Serini sürdür",
+  "@consistencyIsKey": {
+    "description": "Consistency motivation message"
+  },
+  "core": "Karın",
+  "@core": {
+    "description": "Core muscle group"
+  },
+  "createCustomExercise": "Özel Egzersiz Oluştur",
+  "@createCustomExercise": {
+    "description": "Create custom exercise button"
+  },
+  "createNewTemplate": "Yeni Şablon Oluştur",
+  "@createNewTemplate": {
+    "description": "Create new template button"
+  },
+  "createYourFirstTemplate": "Hızlıca antrenman başlatmak için bir şablon oluşturun",
+  "@createYourFirstTemplate": {
+    "description": "Create first template message"
+  },
+  "crossModuleCategory": "Çapraz Modül",
+  "@crossModuleCategory": {
+    "description": "Cross-module category"
+  },
+  "deleteTemplate": "Şablonu Sil",
+  "@deleteTemplate": {
+    "description": "Delete template button"
+  },
+  "deleteTemplateConfirmation": "Bu şablonu silmek istediğinden emin misin?",
+  "@deleteTemplateConfirmation": {
+    "description": "Delete template confirmation message"
+  },
+  "discardWorkout": "Antrenmanı İptal Et",
+  "@discardWorkout": {
+    "description": "Discard workout dialog title"
+  },
+  "discardWorkoutMessage": "Emin misin? Antrenmanın kaydedilmeyecek.",
+  "@discardWorkoutMessage": {
+    "description": "Discard workout confirmation message"
+  },
+  "duration": "Süre",
+  "@duration": {
+    "description": "Duration label"
+  },
+  "editTemplate": "Şablonu Düzenle",
+  "@editTemplate": {
+    "description": "Edit template button"
+  },
+  "estimatedDuration": "Tahmini Süre",
+  "@estimatedDuration": {
+    "description": "Estimated duration label"
+  },
+  "exerciseCount": "Egzersizler",
+  "@exerciseCount": {
+    "description": "Exercise count label"
+  },
+  "exerciseDetails": "Egzersiz Detayları",
+  "@exerciseDetails": {
+    "description": "Exercise details title"
+  },
+  "exerciseHistory": "Geçmiş",
+  "@exerciseHistory": {
+    "description": "Exercise history label"
+  },
+  "exerciseLibrary": "Egzersiz Kütüphanesi",
+  "@exerciseLibrary": {
+    "description": "Exercise library screen title"
+  },
+  "exercises": "Egzersizler",
+  "@exercises": {
+    "description": "Exercises label"
+  },
+  "exportJSON": "JSON Dışa Aktar",
+  "@exportJSON": {
+    "description": "Export JSON option"
+  },
+  "finishWorkout": "Bitir",
+  "@finishWorkout": {
+    "description": "Finish workout button"
+  },
+  "firstWorkoutComplete": "İlk antrenman tamamlandı! 🔥",
+  "@firstWorkoutComplete": {
+    "description": "First workout completion message"
+  },
+  "fitnessCategory": "Fitness",
+  "@fitnessCategory": {
+    "description": "Fitness category"
+  },
+  "healthCategory": "Sağlık",
+  "@healthCategory": {
+    "description": "Health category"
+  },
+  "instructions": "Talimatlar",
+  "@instructions": {
+    "description": "Instructions label"
+  },
+  "keepWorkingToUnlock": "Başarıları açmak için antrenman yapmaya devam edin",
+  "@keepWorkingToUnlock": {
+    "description": "Keep working message"
+  },
+  "kg": "kg",
+  "@kg": {
+    "description": "Kilograms unit"
+  },
+  "lbs": "lbs",
+  "@lbs": {
+    "description": "Pounds unit"
+  },
+  "legs": "Bacaklar",
+  "@legs": {
+    "description": "Legs muscle group"
+  },
+  "locked": "Kilitli",
+  "@locked": {
+    "description": "Locked achievement status"
+  },
+  "min": "dk",
+  "@min": {
+    "description": "Minutes abbreviation"
+  },
+  "monthlyStats": "Aylık İstatistikler",
+  "@monthlyStats": {
+    "description": "Monthly stats section title"
+  },
+  "nearCompletion": "Neredeyse tamam!",
+  "@nearCompletion": {
+    "description": "Near completion message"
+  },
+  "newPRCelebration": "Yeni Kişisel Rekor! 🏆",
+  "@newPRCelebration": {
+    "description": "New PR celebration message"
+  },
+  "newPRs": "Yeni Rekorlar",
+  "@newPRs": {
+    "description": "New personal records section title"
+  },
+  "noAchievementsYet": "Henüz başarı yok",
+  "@noAchievementsYet": {
+    "description": "No achievements empty state"
+  },
+  "noExercisesFound": "Egzersiz bulunamadı",
+  "@noExercisesFound": {
+    "description": "No exercises found message"
+  },
+  "noTemplatesYet": "Henüz şablon yok",
+  "@noTemplatesYet": {
+    "description": "No templates empty state"
+  },
+  "noWorkoutsYet": "Henüz antrenman yok",
+  "@noWorkoutsYet": {
+    "description": "No workouts empty state"
+  },
+  "oneMonth": "1A",
+  "@oneMonth": {
+    "description": "One month time range"
+  },
+  "oneRepMax": "1TM",
+  "@oneRepMax": {
+    "description": "One rep max abbreviation"
+  },
+  "oneWeek": "1H",
+  "@oneWeek": {
+    "description": "One week time range"
+  },
+  "oneYear": "1Y",
+  "@oneYear": {
+    "description": "One year time range"
+  },
+  "personalRecord": "Kişisel Rekor",
+  "@personalRecord": {
+    "description": "Personal record label"
+  },
+  "personalRecords": "Kişisel Rekorlar",
+  "@personalRecords": {
+    "description": "Personal records section title"
+  },
+  "previousSession": "Önceki",
+  "@previousSession": {
+    "description": "Previous session label"
+  },
+  "progress": "İlerleme",
+  "@progress": {
+    "description": "Progress screen title"
+  },
+  "quickStats": "Hızlı İstatistikler",
+  "@quickStats": {
+    "description": "Quick stats section title"
+  },
+  "rateWorkout": "Antrenmanı Değerlendir",
+  "@rateWorkout": {
+    "description": "Rate workout label"
+  },
+  "readyForNextSet": "Sonraki set için hazır mısın?",
+  "@readyForNextSet": {
+    "description": "Ready for next set prompt"
+  },
+  "recentWorkouts": "Son Antrenmanlar",
+  "@recentWorkouts": {
+    "description": "Recent workouts section title"
+  },
+  "reps": "Tekrar",
+  "@reps": {
+    "description": "Reps label"
+  },
+  "restTime": "Dinlenme Süresi",
+  "@restTime": {
+    "description": "Rest time label"
+  },
+  "restTimer": "Dinlenme Sayacı",
+  "@restTimer": {
+    "description": "Rest timer label"
+  },
+  "searchExercises": "Egzersiz ara...",
+  "@searchExercises": {
+    "description": "Search exercises hint"
+  },
+  "seconds": "saniye",
+  "@seconds": {
+    "description": "Seconds unit"
+  },
+  "selectExercise": "Egzersiz Seç",
+  "@selectExercise": {
+    "description": "Select exercise dropdown hint"
+  },
+  "setNumber": "Set {number}",
+  "@setNumber": {
+    "description": "Set number label",
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "sets": "Setler",
+  "@sets": {
+    "description": "Sets label"
+  },
+  "shareWorkout": "Antrenmanı Paylaş",
+  "@shareWorkout": {
+    "description": "Share workout button"
+  },
+  "shareYourPR": "Başarını paylaş",
+  "@shareYourPR": {
+    "description": "Share PR call to action"
+  },
+  "shareYourStreak": "Serini paylaş?",
+  "@shareYourStreak": {
+    "description": "Share streak prompt"
+  },
+  "shoulders": "Omuzlar",
+  "@shoulders": {
+    "description": "Shoulders muscle group"
+  },
+  "sixMonths": "6A",
+  "@sixMonths": {
+    "description": "Six months time range"
+  },
+  "skipRest": "Dinlenmeyi Atla",
+  "@skipRest": {
+    "description": "Skip rest button"
+  },
+  "startYourFirstWorkout": "İlerlemenizi takip etmek için ilk antrenmanınızı başlatın",
+  "@startYourFirstWorkout": {
+    "description": "Start first workout message"
+  },
+  "storyFormat": "Hikaye Formatı",
+  "@storyFormat": {
+    "description": "Story format share option"
+  },
+  "streak": "Seri",
+  "@streak": {
+    "description": "Streak label"
+  },
+  "streakMilestone": "{days} Gün Seri! 🔥",
+  "@streakMilestone": {
+    "description": "Streak milestone message",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "templateName": "Şablon Adı",
+  "@templateName": {
+    "description": "Template name label"
+  },
+  "thisWeeksVolume": "Bu Haftanın Hacmi",
+  "@thisWeeksVolume": {
+    "description": "This week's volume label"
+  },
+  "thisWeeksWorkouts": "Bu Haftanın Antrenmanları",
+  "@thisWeeksWorkouts": {
+    "description": "This week's workouts count label"
+  },
+  "threeMonths": "3A",
+  "@threeMonths": {
+    "description": "Three months time range"
+  },
+  "totalSets": "Toplam Set",
+  "@totalSets": {
+    "description": "Total sets label"
+  },
+  "totalVolume": "Toplam Hacim",
+  "@totalVolume": {
+    "description": "Total volume label"
+  },
+  "totalWorkouts": "Toplam Antrenman",
+  "@totalWorkouts": {
+    "description": "Total workouts label"
+  },
+  "trackedWithVitalSync": "VitalSync ile takip edildi",
+  "@trackedWithVitalSync": {
+    "description": "Share template watermark"
+  },
+  "unlocked": "Açıldı",
+  "@unlocked": {
+    "description": "Unlocked achievement status"
+  },
+  "volumeProgression": "Hacim İlerlemesi",
+  "@volumeProgression": {
+    "description": "Volume progression chart title"
+  },
+  "vsLastWeek": "geçen haftaya göre",
+  "@vsLastWeek": {
+    "description": "Comparison to last week label"
+  },
+  "vsPreviousMonth": "önceki aya göre",
+  "@vsPreviousMonth": {
+    "description": "Comparison to previous month label"
+  },
+  "warmup": "Isınma",
+  "@warmup": {
+    "description": "Warmup toggle label"
+  },
+  "weight": "Ağırlık",
+  "@weight": {
+    "description": "Weight label"
+  },
+  "weightProgression": "Ağırlık İlerlemesi",
+  "@weightProgression": {
+    "description": "Weight progression chart title"
+  },
+  "workoutDetails": "Antrenman Detayları",
+  "@workoutDetails": {
+    "description": "Workout details title"
+  },
+  "workoutFrequency": "Antrenman Sıklığı",
+  "@workoutFrequency": {
+    "description": "Workout frequency section title"
+  },
+  "workoutHome": "Antrenmanlar",
+  "@workoutHome": {
+    "description": "Workout home screen title"
+  },
+  "workoutNotes": "Antrenman Notları",
+  "@workoutNotes": {
+    "description": "Workout notes label"
+  },
+  "workoutSummary": "Antrenman Özeti",
+  "@workoutSummary": {
+    "description": "Workout summary screen title"
+  },
+  "workoutTemplates": "Şablonlar",
+  "@workoutTemplates": {
+    "description": "Workout templates section title"
+  },
+  "muscleGroup": "Kas Grubu",
+  "@muscleGroup": {
+    "description": "Muscle group label"
+  },
+  "equipment": "Ekipman",
+  "@equipment": {
+    "description": "Equipment label"
+  },
+  "exerciseAdded": "Egzersiz başarıyla eklendi",
+  "@exerciseAdded": {
+    "description": "Exercise added success message"
+  }
 }

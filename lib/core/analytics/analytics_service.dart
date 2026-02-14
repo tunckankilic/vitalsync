@@ -236,6 +236,19 @@ class AnalyticsService {
     );
   }
 
+  /// Logs when user provides feedback on an insight.
+  /// [insightType] - Type of insight
+  /// [helpful] - Whether user found it helpful
+  Future<void> logInsightFeedback({
+    required String insightType,
+    required bool helpful,
+  }) async {
+    await _logEvent(
+      'insight_feedback',
+      parameters: {'insight_type': insightType, 'helpful': helpful},
+    );
+  }
+
   // ENGAGEMENT EVENTS
 
   /// Logs when app is opened.
