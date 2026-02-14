@@ -464,7 +464,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get chest => 'Brust';
 
   @override
-  String get back => 'Rücken';
+  String get back => 'Zurück';
 
   @override
   String get shoulders => 'Schultern';
@@ -733,16 +733,16 @@ class AppLocalizationsDe extends AppLocalizations {
   String get appearance => 'Appearance';
 
   @override
-  String get theme => 'Theme';
+  String get theme => 'Thema';
 
   @override
-  String get themeSystem => 'System Default';
+  String get themeSystem => 'System';
 
   @override
-  String get themeLight => 'Light Mode';
+  String get themeLight => 'Hell';
 
   @override
-  String get themeDark => 'Dark Mode';
+  String get themeDark => 'Dunkel';
 
   @override
   String get materialYou => 'Material You';
@@ -751,7 +751,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get materialYouSubtitle => 'Use dynamic colors from wallpaper';
 
   @override
-  String get language => 'Language';
+  String get language => 'Sprache';
 
   @override
   String get languageEn => 'English';
@@ -857,10 +857,10 @@ class AppLocalizationsDe extends AppLocalizations {
   String get workouts => 'Workouts';
 
   @override
-  String get getStarted => 'Get Started';
+  String get getStarted => 'Loslegen';
 
   @override
-  String get next => 'Next';
+  String get next => 'Weiter';
 
   @override
   String get welcomeTitle => 'Welcome to VitalSync';
@@ -1043,4 +1043,103 @@ class AppLocalizationsDe extends AppLocalizations {
   String resetPasswordError(Object error) {
     return 'Fehler: $error';
   }
+
+  @override
+  String get onboardingWelcomeTitle => 'Willkommen bei VitalSync';
+
+  @override
+  String get onboardingWelcomeSubtitle =>
+      'Ihr All-in-One-Begleiter für Gesundheit & Fitness';
+
+  @override
+  String get onboardingPrivacyNote =>
+      'Ihre Daten bleiben auf Ihrem Gerät. Wir respektieren Ihre Privatsphäre.';
+
+  @override
+  String get onboardingHealthTitle => 'Verfolgen Sie Ihre Gesundheit';
+
+  @override
+  String get onboardingHealthDescription =>
+      'Verwalten Sie Medikamente, Symptome und Gesundheitsverlauf';
+
+  @override
+  String get onboardingHealthFeature1 =>
+      'Verpassen Sie kein Medikament mit intelligenten Erinnerungen';
+
+  @override
+  String get onboardingHealthFeature2 =>
+      'Protokollieren Sie Symptome und verfolgen Sie Muster';
+
+  @override
+  String get onboardingHealthFeature3 =>
+      'Sehen Sie Ihren vollständigen Gesundheitsverlauf';
+
+  @override
+  String get onboardingFitnessTitle => 'Steigern Sie Ihre Fitness';
+
+  @override
+  String get onboardingFitnessDescription =>
+      'Protokollieren Sie Workouts, verfolgen Sie Fortschritte, erreichen Sie Ihre Ziele';
+
+  @override
+  String get onboardingFitnessFeature1 =>
+      'Verfolgen Sie Workouts mit detaillierter Übungsprotokollierung';
+
+  @override
+  String get onboardingFitnessFeature2 =>
+      'Überwachen Sie Ihren Fortschritt mit visuellen Diagrammen';
+
+  @override
+  String get onboardingFitnessFeature3 =>
+      'Schalten Sie Erfolge frei und bauen Sie Serien auf';
+
+  @override
+  String get onboardingPrivacyTitle => 'Ihre Privatsphäre, Ihre Kontrolle';
+
+  @override
+  String get onboardingPrivacyDescription =>
+      'Wählen Sie aus, welche Daten Sie teilen möchten';
+
+  @override
+  String get onboardingPreferencesTitle => 'Personalisieren Sie Ihre Erfahrung';
+
+  @override
+  String get onboardingPreferencesDescription =>
+      'Legen Sie Ihre Sprach- und Themenpräferenzen fest';
+
+  @override
+  String get onboardingPreferencesNote =>
+      'Sie können diese Einstellungen jederzeit ändern';
+
+  @override
+  String get gdprAnalyticsTitle => 'Analytik & Einblicke';
+
+  @override
+  String get gdprAnalyticsDescription =>
+      'Helfen Sie uns, die App mit anonymen Nutzungsdaten zu verbessern';
+
+  @override
+  String get gdprHealthDataTitle => 'Gesundheitsdatenspeicherung';
+
+  @override
+  String get gdprHealthDataDescription =>
+      'Speichern Sie Ihre Medikamenten- und Symptomdaten (erforderlich)';
+
+  @override
+  String get gdprFitnessDataTitle => 'Fitnessdatenspeicherung';
+
+  @override
+  String get gdprFitnessDataDescription =>
+      'Speichern Sie Ihre Workout- und Fortschrittsdaten (erforderlich)';
+
+  @override
+  String get gdprCloudBackupTitle => 'Cloud-Backup';
+
+  @override
+  String get gdprCloudBackupDescription =>
+      'Sichern Sie Ihre Daten in Firebase für die Synchronisierung zwischen Geräten';
+
+  @override
+  String get gdprNote =>
+      'Erforderliche Zustimmungen sind für die Kernfunktionalität der App notwendig. Sie können Zustimmungen jederzeit in den Einstellungen verwalten.';
 }

@@ -463,7 +463,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get chest => 'Göğüs';
 
   @override
-  String get back => 'Sırt';
+  String get back => 'Geri';
 
   @override
   String get shoulders => 'Omuzlar';
@@ -731,16 +731,16 @@ class AppLocalizationsTr extends AppLocalizations {
   String get appearance => 'Appearance';
 
   @override
-  String get theme => 'Theme';
+  String get theme => 'Tema';
 
   @override
-  String get themeSystem => 'System Default';
+  String get themeSystem => 'Sistem';
 
   @override
-  String get themeLight => 'Light Mode';
+  String get themeLight => 'Açık';
 
   @override
-  String get themeDark => 'Dark Mode';
+  String get themeDark => 'Koyu';
 
   @override
   String get materialYou => 'Material You';
@@ -749,7 +749,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get materialYouSubtitle => 'Use dynamic colors from wallpaper';
 
   @override
-  String get language => 'Language';
+  String get language => 'Dil';
 
   @override
   String get languageEn => 'English';
@@ -855,10 +855,10 @@ class AppLocalizationsTr extends AppLocalizations {
   String get workouts => 'Workouts';
 
   @override
-  String get getStarted => 'Get Started';
+  String get getStarted => 'Başla';
 
   @override
-  String get next => 'Next';
+  String get next => 'İleri';
 
   @override
   String get welcomeTitle => 'Welcome to VitalSync';
@@ -1040,4 +1040,103 @@ class AppLocalizationsTr extends AppLocalizations {
   String resetPasswordError(Object error) {
     return 'Hata: $error';
   }
+
+  @override
+  String get onboardingWelcomeTitle => 'VitalSync\'e Hoş Geldiniz';
+
+  @override
+  String get onboardingWelcomeSubtitle =>
+      'Hepsi bir arada sağlık ve fitness yardımcınız';
+
+  @override
+  String get onboardingPrivacyNote =>
+      'Verileriniz cihazınızda kalır. Gizliliğinize saygı duyuyoruz.';
+
+  @override
+  String get onboardingHealthTitle => 'Sağlığınızı Takip Edin';
+
+  @override
+  String get onboardingHealthDescription =>
+      'İlaçları, semptomları ve sağlık zaman çizelgesini yönetin';
+
+  @override
+  String get onboardingHealthFeature1 =>
+      'Akıllı hatırlatıcılarla hiçbir ilacı kaçırmayın';
+
+  @override
+  String get onboardingHealthFeature2 =>
+      'Semptomları kaydedin ve kalıpları takip edin';
+
+  @override
+  String get onboardingHealthFeature3 =>
+      'Eksiksiz sağlık zaman çizelgenizi görüntüleyin';
+
+  @override
+  String get onboardingFitnessTitle => 'Fitness Seviyenizi Yükseltin';
+
+  @override
+  String get onboardingFitnessDescription =>
+      'Antrenmanları kaydedin, ilerlemeyi takip edin, hedeflerinizi ezin';
+
+  @override
+  String get onboardingFitnessFeature1 =>
+      'Detaylı egzersiz kaydı ile antrenmanları takip edin';
+
+  @override
+  String get onboardingFitnessFeature2 =>
+      'Görsel grafiklerle ilerlemenizi izleyin';
+
+  @override
+  String get onboardingFitnessFeature3 =>
+      'Başarıların kilidini açın ve seriler oluşturun';
+
+  @override
+  String get onboardingPrivacyTitle => 'Gizliliğiniz, Kontrolünüz';
+
+  @override
+  String get onboardingPrivacyDescription =>
+      'Hangi verileri paylaşmak istediğinizi seçin';
+
+  @override
+  String get onboardingPreferencesTitle => 'Deneyiminizi Kişiselleştirin';
+
+  @override
+  String get onboardingPreferencesDescription =>
+      'Dil ve tema tercihlerinizi ayarlayın';
+
+  @override
+  String get onboardingPreferencesNote =>
+      'Bu ayarları istediğiniz zaman değiştirebilirsiniz';
+
+  @override
+  String get gdprAnalyticsTitle => 'Analitik ve İçgörüler';
+
+  @override
+  String get gdprAnalyticsDescription =>
+      'Anonim kullanım verileriyle uygulamayı geliştirmemize yardımcı olun';
+
+  @override
+  String get gdprHealthDataTitle => 'Sağlık Verisi Depolama';
+
+  @override
+  String get gdprHealthDataDescription =>
+      'İlaç ve semptom verilerinizi saklayın (gerekli)';
+
+  @override
+  String get gdprFitnessDataTitle => 'Fitness Verisi Depolama';
+
+  @override
+  String get gdprFitnessDataDescription =>
+      'Antrenman ve ilerleme verilerinizi saklayın (gerekli)';
+
+  @override
+  String get gdprCloudBackupTitle => 'Bulut Yedekleme';
+
+  @override
+  String get gdprCloudBackupDescription =>
+      'Cihazlar arasında senkronizasyon için verilerinizi Firebase\'e yedekleyin';
+
+  @override
+  String get gdprNote =>
+      'Gerekli onaylar, temel uygulama işlevselliği için gereklidir. Onayları istediğiniz zaman Ayarlar\'dan yönetebilirsiniz.';
 }
