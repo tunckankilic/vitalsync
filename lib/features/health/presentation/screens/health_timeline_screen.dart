@@ -333,10 +333,26 @@ class _DayDetailSheet extends ConsumerWidget {
               logsAsyncRange.when(
                 data: (logs) {
                   if (logs.isEmpty) return Text(l10n.noLogsYet);
-                  return Column(
-                    children: logs
-                        .map(
-                          (log) => ListTile(
+
+                  // Watch all medications to resolve names
+                  final medicationsAsync = ref.watch(medicationsProvider);
+
+                  return medicationsAsync.when(
+                    data: (medications) {
+                      final medicationMap = {
+                        for (final m in medications) m.id: m,
+                      };
+
+                      return Column(
+                        children: logs.map((log) {
+                          final medication = medicationMap[log.medicationId];
+                          final medicationName =
+                              medication?.name ?? 'Unknown Medication';
+                          final medicationColor = medication?.color != null
+                              ? Color(medication!.color)
+                              : theme.colorScheme.primary;
+
+                          return ListTile(
                             leading: Icon(
                               log.status == MedicationLogStatus.taken
                                   ? Icons.check_circle
@@ -345,21 +361,22 @@ class _DayDetailSheet extends ConsumerWidget {
                                   ? Colors.green
                                   : Colors.grey,
                             ),
-                            title: FutureBuilder<String>(
-                              // Fetch medication name by ID?
-                              // Ideally log contains name or we have map.
-                              // MedicationLog entity usually only has ID.
-                              // We need access to medications list to resolve name.
-                              future: Future.value(
-                                'Medication ${log.medicationId}',
-                              ), // Placeholder
-                              builder: (context, snapshot) =>
-                                  Text(snapshot.data ?? '...'),
-                            ),
+                            title: Text(medicationName),
                             subtitle: Text(log.scheduledTime.format('h:mm a')),
-                          ),
-                        )
-                        .toList(),
+                            trailing: Container(
+                              width: 12,
+                              height: 12,
+                              decoration: BoxDecoration(
+                                color: medicationColor,
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                      );
+                    },
+                    loading: () => const LinearProgressIndicator(),
+                    error: (_, _) => const SizedBox(),
                   );
                 },
                 loading: () => const LinearProgressIndicator(),

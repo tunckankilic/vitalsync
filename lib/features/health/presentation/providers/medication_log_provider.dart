@@ -4,7 +4,6 @@
 library;
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import '../../../../core/analytics/analytics_service.dart';
 import '../../../../core/di/injection_container.dart';
 import '../../../../core/enums/medication_log_status.dart';
 import '../../../../domain/entities/health/medication_log.dart';

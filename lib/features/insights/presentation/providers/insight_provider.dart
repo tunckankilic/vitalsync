@@ -31,6 +31,13 @@ Stream<List<Insight>> activeInsights(Ref ref) {
   return repository.watchActive();
 }
 
+/// Stream provider for dismissed insights
+@riverpod
+Stream<List<Insight>> dismissedInsights(Ref ref) {
+  final repository = ref.watch(insightRepositoryProvider);
+  return repository.watchDismissed();
+}
+
 /// Family provider for insights filtered by category
 @riverpod
 Future<List<Insight>> insightsByCategory(

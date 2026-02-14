@@ -240,6 +240,9 @@ class AppLocalizationsTr extends AppLocalizations {
   String get editMedication => 'İlacı Düzenle';
 
   @override
+  String get exerciseName => 'Egzersiz Adı';
+
+  @override
   String get medicationName => 'İlaç Adı';
 
   @override
@@ -337,44 +340,44 @@ class AppLocalizationsTr extends AppLocalizations {
   String get take => 'Al';
 
   @override
-  String get workoutHome => 'Workouts';
+  String get workoutHome => 'Antrenmanlar';
 
   @override
-  String get recentWorkouts => 'Recent Workouts';
+  String get recentWorkouts => 'Son Antrenmanlar';
 
   @override
-  String get workoutTemplates => 'Templates';
+  String get workoutTemplates => 'Şablonlar';
 
   @override
-  String get createNewTemplate => 'Create New Template';
+  String get createNewTemplate => 'Yeni Şablon Oluştur';
 
   @override
-  String get quickStats => 'Quick Stats';
+  String get quickStats => 'Hızlı İstatistikler';
 
   @override
-  String get thisWeeksVolume => 'This Week\'s Volume';
+  String get thisWeeksVolume => 'Bu Haftanın Hacmi';
 
   @override
-  String get thisWeeksWorkouts => 'This Week\'s Workouts';
+  String get thisWeeksWorkouts => 'Bu Haftanın Antrenmanları';
 
   @override
-  String get vsLastWeek => 'vs last week';
+  String get vsLastWeek => 'geçen haftaya göre';
 
   @override
-  String get activeWorkout => 'Active Workout';
+  String get activeWorkout => 'Aktif Antrenman';
 
   @override
-  String get finishWorkout => 'Finish';
+  String get finishWorkout => 'Bitir';
 
   @override
-  String get discardWorkout => 'Discard Workout';
+  String get discardWorkout => 'Antrenmanı İptal Et';
 
   @override
   String get discardWorkoutMessage =>
-      'Are you sure? Your workout won\'t be saved.';
+      'Emin misin? Antrenmanın kaydedilmeyecek.';
 
   @override
-  String get previousSession => 'Previous';
+  String get previousSession => 'Önceki';
 
   @override
   String setNumber(int number) {
@@ -382,181 +385,181 @@ class AppLocalizationsTr extends AppLocalizations {
   }
 
   @override
-  String get weight => 'Weight';
+  String get weight => 'Ağırlık';
 
   @override
-  String get reps => 'Reps';
+  String get reps => 'Tekrar';
 
   @override
-  String get warmup => 'Warmup';
+  String get warmup => 'Isınma';
 
   @override
-  String get completeSet => 'Complete';
+  String get completeSet => 'Tamamla';
 
   @override
-  String get restTimer => 'Rest Timer';
+  String get restTimer => 'Dinlenme Sayacı';
 
   @override
-  String get skipRest => 'Skip Rest';
+  String get skipRest => 'Dinlenmeyi Atla';
 
   @override
-  String get readyForNextSet => 'Ready for next set?';
+  String get readyForNextSet => 'Sonraki set için hazır mısın?';
 
   @override
-  String get addExercise => 'Add Exercise';
+  String get addExercise => 'Egzersiz Ekle';
 
   @override
-  String get seconds => 'seconds';
+  String get seconds => 'saniye';
 
   @override
-  String get workoutSummary => 'Workout Summary';
+  String get workoutSummary => 'Antrenman Özeti';
 
   @override
-  String get duration => 'Duration';
+  String get duration => 'Süre';
 
   @override
-  String get totalVolume => 'Total Volume';
+  String get totalVolume => 'Toplam Hacim';
 
   @override
-  String get totalSets => 'Total Sets';
+  String get totalSets => 'Toplam Set';
 
   @override
-  String get exerciseCount => 'Exercises';
+  String get exerciseCount => 'Egzersizler';
 
   @override
-  String get newPRs => 'New PRs';
+  String get newPRs => 'Yeni Rekorlar';
 
   @override
-  String get rateWorkout => 'Rate Your Workout';
+  String get rateWorkout => 'Antrenmanı Değerlendir';
 
   @override
-  String get workoutNotes => 'Workout Notes';
+  String get workoutNotes => 'Antrenman Notları';
 
   @override
-  String get shareWorkout => 'Share Workout';
+  String get shareWorkout => 'Antrenmanı Paylaş';
 
   @override
-  String get storyFormat => 'Story Format';
+  String get storyFormat => 'Hikaye Formatı';
 
   @override
-  String get compactCard => 'Compact Card';
+  String get compactCard => 'Kompakt Kart';
 
   @override
-  String get exportJSON => 'Export JSON';
+  String get exportJSON => 'JSON Dışa Aktar';
 
   @override
-  String get trackedWithVitalSync => 'Tracked with VitalSync';
+  String get trackedWithVitalSync => 'VitalSync ile takip edildi';
 
   @override
-  String get exerciseLibrary => 'Exercise Library';
+  String get exerciseLibrary => 'Egzersiz Kütüphanesi';
 
   @override
-  String get searchExercises => 'Search exercises...';
+  String get searchExercises => 'Egzersiz ara...';
 
   @override
-  String get allCategories => 'All';
+  String get allCategories => 'Tümü';
 
   @override
-  String get chest => 'Chest';
+  String get chest => 'Göğüs';
 
   @override
-  String get back => 'Back';
+  String get back => 'Sırt';
 
   @override
-  String get shoulders => 'Shoulders';
+  String get shoulders => 'Omuzlar';
 
   @override
-  String get arms => 'Arms';
+  String get arms => 'Kollar';
 
   @override
-  String get legs => 'Legs';
+  String get legs => 'Bacaklar';
 
   @override
-  String get core => 'Core';
+  String get core => 'Karın';
 
   @override
-  String get cardio => 'Cardio';
+  String get cardio => 'Kardio';
 
   @override
-  String get exerciseDetails => 'Exercise Details';
+  String get exerciseDetails => 'Egzersiz Detayları';
 
   @override
-  String get instructions => 'Instructions';
+  String get instructions => 'Talimatlar';
 
   @override
-  String get exerciseHistory => 'History';
+  String get exerciseHistory => 'Geçmiş';
 
   @override
-  String get personalRecord => 'Personal Record';
+  String get personalRecord => 'Kişisel Rekor';
 
   @override
-  String get weightProgression => 'Weight Progression';
+  String get weightProgression => 'Ağırlık İlerlemesi';
 
   @override
-  String get createCustomExercise => 'Create Custom Exercise';
+  String get createCustomExercise => 'Özel Egzersiz Oluştur';
 
   @override
-  String get progress => 'Progress';
+  String get progress => 'İlerleme';
 
   @override
-  String get oneWeek => '1W';
+  String get oneWeek => '1H';
 
   @override
-  String get oneMonth => '1M';
+  String get oneMonth => '1A';
 
   @override
-  String get threeMonths => '3M';
+  String get threeMonths => '3A';
 
   @override
-  String get sixMonths => '6M';
+  String get sixMonths => '6A';
 
   @override
   String get oneYear => '1Y';
 
   @override
-  String get volumeProgression => 'Volume Progression';
+  String get volumeProgression => 'Hacim İlerlemesi';
 
   @override
-  String get workoutFrequency => 'Workout Frequency';
+  String get workoutFrequency => 'Antrenman Sıklığı';
 
   @override
-  String get personalRecords => 'Personal Records';
+  String get personalRecords => 'Kişisel Rekorlar';
 
   @override
-  String get oneRepMax => '1RM';
+  String get oneRepMax => '1TM';
 
   @override
-  String get selectExercise => 'Select Exercise';
+  String get selectExercise => 'Egzersiz Seç';
 
   @override
-  String get calendar => 'Calendar';
+  String get calendar => 'Takvim';
 
   @override
-  String get monthlyStats => 'Monthly Stats';
+  String get monthlyStats => 'Aylık İstatistikler';
 
   @override
-  String get totalWorkouts => 'Total Workouts';
+  String get totalWorkouts => 'Toplam Antrenman';
 
   @override
-  String get streak => 'Streak';
+  String get streak => 'Seri';
 
   @override
-  String get vsPreviousMonth => 'vs previous month';
+  String get vsPreviousMonth => 'önceki aya göre';
 
   @override
-  String get workoutDetails => 'Workout Details';
+  String get workoutDetails => 'Antrenman Detayları';
 
   @override
-  String get achievements => 'Achievements';
+  String get achievements => 'Başarılar';
 
   @override
-  String get unlocked => 'Unlocked';
+  String get unlocked => 'Açıldı';
 
   @override
-  String get locked => 'Locked';
+  String get locked => 'Kilitli';
 
   @override
-  String get nearCompletion => 'Almost there!';
+  String get nearCompletion => 'Neredeyse tamam!';
 
   @override
   String achievementProgress(int current, int total) {
@@ -567,81 +570,82 @@ class AppLocalizationsTr extends AppLocalizations {
   String get fitnessCategory => 'Fitness';
 
   @override
-  String get healthCategory => 'Health';
+  String get healthCategory => 'Sağlık';
 
   @override
-  String get crossModuleCategory => 'Cross-Module';
+  String get crossModuleCategory => 'Çapraz Modül';
 
   @override
-  String get templateName => 'Template Name';
+  String get templateName => 'Şablon Adı';
 
   @override
-  String get estimatedDuration => 'Estimated Duration';
+  String get estimatedDuration => 'Tahmini Süre';
 
   @override
-  String get exercises => 'Exercises';
+  String get exercises => 'Egzersizler';
 
   @override
-  String get editTemplate => 'Edit Template';
+  String get editTemplate => 'Şablonu Düzenle';
 
   @override
-  String get deleteTemplate => 'Delete Template';
+  String get deleteTemplate => 'Şablonu Sil';
 
   @override
   String get deleteTemplateConfirmation =>
-      'Are you sure you want to delete this template?';
+      'Bu şablonu silmek istediğinden emin misin?';
 
   @override
-  String get sets => 'Sets';
+  String get sets => 'Setler';
 
   @override
-  String get restTime => 'Rest Time';
+  String get restTime => 'Dinlenme Süresi';
 
   @override
-  String get addExerciseToTemplate => 'Add Exercise';
+  String get addExerciseToTemplate => 'Egzersiz Ekle';
 
   @override
-  String get noWorkoutsYet => 'No workouts yet';
+  String get noWorkoutsYet => 'Henüz antrenman yok';
 
   @override
   String get startYourFirstWorkout =>
-      'Start your first workout to begin tracking your progress';
+      'İlerlemenizi takip etmek için ilk antrenmanınızı başlatın';
 
   @override
-  String get noTemplatesYet => 'No templates yet';
+  String get noTemplatesYet => 'Henüz şablon yok';
 
   @override
   String get createYourFirstTemplate =>
-      'Create a template to quickly start workouts';
+      'Hızlıca antrenman başlatmak için bir şablon oluşturun';
 
   @override
-  String get noExercisesFound => 'No exercises found';
+  String get noExercisesFound => 'Egzersiz bulunamadı';
 
   @override
-  String get noAchievementsYet => 'No achievements yet';
+  String get noAchievementsYet => 'Henüz başarı yok';
 
   @override
-  String get keepWorkingToUnlock => 'Keep working out to unlock achievements';
+  String get keepWorkingToUnlock =>
+      'Başarıları açmak için antrenman yapmaya devam edin';
 
   @override
-  String get firstWorkoutComplete => 'First workout complete! 🔥';
+  String get firstWorkoutComplete => 'İlk antrenman tamamlandı! 🔥';
 
   @override
-  String get consistencyIsKey => 'Consistency is key! Keep your streak going';
+  String get consistencyIsKey => 'Tutarlılık anahtardır! Serini sürdür';
 
   @override
-  String get newPRCelebration => 'New Personal Record! 🏆';
+  String get newPRCelebration => 'Yeni Kişisel Rekor! 🏆';
 
   @override
-  String get shareYourPR => 'Share your achievement';
+  String get shareYourPR => 'Başarını paylaş';
 
   @override
   String streakMilestone(int days) {
-    return '$days Day Streak! 🔥';
+    return '$days Gün Seri! 🔥';
   }
 
   @override
-  String get shareYourStreak => 'Share your streak?';
+  String get shareYourStreak => 'Serini paylaş?';
 
   @override
   String get kg => 'kg';
@@ -650,5 +654,17 @@ class AppLocalizationsTr extends AppLocalizations {
   String get lbs => 'lbs';
 
   @override
-  String get min => 'min';
+  String get min => 'dk';
+
+  @override
+  String get noExercises => 'No exercises in this workout';
+
+  @override
+  String get muscleGroup => 'Kas Grubu';
+
+  @override
+  String get equipment => 'Ekipman';
+
+  @override
+  String get exerciseAdded => 'Egzersiz başarıyla eklendi';
 }

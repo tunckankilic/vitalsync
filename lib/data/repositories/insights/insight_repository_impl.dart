@@ -15,6 +15,12 @@ class InsightRepositoryImpl implements InsightRepository {
   }
 
   @override
+  Future<List<Insight>> getDismissed() async {
+    final results = await _dao.getDismissed();
+    return results.map(InsightModel.fromDrift).toList();
+  }
+
+  @override
   Future<List<Insight>> getByCategory(InsightCategory category) async {
     // Assuming DAO supports enum or we map it.
     // If GeneratedInsightData stores enum index or string, we need to pass appropriate type.
@@ -47,6 +53,13 @@ class InsightRepositoryImpl implements InsightRepository {
   @override
   Stream<List<Insight>> watchActive() {
     return _dao.watchActive().map(
+      (list) => list.map(InsightModel.fromDrift).toList(),
+    );
+  }
+
+  @override
+  Stream<List<Insight>> watchDismissed() {
+    return _dao.watchDismissed().map(
       (list) => list.map(InsightModel.fromDrift).toList(),
     );
   }

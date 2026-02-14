@@ -102,7 +102,10 @@ class SettingsScreen extends ConsumerWidget {
                       .read(notificationSettingProvider.notifier)
                       .setEnabled(val);
                 },
-                activeColor: Theme.of(context).primaryColor,
+                activeThumbColor: Theme.of(context).primaryColor,
+                activeTrackColor: Theme.of(
+                  context,
+                ).primaryColor.withValues(alpha: 0.5),
               ),
             ],
           ),
@@ -121,12 +124,12 @@ class SettingsScreen extends ConsumerWidget {
                 icon: Icons.scale_outlined,
                 trailing: Switch(
                   value: unitSystem == UnitSystem.metric,
-                  activeColor: Theme.of(context).primaryColor,
+                  activeThumbColor: Theme.of(context).primaryColor,
                   activeTrackColor: Theme.of(
                     context,
-                  ).primaryColor.withOpacity(0.5),
+                  ).primaryColor.withValues(alpha: 0.5),
                   inactiveThumbColor: Colors.grey,
-                  inactiveTrackColor: Colors.grey.withOpacity(0.5),
+                  inactiveTrackColor: Colors.grey.withValues(alpha: 0.5),
                   onChanged: (val) {
                     ref
                         .read(unitSystemSettingProvider.notifier)
@@ -220,7 +223,7 @@ class SettingsScreen extends ConsumerWidget {
           _SettingsSection(
             title: 'About',
             children: [
-              _SettingsTile(
+              const _SettingsTile(
                 title: 'Version',
                 subtitle: '1.0.0 (Build 100)',
                 icon: Icons.info_outline,
@@ -304,10 +307,9 @@ class SettingsScreen extends ConsumerWidget {
 }
 
 class _SettingsSection extends StatelessWidget {
+  const _SettingsSection({required this.title, required this.children});
   final String title;
   final List<Widget> children;
-
-  const _SettingsSection({required this.title, required this.children});
 
   @override
   Widget build(BuildContext context) {
@@ -327,11 +329,11 @@ class _SettingsSection extends StatelessWidget {
         ),
         Container(
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.7),
+            color: Colors.white.withValues(alpha: 0.7),
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.05),
+                color: Colors.black.withValues(alpha: 0.05),
                 blurRadius: 10,
                 offset: const Offset(0, 2),
               ),
@@ -345,17 +347,8 @@ class _SettingsSection extends StatelessWidget {
 }
 
 class _SettingsTile extends StatelessWidget {
-  final String title;
-  final String? subtitle;
-  final IconData? icon;
-  final Widget? trailing;
-  final VoidCallback? onTap;
-  final Color? textColor;
-  final Color? iconColor;
-
   const _SettingsTile({
     required this.title,
-    super.key,
     this.subtitle,
     this.icon,
     this.trailing,
@@ -363,6 +356,13 @@ class _SettingsTile extends StatelessWidget {
     this.textColor,
     this.iconColor,
   });
+  final String title;
+  final String? subtitle;
+  final IconData? icon;
+  final Widget? trailing;
+  final VoidCallback? onTap;
+  final Color? textColor;
+  final Color? iconColor;
 
   @override
   Widget build(BuildContext context) {

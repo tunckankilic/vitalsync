@@ -4,7 +4,6 @@
 library;
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import '../../../../core/analytics/analytics_service.dart';
 import '../../../../core/di/injection_container.dart';
 import '../../../../domain/entities/health/symptom.dart';
 import '../../../../domain/repositories/health/symptom_repository.dart';

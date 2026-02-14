@@ -32,7 +32,7 @@ Future<Map<String, dynamic>?> previousWeekReport(Ref ref) async {
 
 /// Notifier for weekly report operations
 @riverpod
-class WeeklyReportNotifier extends _$WeeklyReportNotifier {
+class WeeklyReportActions extends _$WeeklyReportActions {
   @override
   FutureOr<void> build() {
     // No initial state needed

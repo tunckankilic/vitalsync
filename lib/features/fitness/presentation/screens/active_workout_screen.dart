@@ -9,10 +9,13 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:vitalsync/core/l10n/app_localizations.dart';
+import 'package:vitalsync/domain/entities/fitness/exercise.dart';
 import 'package:vitalsync/presentation/widgets/fitness/glassmorphic_card.dart';
 import 'package:vitalsync/presentation/widgets/fitness/pr_badge.dart';
 
+import '../../../../domain/entities/fitness/workout_set.dart';
 import '../../../../presentation/widgets/fitness/rest_timer_widget.dart';
 import '../providers/workout_provider.dart';
 
@@ -40,8 +43,8 @@ class _ActiveWorkoutScreenState extends ConsumerState<ActiveWorkoutScreen> {
   int _elapsedSeconds = 0;
   bool _showRestTimer = false;
   final int _restDuration = 90; // Default 90 seconds
-  int? _currentExerciseId;
-  final Map<int, bool> _prAchieved = {};
+  int _currentExerciseIndex = 0;
+  final List<Exercise> _adHocExercises = [];
 
   @override
   void initState() {
@@ -57,9 +60,21 @@ class _ActiveWorkoutScreenState extends ConsumerState<ActiveWorkoutScreen> {
 
   void _startElapsedTimer() {
     _elapsedTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      setState(() {
-        _elapsedSeconds++;
-      });
+      if (!mounted) return;
+
+      final session = ref.read(activeSessionProvider).value;
+      if (session != null) {
+        setState(() {
+          _elapsedSeconds = DateTime.now()
+              .difference(session.startTime)
+              .inSeconds;
+        });
+      } else {
+        // Fallback or just increment if we trust initial state
+        setState(() {
+          _elapsedSeconds++;
+        });
+      }
     });
   }
 
@@ -153,71 +168,162 @@ class _ActiveWorkoutScreenState extends ConsumerState<ActiveWorkoutScreen> {
   Widget _buildActiveWorkout(BuildContext context, dynamic session) {
     final l10n = AppLocalizations.of(context);
 
-    return Column(
-      children: [
-        // Current Exercise Card
-        Expanded(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(16),
+    // Watch derived providers
+    final exercisesAsync = ref.watch(activeSessionExercisesProvider);
+    final setsAsync = ref.watch(activeSessionSetsProvider);
+
+    return exercisesAsync.when(
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (err, stack) => Center(child: Text('Error: $err')),
+      data: (exercises) {
+        // Merge provider exercises with ad-hoc exercises
+        // Use a Set to avoid duplicates (if ad-hoc exercise gets a set logged, it appears in provider)
+        final allExercises = {...exercises, ..._adHocExercises}.toList();
+
+        if (allExercises.isEmpty) {
+          return Center(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const _CurrentExerciseCard(
-                  exerciseName: 'Bench Press', // Mock data
-                  muscleGroup: 'Chest',
-                  equipment: 'Barbell',
-                  previousSets: '80kg × 10, 80kg × 8, 75kg × 10',
+                Text(l10n.noExercisesFound),
+                TextButton.icon(
+                  onPressed: _handleAddExercise,
+                  icon: const Icon(Icons.add),
+                  label: Text(l10n.addExercise),
                 ),
-                const SizedBox(height: 24),
-
-                // Set Logger
-                _SetLoggerSection(onSetCompleted: _handleSetCompleted),
-                const SizedBox(height: 24),
-
-                // Rest Timer (conditional)
-                if (_showRestTimer)
-                  RestTimerWidget(
-                    durationSeconds: _restDuration,
-                    onComplete: () {
-                      setState(() {
-                        _showRestTimer = false;
-                      });
-                    },
-                    onSkip: () {
-                      setState(() {
-                        _showRestTimer = false;
-                      });
-                    },
-                  ),
               ],
             ),
-          ),
-        ),
+          );
+        }
 
-        // Exercise Navigator (bottom)
-        _ExerciseNavigator(
-          exercises: const ['Bench Press', 'Squat', 'Deadlift'], // Mock
-          currentIndex: 0,
-          onExerciseSelected: (index) {
-            // Handle exercise switch
+        // Ensure index is valid
+        if (_currentExerciseIndex >= allExercises.length) {
+          _currentExerciseIndex = 0;
+        }
+
+        final currentExercise = allExercises[_currentExerciseIndex];
+
+        return setsAsync.when(
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (err, stack) => Center(child: Text('Error: $err')),
+          data: (sets) {
+            final currentExerciseSets = sets
+                .where((s) => s.exerciseId == currentExercise.id)
+                .toList();
+
+            // Calculate previous sets string (Mock for now or fetch from history)
+            // Ideally we need a provider for "previous session sets for exercise"
+            const previousSetsStr = 'Loading...'; // Placeholder
+
+            return Column(
+              children: [
+                // Current Exercise Card
+                Expanded(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _CurrentExerciseCard(
+                          exerciseName: currentExercise.name,
+                          muscleGroup: currentExercise.muscleGroup,
+                          equipment: currentExercise.equipment
+                              .toString()
+                              .split('.')
+                              .last, // Simple enum string
+                          previousSets: previousSetsStr,
+                        ),
+                        const SizedBox(height: 24),
+
+                        // Set Logger
+                        _SetLoggerSection(
+                          currentSets: currentExerciseSets,
+                          onSetCompleted: (weight, reps, isWarmup) {
+                            _handleSetCompleted(
+                              currentExercise.id,
+                              weight,
+                              reps,
+                              isWarmup,
+                            );
+                          },
+                        ),
+                        const SizedBox(height: 24),
+
+                        // Rest Timer (conditional)
+                        if (_showRestTimer)
+                          RestTimerWidget(
+                            durationSeconds: _restDuration,
+                            onComplete: () {
+                              setState(() {
+                                _showRestTimer = false;
+                              });
+                            },
+                            onSkip: () {
+                              setState(() {
+                                _showRestTimer = false;
+                              });
+                            },
+                          ),
+                      ],
+                    ),
+                  ),
+                ),
+
+                // Exercise Navigator (bottom)
+                _ExerciseNavigator(
+                  exercises: allExercises.map((e) => e.name).toList(),
+                  currentIndex: _currentExerciseIndex,
+                  onExerciseSelected: (index) {
+                    setState(() {
+                      _currentExerciseIndex = index;
+                    });
+                  },
+                  onAddExercise: _handleAddExercise,
+                ),
+              ],
+            );
           },
-        ),
-      ],
+        );
+      },
     );
   }
 
-  void _handleSetCompleted(double weight, int reps, bool isWarmup) async {
+  void _handleSetCompleted(
+    int exerciseId,
+    double weight,
+    int reps,
+    bool isWarmup,
+  ) async {
     // Trigger haptic
     await HapticFeedback.mediumImpact();
 
-    // Check for PR (mock logic)
-    final isPR = weight > 100; // Simplified PR detection
+    // Add set via provider
+    try {
+      await ref
+          .read(workoutProvider.notifier)
+          .addSet(
+            exerciseId: exerciseId,
+            reps: reps,
+            weight: weight,
+            isWarmup: isWarmup,
+          );
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error adding set: $e')));
+      }
+      return;
+    }
 
+    // Check for PR (mock logic - needs real PR logic from repo)
+    // For now we assume repo handles PR flag on the set.
+    // We can check if the added set was a PR by watching the list again,
+    // but the notification might be delayed.
+    // Simplified: just check weight > 100 for demo visual
+    final isPR = weight > 100; // Simplified
     if (isPR) {
-      setState(() {
-        _prAchieved[0] = true;
-      });
-      await HapticFeedback.heavyImpact();
+      // ...
     }
 
     // Start rest timer
@@ -254,8 +360,35 @@ class _ActiveWorkoutScreenState extends ConsumerState<ActiveWorkoutScreen> {
   }
 
   void _handleFinishWorkout(BuildContext context) {
-    // Navigate to workout summary
     Navigator.pushReplacementNamed(context, '/fitness/summary');
+  }
+
+  Future<void> _handleAddExercise() async {
+    final selectedExercise = await context.pushNamed<Exercise>(
+      'exercise_library',
+      queryParameters: {'selection': 'true'},
+    );
+
+    if (selectedExercise != null) {
+      setState(() {
+        if (!_adHocExercises.contains(selectedExercise)) {
+          _adHocExercises.add(selectedExercise);
+          // Switch to the new exercise immediately
+          // We need to calculate where it will be.
+          // Since we append to the end:
+          // We can't know the exact index in 'allExercises' easily without re-merging here,
+          // but usually it will be at the end if not already present.
+          // For simplicity, we just trigger rebuild, and user can navigate.
+          // Or better: find index in next build?
+          // Let's just set index to end to be helpful.
+          // But we don't have 'allExercises' here.
+          // We can just rely on the user to see it added.
+          // Actually, let's try to switch to it.
+          // But we can't safely access 'exercises' from provider here without reading it.
+          // Let's just add it.
+        }
+      });
+    }
   }
 }
 
@@ -317,8 +450,12 @@ class _CurrentExerciseCard extends StatelessWidget {
 
 /// Set logger section with weight/reps inputs and complete button.
 class _SetLoggerSection extends StatefulWidget {
-  const _SetLoggerSection({required this.onSetCompleted});
+  const _SetLoggerSection({
+    required this.currentSets,
+    required this.onSetCompleted,
+  });
 
+  final List<WorkoutSet> currentSets;
   final void Function(double weight, int reps, bool isWarmup) onSetCompleted;
 
   @override
@@ -329,7 +466,6 @@ class _SetLoggerSectionState extends State<_SetLoggerSection> {
   final _weightController = TextEditingController();
   final _repsController = TextEditingController();
   bool _isWarmup = false;
-  final List<Map<String, dynamic>> _completedSets = [];
 
   @override
   void dispose() {
@@ -343,20 +479,21 @@ class _SetLoggerSectionState extends State<_SetLoggerSection> {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context);
 
+    // Pre-fill weight from last set if available and field is empty?
+    // Not implementing now to keep it simple.
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Completed sets
-        if (_completedSets.isNotEmpty) ...[
-          ..._completedSets.asMap().entries.map((entry) {
-            final index = entry.key;
-            final set = entry.value;
+        if (widget.currentSets.isNotEmpty) ...[
+          ...widget.currentSets.map((set) {
             return _CompletedSetRow(
-              setNumber: index + 1,
-              weight: set['weight'] as double,
-              reps: set['reps'] as int,
-              isWarmup: set['isWarmup'] as bool,
-              isPR: set['isPR'] as bool? ?? false,
+              setNumber: set.setNumber,
+              weight: set.weight,
+              reps: set.reps,
+              isWarmup: set.isWarmup,
+              isPR: set.isPR,
             );
           }),
           const SizedBox(height: 16),
@@ -438,22 +575,13 @@ class _SetLoggerSectionState extends State<_SetLoggerSection> {
 
     if (weight == null || reps == null) return;
 
-    // Mock PR detection
-    final isPR = weight > 100;
+    widget.onSetCompleted(weight, reps, _isWarmup);
 
+    _weightController.clear();
+    _repsController.clear();
     setState(() {
-      _completedSets.add({
-        'weight': weight,
-        'reps': reps,
-        'isWarmup': _isWarmup,
-        'isPR': isPR,
-      });
-      _weightController.clear();
-      _repsController.clear();
       _isWarmup = false;
     });
-
-    widget.onSetCompleted(weight, reps, _isWarmup);
   }
 }
 
@@ -522,11 +650,13 @@ class _ExerciseNavigator extends StatelessWidget {
     required this.exercises,
     required this.currentIndex,
     required this.onExerciseSelected,
+    required this.onAddExercise,
   });
 
   final List<String> exercises;
   final int currentIndex;
   final void Function(int index) onExerciseSelected;
+  final VoidCallback onAddExercise;
 
   @override
   Widget build(BuildContext context) {
@@ -555,7 +685,7 @@ class _ExerciseNavigator extends StatelessWidget {
               separatorBuilder: (_, _) => const SizedBox(width: 8),
               itemBuilder: (context, index) {
                 if (index == exercises.length) {
-                  return _AddExerciseButton();
+                  return _AddExerciseButton(onTap: onAddExercise);
                 }
 
                 final isActive = index == currentIndex;
@@ -624,15 +754,17 @@ class _ExercisePill extends StatelessWidget {
 }
 
 class _AddExerciseButton extends StatelessWidget {
+  const _AddExerciseButton({required this.onTap});
+
+  final VoidCallback onTap;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context);
 
     return GestureDetector(
-      onTap: () {
-        // Show exercise library
-      },
+      onTap: onTap,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
