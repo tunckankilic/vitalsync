@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:vitalsync/core/auth/auth_provider.dart';
+import 'package:vitalsync/core/l10n/app_localizations.dart';
 import 'package:vitalsync/core/settings/settings_provider.dart';
-// import 'package:vitalsync/core/constants/app_constants.dart'; // Loop if needed, but avoiding for now
+import 'package:vitalsync/features/fitness/presentation/providers/streak_provider.dart';
+import 'package:vitalsync/features/fitness/presentation/providers/workout_provider.dart';
+import 'package:vitalsync/features/health/presentation/providers/medication_log_provider.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
@@ -12,6 +16,7 @@ class ProfileScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final userAsync = ref.watch(currentUserProvider);
     final unitSystem = ref.watch(unitSystemSettingProvider);
+    final l10n = AppLocalizations.of(context);
 
     return Scaffold(
       body: Stack(
@@ -39,9 +44,9 @@ class ProfileScreen extends ConsumerWidget {
                   // Profile Header
                   userAsync.when(
                     data: (user) {
-                      final name = user?.name ?? 'User';
+                      final name = user?.name ?? l10n.defaultUser;
                       final authState = ref.watch(authStateProvider);
-                      final email = authState.value?.email ?? 'No email';
+                      final email = authState.value?.email ?? l10n.noEmail;
                       // final photoUrl = user?.photoUrl;
 
                       return Column(
@@ -91,51 +96,13 @@ class ProfileScreen extends ConsumerWidget {
                     },
                     loading: () =>
                         const Center(child: CircularProgressIndicator()),
-                    error: (err, stack) => Text('Error loading profile: $err'),
+                    error: (err, stack) => Text(l10n.errorLoadingProfile(err)),
                   ),
 
                   const SizedBox(height: 32),
 
                   // Stats Overview Card (Glassmorphic)
-                  Container(
-                    padding: const EdgeInsets.all(24),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.7),
-                      borderRadius: BorderRadius.circular(24),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.05),
-                          blurRadius: 15,
-                          offset: const Offset(0, 5),
-                        ),
-                      ],
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        const _StatItem(
-                          label: 'Workouts',
-                          value: '12',
-                          icon: Icons.fitness_center,
-                          color: Colors.blueAccent,
-                        ),
-                        _VerticalDivider(),
-                        const _StatItem(
-                          label: 'Streak',
-                          value: '5',
-                          icon: Icons.local_fire_department,
-                          color: Colors.orange,
-                        ),
-                        _VerticalDivider(),
-                        const _StatItem(
-                          label: 'Health',
-                          value: '85%',
-                          icon: Icons.favorite,
-                          color: Colors.redAccent,
-                        ),
-                      ],
-                    ),
-                  ).animate().fadeIn(delay: 200.ms).slideY(begin: 0.1, end: 0),
+                  const _ProfileStats(),
 
                   const SizedBox(height: 32),
 
@@ -169,9 +136,9 @@ class ProfileScreen extends ConsumerWidget {
                               ),
                             ),
                             const SizedBox(width: 16),
-                            const Text(
-                              'Unit System',
-                              style: TextStyle(
+                            Text(
+                              l10n.unitSystem,
+                              style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 16,
                               ),
@@ -198,20 +165,20 @@ class ProfileScreen extends ConsumerWidget {
                             ),
                             child: Stack(
                               children: [
-                                const Row(
+                                Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceAround,
                                   children: [
                                     Text(
-                                      'kg',
-                                      style: TextStyle(
+                                      l10n.kg,
+                                      style: const TextStyle(
                                         fontSize: 12,
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
                                     Text(
-                                      'lbs',
-                                      style: TextStyle(
+                                      l10n.lbs,
+                                      style: const TextStyle(
                                         fontSize: 12,
                                         fontWeight: FontWeight.bold,
                                       ),
@@ -242,8 +209,8 @@ class ProfileScreen extends ConsumerWidget {
                                     child: Center(
                                       child: Text(
                                         unitSystem == UnitSystem.metric
-                                            ? 'kg'
-                                            : 'lbs',
+                                            ? l10n.kg
+                                            : l10n.lbs,
                                         style: const TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 12,
@@ -264,10 +231,10 @@ class ProfileScreen extends ConsumerWidget {
 
                   ElevatedButton.icon(
                     onPressed: () {
-                      // Edit Profile Logic
+                      context.go('/profile/edit');
                     },
                     icon: const Icon(Icons.edit),
-                    label: const Text('Edit Profile'),
+                    label: Text(l10n.editProfile),
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 32,
@@ -288,7 +255,7 @@ class ProfileScreen extends ConsumerWidget {
                       // context.go('/auth/login');
                     },
                     style: TextButton.styleFrom(foregroundColor: Colors.red),
-                    child: const Text('Log Out'),
+                    child: Text(l10n.logOut),
                   ),
                 ],
               ),
@@ -297,6 +264,78 @@ class ProfileScreen extends ConsumerWidget {
         ],
       ),
     );
+  }
+}
+
+class _ProfileStats extends ConsumerWidget {
+  const _ProfileStats();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
+    // Watch providers
+    final workoutCountAsync = ref.watch(totalWorkoutCountProvider);
+    final streakAsync = ref.watch(currentStreakProvider);
+    final complianceAsync = ref.watch(overallComplianceProvider);
+
+    // Helper to format values
+    String formatValue<T>(
+      AsyncValue<T> asyncValue,
+      String Function(T) formatter,
+    ) {
+      return asyncValue.when(
+        data: (value) => formatter(value),
+        loading: () => '...',
+        error: (_, _) => '-',
+      );
+    }
+
+    final workouts = formatValue<int>(workoutCountAsync, (v) => v.toString());
+    final streak = formatValue<int>(streakAsync, (v) => v.toString());
+    final health = formatValue<double>(
+      complianceAsync,
+      (v) => '${(v * 100).toInt()}%',
+    );
+
+    return Container(
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.7),
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 15,
+            offset: const Offset(0, 5),
+          ),
+        ],
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          _StatItem(
+            label: l10n.workouts,
+            value: workouts,
+            icon: Icons.fitness_center,
+            color: Colors.blueAccent,
+          ),
+          _VerticalDivider(),
+          _StatItem(
+            label: l10n.streak,
+            value: streak,
+            icon: Icons.local_fire_department,
+            color: Colors.orange,
+          ),
+          _VerticalDivider(),
+          _StatItem(
+            label: l10n.health,
+            value: health,
+            icon: Icons.favorite,
+            color: Colors.redAccent,
+          ),
+        ],
+      ),
+    ).animate().fadeIn(delay: 200.ms).slideY(begin: 0.1, end: 0);
   }
 }
 

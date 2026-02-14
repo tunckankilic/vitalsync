@@ -3,6 +3,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:vitalsync/core/auth/auth_provider.dart';
+import 'package:vitalsync/core/l10n/app_localizations.dart';
 
 class ForgotPasswordScreen extends ConsumerStatefulWidget {
   const ForgotPasswordScreen({super.key});
@@ -30,17 +31,19 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
             .resetPassword(_emailController.text.trim());
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Password reset email sent. Check your inbox.'),
+            SnackBar(
+              content: Text(AppLocalizations.of(context).resetEmailSent),
             ),
           );
           context.go('/auth/login');
         }
       } catch (e) {
         if (mounted) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text('Error: ${e.toString()}')));
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(AppLocalizations.of(context).resetPasswordError(e)),
+            ),
+          );
         }
       }
     }
@@ -50,6 +53,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
   Widget build(BuildContext context) {
     final authState = ref.watch(authProvider);
     final isLoading = authState.isLoading;
+    final l10n = AppLocalizations.of(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -92,14 +96,14 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                       ).animate().scale(duration: 600.ms),
                       const SizedBox(height: 24),
                       Text(
-                        'Reset Password',
+                        l10n.resetPassword,
                         textAlign: TextAlign.center,
                         style: Theme.of(context).textTheme.headlineMedium
                             ?.copyWith(fontWeight: FontWeight.bold),
                       ).animate().fadeIn().moveY(begin: 10, end: 0),
                       const SizedBox(height: 8),
                       Text(
-                        'Enter your email to receive a reset link',
+                        l10n.resetPasswordSubtitle,
                         textAlign: TextAlign.center,
                         style: TextStyle(color: Colors.grey[600]),
                       ),
@@ -108,12 +112,12 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                       // Email Field
                       _GlassTextField(
                         controller: _emailController,
-                        label: 'Email',
+                        label: l10n.email,
                         icon: Icons.email_outlined,
                         keyboardType: TextInputType.emailAddress,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter your email';
+                            return l10n.enterEmail;
                           }
                           return null;
                         },
@@ -141,9 +145,9 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                                   color: Colors.white,
                                 ),
                               )
-                            : const Text(
-                                'Send Reset Link',
-                                style: TextStyle(
+                            : Text(
+                                l10n.sendResetLink,
+                                style: const TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
                                 ),

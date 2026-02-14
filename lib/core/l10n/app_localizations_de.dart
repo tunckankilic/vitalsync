@@ -669,4 +669,375 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get exerciseAdded => 'Übung erfolgreich hinzugefügt';
+
+  @override
+  String get editProfile => 'Edit Profile';
+
+  @override
+  String get userNotFound => 'User not found';
+
+  @override
+  String get personalInformation => 'Personal Information';
+
+  @override
+  String get fullName => 'Full Name';
+
+  @override
+  String get enterFullName => 'Please enter your name';
+
+  @override
+  String get dateOfBirth => 'Date of Birth';
+
+  @override
+  String get selectDate => 'Select Date';
+
+  @override
+  String get gender => 'Gender';
+
+  @override
+  String get genderMale => 'Male';
+
+  @override
+  String get genderFemale => 'Female';
+
+  @override
+  String get genderOther => 'Other';
+
+  @override
+  String get genderPreferNotToSay => 'Prefer not to say';
+
+  @override
+  String get emergencyContact => 'Emergency Contact';
+
+  @override
+  String get contactName => 'Contact Name';
+
+  @override
+  String get phoneNumber => 'Phone Number';
+
+  @override
+  String get saveChanges => 'Save Changes';
+
+  @override
+  String get profileUpdatedSuccess => 'Profile updated successfully';
+
+  @override
+  String profileUpdateError(Object error) {
+    return 'Error updating profile: $error';
+  }
+
+  @override
+  String get settingsTitle => 'Settings';
+
+  @override
+  String get appearance => 'Appearance';
+
+  @override
+  String get theme => 'Theme';
+
+  @override
+  String get themeSystem => 'System Default';
+
+  @override
+  String get themeLight => 'Light Mode';
+
+  @override
+  String get themeDark => 'Dark Mode';
+
+  @override
+  String get materialYou => 'Material You';
+
+  @override
+  String get materialYouSubtitle => 'Use dynamic colors from wallpaper';
+
+  @override
+  String get language => 'Language';
+
+  @override
+  String get languageEn => 'English';
+
+  @override
+  String get languageTr => 'Türkçe';
+
+  @override
+  String get languageDe => 'Deutsch';
+
+  @override
+  String get notifications => 'Notifications';
+
+  @override
+  String get enableNotifications => 'Enable Notifications';
+
+  @override
+  String get units => 'Units';
+
+  @override
+  String get unitSystem => 'Unit System';
+
+  @override
+  String get unitMetric => 'Metric (kg, cm)';
+
+  @override
+  String get unitImperial => 'Imperial (lbs, in)';
+
+  @override
+  String get privacyData => 'Privacy & Data';
+
+  @override
+  String get manageConsents => 'Manage Consents';
+
+  @override
+  String get manageConsentsSubtitle => 'Update your GDPR privacy choices';
+
+  @override
+  String get exportData => 'Export Data';
+
+  @override
+  String get exportDataSubtitle => 'Download a copy of your data';
+
+  @override
+  String get deleteAccount => 'Delete Account';
+
+  @override
+  String get deleteAccountSubtitle =>
+      'Permanently delete your account and data';
+
+  @override
+  String get sync => 'Sync';
+
+  @override
+  String get syncStatus => 'Sync Status';
+
+  @override
+  String get syncIdle => 'Last synced recently';
+
+  @override
+  String get syncError => 'Sync failed. Tap to retry.';
+
+  @override
+  String get syncNow => 'Sync Now';
+
+  @override
+  String get about => 'About';
+
+  @override
+  String get version => 'Version';
+
+  @override
+  String get licenses => 'Open Source Licenses';
+
+  @override
+  String get exportStarted => 'Export started...';
+
+  @override
+  String get deleteAccountDialogTitle => 'Delete Account?';
+
+  @override
+  String get deleteAccountDialogMessage =>
+      'This action cannot be undone. All your data will be permanently deleted.';
+
+  @override
+  String get deleteAccountRequested => 'Account deletion requested.';
+
+  @override
+  String get defaultUser => 'User';
+
+  @override
+  String get noEmail => 'No email';
+
+  @override
+  String errorLoadingProfile(Object error) {
+    return 'Error loading profile: $error';
+  }
+
+  @override
+  String get logOut => 'Log Out';
+
+  @override
+  String get workouts => 'Workouts';
+
+  @override
+  String get getStarted => 'Get Started';
+
+  @override
+  String get next => 'Next';
+
+  @override
+  String get welcomeTitle => 'Welcome to VitalSync';
+
+  @override
+  String get welcomeSubtitle => 'Manage your health and fitness in one place.';
+
+  @override
+  String get personalizationTitle => 'What matters most to you?';
+
+  @override
+  String get interestMedication => 'Medication Tracking';
+
+  @override
+  String get interestFitness => 'Fitness & Workouts';
+
+  @override
+  String get interestInsights => 'Smart Insights';
+
+  @override
+  String get interestAnalysis => 'Progress Analysis';
+
+  @override
+  String get quickSetupTitle => 'Quick Setup';
+
+  @override
+  String get quickSetupSubtitle =>
+      'Get a head start by adding your first item.';
+
+  @override
+  String get quickAddMedication => 'Add Medication';
+
+  @override
+  String get quickAddMedicationSubtitle => 'Set up name & time quickly';
+
+  @override
+  String get quickPickTemplate => 'Pick Workout Template';
+
+  @override
+  String get quickPickTemplateSubtitle => 'Choose from popular routines';
+
+  @override
+  String get privacyTitle => 'Your Privacy Matters';
+
+  @override
+  String get privacySubtitle =>
+      'We believe in transparency. Please review and manage how your data is handled.';
+
+  @override
+  String get consentHealthTitle => 'Health Data Processing';
+
+  @override
+  String get consentHealthDescription =>
+      'Required to track medications and symptoms locally.';
+
+  @override
+  String get consentFitnessTitle => 'Fitness Data Processing';
+
+  @override
+  String get consentFitnessDescription =>
+      'Required to log workouts and track progress locally.';
+
+  @override
+  String get consentAnalyticsTitle => 'Analytics & Usage';
+
+  @override
+  String get consentAnalyticsDescription =>
+      'Help us improve VitalSync by sharing anonymous usage data.';
+
+  @override
+  String get consentBackupTitle => 'Cloud Backup';
+
+  @override
+  String get consentBackupDescription =>
+      'Securely backup your data to the cloud so you don\'t lose it.';
+
+  @override
+  String get readPrivacyPolicy => 'Read Full Privacy Policy';
+
+  @override
+  String get acceptContinue => 'Accept & Continue';
+
+  @override
+  String get requiredTag => 'REQUIRED';
+
+  @override
+  String consentRequiredMessage(String module) {
+    return 'This is required for the $module module to function.';
+  }
+
+  @override
+  String get welcomeBack => 'Welcome Back';
+
+  @override
+  String get signInSubtitle => 'Sign in to continue your healthy journey';
+
+  @override
+  String get email => 'Email';
+
+  @override
+  String get password => 'Password';
+
+  @override
+  String get forgotPassword => 'Forgot Password?';
+
+  @override
+  String get logIn => 'Log In';
+
+  @override
+  String get orSeparator => 'OR';
+
+  @override
+  String get continueWithGoogle => 'Continue with Google';
+
+  @override
+  String get dontHaveAccount => 'Don\'t have an account?';
+
+  @override
+  String get signUp => 'Sign Up';
+
+  @override
+  String get enterEmail => 'Please enter your email';
+
+  @override
+  String get enterPassword => 'Please enter your password';
+
+  @override
+  String loginFailed(Object error) {
+    return 'Login failed: $error';
+  }
+
+  @override
+  String googleLoginFailed(Object error) {
+    return 'Google Login failed: $error';
+  }
+
+  @override
+  String get createAccount => 'Create Account';
+
+  @override
+  String get joinVitalSync => 'Join VitalSync today';
+
+  @override
+  String get confirmPassword => 'Confirm Password';
+
+  @override
+  String get alreadyHaveAccount => 'Already have an account?';
+
+  @override
+  String get passwordsDoNotMatch => 'Passwords do not match';
+
+  @override
+  String get passwordLengthError => 'Password must be at least 6 characters';
+
+  @override
+  String get confirmPasswordError => 'Please confirm your password';
+
+  @override
+  String registrationFailed(Object error) {
+    return 'Registration failed: $error';
+  }
+
+  @override
+  String get resetPassword => 'Reset Password';
+
+  @override
+  String get resetPasswordSubtitle =>
+      'Enter your email to receive a reset link';
+
+  @override
+  String get sendResetLink => 'Send Reset Link';
+
+  @override
+  String get resetEmailSent => 'Password reset email sent. Check your inbox.';
+
+  @override
+  String resetPasswordError(Object error) {
+    return 'Error: $error';
+  }
 }
