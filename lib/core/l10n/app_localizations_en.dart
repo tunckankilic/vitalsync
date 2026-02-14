@@ -239,6 +239,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get editMedication => 'Edit Medication';
 
   @override
+  String get exerciseName => 'Exercise Name';
+
+  @override
   String get medicationName => 'Medication Name';
 
   @override
@@ -650,4 +653,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get min => 'min';
+
+  @override
+  String get noExercises => 'No exercises in this workout';
+
+  @override
+  String get muscleGroup => 'Muscle Group';
+
+  @override
+  String get equipment => 'Equipment';
+
+  @override
+  String get exerciseAdded => 'Exercise added successfully';
 }

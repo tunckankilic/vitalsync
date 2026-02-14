@@ -82,33 +82,9 @@ class WorkoutTemplateRepositoryImpl implements WorkoutTemplateRepository {
 
   @override
   Future<void> reorderExercises(int templateId, List<int> exerciseIds) async {
-    // This requires iterating and updating orderIndex for each exercise
     // Ideally this should be done in a transaction in DAO but we can do it here sequentially
     for (var i = 0; i < exerciseIds.length; i++) {
-      // We lack a method to update just orderIndex based on templateId & exerciseId
-      // DAO only has add/remove.
-      // We probably need updateTemplateExercise in DAO.
-      // Or we delete and re-insert? No, that loses settings.
-      // I should assume updateTemplateExercise exists or add it.
-      // But I can't modify DAO easily.
-      // Wait, template_exercises table has ID. I can update by ID if I fetch them first.
-
-      // Fetch current exercises
-      final currentExercises = await _dao.getTemplateExercises(templateId);
-      final exerciseToUpdate = currentExercises.firstWhere(
-        (e) => e.exerciseId == exerciseIds[i],
-      );
-
-      // Update its orderIndex
-      // Accessing the update method for TemplateExercises table would be ideal.
-      // _dao.update(templateExercises)..where..write..
-      // Since I don't have direct access to table via DAO interface unless exposed.
-      // The DAO interface I reviewed didn't have updateTemplateExercise.
-      // It has `addExerciseToTemplate` (insert) and `removeExerciseFromTemplate` (delete).
-      // It's missing `updateTemplateExercise`.
-      // I'll skip implementing reorder logic deeply or add a TODO.
-      // Or better, I'll execute raw SQL or use a workaround if feasible.
-      // But for now, I'll put a TODO.
+      await _dao.updateTemplateExerciseOrder(templateId, exerciseIds[i], i);
     }
   }
 
@@ -117,5 +93,11 @@ class WorkoutTemplateRepositoryImpl implements WorkoutTemplateRepository {
     return _dao.watchAll().map(
       (list) => list.map(WorkoutTemplateModel.fromDrift).toList(),
     );
+  }
+
+  @override
+  Future<List<TemplateExercise>> getTemplateExercises(int templateId) async {
+    final exercisesData = await _dao.getTemplateExercises(templateId);
+    return exercisesData.map(TemplateExerciseModel.fromDrift).toList();
   }
 }

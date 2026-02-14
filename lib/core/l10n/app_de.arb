@@ -1,14 +1,11 @@
 {
   "@@locale": "de",
   "appTitle": "VitalSync",
-  
   "dashboard": "Dashboard",
   "health": "Gesundheit",
   "fitness": "Fitness",
-  
   "settings": "Einstellungen",
   "profile": "Profil",
-  
   "syncOnline": "Online",
   "syncOffline": "Offline",
   "syncing": "Synchronisierung",
@@ -18,82 +15,64 @@
   "syncSemanticsOnline": "Online",
   "syncSemanticsOffline": "Offline",
   "syncSemanticsSyncing": "Daten werden synchronisiert",
-  
   "insights": "Einblicke",
   "insightsCountSemantics": "Einblicke, {count} ungelesen",
   "insightsCountTooltip": "{count} {count, plural, =1{neuer Einblick} other{neue Einblicke}}",
-  
   "addMedication": "Medikament hinzufügen",
   "logSymptom": "Symptom erfassen",
   "startWorkout": "Training starten",
-  
   "quickAddMenuOpen": "Schnellzugriffsmenü öffnen",
   "quickAddMenuClose": "Schnellzugriffsmenü schließen",
-  
   "dashboardTabSemantics": "Dashboard-Tab",
   "dashboardTabSelectedSemantics": "Dashboard-Tab, ausgewählt",
   "dashboardTabTooltip": "Zeigen Sie Ihr vereinheitlichtes Gesundheits- und Fitness-Dashboard an",
-  
   "healthTabSemantics": "Gesundheits-Tab",
   "healthTabSelectedSemantics": "Gesundheits-Tab, ausgewählt",
   "healthTabTooltip": "Medikamente und Symptome verwalten",
-  
   "fitnessTabSemantics": "Fitness-Tab",
   "fitnessTabSelectedSemantics": "Fitness-Tab, ausgewählt",
   "fitnessTabTooltip": "Trainings und Fortschritt verfolgen",
-  
   "settingsSemantics": "Einstellungen",
   "settingsTooltip": "Einstellungen öffnen",
-  
   "profileSemantics": "Profil",
-  
   "returnToWorkout": "Zurück zum Training",
   "timeElapsed": "Verstrichene Zeit",
-  
   "goodMorning": "Guten Morgen",
   "goodAfternoon": "Guten Tag",
   "goodEvening": "Guten Abend",
   "goodNight": "Gute Nacht",
-  
   "todaysMedications": "Heutige Medikamente",
   "nextMedicationIn": "Nächste in {time}",
   "noUpcomingMedications": "Keine anstehenden Medikamente",
   "hoursShort": "Std",
   "minutesShort": "Min",
-  
   "currentStreak": "Tage Serie",
   "inProgress": "In Bearbeitung",
-  
   "weeklyOverview": "Wöchentliche Übersicht",
   "thisWeek": "Diese Woche",
   "last30Days": "Letzte 30 Tage",
   "medicationCompliance": "Medikation",
   "workoutVolume": "Training",
-  
   "viewReport": "Bericht anzeigen",
-  
   "recentActivity": "Letzte Aktivitäten",
   "viewAll": "Alle anzeigen",
   "noRecentActivity": "Keine letzten Aktivitäten",
-  
   "dataCollecting": "Einblicke werden hier angezeigt, sobald Daten gesammelt werden",
   "startFirstWorkout": "Starten Sie Ihr erstes Training",
   "addFirstMedication": "Fügen Sie Ihr erstes Medikament hinzu",
-  
   "dismissInsightTitle": "Einblick verwerfen",
   "dismissInsightMessage": "Möchten Sie diesen Einblick wirklich verwerfen?",
   "cancel": "Abbrechen",
   "dismiss": "Verwerfen",
-  
   "errorLoadingDashboard": "Fehler beim Laden des Dashboards",
   "retry": "Wiederholen",
-
   "active": "Aktiv",
   "all": "Alle",
   "completed": "Abgeschlossen",
   "searchMedication": "Medikament suchen...",
   "noMedicationsFound": "Keine Medikamente gefunden",
   "editMedication": "Medikament bearbeiten",
+  "exerciseName": "Übungsname",
   "medicationName": "Medikamentenname",
   "dosage": "Dosierung",
   "requiredField": "Dieses Feld ist erforderlich",
@@ -125,5 +104,443 @@
   "medications": "Medikamente",
   "complianceTrend": "Einhaltungstrend",
   "skip": "Überspringen",
-  "take": "Einnehmen"
+  "take": "Einnehmen",
+  "achievementProgress": "{current} / {total}",
+  "@achievementProgress": {
+    "description": "Achievement progress format",
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "achievements": "Erfolge",
+  "@achievements": {
+    "description": "Achievements screen title"
+  },
+  "activeWorkout": "Aktives Training",
+  "@activeWorkout": {
+    "description": "Active workout screen title"
+  },
+  "addExercise": "Übung hinzufügen",
+  "@addExercise": {
+    "description": "Add exercise button"
+  },
+  "addExerciseToTemplate": "Übung hinzufügen",
+  "@addExerciseToTemplate": {
+    "description": "Add exercise to template button"
+  },
+  "allCategories": "Alle",
+  "@allCategories": {
+    "description": "All categories filter"
+  },
+  "arms": "Arme",
+  "@arms": {
+    "description": "Arms muscle group"
+  },
+  "back": "Rücken",
+  "@back": {
+    "description": "Back muscle group"
+  },
+  "calendar": "Kalender",
+  "@calendar": {
+    "description": "Calendar screen title"
+  },
+  "cardio": "Kardio",
+  "@cardio": {
+    "description": "Cardio category"
+  },
+  "chest": "Brust",
+  "@chest": {
+    "description": "Chest muscle group"
+  },
+  "compactCard": "Kompakte Karte",
+  "@compactCard": {
+    "description": "Compact card share option"
+  },
+  "completeSet": "Abschließen",
+  "@completeSet": {
+    "description": "Complete set button"
+  },
+  "consistencyIsKey": "Beständigkeit ist der Schlüssel! Halte deine Serie aufrecht",
+  "@consistencyIsKey": {
+    "description": "Consistency motivation message"
+  },
+  "core": "Core",
+  "@core": {
+    "description": "Core muscle group"
+  },
+  "createCustomExercise": "Benutzerdefinierte Übung erstellen",
+  "@createCustomExercise": {
+    "description": "Create custom exercise button"
+  },
+  "createNewTemplate": "Neue Vorlage erstellen",
+  "@createNewTemplate": {
+    "description": "Create new template button"
+  },
+  "createYourFirstTemplate": "Erstelle eine Vorlage, um schnell Trainings zu starten",
+  "@createYourFirstTemplate": {
+    "description": "Create first template message"
+  },
+  "crossModuleCategory": "Modulübergreifend",
+  "@crossModuleCategory": {
+    "description": "Cross-module category"
+  },
+  "deleteTemplate": "Vorlage löschen",
+  "@deleteTemplate": {
+    "description": "Delete template button"
+  },
+  "deleteTemplateConfirmation": "Bist du sicher, dass du diese Vorlage löschen möchtest?",
+  "@deleteTemplateConfirmation": {
+    "description": "Delete template confirmation message"
+  },
+  "discardWorkout": "Training verwerfen",
+  "@discardWorkout": {
+    "description": "Discard workout dialog title"
+  },
+  "discardWorkoutMessage": "Bist du sicher? Dein Training wird nicht gespeichert.",
+  "@discardWorkoutMessage": {
+    "description": "Discard workout confirmation message"
+  },
+  "duration": "Dauer",
+  "@duration": {
+    "description": "Duration label"
+  },
+  "editTemplate": "Vorlage bearbeiten",
+  "@editTemplate": {
+    "description": "Edit template button"
+  },
+  "estimatedDuration": "Geschätzte Dauer",
+  "@estimatedDuration": {
+    "description": "Estimated duration label"
+  },
+  "exerciseCount": "Übungen",
+  "@exerciseCount": {
+    "description": "Exercise count label"
+  },
+  "exerciseDetails": "Übungsdetails",
+  "@exerciseDetails": {
+    "description": "Exercise details title"
+  },
+  "exerciseHistory": "Verlauf",
+  "@exerciseHistory": {
+    "description": "Exercise history label"
+  },
+  "exerciseLibrary": "Übungsbibliothek",
+  "@exerciseLibrary": {
+    "description": "Exercise library screen title"
+  },
+  "exercises": "Übungen",
+  "@exercises": {
+    "description": "Exercises label"
+  },
+  "exportJSON": "JSON exportieren",
+  "@exportJSON": {
+    "description": "Export JSON option"
+  },
+  "finishWorkout": "Beenden",
+  "@finishWorkout": {
+    "description": "Finish workout button"
+  },
+  "firstWorkoutComplete": "Erstes Training abgeschlossen! 🔥",
+  "@firstWorkoutComplete": {
+    "description": "First workout completion message"
+  },
+  "fitnessCategory": "Fitness",
+  "@fitnessCategory": {
+    "description": "Fitness category"
+  },
+  "healthCategory": "Gesundheit",
+  "@healthCategory": {
+    "description": "Health category"
+  },
+  "instructions": "Anweisungen",
+  "@instructions": {
+    "description": "Instructions label"
+  },
+  "keepWorkingToUnlock": "Trainiere weiter, um Erfolge freizuschalten",
+  "@keepWorkingToUnlock": {
+    "description": "Keep working message"
+  },
+  "kg": "kg",
+  "@kg": {
+    "description": "Kilograms unit"
+  },
+  "lbs": "lbs",
+  "@lbs": {
+    "description": "Pounds unit"
+  },
+  "legs": "Beine",
+  "@legs": {
+    "description": "Legs muscle group"
+  },
+  "locked": "Gesperrt",
+  "@locked": {
+    "description": "Locked achievement status"
+  },
+  "min": "min",
+  "@min": {
+    "description": "Minutes abbreviation"
+  },
+  "monthlyStats": "Monatsstatistik",
+  "@monthlyStats": {
+    "description": "Monthly stats section title"
+  },
+  "nearCompletion": "Fast geschafft!",
+  "@nearCompletion": {
+    "description": "Near completion message"
+  },
+  "newPRCelebration": "Neuer persönlicher Rekord! 🏆",
+  "@newPRCelebration": {
+    "description": "New PR celebration message"
+  },
+  "newPRs": "Neue PRs",
+  "@newPRs": {
+    "description": "New personal records section title"
+  },
+  "noAchievementsYet": "Noch keine Erfolge",
+  "@noAchievementsYet": {
+    "description": "No achievements empty state"
+  },
+  "noExercisesFound": "Keine Übungen gefunden",
+  "@noExercisesFound": {
+    "description": "No exercises found message"
+  },
+  "noTemplatesYet": "Noch keine Vorlagen",
+  "@noTemplatesYet": {
+    "description": "No templates empty state"
+  },
+  "noWorkoutsYet": "Noch keine Trainings",
+  "@noWorkoutsYet": {
+    "description": "No workouts empty state"
+  },
+  "oneMonth": "1M",
+  "@oneMonth": {
+    "description": "One month time range"
+  },
+  "oneRepMax": "1RM",
+  "@oneRepMax": {
+    "description": "One rep max abbreviation"
+  },
+  "oneWeek": "1W",
+  "@oneWeek": {
+    "description": "One week time range"
+  },
+  "oneYear": "1J",
+  "@oneYear": {
+    "description": "One year time range"
+  },
+  "personalRecord": "Persönlicher Rekord",
+  "@personalRecord": {
+    "description": "Personal record label"
+  },
+  "personalRecords": "Persönliche Rekorde",
+  "@personalRecords": {
+    "description": "Personal records section title"
+  },
+  "previousSession": "Vorherige",
+  "@previousSession": {
+    "description": "Previous session label"
+  },
+  "progress": "Fortschritt",
+  "@progress": {
+    "description": "Progress screen title"
+  },
+  "quickStats": "Schnellstatistik",
+  "@quickStats": {
+    "description": "Quick stats section title"
+  },
+  "rateWorkout": "Training bewerten",
+  "@rateWorkout": {
+    "description": "Rate workout label"
+  },
+  "readyForNextSet": "Bereit für den nächsten Satz?",
+  "@readyForNextSet": {
+    "description": "Ready for next set prompt"
+  },
+  "recentWorkouts": "Letzte Trainings",
+  "@recentWorkouts": {
+    "description": "Recent workouts section title"
+  },
+  "reps": "Wiederholungen",
+  "@reps": {
+    "description": "Reps label"
+  },
+  "restTime": "Pausenzeit",
+  "@restTime": {
+    "description": "Rest time label"
+  },
+  "restTimer": "Pausentimer",
+  "@restTimer": {
+    "description": "Rest timer label"
+  },
+  "searchExercises": "Übungen suchen...",
+  "@searchExercises": {
+    "description": "Search exercises hint"
+  },
+  "seconds": "Sekunden",
+  "@seconds": {
+    "description": "Seconds unit"
+  },
+  "selectExercise": "Übung auswählen",
+  "@selectExercise": {
+    "description": "Select exercise dropdown hint"
+  },
+  "setNumber": "Satz {number}",
+  "@setNumber": {
+    "description": "Set number label",
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "sets": "Sätze",
+  "@sets": {
+    "description": "Sets label"
+  },
+  "shareWorkout": "Training teilen",
+  "@shareWorkout": {
+    "description": "Share workout button"
+  },
+  "shareYourPR": "Teile deine Leistung",
+  "@shareYourPR": {
+    "description": "Share PR call to action"
+  },
+  "shareYourStreak": "Deine Serie teilen?",
+  "@shareYourStreak": {
+    "description": "Share streak prompt"
+  },
+  "shoulders": "Schultern",
+  "@shoulders": {
+    "description": "Shoulders muscle group"
+  },
+  "sixMonths": "6M",
+  "@sixMonths": {
+    "description": "Six months time range"
+  },
+  "skipRest": "Pause überspringen",
+  "@skipRest": {
+    "description": "Skip rest button"
+  },
+  "startYourFirstWorkout": "Starte dein erstes Training, um deinen Fortschritt zu verfolgen",
+  "@startYourFirstWorkout": {
+    "description": "Start first workout message"
+  },
+  "storyFormat": "Story-Format",
+  "@storyFormat": {
+    "description": "Story format share option"
+  },
+  "streak": "Serie",
+  "@streak": {
+    "description": "Streak label"
+  },
+  "streakMilestone": "{days} Tage Serie! 🔥",
+  "@streakMilestone": {
+    "description": "Streak milestone message",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "templateName": "Vorlagenname",
+  "@templateName": {
+    "description": "Template name label"
+  },
+  "thisWeeksVolume": "Volumen dieser Woche",
+  "@thisWeeksVolume": {
+    "description": "This week's volume label"
+  },
+  "thisWeeksWorkouts": "Trainings dieser Woche",
+  "@thisWeeksWorkouts": {
+    "description": "This week's workouts count label"
+  },
+  "threeMonths": "3M",
+  "@threeMonths": {
+    "description": "Three months time range"
+  },
+  "totalSets": "Gesamtsätze",
+  "@totalSets": {
+    "description": "Total sets label"
+  },
+  "totalVolume": "Gesamtvolumen",
+  "@totalVolume": {
+    "description": "Total volume label"
+  },
+  "totalWorkouts": "Gesamttrainings",
+  "@totalWorkouts": {
+    "description": "Total workouts label"
+  },
+  "trackedWithVitalSync": "Verfolgt mit VitalSync",
+  "@trackedWithVitalSync": {
+    "description": "Share template watermark"
+  },
+  "unlocked": "Freigeschaltet",
+  "@unlocked": {
+    "description": "Unlocked achievement status"
+  },
+  "volumeProgression": "Volumenprogression",
+  "@volumeProgression": {
+    "description": "Volume progression chart title"
+  },
+  "vsLastWeek": "vs. letzte Woche",
+  "@vsLastWeek": {
+    "description": "Comparison to last week label"
+  },
+  "vsPreviousMonth": "vs. vorheriger Monat",
+  "@vsPreviousMonth": {
+    "description": "Comparison to previous month label"
+  },
+  "warmup": "Aufwärmen",
+  "@warmup": {
+    "description": "Warmup toggle label"
+  },
+  "weight": "Gewicht",
+  "@weight": {
+    "description": "Weight label"
+  },
+  "weightProgression": "Gewichtsprogression",
+  "@weightProgression": {
+    "description": "Weight progression chart title"
+  },
+  "workoutDetails": "Trainingsdetails",
+  "@workoutDetails": {
+    "description": "Workout details title"
+  },
+  "workoutFrequency": "Trainingshäufigkeit",
+  "@workoutFrequency": {
+    "description": "Workout frequency section title"
+  },
+  "workoutHome": "Trainings",
+  "@workoutHome": {
+    "description": "Workout home screen title"
+  },
+  "workoutNotes": "Trainingsnotizen",
+  "@workoutNotes": {
+    "description": "Workout notes label"
+  },
+  "workoutSummary": "Trainingszusammenfassung",
+  "@workoutSummary": {
+    "description": "Workout summary screen title"
+  },
+  "workoutTemplates": "Vorlagen",
+  "@workoutTemplates": {
+    "description": "Workout templates section title"
+  },
+  "muscleGroup": "Muskelgruppe",
+  "@muscleGroup": {
+    "description": "Muscle group label"
+  },
+  "equipment": "Ausrüstung",
+  "@equipment": {
+    "description": "Equipment label"
+  },
+  "exerciseAdded": "Übung erfolgreich hinzugefügt",
+  "@exerciseAdded": {
+    "description": "Exercise added success message"
+  }
 }

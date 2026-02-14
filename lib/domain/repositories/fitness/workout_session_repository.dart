@@ -16,4 +16,5 @@ abstract class WorkoutSessionRepository {
   Future<int> getWorkoutCount({int? days});
   Future<List<DateTime>> getWorkoutDates({int days = 30});
   Stream<WorkoutSession?> watchActiveSession();
+  Stream<List<WorkoutSet>> watchSessionSets(int sessionId);
 }

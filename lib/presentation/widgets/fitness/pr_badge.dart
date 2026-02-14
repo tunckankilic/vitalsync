@@ -134,7 +134,7 @@ class _GoldFlashOverlayState extends State<GoldFlashOverlay>
                   decoration: BoxDecoration(
                     color: const Color(
                       0xFFFFD700,
-                    ).withOpacity(0.3 * (1 - _animation.value)),
+                    ).withValues(alpha: 0.3 * (1 - _animation.value)),
                   ),
                 ),
               );
