@@ -1486,7 +1486,7 @@ abstract class AppLocalizations {
   /// **'Appearance'**
   String get appearance;
 
-  /// Theme setting
+  /// Theme label
   ///
   /// In en, this message translates to:
   /// **'Theme'**
@@ -1495,19 +1495,19 @@ abstract class AppLocalizations {
   /// System theme option
   ///
   /// In en, this message translates to:
-  /// **'System Default'**
+  /// **'System'**
   String get themeSystem;
 
   /// Light theme option
   ///
   /// In en, this message translates to:
-  /// **'Light Mode'**
+  /// **'Light'**
   String get themeLight;
 
   /// Dark theme option
   ///
   /// In en, this message translates to:
-  /// **'Dark Mode'**
+  /// **'Dark'**
   String get themeDark;
 
   /// Material You setting
@@ -1522,7 +1522,7 @@ abstract class AppLocalizations {
   /// **'Use dynamic colors from wallpaper'**
   String get materialYouSubtitle;
 
-  /// Language setting
+  /// Language label
   ///
   /// In en, this message translates to:
   /// **'Language'**
@@ -2061,6 +2061,168 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Error: {error}'**
   String resetPasswordError(Object error);
+
+  /// Onboarding welcome title
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome to VitalSync'**
+  String get onboardingWelcomeTitle;
+
+  /// Onboarding welcome subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Your all-in-one health & fitness companion'**
+  String get onboardingWelcomeSubtitle;
+
+  /// Onboarding privacy note
+  ///
+  /// In en, this message translates to:
+  /// **'Your data stays on your device. We respect your privacy.'**
+  String get onboardingPrivacyNote;
+
+  /// Onboarding health feature title
+  ///
+  /// In en, this message translates to:
+  /// **'Track Your Health'**
+  String get onboardingHealthTitle;
+
+  /// Onboarding health feature description
+  ///
+  /// In en, this message translates to:
+  /// **'Manage medications, symptoms, and health timeline'**
+  String get onboardingHealthDescription;
+
+  /// Onboarding health feature 1
+  ///
+  /// In en, this message translates to:
+  /// **'Never miss a medication with smart reminders'**
+  String get onboardingHealthFeature1;
+
+  /// Onboarding health feature 2
+  ///
+  /// In en, this message translates to:
+  /// **'Log symptoms and track patterns'**
+  String get onboardingHealthFeature2;
+
+  /// Onboarding health feature 3
+  ///
+  /// In en, this message translates to:
+  /// **'View your complete health timeline'**
+  String get onboardingHealthFeature3;
+
+  /// Onboarding fitness feature title
+  ///
+  /// In en, this message translates to:
+  /// **'Elevate Your Fitness'**
+  String get onboardingFitnessTitle;
+
+  /// Onboarding fitness feature description
+  ///
+  /// In en, this message translates to:
+  /// **'Log workouts, track progress, crush your goals'**
+  String get onboardingFitnessDescription;
+
+  /// Onboarding fitness feature 1
+  ///
+  /// In en, this message translates to:
+  /// **'Track workouts with detailed exercise logging'**
+  String get onboardingFitnessFeature1;
+
+  /// Onboarding fitness feature 2
+  ///
+  /// In en, this message translates to:
+  /// **'Monitor your progress with visual charts'**
+  String get onboardingFitnessFeature2;
+
+  /// Onboarding fitness feature 3
+  ///
+  /// In en, this message translates to:
+  /// **'Unlock achievements and build streaks'**
+  String get onboardingFitnessFeature3;
+
+  /// Onboarding privacy screen title
+  ///
+  /// In en, this message translates to:
+  /// **'Your Privacy, Your Control'**
+  String get onboardingPrivacyTitle;
+
+  /// Onboarding privacy screen description
+  ///
+  /// In en, this message translates to:
+  /// **'Choose what data you want to share'**
+  String get onboardingPrivacyDescription;
+
+  /// Onboarding preferences screen title
+  ///
+  /// In en, this message translates to:
+  /// **'Personalize Your Experience'**
+  String get onboardingPreferencesTitle;
+
+  /// Onboarding preferences screen description
+  ///
+  /// In en, this message translates to:
+  /// **'Set your language and theme preferences'**
+  String get onboardingPreferencesDescription;
+
+  /// Onboarding preferences note
+  ///
+  /// In en, this message translates to:
+  /// **'You can change these settings anytime'**
+  String get onboardingPreferencesNote;
+
+  /// GDPR analytics consent title
+  ///
+  /// In en, this message translates to:
+  /// **'Analytics & Insights'**
+  String get gdprAnalyticsTitle;
+
+  /// GDPR analytics consent description
+  ///
+  /// In en, this message translates to:
+  /// **'Help us improve the app with anonymous usage data'**
+  String get gdprAnalyticsDescription;
+
+  /// GDPR health data consent title
+  ///
+  /// In en, this message translates to:
+  /// **'Health Data Storage'**
+  String get gdprHealthDataTitle;
+
+  /// GDPR health data consent description
+  ///
+  /// In en, this message translates to:
+  /// **'Store your medication and symptom data (required)'**
+  String get gdprHealthDataDescription;
+
+  /// GDPR fitness data consent title
+  ///
+  /// In en, this message translates to:
+  /// **'Fitness Data Storage'**
+  String get gdprFitnessDataTitle;
+
+  /// GDPR fitness data consent description
+  ///
+  /// In en, this message translates to:
+  /// **'Store your workout and progress data (required)'**
+  String get gdprFitnessDataDescription;
+
+  /// GDPR cloud backup consent title
+  ///
+  /// In en, this message translates to:
+  /// **'Cloud Backup'**
+  String get gdprCloudBackupTitle;
+
+  /// GDPR cloud backup consent description
+  ///
+  /// In en, this message translates to:
+  /// **'Backup your data to Firebase for sync across devices'**
+  String get gdprCloudBackupDescription;
+
+  /// GDPR consent note
+  ///
+  /// In en, this message translates to:
+  /// **'Required consents are necessary for core app functionality. You can manage consents anytime in Settings.'**
+  String get gdprNote;
 }
 
 class _AppLocalizationsDelegate
