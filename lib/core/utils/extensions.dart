@@ -11,9 +11,7 @@ library;
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-// ═════════════════════════════════════════════════════════════════════════════
 // DATETIME EXTENSIONS
-// ═════════════════════════════════════════════════════════════════════════════
 
 /// Extension methods for [DateTime] to provide convenient date operations.
 extension DateTimeX on DateTime {
@@ -124,9 +122,7 @@ extension DateTimeX on DateTime {
   }
 }
 
-// ═════════════════════════════════════════════════════════════════════════════
 // STRING EXTENSIONS
-// ═════════════════════════════════════════════════════════════════════════════
 
 /// Extension methods for [String] to provide convenient string operations.
 extension StringX on String {
@@ -165,9 +161,7 @@ extension StringX on String {
   }
 }
 
-// ═════════════════════════════════════════════════════════════════════════════
 // DURATION EXTENSIONS
-// ═════════════════════════════════════════════════════════════════════════════
 
 /// Extension methods for [Duration] to provide workout time formatting.
 extension DurationX on Duration {
@@ -212,9 +206,7 @@ extension DurationX on Duration {
   }
 }
 
-// ═════════════════════════════════════════════════════════════════════════════
 // INT EXTENSIONS
-// ═════════════════════════════════════════════════════════════════════════════
 
 /// Extension methods for [int] to provide fitness-related formatting.
 extension IntX on int {
@@ -250,9 +242,7 @@ extension IntX on int {
   }
 }
 
-// ═════════════════════════════════════════════════════════════════════════════
 // DOUBLE EXTENSIONS
-// ═════════════════════════════════════════════════════════════════════════════
 
 /// Extension methods for [double] to provide fitness-related formatting.
 extension DoubleX on double {
@@ -294,9 +284,7 @@ extension DoubleX on double {
   }
 }
 
-// ═════════════════════════════════════════════════════════════════════════════
 // BUILDCONTEXT EXTENSIONS
-// ═════════════════════════════════════════════════════════════════════════════
 
 /// Extension methods for [BuildContext] to provide UI helpers.
 extension BuildContextX on BuildContext {
@@ -378,9 +366,42 @@ extension BuildContextX on BuildContext {
       MediaQuery.of(this).orientation == Orientation.landscape;
 }
 
-// ═════════════════════════════════════════════════════════════════════════════
+/// Extension for datetime formatting with context (localization aware).
+extension DateTimeContextX on DateTime {
+  /// Returns a localized relative time string (e.g., '5 minutes ago', 'Just now').
+  String formatRelative(BuildContext context) {
+    final now = DateTime.now();
+    final difference = now.difference(this);
+
+    if (difference.isNegative) {
+      // Future time
+      final absDifference = -difference.inMinutes;
+      if (absDifference < 60) {
+        return 'in $absDifference minutes';
+      } else {
+        return format('MMM d, h:mm a');
+      }
+    }
+
+    // Past time
+    if (difference.inSeconds < 60) {
+      return 'Just now';
+    } else if (difference.inMinutes < 60) {
+      final minutes = difference.inMinutes;
+      return '$minutes minute${minutes == 1 ? '' : 's'} ago';
+    } else if (difference.inHours < 24) {
+      final hours = difference.inHours;
+      return '$hours hour${hours == 1 ? '' : 's'} ago';
+    } else if (difference.inDays < 7) {
+      final days = difference.inDays;
+      return '$days day${days == 1 ? '' : 's'} ago';
+    } else {
+      return format('MMM d');
+    }
+  }
+}
+
 // LIST EXTENSIONS
-// ═════════════════════════════════════════════════════════════════════════════
 
 /// Extension methods for [List] to provide convenient list operations.
 extension ListX<T> on List<T> {

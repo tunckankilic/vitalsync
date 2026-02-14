@@ -1,4 +1,129 @@
 {
   "@@locale": "de",
-  "appTitle": "VitalSync"
+  "appTitle": "VitalSync",
+  
+  "dashboard": "Dashboard",
+  "health": "Gesundheit",
+  "fitness": "Fitness",
+  
+  "settings": "Einstellungen",
+  "profile": "Profil",
+  
+  "syncOnline": "Online",
+  "syncOffline": "Offline",
+  "syncing": "Synchronisierung",
+  "syncOnlineTooltip": "Online - Daten synchronisiert",
+  "syncOfflineTooltip": "Offline - Änderungen werden synchronisiert, wenn online",
+  "syncingTooltip": "Synchronisierung läuft...",
+  "syncSemanticsOnline": "Online",
+  "syncSemanticsOffline": "Offline",
+  "syncSemanticsSyncing": "Daten werden synchronisiert",
+  
+  "insights": "Einblicke",
+  "insightsCountSemantics": "Einblicke, {count} ungelesen",
+  "insightsCountTooltip": "{count} {count, plural, =1{neuer Einblick} other{neue Einblicke}}",
+  
+  "addMedication": "Medikament hinzufügen",
+  "logSymptom": "Symptom erfassen",
+  "startWorkout": "Training starten",
+  
+  "quickAddMenuOpen": "Schnellzugriffsmenü öffnen",
+  "quickAddMenuClose": "Schnellzugriffsmenü schließen",
+  
+  "dashboardTabSemantics": "Dashboard-Tab",
+  "dashboardTabSelectedSemantics": "Dashboard-Tab, ausgewählt",
+  "dashboardTabTooltip": "Zeigen Sie Ihr vereinheitlichtes Gesundheits- und Fitness-Dashboard an",
+  
+  "healthTabSemantics": "Gesundheits-Tab",
+  "healthTabSelectedSemantics": "Gesundheits-Tab, ausgewählt",
+  "healthTabTooltip": "Medikamente und Symptome verwalten",
+  
+  "fitnessTabSemantics": "Fitness-Tab",
+  "fitnessTabSelectedSemantics": "Fitness-Tab, ausgewählt",
+  "fitnessTabTooltip": "Trainings und Fortschritt verfolgen",
+  
+  "settingsSemantics": "Einstellungen",
+  "settingsTooltip": "Einstellungen öffnen",
+  
+  "profileSemantics": "Profil",
+  
+  "returnToWorkout": "Zurück zum Training",
+  "timeElapsed": "Verstrichene Zeit",
+  
+  "goodMorning": "Guten Morgen",
+  "goodAfternoon": "Guten Tag",
+  "goodEvening": "Guten Abend",
+  "goodNight": "Gute Nacht",
+  
+  "todaysMedications": "Heutige Medikamente",
+  "nextMedicationIn": "Nächste in {time}",
+  "noUpcomingMedications": "Keine anstehenden Medikamente",
+  "hoursShort": "Std",
+  "minutesShort": "Min",
+  
+  "currentStreak": "Tage Serie",
+  "inProgress": "In Bearbeitung",
+  
+  "weeklyOverview": "Wöchentliche Übersicht",
+  "thisWeek": "Diese Woche",
+  "last30Days": "Letzte 30 Tage",
+  "medicationCompliance": "Medikation",
+  "workoutVolume": "Training",
+  
+  "viewReport": "Bericht anzeigen",
+  
+  "recentActivity": "Letzte Aktivitäten",
+  "viewAll": "Alle anzeigen",
+  "noRecentActivity": "Keine letzten Aktivitäten",
+  
+  "dataCollecting": "Einblicke werden hier angezeigt, sobald Daten gesammelt werden",
+  "startFirstWorkout": "Starten Sie Ihr erstes Training",
+  "addFirstMedication": "Fügen Sie Ihr erstes Medikament hinzu",
+  
+  "dismissInsightTitle": "Einblick verwerfen",
+  "dismissInsightMessage": "Möchten Sie diesen Einblick wirklich verwerfen?",
+  "cancel": "Abbrechen",
+  "dismiss": "Verwerfen",
+  
+  "errorLoadingDashboard": "Fehler beim Laden des Dashboards",
+  "retry": "Wiederholen",
+
+  "active": "Aktiv",
+  "all": "Alle",
+  "completed": "Abgeschlossen",
+  "searchMedication": "Medikament suchen...",
+  "noMedicationsFound": "Keine Medikamente gefunden",
+  "editMedication": "Medikament bearbeiten",
+  "medicationName": "Medikamentenname",
+  "dosage": "Dosierung",
+  "requiredField": "Dieses Feld ist erforderlich",
+  "frequency": "Häufigkeit",
+  "scheduledTimes": "Geplante Zeiten",
+  "color": "Farbe",
+  "saving": "Speichern...",
+  "save": "Speichern",
+  "medicationDetails": "Medikamentendetails",
+  "deleteMedication": "Medikament löschen",
+  "deleteConfirmation": "Sind Sie sicher, dass Sie dieses Medikament löschen möchten?",
+  "delete": "Löschen",
+  "complianceHistory": "Einhaltungshistorie",
+  "history": "Verlauf",
+  "noLogsYet": "Noch keine Einträge",
+  "takenAt": "Eingenommen um",
+  "shareReport": "Bericht teilen",
+  "symptoms": "Symptome",
+  "mostFrequent": "Häufigste",
+  "recentTimeline": "Jüngster Verlauf",
+  "noSymptomsLogged": "Keine Symptome protokolliert",
+  "symptomName": "Symptomname",
+  "severity": "Schweregrad",
+  "date": "Datum",
+  "time": "Zeit",
+  "notes": "Notizen",
+  "healthTimeline": "Gesundheits-Zeitlinie",
+  "compliance": "Einhaltung",
+  "medications": "Medikamente",
+  "complianceTrend": "Einhaltungstrend",
+  "skip": "Überspringen",
+  "take": "Einnehmen"
 }
