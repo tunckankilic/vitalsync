@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 /// VitalSync — Weekly Report Screen.
 ///
 /// Comprehensive weekly health & fitness report with cross-module highlights.
