@@ -12,10 +12,21 @@ library;
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../features/health/presentation/screens/add_edit_medication_screen.dart';
+import '../../features/health/presentation/screens/add_symptom_screen.dart';
+import '../../features/health/presentation/screens/health_timeline_screen.dart';
+import '../../features/health/presentation/screens/medication_detail_screen.dart';
+import '../../features/health/presentation/screens/medication_list_screen.dart';
+import '../../features/health/presentation/screens/symptom_list_screen.dart';
 import '../../presentation/pages/dashboard_page.dart';
 import '../../presentation/pages/onboarding_page.dart';
 import '../../presentation/pages/splash_page.dart';
 import '../../presentation/screens/app_shell.dart';
+import '../../presentation/screens/auth/forgot_password_screen.dart';
+import '../../presentation/screens/auth/login_screen.dart';
+import '../../presentation/screens/auth/register_screen.dart';
+import '../../presentation/screens/profile/profile_screen.dart';
+import '../../presentation/screens/settings/settings_screen.dart';
 
 /// GoRouter configuration for VitalSync app navigation.
 ///
@@ -24,7 +35,13 @@ import '../../presentation/screens/app_shell.dart';
 /// - Nested navigation per tab
 /// - Auth redirect logic
 /// - Custom page transitions
+// Define Keys
+final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>();
+final GlobalKey<NavigatorState> _shellNavigatorKey =
+    GlobalKey<NavigatorState>();
+
 final GoRouter appRouter = GoRouter(
+  navigatorKey: _rootNavigatorKey,
   initialLocation: '/splash',
   debugLogDiagnostics: true,
   routes: [
@@ -42,8 +59,42 @@ final GoRouter appRouter = GoRouter(
           _buildPageWithFadeTransition(context, state, const OnboardingPage()),
     ),
 
+    // AUTH ROUTES
+    GoRoute(
+      path: '/auth',
+      name: 'auth',
+      redirect: (context, state) => '/auth/login',
+      routes: [
+        GoRoute(
+          path: 'login',
+          name: 'login',
+          pageBuilder: (context, state) =>
+              _buildPageWithFadeTransition(context, state, const LoginScreen()),
+        ),
+        GoRoute(
+          path: 'register',
+          name: 'register',
+          pageBuilder: (context, state) => _buildPageWithFadeTransition(
+            context,
+            state,
+            const RegisterScreen(),
+          ),
+        ),
+        GoRoute(
+          path: 'forgot-password',
+          name: 'forgot_password',
+          pageBuilder: (context, state) => _buildPageWithFadeTransition(
+            context,
+            state,
+            const ForgotPasswordScreen(),
+          ),
+        ),
+      ],
+    ),
+
     // MAIN APP SHELL (Bottom Navigation with 3 tabs)
     ShellRoute(
+      navigatorKey: _shellNavigatorKey,
       builder: (context, state, child) {
         return AppShell(child: child);
       },
@@ -66,10 +117,76 @@ final GoRouter appRouter = GoRouter(
           pageBuilder: (context, state) => _buildPageWithFadeThroughTransition(
             context,
             state,
-            const Placeholder(), // TODO: Create HealthPage
+            const MedicationListScreen(),
           ),
-          routes: const [
-            // Health nested routes will be added
+          routes: [
+            GoRoute(
+              path: 'medications/:id',
+              name: 'medication_detail',
+              parentNavigatorKey: _rootNavigatorKey, // Hide bottom nav
+              pageBuilder: (context, state) {
+                final id = int.tryParse(state.pathParameters['id'] ?? '') ?? 0;
+                return _buildPageWithSlideTransition(
+                  context,
+                  state,
+                  MedicationDetailScreen(medicationId: id),
+                );
+              },
+            ),
+            GoRoute(
+              path: 'add-medication',
+              name: 'add_medication',
+              parentNavigatorKey: _rootNavigatorKey,
+              pageBuilder: (context, state) => _buildPageWithSlideTransition(
+                context,
+                state,
+                const AddEditMedicationScreen(),
+              ),
+            ),
+            GoRoute(
+              path: 'edit-medication',
+              name: 'edit_medication',
+              parentNavigatorKey: _rootNavigatorKey,
+              pageBuilder: (context, state) {
+                // expected ?id=... query param
+                final id = int.tryParse(state.uri.queryParameters['id'] ?? '');
+                return _buildPageWithSlideTransition(
+                  context,
+                  state,
+                  AddEditMedicationScreen(medicationId: id),
+                );
+              },
+            ),
+            GoRoute(
+              path: 'symptoms',
+              name: 'symptoms',
+              parentNavigatorKey: _rootNavigatorKey,
+              pageBuilder: (context, state) => _buildPageWithSlideTransition(
+                context,
+                state,
+                const SymptomListScreen(),
+              ),
+            ),
+            GoRoute(
+              path: 'add-symptom',
+              name: 'add_symptom',
+              parentNavigatorKey: _rootNavigatorKey,
+              pageBuilder: (context, state) => _buildPageWithSlideTransition(
+                context,
+                state,
+                const AddSymptomScreen(),
+              ),
+            ),
+            GoRoute(
+              path: 'timeline',
+              name: 'timeline',
+              parentNavigatorKey: _rootNavigatorKey,
+              pageBuilder: (context, state) => _buildPageWithSlideTransition(
+                context,
+                state,
+                const HealthTimelineScreen(),
+              ),
+            ),
           ],
         ),
 
@@ -93,23 +210,20 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: '/profile',
       name: 'profile',
-      pageBuilder: (context, state) => _buildPageWithSlideTransition(
-        context,
-        state,
-        const Placeholder(), // TODO: Create ProfilePage
-      ),
+      parentNavigatorKey: _rootNavigatorKey,
+      pageBuilder: (context, state) =>
+          _buildPageWithSlideTransition(context, state, const ProfileScreen()),
     ),
+    // SETTINGS
     GoRoute(
       path: '/settings',
       name: 'settings',
-      pageBuilder: (context, state) => _buildPageWithSlideTransition(
-        context,
-        state,
-        const Placeholder(), // TODO: Create SettingsPage
-      ),
+      parentNavigatorKey: _rootNavigatorKey,
+      pageBuilder: (context, state) =>
+          _buildPageWithSlideTransition(context, state, const SettingsScreen()),
     ),
   ],
-  // TODO: Add redirect logic for auth in later prompts
+  // TODO: Add redirect logic for auth 
   // redirect: (context, state) { ... }
 );
 

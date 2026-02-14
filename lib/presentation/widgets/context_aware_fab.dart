@@ -9,7 +9,9 @@ library;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/l10n/app_localizations.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/utils/accessibility_helper.dart';
 
 /// Context-aware floating action button.
 ///
@@ -42,6 +44,16 @@ class _ContextAwareFabState extends ConsumerState<ContextAwareFab>
     _expandAnimation = CurvedAnimation(
       parent: _animationController,
       curve: Curves.easeInOut,
+    );
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Update duration based on reduce motion
+    _animationController.duration = AccessibilityHelper.getDuration(
+      context,
+      const Duration(milliseconds: 200),
     );
   }
 
@@ -83,6 +95,7 @@ class _ContextAwareFabState extends ConsumerState<ContextAwareFab>
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
 
     // Dashboard tab: Expandable menu
     if (widget.currentTabIndex == 0) {
@@ -95,7 +108,7 @@ class _ContextAwareFabState extends ConsumerState<ContextAwareFab>
             context,
             offset: const Offset(0, -140),
             icon: Icons.medication_rounded,
-            label: 'Add Medication',
+            label: l10n.addMedication,
             color: AppTheme.healthPrimary,
             onPressed: _onAddMedication,
           ),
@@ -105,7 +118,7 @@ class _ContextAwareFabState extends ConsumerState<ContextAwareFab>
             context,
             offset: const Offset(0, -90),
             icon: Icons.healing_rounded,
-            label: 'Log Symptom',
+            label: l10n.logSymptom,
             color: AppTheme.healthSecondary,
             onPressed: _onLogSymptom,
           ),
@@ -115,7 +128,7 @@ class _ContextAwareFabState extends ConsumerState<ContextAwareFab>
             context,
             offset: const Offset(0, -40),
             icon: Icons.fitness_center_rounded,
-            label: 'Start Workout',
+            label: l10n.startWorkout,
             color: AppTheme.fitnessPrimary,
             onPressed: _onStartWorkout,
           ),
@@ -127,12 +140,15 @@ class _ContextAwareFabState extends ConsumerState<ContextAwareFab>
             foregroundColor: theme.colorScheme.onPrimary,
             child: Semantics(
               label: _isExpanded
-                  ? 'Close quick add menu'
-                  : 'Open quick add menu',
+                  ? l10n.quickAddMenuClose
+                  : l10n.quickAddMenuOpen,
               button: true,
               child: AnimatedRotation(
                 turns: _isExpanded ? 0.125 : 0, // 45 degrees when expanded
-                duration: const Duration(milliseconds: 200),
+                duration: AccessibilityHelper.getDuration(
+                  context,
+                  const Duration(milliseconds: 200),
+                ),
                 child: const Icon(Icons.add_rounded),
               ),
             ),
@@ -143,23 +159,25 @@ class _ContextAwareFabState extends ConsumerState<ContextAwareFab>
 
     // Health tab: Single FAB for adding medication
     if (widget.currentTabIndex == 1) {
+      final l10n = AppLocalizations.of(context);
       return FloatingActionButton.extended(
         onPressed: _onAddMedication,
         backgroundColor: AppTheme.healthPrimary,
         foregroundColor: Colors.white,
         icon: const Icon(Icons.medication_rounded),
-        label: const Text('Add Medication'),
+        label: Text(l10n.addMedication),
       );
     }
 
     // Fitness tab: Single FAB for starting workout
     if (widget.currentTabIndex == 2) {
+      final l10n = AppLocalizations.of(context);
       return FloatingActionButton.extended(
         onPressed: _onStartWorkout,
         backgroundColor: AppTheme.fitnessPrimary,
         foregroundColor: Colors.white,
         icon: const Icon(Icons.fitness_center_rounded),
-        label: const Text('Start Workout'),
+        label: Text(l10n.startWorkout),
       );
     }
 
