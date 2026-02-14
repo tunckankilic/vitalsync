@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:vitalsync/core/l10n/app_localizations.dart';
 import 'package:vitalsync/presentation/screens/gdpr/consent_screen.dart'; // Will be created later
 
 final onboardingStepProvider = NotifierProvider<OnboardingStepNotifier, int>(
@@ -44,6 +45,7 @@ class OnboardingScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final currentStep = ref.watch(onboardingStepProvider);
     final pageController = PageController(initialPage: currentStep);
+    final l10n = AppLocalizations.of(context);
 
     // Sync page controller with provider if needed, or just use provider for UI state
     // For simplicity, we'll drive the PageView with the controller and update provider on change.
@@ -104,8 +106,7 @@ class OnboardingScreen extends ConsumerWidget {
                 Expanded(
                   child: PageView(
                     controller: pageController,
-                    physics:
-                        const NeverScrollableScrollPhysics(), // Disable swipe, force buttons
+                    physics: const NeverScrollableScrollPhysics(),
                     onPageChanged: (index) {
                       ref.read(onboardingStepProvider.notifier).setStep(index);
                     },
@@ -113,9 +114,7 @@ class OnboardingScreen extends ConsumerWidget {
                       _WelcomePage(),
                       _PersonalizationPage(),
                       _QuickSetupPage(),
-                      ConsentContent(
-                        isOnboarding: true,
-                      ), // Updated to use real screen logic
+                      ConsentContent(isOnboarding: true),
                     ],
                   ),
                 ),
@@ -134,7 +133,7 @@ class OnboardingScreen extends ConsumerWidget {
                               curve: Curves.easeInOut,
                             );
                           },
-                          child: const Text('Back'),
+                          child: Text(l10n.back),
                         )
                       else
                         const SizedBox(width: 64), // Spacer
@@ -147,7 +146,7 @@ class OnboardingScreen extends ConsumerWidget {
                               curve: Curves.easeInOut,
                             );
                           },
-                          child: const Text('Skip'),
+                          child: Text(l10n.skip),
                         ),
 
                       ElevatedButton(
@@ -176,8 +175,8 @@ class OnboardingScreen extends ConsumerWidget {
                         ),
                         child: Text(
                           currentStep == _totalSteps - 1
-                              ? 'Get Started'
-                              : 'Next',
+                              ? l10n.getStarted
+                              : l10n.next,
                         ),
                       ),
                     ],
@@ -197,6 +196,7 @@ class _WelcomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Padding(
       padding: const EdgeInsets.all(24.0),
       child: Column(
@@ -213,14 +213,14 @@ class _WelcomePage extends StatelessWidget {
               .shimmer(duration: 1200.ms),
           const SizedBox(height: 32),
           Text(
-            'Welcome to VitalSync',
+            l10n.welcomeTitle,
             style: Theme.of(
               context,
             ).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold),
           ).animate().fadeIn(delay: 200.ms).moveY(begin: 20, end: 0),
           const SizedBox(height: 16),
           Text(
-            'Manage your health and fitness in one place.',
+            l10n.welcomeSubtitle,
             textAlign: TextAlign.center,
             style: Theme.of(
               context,
@@ -261,6 +261,7 @@ class _PersonalizationPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedInterests = ref.watch(selectedInterestsProvider);
+    final l10n = AppLocalizations.of(context);
 
     void toggleInterest(String interest) {
       ref.read(selectedInterestsProvider.notifier).toggle(interest);
@@ -273,14 +274,14 @@ class _PersonalizationPage extends ConsumerWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            'What matters most to you?',
+            l10n.personalizationTitle,
             style: Theme.of(
               context,
             ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
           ).animate().fadeIn().moveX(begin: -20, end: 0),
           const SizedBox(height: 24),
           _InterestCard(
-            title: 'Medication Tracking',
+            title: l10n.interestMedication,
             icon: Icons.medication,
             color: Colors.redAccent,
             isSelected: selectedInterests.contains('medication'),
@@ -288,7 +289,7 @@ class _PersonalizationPage extends ConsumerWidget {
           ),
           const SizedBox(height: 16),
           _InterestCard(
-            title: 'Fitness & Workouts',
+            title: l10n.interestFitness,
             icon: Icons.fitness_center,
             color: Colors.blueAccent,
             isSelected: selectedInterests.contains('fitness'),
@@ -296,7 +297,7 @@ class _PersonalizationPage extends ConsumerWidget {
           ),
           const SizedBox(height: 16),
           _InterestCard(
-            title: 'Smart Insights',
+            title: l10n.interestInsights,
             icon: Icons.lightbulb,
             color: Colors.amber,
             isSelected: selectedInterests.contains('insights'),
@@ -304,7 +305,7 @@ class _PersonalizationPage extends ConsumerWidget {
           ),
           const SizedBox(height: 16),
           _InterestCard(
-            title: 'Progress Analysis',
+            title: l10n.interestAnalysis,
             icon: Icons.bar_chart,
             color: Colors.green,
             isSelected: selectedInterests.contains('analysis'),
@@ -388,20 +389,21 @@ class _QuickSetupPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Padding(
       padding: const EdgeInsets.all(24.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            'Quick Setup',
+            l10n.quickSetupTitle,
             style: Theme.of(
               context,
             ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
           Text(
-            'Get a head start by adding your first item.',
+            l10n.quickSetupSubtitle,
             textAlign: TextAlign.center,
             style: Theme.of(
               context,
@@ -411,8 +413,8 @@ class _QuickSetupPage extends StatelessWidget {
 
           // Add Medication Option
           _QuickActionCard(
-            title: 'Add Logic Medication',
-            subtitle: 'Set up name & time quickly',
+            title: l10n.quickAddMedication,
+            subtitle: l10n.quickAddMedicationSubtitle,
             icon: Icons.medication_liquid,
             color: Colors.redAccent,
             onTap: () {
@@ -423,8 +425,8 @@ class _QuickSetupPage extends StatelessWidget {
 
           // Select Template Option
           _QuickActionCard(
-            title: 'Pick Workout Template',
-            subtitle: 'Choose from popular routines',
+            title: l10n.quickPickTemplate,
+            subtitle: l10n.quickPickTemplateSubtitle,
             icon: Icons.fitness_center_outlined,
             color: Colors.blueAccent,
             onTap: () {
@@ -505,5 +507,3 @@ class _QuickActionCard extends StatelessWidget {
     );
   }
 }
-
-// Replaced by ConsentContent from consent_screen.dart

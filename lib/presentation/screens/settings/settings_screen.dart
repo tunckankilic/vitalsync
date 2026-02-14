@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:vitalsync/core/l10n/app_localizations.dart';
 import 'package:vitalsync/core/settings/settings_provider.dart';
 import 'package:vitalsync/core/sync/sync_provider.dart';
 import 'package:vitalsync/presentation/screens/gdpr/consent_screen.dart';
@@ -10,6 +11,7 @@ class SettingsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
     // Watch providers
     final themeMode = ref.watch(themeSettingProvider);
     final locale = ref.watch(localeSettingProvider);
@@ -21,7 +23,7 @@ class SettingsScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Settings'),
+        title: Text(l10n.settingsTitle),
         centerTitle: true,
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -31,11 +33,11 @@ class SettingsScreen extends ConsumerWidget {
         children: [
           // Appearance Section
           _SettingsSection(
-            title: 'Appearance',
+            title: l10n.appearance,
             children: [
               _SettingsTile(
-                title: 'Theme',
-                subtitle: _getThemeName(themeMode),
+                title: l10n.theme,
+                subtitle: _getThemeName(themeMode, l10n),
                 icon: Icons.brightness_6_outlined,
                 trailing: DropdownButton<ThemeMode>(
                   value: themeMode,
@@ -47,25 +49,42 @@ class SettingsScreen extends ConsumerWidget {
                           .setThemeMode(newMode);
                     }
                   },
-                  items: const [
+                  items: [
                     DropdownMenuItem(
                       value: ThemeMode.system,
-                      child: Text('System'),
+                      child: Text(l10n.themeSystem),
                     ),
                     DropdownMenuItem(
                       value: ThemeMode.light,
-                      child: Text('Light'),
+                      child: Text(l10n.themeLight),
                     ),
                     DropdownMenuItem(
                       value: ThemeMode.dark,
-                      child: Text('Dark'),
+                      child: Text(l10n.themeDark),
                     ),
                   ],
                 ),
               ),
               _SettingsTile(
-                title: 'Language',
-                subtitle: _getLanguageName(locale.languageCode),
+                title: l10n.materialYou,
+                subtitle: l10n.materialYouSubtitle,
+                icon: Icons.palette_outlined,
+                trailing: Switch(
+                  value: ref.watch(materialYouSettingProvider),
+                  activeThumbColor: Theme.of(context).primaryColor,
+                  activeTrackColor: Theme.of(
+                    context,
+                  ).primaryColor.withValues(alpha: 0.5),
+                  onChanged: (val) {
+                    ref
+                        .read(materialYouSettingProvider.notifier)
+                        .setEnabled(val);
+                  },
+                ),
+              ),
+              _SettingsTile(
+                title: l10n.language,
+                subtitle: _getLanguageName(locale.languageCode, l10n),
                 icon: Icons.language_outlined,
                 trailing: DropdownButton<String>(
                   value: locale.languageCode,
@@ -77,10 +96,10 @@ class SettingsScreen extends ConsumerWidget {
                           .setLocale(Locale(newCode));
                     }
                   },
-                  items: const [
-                    DropdownMenuItem(value: 'en', child: Text('English')),
-                    DropdownMenuItem(value: 'tr', child: Text('Türkçe')),
-                    DropdownMenuItem(value: 'de', child: Text('Deutsch')),
+                  items: [
+                    DropdownMenuItem(value: 'en', child: Text(l10n.languageEn)),
+                    DropdownMenuItem(value: 'tr', child: Text(l10n.languageTr)),
+                    DropdownMenuItem(value: 'de', child: Text(l10n.languageDe)),
                   ],
                 ),
               ),
@@ -91,10 +110,10 @@ class SettingsScreen extends ConsumerWidget {
 
           // Notifications Section
           _SettingsSection(
-            title: 'Notifications',
+            title: l10n.notifications,
             children: [
               SwitchListTile(
-                title: const Text('Enable Notifications'),
+                title: Text(l10n.enableNotifications),
                 secondary: const Icon(Icons.notifications_outlined),
                 value: notificationsEnabled,
                 onChanged: (val) {
@@ -114,13 +133,13 @@ class SettingsScreen extends ConsumerWidget {
 
           // Units Section
           _SettingsSection(
-            title: 'Units',
+            title: l10n.units,
             children: [
               _SettingsTile(
-                title: 'Unit System',
+                title: l10n.unitSystem,
                 subtitle: unitSystem == UnitSystem.metric
-                    ? 'Metric (kg, cm)'
-                    : 'Imperial (lbs, in)',
+                    ? l10n.unitMetric
+                    : l10n.unitImperial,
                 icon: Icons.scale_outlined,
                 trailing: Switch(
                   value: unitSystem == UnitSystem.metric,
@@ -146,11 +165,11 @@ class SettingsScreen extends ConsumerWidget {
 
           // Privacy & Data
           _SettingsSection(
-            title: 'Privacy & Data',
+            title: l10n.privacyData,
             children: [
               _SettingsTile(
-                title: 'Manage Consents',
-                subtitle: 'Update your GDPR privacy choices',
+                title: l10n.manageConsents,
+                subtitle: l10n.manageConsentsSubtitle,
                 icon: Icons.shield_outlined,
                 onTap: () {
                   Navigator.of(context).push(
@@ -161,23 +180,23 @@ class SettingsScreen extends ConsumerWidget {
                 },
               ),
               _SettingsTile(
-                title: 'Export Data',
-                subtitle: 'Download a copy of your data',
+                title: l10n.exportData,
+                subtitle: l10n.exportDataSubtitle,
                 icon: Icons.download_outlined,
                 onTap: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Export started...')),
-                  );
+                  ScaffoldMessenger.of(
+                    context,
+                  ).showSnackBar(SnackBar(content: Text(l10n.exportStarted)));
                 },
               ),
               _SettingsTile(
-                title: 'Delete Account',
-                subtitle: 'Permanently delete your account and data',
+                title: l10n.deleteAccount,
+                subtitle: l10n.deleteAccountSubtitle,
                 icon: Icons.delete_forever_outlined,
                 textColor: Colors.red,
                 iconColor: Colors.red,
                 onTap: () {
-                  _showDeleteConfirmation(context, ref);
+                  _showDeleteConfirmation(context, ref, l10n);
                 },
               ),
             ],
@@ -187,7 +206,7 @@ class SettingsScreen extends ConsumerWidget {
 
           // Sync Section
           _SettingsSection(
-            title: 'Sync',
+            title: l10n.sync,
             children: [
               ListTile(
                 leading:
@@ -203,15 +222,15 @@ class SettingsScreen extends ConsumerWidget {
                           target: syncStatus == SyncStatus.syncing ? 1 : 0,
                         )
                         .rotate(duration: 1.seconds, curve: Curves.linear),
-                title: const Text('Sync Status'),
-                subtitle: Text(_getSyncStatusText(syncStatus)),
+                title: Text(l10n.syncStatus),
+                subtitle: Text(_getSyncStatusText(syncStatus, l10n)),
                 trailing: TextButton(
                   onPressed: syncStatus == SyncStatus.syncing
                       ? null
                       : () {
                           ref.read(syncStatusProvider.notifier).triggerSync();
                         },
-                  child: const Text('Sync Now'),
+                  child: Text(l10n.syncNow),
                 ),
               ),
             ],
@@ -221,15 +240,15 @@ class SettingsScreen extends ConsumerWidget {
 
           // About
           _SettingsSection(
-            title: 'About',
+            title: l10n.about,
             children: [
-              const _SettingsTile(
-                title: 'Version',
+              _SettingsTile(
+                title: l10n.version,
                 subtitle: '1.0.0 (Build 100)',
                 icon: Icons.info_outline,
               ),
               _SettingsTile(
-                title: 'Open Source Licenses',
+                title: l10n.licenses,
                 icon: Icons.description_outlined,
                 onTap: () => showLicensePage(context: context),
               ),
@@ -242,63 +261,65 @@ class SettingsScreen extends ConsumerWidget {
     );
   }
 
-  String _getThemeName(ThemeMode mode) {
+  String _getThemeName(ThemeMode mode, AppLocalizations l10n) {
     switch (mode) {
       case ThemeMode.system:
-        return 'System Default';
+        return l10n.themeSystem;
       case ThemeMode.light:
-        return 'Light Mode';
+        return l10n.themeLight;
       case ThemeMode.dark:
-        return 'Dark Mode';
+        return l10n.themeDark;
     }
   }
 
-  String _getLanguageName(String code) {
+  String _getLanguageName(String code, AppLocalizations l10n) {
     switch (code) {
       case 'en':
-        return 'English';
+        return l10n.languageEn;
       case 'tr':
-        return 'Türkçe';
+        return l10n.languageTr;
       case 'de':
-        return 'Deutsch';
+        return l10n.languageDe;
       default:
         return code;
     }
   }
 
-  String _getSyncStatusText(SyncStatus status) {
+  String _getSyncStatusText(SyncStatus status, AppLocalizations l10n) {
     switch (status) {
       case SyncStatus.idle:
-        return 'Last synced recently';
+        return l10n.syncIdle;
       case SyncStatus.syncing:
-        return 'Syncing...';
+        return l10n.syncing; // Existing
       case SyncStatus.error:
-        return 'Sync failed. Tap to retry.';
+        return l10n.syncError;
     }
   }
 
-  void _showDeleteConfirmation(BuildContext context, WidgetRef ref) {
+  void _showDeleteConfirmation(
+    BuildContext context,
+    WidgetRef ref,
+    AppLocalizations l10n,
+  ) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Delete Account?'),
-        content: const Text(
-          'This action cannot be undone. All your data will be permanently deleted.',
-        ),
+        title: Text(l10n.deleteAccountDialogTitle),
+        content: Text(l10n.deleteAccountDialogMessage),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            child: Text(l10n.cancel), // Existing
           ),
           TextButton(
             onPressed: () {
               Navigator.pop(context);
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Account deletion requested.')),
+                SnackBar(content: Text(l10n.deleteAccountRequested)),
               );
             },
             style: TextButton.styleFrom(foregroundColor: Colors.red),
-            child: const Text('Delete'),
+            child: Text(l10n.delete), // Existing
           ),
         ],
       ),

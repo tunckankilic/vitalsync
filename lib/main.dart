@@ -9,13 +9,14 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
+import 'package:vitalsync/core/l10n/app_localizations.dart';
 import 'core/background/background_service.dart';
 import 'core/constants/app_constants.dart';
 import 'core/di/injection_container.dart';
 import 'core/network/connectivity_service.dart';
 import 'core/notifications/notification_service.dart';
 import 'core/router/app_router.dart';
+import 'core/settings/settings_provider.dart';
 import 'core/sync/sync_service.dart';
 import 'core/theme/app_theme.dart';
 import 'firebase_options.dart';
@@ -65,17 +66,18 @@ class VitalSyncApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // TODO: Connect to theme provider for dynamic theme selection in Prompt 3.x
-    // TODO: Connect to locale provider for dynamic locale in Prompt 3.x
+    final themeMode = ref.watch(themeSettingProvider);
+    final locale = ref.watch(localeSettingProvider);
+    final materialYouEnabled = ref.watch(materialYouSettingProvider);
 
     return DynamicColorBuilder(
       builder: (ColorScheme? lightDynamic, ColorScheme? darkDynamic) {
         // Material You color schemes (Android 12+)
         // If not available, fallback to default themes
 
-        // TODO: In Prompt 4.5, add settings toggle to enable/disable Material You
-        // For now, use dynamic colors if available
-        final useDynamicColors = lightDynamic != null && darkDynamic != null;
+        // Use dynamic colors if available AND enabled in settings
+        final useDynamicColors =
+            lightDynamic != null && darkDynamic != null && materialYouEnabled;
 
         ThemeData lightTheme;
         ThemeData darkTheme;
@@ -99,23 +101,19 @@ class VitalSyncApp extends ConsumerWidget {
           routerConfig: appRouter,
 
           // === LOCALIZATION ===
-          // TODO: Add AppLocalizations.delegate when l10n is generated (Prompt 1.2)
           localizationsDelegates: const [
+            AppLocalizations.delegate,
             GlobalMaterialLocalizations.delegate,
             GlobalWidgetsLocalizations.delegate,
             GlobalCupertinoLocalizations.delegate,
           ],
-          supportedLocales: const [
-            Locale('en'), // English
-            Locale('tr'), // Turkish
-            Locale('de'), // German
-          ],
-          locale: const Locale('en'), // Default locale
+          supportedLocales: AppLocalizations.supportedLocales,
+          locale: locale,
           // === THEME ===
           theme: lightTheme,
           darkTheme: darkTheme,
           highContrastTheme: AppTheme.highContrastTheme,
-          themeMode: ThemeMode.system,
+          themeMode: themeMode,
         );
       },
     );

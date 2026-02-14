@@ -3,6 +3,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:vitalsync/core/auth/auth_provider.dart';
+import 'package:vitalsync/core/l10n/app_localizations.dart';
 
 class RegisterScreen extends ConsumerStatefulWidget {
   const RegisterScreen({super.key});
@@ -45,7 +46,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
       } catch (e) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Registration failed: ${e.toString()}')),
+            SnackBar(
+              content: Text(AppLocalizations.of(context).registrationFailed(e)),
+            ),
           );
         }
       }
@@ -56,6 +59,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   Widget build(BuildContext context) {
     final authState = ref.watch(authProvider);
     final isLoading = authState.isLoading;
+    final l10n = AppLocalizations.of(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -92,14 +96,14 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Text(
-                        'Create Account',
+                        l10n.createAccount,
                         textAlign: TextAlign.center,
                         style: Theme.of(context).textTheme.headlineMedium
                             ?.copyWith(fontWeight: FontWeight.bold),
                       ).animate().fadeIn().moveY(begin: 10, end: 0),
                       const SizedBox(height: 8),
                       Text(
-                        'Join VitalSync today',
+                        l10n.joinVitalSync,
                         textAlign: TextAlign.center,
                         style: TextStyle(color: Colors.grey[600]),
                       ),
@@ -108,11 +112,11 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       // Name Field
                       _GlassTextField(
                         controller: _nameController,
-                        label: 'Full Name',
+                        label: l10n.fullName,
                         icon: Icons.person_outline,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter your name';
+                            return l10n.enterFullName;
                           }
                           return null;
                         },
@@ -122,12 +126,12 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       // Email Field
                       _GlassTextField(
                         controller: _emailController,
-                        label: 'Email',
+                        label: l10n.email,
                         icon: Icons.email_outlined,
                         keyboardType: TextInputType.emailAddress,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter your email';
+                            return l10n.enterEmail;
                           }
                           return null;
                         },
@@ -137,15 +141,15 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       // Password Field
                       _GlassTextField(
                         controller: _passwordController,
-                        label: 'Password',
+                        label: l10n.password,
                         icon: Icons.lock_outline,
                         obscureText: !_isPasswordVisible,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter your password';
+                            return l10n.enterPassword;
                           }
                           if (value.length < 6) {
-                            return 'Password must be at least 6 characters';
+                            return l10n.passwordLengthError;
                           }
                           return null;
                         },
@@ -168,15 +172,15 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       // Confirm Password Field
                       _GlassTextField(
                         controller: _confirmPasswordController,
-                        label: 'Confirm Password',
+                        label: l10n.confirmPassword,
                         icon: Icons.lock_outline,
                         obscureText: !_isConfirmPasswordVisible,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please confirm your password';
+                            return l10n.confirmPasswordError;
                           }
                           if (value != _passwordController.text) {
-                            return 'Passwords do not match';
+                            return l10n.passwordsDoNotMatch;
                           }
                           return null;
                         },
@@ -218,9 +222,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                                   color: Colors.white,
                                 ),
                               )
-                            : const Text(
-                                'Sign Up',
-                                style: TextStyle(
+                            : Text(
+                                l10n.signUp,
+                                style: const TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -234,12 +238,12 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            'Already have an account?',
+                            l10n.alreadyHaveAccount,
                             style: TextStyle(color: Colors.grey[700]),
                           ),
                           TextButton(
                             onPressed: () => context.go('/auth/login'),
-                            child: const Text('Log In'),
+                            child: Text(l10n.logIn),
                           ),
                         ],
                       ),

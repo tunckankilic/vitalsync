@@ -26,6 +26,7 @@ import '../../presentation/screens/app_shell.dart';
 import '../../presentation/screens/auth/forgot_password_screen.dart';
 import '../../presentation/screens/auth/login_screen.dart';
 import '../../presentation/screens/auth/register_screen.dart';
+import '../../presentation/screens/profile/edit_profile_screen.dart';
 import '../../presentation/screens/profile/profile_screen.dart';
 import '../../presentation/screens/settings/settings_screen.dart';
 
@@ -227,6 +228,18 @@ final GoRouter appRouter = GoRouter(
       parentNavigatorKey: _rootNavigatorKey,
       pageBuilder: (context, state) =>
           _buildPageWithSlideTransition(context, state, const ProfileScreen()),
+      routes: [
+        GoRoute(
+          path: 'edit',
+          name: 'edit_profile',
+          parentNavigatorKey: _rootNavigatorKey,
+          pageBuilder: (context, state) => _buildPageWithSlideTransition(
+            context,
+            state,
+            const EditProfileScreen(),
+          ),
+        ),
+      ],
     ),
     // SETTINGS
     GoRoute(
