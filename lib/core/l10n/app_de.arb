@@ -542,5 +542,90 @@
   "exerciseAdded": "Übung erfolgreich hinzugefügt",
   "@exerciseAdded": {
     "description": "Exercise added success message"
+  },
+
+  "welcomeBack": "Willkommen zurück",
+  "@welcomeBack": { "description": "Welcome back title" },
+  "signInSubtitle": "Melden Sie sich an, um Ihre gesunde Reise fortzusetzen",
+  "@signInSubtitle": { "description": "Sign in subtitle" },
+  "email": "E-Mail",
+  "@email": { "description": "Email label" },
+  "password": "Passwort",
+  "@password": { "description": "Password label" },
+  "forgotPassword": "Passwort vergessen?",
+  "@forgotPassword": { "description": "Forgot password button" },
+  "logIn": "Anmelden",
+  "@logIn": { "description": "Log in button" },
+  "orSeparator": "ODER",
+  "@orSeparator": { "description": "OR separator" },
+  "continueWithGoogle": "Mit Google fortfahren",
+  "@continueWithGoogle": { "description": "Continue with Google button" },
+  "dontHaveAccount": "Noch kein Konto?",
+  "@dontHaveAccount": { "description": "Don't have account text" },
+  "signUp": "Registrieren",
+  "@signUp": { "description": "Sign up button" },
+  "enterEmail": "Bitte geben Sie Ihre E-Mail ein",
+  "@enterEmail": { "description": "Enter email error" },
+  "enterPassword": "Bitte geben Sie Ihr Passwort ein",
+  "@enterPassword": { "description": "Enter password error" },
+  "loginFailed": "Anmeldung fehlgeschlagen: {error}",
+  "@loginFailed": { 
+    "description": "Login failed error",
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
+  "googleLoginFailed": "Google-Anmeldung fehlgeschlagen: {error}",
+  "@googleLoginFailed": { 
+    "description": "Google login failed error",
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
+
+  "createAccount": "Konto erstellen",
+  "@createAccount": { "description": "Create account title" },
+  "joinVitalSync": "Treten Sie VitalSync heute bei",
+  "@joinVitalSync": { "description": "Join VitalSync subtitle" },
+  "confirmPassword": "Passwort bestätigen",
+  "@confirmPassword": { "description": "Confirm password label" },
+  "alreadyHaveAccount": "Haben Sie bereits ein Konto?",
+  "@alreadyHaveAccount": { "description": "Already have account text" },
+  "passwordsDoNotMatch": "Passwörter stimmen nicht überein",
+  "@passwordsDoNotMatch": { "description": "Passwords do not match error" },
+  "passwordLengthError": "Passwort muss mindestens 6 Zeichen lang sein",
+  "@passwordLengthError": { "description": "Password length error" },
+  "confirmPasswordError": "Bitte bestätigen Sie Ihr Passwort",
+  "@confirmPasswordError": { "description": "Confirm password error" },
+  "registrationFailed": "Registrierung fehlgeschlagen: {error}",
+  "@registrationFailed": { 
+    "description": "Registration failed error",
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
+
+  "resetPassword": "Passwort zurücksetzen",
+  "@resetPassword": { "description": "Reset password title" },
+  "resetPasswordSubtitle": "Geben Sie Ihre E-Mail ein, um einen Zurücksetzungslink zu erhalten",
+  "@resetPasswordSubtitle": { "description": "Reset password subtitle" },
+  "sendResetLink": "Zurücksetzungslink senden",
+  "@sendResetLink": { "description": "Send reset link button" },
+  "resetEmailSent": "E-Mail zum Zurücksetzen des Passworts gesendet. Überprüfen Sie Ihren Posteingang.",
+  "@resetEmailSent": { "description": "Reset email sent message" },
+  "resetPasswordError": "Fehler: {error}",
+  "@resetPasswordError": { 
+    "description": "Reset password error",
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
   }
 }

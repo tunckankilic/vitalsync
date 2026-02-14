@@ -80,6 +80,32 @@ class ThemeSetting extends _$ThemeSetting {
   }
 }
 
+/// Material You enable/disable provider with SharedPreferences persistence
+@riverpod
+class MaterialYouSetting extends _$MaterialYouSetting {
+  @override
+  bool build() {
+    final prefs = ref.watch(sharedPreferencesProvider);
+    // Default to true for supported devices
+    return prefs.getBool(AppConstants.prefKeyMaterialYouEnabled) ?? true;
+  }
+
+  /// Toggle Material You
+  Future<void> setEnabled(bool enabled) async {
+    final prefs = ref.read(sharedPreferencesProvider);
+    final analytics = ref.read(settingsAnalyticsServiceProvider);
+
+    await prefs.setBool(AppConstants.prefKeyMaterialYouEnabled, enabled);
+
+    // Fire analytics event (using theme changed event with a parameter)
+    await analytics.logThemeChanged(
+      theme: enabled ? 'material_you' : 'default',
+    );
+
+    state = enabled;
+  }
+}
+
 /// Locale provider with SharedPreferences persistence
 @riverpod
 class LocaleSetting extends _$LocaleSetting {

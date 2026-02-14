@@ -970,7 +970,7 @@ abstract class AppLocalizations {
   /// **'Chest'**
   String get chest;
 
-  /// Back muscle group
+  /// Back button
   ///
   /// In en, this message translates to:
   /// **'Back'**
@@ -1365,6 +1365,702 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Exercise added successfully'**
   String get exerciseAdded;
+
+  /// Edit profile screen title
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Profile'**
+  String get editProfile;
+
+  /// User not found error
+  ///
+  /// In en, this message translates to:
+  /// **'User not found'**
+  String get userNotFound;
+
+  /// Personal information section title
+  ///
+  /// In en, this message translates to:
+  /// **'Personal Information'**
+  String get personalInformation;
+
+  /// Full name label
+  ///
+  /// In en, this message translates to:
+  /// **'Full Name'**
+  String get fullName;
+
+  /// Enter full name validation error
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your name'**
+  String get enterFullName;
+
+  /// Date of birth label
+  ///
+  /// In en, this message translates to:
+  /// **'Date of Birth'**
+  String get dateOfBirth;
+
+  /// Select date placeholder
+  ///
+  /// In en, this message translates to:
+  /// **'Select Date'**
+  String get selectDate;
+
+  /// Gender label
+  ///
+  /// In en, this message translates to:
+  /// **'Gender'**
+  String get gender;
+
+  /// Male gender option
+  ///
+  /// In en, this message translates to:
+  /// **'Male'**
+  String get genderMale;
+
+  /// Female gender option
+  ///
+  /// In en, this message translates to:
+  /// **'Female'**
+  String get genderFemale;
+
+  /// Other gender option
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get genderOther;
+
+  /// Prefer not to say gender option
+  ///
+  /// In en, this message translates to:
+  /// **'Prefer not to say'**
+  String get genderPreferNotToSay;
+
+  /// Emergency contact section title
+  ///
+  /// In en, this message translates to:
+  /// **'Emergency Contact'**
+  String get emergencyContact;
+
+  /// Contact name label
+  ///
+  /// In en, this message translates to:
+  /// **'Contact Name'**
+  String get contactName;
+
+  /// Phone number label
+  ///
+  /// In en, this message translates to:
+  /// **'Phone Number'**
+  String get phoneNumber;
+
+  /// Save changes button
+  ///
+  /// In en, this message translates to:
+  /// **'Save Changes'**
+  String get saveChanges;
+
+  /// Profile updated success message
+  ///
+  /// In en, this message translates to:
+  /// **'Profile updated successfully'**
+  String get profileUpdatedSuccess;
+
+  /// Profile update error message
+  ///
+  /// In en, this message translates to:
+  /// **'Error updating profile: {error}'**
+  String profileUpdateError(Object error);
+
+  /// Settings screen title
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get settingsTitle;
+
+  /// Appearance settings section
+  ///
+  /// In en, this message translates to:
+  /// **'Appearance'**
+  String get appearance;
+
+  /// Theme setting
+  ///
+  /// In en, this message translates to:
+  /// **'Theme'**
+  String get theme;
+
+  /// System theme option
+  ///
+  /// In en, this message translates to:
+  /// **'System Default'**
+  String get themeSystem;
+
+  /// Light theme option
+  ///
+  /// In en, this message translates to:
+  /// **'Light Mode'**
+  String get themeLight;
+
+  /// Dark theme option
+  ///
+  /// In en, this message translates to:
+  /// **'Dark Mode'**
+  String get themeDark;
+
+  /// Material You setting
+  ///
+  /// In en, this message translates to:
+  /// **'Material You'**
+  String get materialYou;
+
+  /// Material You setting subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Use dynamic colors from wallpaper'**
+  String get materialYouSubtitle;
+
+  /// Language setting
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get language;
+
+  /// English language option
+  ///
+  /// In en, this message translates to:
+  /// **'English'**
+  String get languageEn;
+
+  /// Turkish language option
+  ///
+  /// In en, this message translates to:
+  /// **'Türkçe'**
+  String get languageTr;
+
+  /// German language option
+  ///
+  /// In en, this message translates to:
+  /// **'Deutsch'**
+  String get languageDe;
+
+  /// Notifications settings section
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get notifications;
+
+  /// Enable notifications toggle
+  ///
+  /// In en, this message translates to:
+  /// **'Enable Notifications'**
+  String get enableNotifications;
+
+  /// Units settings section
+  ///
+  /// In en, this message translates to:
+  /// **'Units'**
+  String get units;
+
+  /// Unit system setting
+  ///
+  /// In en, this message translates to:
+  /// **'Unit System'**
+  String get unitSystem;
+
+  /// Metric unit option
+  ///
+  /// In en, this message translates to:
+  /// **'Metric (kg, cm)'**
+  String get unitMetric;
+
+  /// Imperial unit option
+  ///
+  /// In en, this message translates to:
+  /// **'Imperial (lbs, in)'**
+  String get unitImperial;
+
+  /// Privacy and data settings section
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy & Data'**
+  String get privacyData;
+
+  /// Manage consents setting
+  ///
+  /// In en, this message translates to:
+  /// **'Manage Consents'**
+  String get manageConsents;
+
+  /// Manage consents subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Update your GDPR privacy choices'**
+  String get manageConsentsSubtitle;
+
+  /// Export data setting
+  ///
+  /// In en, this message translates to:
+  /// **'Export Data'**
+  String get exportData;
+
+  /// Export data subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Download a copy of your data'**
+  String get exportDataSubtitle;
+
+  /// Delete account setting
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Account'**
+  String get deleteAccount;
+
+  /// Delete account subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Permanently delete your account and data'**
+  String get deleteAccountSubtitle;
+
+  /// Sync settings section
+  ///
+  /// In en, this message translates to:
+  /// **'Sync'**
+  String get sync;
+
+  /// Sync status setting
+  ///
+  /// In en, this message translates to:
+  /// **'Sync Status'**
+  String get syncStatus;
+
+  /// Sync idle status
+  ///
+  /// In en, this message translates to:
+  /// **'Last synced recently'**
+  String get syncIdle;
+
+  /// Sync error status
+  ///
+  /// In en, this message translates to:
+  /// **'Sync failed. Tap to retry.'**
+  String get syncError;
+
+  /// Sync now button
+  ///
+  /// In en, this message translates to:
+  /// **'Sync Now'**
+  String get syncNow;
+
+  /// About settings section
+  ///
+  /// In en, this message translates to:
+  /// **'About'**
+  String get about;
+
+  /// Version label
+  ///
+  /// In en, this message translates to:
+  /// **'Version'**
+  String get version;
+
+  /// Licenses label
+  ///
+  /// In en, this message translates to:
+  /// **'Open Source Licenses'**
+  String get licenses;
+
+  /// Export started message
+  ///
+  /// In en, this message translates to:
+  /// **'Export started...'**
+  String get exportStarted;
+
+  /// Delete account dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Account?'**
+  String get deleteAccountDialogTitle;
+
+  /// Delete account dialog message
+  ///
+  /// In en, this message translates to:
+  /// **'This action cannot be undone. All your data will be permanently deleted.'**
+  String get deleteAccountDialogMessage;
+
+  /// Delete account requested message
+  ///
+  /// In en, this message translates to:
+  /// **'Account deletion requested.'**
+  String get deleteAccountRequested;
+
+  /// Default user name
+  ///
+  /// In en, this message translates to:
+  /// **'User'**
+  String get defaultUser;
+
+  /// No email placeholder
+  ///
+  /// In en, this message translates to:
+  /// **'No email'**
+  String get noEmail;
+
+  /// Error loading profile message
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading profile: {error}'**
+  String errorLoadingProfile(Object error);
+
+  /// Log out button
+  ///
+  /// In en, this message translates to:
+  /// **'Log Out'**
+  String get logOut;
+
+  /// Workouts stat label
+  ///
+  /// In en, this message translates to:
+  /// **'Workouts'**
+  String get workouts;
+
+  /// Get started button
+  ///
+  /// In en, this message translates to:
+  /// **'Get Started'**
+  String get getStarted;
+
+  /// Next button
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get next;
+
+  /// Welcome screen title
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome to VitalSync'**
+  String get welcomeTitle;
+
+  /// Welcome screen subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Manage your health and fitness in one place.'**
+  String get welcomeSubtitle;
+
+  /// Personalization screen title
+  ///
+  /// In en, this message translates to:
+  /// **'What matters most to you?'**
+  String get personalizationTitle;
+
+  /// Medication interest
+  ///
+  /// In en, this message translates to:
+  /// **'Medication Tracking'**
+  String get interestMedication;
+
+  /// Fitness interest
+  ///
+  /// In en, this message translates to:
+  /// **'Fitness & Workouts'**
+  String get interestFitness;
+
+  /// Insights interest
+  ///
+  /// In en, this message translates to:
+  /// **'Smart Insights'**
+  String get interestInsights;
+
+  /// Analysis interest
+  ///
+  /// In en, this message translates to:
+  /// **'Progress Analysis'**
+  String get interestAnalysis;
+
+  /// Quick setup screen title
+  ///
+  /// In en, this message translates to:
+  /// **'Quick Setup'**
+  String get quickSetupTitle;
+
+  /// Quick setup screen subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Get a head start by adding your first item.'**
+  String get quickSetupSubtitle;
+
+  /// Quick add medication option
+  ///
+  /// In en, this message translates to:
+  /// **'Add Medication'**
+  String get quickAddMedication;
+
+  /// Quick add medication subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Set up name & time quickly'**
+  String get quickAddMedicationSubtitle;
+
+  /// Quick pick template option
+  ///
+  /// In en, this message translates to:
+  /// **'Pick Workout Template'**
+  String get quickPickTemplate;
+
+  /// Quick pick template subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Choose from popular routines'**
+  String get quickPickTemplateSubtitle;
+
+  /// Privacy title
+  ///
+  /// In en, this message translates to:
+  /// **'Your Privacy Matters'**
+  String get privacyTitle;
+
+  /// Privacy subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'We believe in transparency. Please review and manage how your data is handled.'**
+  String get privacySubtitle;
+
+  /// Health data consent title
+  ///
+  /// In en, this message translates to:
+  /// **'Health Data Processing'**
+  String get consentHealthTitle;
+
+  /// Health data consent description
+  ///
+  /// In en, this message translates to:
+  /// **'Required to track medications and symptoms locally.'**
+  String get consentHealthDescription;
+
+  /// Fitness data consent title
+  ///
+  /// In en, this message translates to:
+  /// **'Fitness Data Processing'**
+  String get consentFitnessTitle;
+
+  /// Fitness data consent description
+  ///
+  /// In en, this message translates to:
+  /// **'Required to log workouts and track progress locally.'**
+  String get consentFitnessDescription;
+
+  /// Analytics consent title
+  ///
+  /// In en, this message translates to:
+  /// **'Analytics & Usage'**
+  String get consentAnalyticsTitle;
+
+  /// Analytics consent description
+  ///
+  /// In en, this message translates to:
+  /// **'Help us improve VitalSync by sharing anonymous usage data.'**
+  String get consentAnalyticsDescription;
+
+  /// Backup consent title
+  ///
+  /// In en, this message translates to:
+  /// **'Cloud Backup'**
+  String get consentBackupTitle;
+
+  /// Backup consent description
+  ///
+  /// In en, this message translates to:
+  /// **'Securely backup your data to the cloud so you don\'t lose it.'**
+  String get consentBackupDescription;
+
+  /// Read privacy policy link
+  ///
+  /// In en, this message translates to:
+  /// **'Read Full Privacy Policy'**
+  String get readPrivacyPolicy;
+
+  /// Accept and continue button
+  ///
+  /// In en, this message translates to:
+  /// **'Accept & Continue'**
+  String get acceptContinue;
+
+  /// Required tag
+  ///
+  /// In en, this message translates to:
+  /// **'REQUIRED'**
+  String get requiredTag;
+
+  /// Consent required message
+  ///
+  /// In en, this message translates to:
+  /// **'This is required for the {module} module to function.'**
+  String consentRequiredMessage(String module);
+
+  /// Welcome back title
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome Back'**
+  String get welcomeBack;
+
+  /// Sign in subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in to continue your healthy journey'**
+  String get signInSubtitle;
+
+  /// Email label
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get email;
+
+  /// Password label
+  ///
+  /// In en, this message translates to:
+  /// **'Password'**
+  String get password;
+
+  /// Forgot password button
+  ///
+  /// In en, this message translates to:
+  /// **'Forgot Password?'**
+  String get forgotPassword;
+
+  /// Log in button
+  ///
+  /// In en, this message translates to:
+  /// **'Log In'**
+  String get logIn;
+
+  /// OR separator
+  ///
+  /// In en, this message translates to:
+  /// **'OR'**
+  String get orSeparator;
+
+  /// Continue with Google button
+  ///
+  /// In en, this message translates to:
+  /// **'Continue with Google'**
+  String get continueWithGoogle;
+
+  /// Don't have account text
+  ///
+  /// In en, this message translates to:
+  /// **'Don\'t have an account?'**
+  String get dontHaveAccount;
+
+  /// Sign up button
+  ///
+  /// In en, this message translates to:
+  /// **'Sign Up'**
+  String get signUp;
+
+  /// Enter email error
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your email'**
+  String get enterEmail;
+
+  /// Enter password error
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your password'**
+  String get enterPassword;
+
+  /// Login failed error
+  ///
+  /// In en, this message translates to:
+  /// **'Login failed: {error}'**
+  String loginFailed(Object error);
+
+  /// Google login failed error
+  ///
+  /// In en, this message translates to:
+  /// **'Google Login failed: {error}'**
+  String googleLoginFailed(Object error);
+
+  /// Create account title
+  ///
+  /// In en, this message translates to:
+  /// **'Create Account'**
+  String get createAccount;
+
+  /// Join VitalSync subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Join VitalSync today'**
+  String get joinVitalSync;
+
+  /// Confirm password label
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Password'**
+  String get confirmPassword;
+
+  /// Already have account text
+  ///
+  /// In en, this message translates to:
+  /// **'Already have an account?'**
+  String get alreadyHaveAccount;
+
+  /// Passwords do not match error
+  ///
+  /// In en, this message translates to:
+  /// **'Passwords do not match'**
+  String get passwordsDoNotMatch;
+
+  /// Password length error
+  ///
+  /// In en, this message translates to:
+  /// **'Password must be at least 6 characters'**
+  String get passwordLengthError;
+
+  /// Confirm password error
+  ///
+  /// In en, this message translates to:
+  /// **'Please confirm your password'**
+  String get confirmPasswordError;
+
+  /// Registration failed error
+  ///
+  /// In en, this message translates to:
+  /// **'Registration failed: {error}'**
+  String registrationFailed(Object error);
+
+  /// Reset password title
+  ///
+  /// In en, this message translates to:
+  /// **'Reset Password'**
+  String get resetPassword;
+
+  /// Reset password subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your email to receive a reset link'**
+  String get resetPasswordSubtitle;
+
+  /// Send reset link button
+  ///
+  /// In en, this message translates to:
+  /// **'Send Reset Link'**
+  String get sendResetLink;
+
+  /// Reset email sent message
+  ///
+  /// In en, this message translates to:
+  /// **'Password reset email sent. Check your inbox.'**
+  String get resetEmailSent;
+
+  /// Reset password error
+  ///
+  /// In en, this message translates to:
+  /// **'Error: {error}'**
+  String resetPasswordError(Object error);
 }
 
 class _AppLocalizationsDelegate

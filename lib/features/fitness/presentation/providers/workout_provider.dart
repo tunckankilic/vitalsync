@@ -64,6 +64,13 @@ Future<List<WorkoutSession>> recentWorkouts(Ref ref) async {
   return sorted.take(5).toList();
 }
 
+/// Provider for total completed workouts count
+@riverpod
+Future<int> totalWorkoutCount(Ref ref) async {
+  final repository = ref.watch(workoutSessionRepositoryProvider);
+  return repository.getWorkoutCount();
+}
+
 /// Stream provider for sets of the active session
 @riverpod
 Stream<List<WorkoutSet>> activeSessionSets(Ref ref) {

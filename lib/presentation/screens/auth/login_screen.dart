@@ -3,6 +3,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:vitalsync/core/auth/auth_provider.dart';
+import 'package:vitalsync/core/l10n/app_localizations.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -41,7 +42,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       } catch (e) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Login failed: ${e.toString()}')),
+            SnackBar(
+              content: Text(AppLocalizations.of(context).loginFailed(e)),
+            ),
           );
         }
       }
@@ -57,7 +60,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Google Login failed: ${e.toString()}')),
+          SnackBar(
+            content: Text(AppLocalizations.of(context).googleLoginFailed(e)),
+          ),
         );
       }
     }
@@ -68,6 +73,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     // Watch auth loading state if needed
     final authState = ref.watch(authProvider);
     final isLoading = authState.isLoading;
+    final l10n = AppLocalizations.of(context);
 
     return Scaffold(
       body: Stack(
@@ -103,14 +109,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       ).animate().scale(duration: 600.ms),
                       const SizedBox(height: 24),
                       Text(
-                        'Welcome Back',
+                        l10n.welcomeBack,
                         textAlign: TextAlign.center,
                         style: Theme.of(context).textTheme.headlineMedium
                             ?.copyWith(fontWeight: FontWeight.bold),
                       ).animate().fadeIn().moveY(begin: 10, end: 0),
                       const SizedBox(height: 8),
                       Text(
-                        'Sign in to continue your healthy journey',
+                        l10n.signInSubtitle,
                         textAlign: TextAlign.center,
                         style: TextStyle(color: Colors.grey[600]),
                       ),
@@ -119,12 +125,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       // Email Field
                       _GlassTextField(
                         controller: _emailController,
-                        label: 'Email',
+                        label: l10n.email,
                         icon: Icons.email_outlined,
                         keyboardType: TextInputType.emailAddress,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter your email';
+                            return l10n.enterEmail;
                           }
                           return null;
                         },
@@ -134,12 +140,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       // Password Field
                       _GlassTextField(
                         controller: _passwordController,
-                        label: 'Password',
+                        label: l10n.password,
                         icon: Icons.lock_outline,
                         obscureText: !_isPasswordVisible,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter your password';
+                            return l10n.enterPassword;
                           }
                           return null;
                         },
@@ -163,7 +169,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         child: TextButton(
                           onPressed: () =>
                               context.push('/auth/forgot-password'),
-                          child: const Text('Forgot Password?'),
+                          child: Text(l10n.forgotPassword),
                         ),
                       ),
 
@@ -189,9 +195,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                   color: Colors.white,
                                 ),
                               )
-                            : const Text(
-                                'Log In',
-                                style: TextStyle(
+                            : Text(
+                                l10n.logIn,
+                                style: const TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -200,17 +206,17 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
                       const SizedBox(height: 24),
 
-                      const Row(
+                      Row(
                         children: [
-                          Expanded(child: Divider()),
+                          const Expanded(child: Divider()),
                           Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 16),
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
                             child: Text(
-                              'OR',
-                              style: TextStyle(color: Colors.grey),
+                              l10n.orSeparator,
+                              style: const TextStyle(color: Colors.grey),
                             ),
                           ),
-                          Expanded(child: Divider()),
+                          const Expanded(child: Divider()),
                         ],
                       ),
 
@@ -223,7 +229,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           Icons.g_mobiledata,
                           size: 28,
                         ), // Placeholder, ideally use SVG logo
-                        label: const Text('Continue with Google'),
+                        label: Text(l10n.continueWithGoogle),
                         style: OutlinedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(vertical: 16),
                           shape: RoundedRectangleBorder(
@@ -240,12 +246,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            "Don't have an account?",
+                            l10n.dontHaveAccount,
                             style: TextStyle(color: Colors.grey[700]),
                           ),
                           TextButton(
                             onPressed: () => context.go('/auth/register'),
-                            child: const Text('Sign Up'),
+                            child: Text(l10n.signUp),
                           ),
                         ],
                       ),
