@@ -232,9 +232,9 @@ class _ConsentCard extends StatelessWidget {
       elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
-        side: BorderSide(color: Colors.grey.withOpacity(0.2)),
+        side: BorderSide(color: Colors.grey.withValues(alpha: 0.2)),
       ),
-      color: Colors.white.withOpacity(0.8), // Glass-ish
+      color: Colors.white.withValues(alpha: 0.8), // Glass-ish
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Row(
@@ -242,7 +242,7 @@ class _ConsentCard extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: Theme.of(context).primaryColor.withOpacity(0.1),
+                color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: Icon(icon, color: Theme.of(context).primaryColor),
@@ -269,10 +269,10 @@ class _ConsentCard extends StatelessWidget {
                             vertical: 2,
                           ),
                           decoration: BoxDecoration(
-                            color: Colors.redAccent.withOpacity(0.1),
+                            color: Colors.redAccent.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(8),
                             border: Border.all(
-                              color: Colors.redAccent.withOpacity(0.5),
+                              color: Colors.redAccent.withValues(alpha: 0.5),
                             ),
                           ),
                           child: const Text(
@@ -296,8 +296,8 @@ class _ConsentCard extends StatelessWidget {
             ),
             Switch(
               value: value,
-              onChanged: isRequired && value ? (v) => onChanged(v) : onChanged,
-              activeColor: Theme.of(context).primaryColor,
+              onChanged: isRequired && value ? onChanged : onChanged,
+              activeThumbColor: Theme.of(context).primaryColor,
             ),
           ],
         ),

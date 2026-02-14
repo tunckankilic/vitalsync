@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vitalsync/core/auth/auth_provider.dart';
 import 'package:vitalsync/core/settings/settings_provider.dart';
 // import 'package:vitalsync/core/constants/app_constants.dart'; // Loop if needed, but avoiding for now
@@ -57,7 +56,7 @@ class ProfileScreen extends ConsumerWidget {
                                 color: Colors.white,
                                 boxShadow: [
                                   BoxShadow(
-                                    color: Colors.black.withOpacity(0.1),
+                                    color: Colors.black.withValues(alpha: 0.1),
                                     blurRadius: 20,
                                     offset: const Offset(0, 5),
                                   ),
@@ -101,11 +100,11 @@ class ProfileScreen extends ConsumerWidget {
                   Container(
                     padding: const EdgeInsets.all(24),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.7),
+                      color: Colors.white.withValues(alpha: 0.7),
                       borderRadius: BorderRadius.circular(24),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.05),
+                          color: Colors.black.withValues(alpha: 0.05),
                           blurRadius: 15,
                           offset: const Offset(0, 5),
                         ),
@@ -147,9 +146,11 @@ class ProfileScreen extends ConsumerWidget {
                       vertical: 12,
                     ),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.6),
+                      color: Colors.white.withValues(alpha: 0.6),
                       borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: Colors.white.withOpacity(0.8)),
+                      border: Border.all(
+                        color: Colors.white.withValues(alpha: 0.8),
+                      ),
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -159,7 +160,7 @@ class ProfileScreen extends ConsumerWidget {
                             Container(
                               padding: const EdgeInsets.all(10),
                               decoration: BoxDecoration(
-                                color: Colors.teal.withOpacity(0.1),
+                                color: Colors.teal.withValues(alpha: 0.1),
                                 shape: BoxShape.circle,
                               ),
                               child: const Icon(
@@ -231,7 +232,9 @@ class ProfileScreen extends ConsumerWidget {
                                       borderRadius: BorderRadius.circular(20),
                                       boxShadow: [
                                         BoxShadow(
-                                          color: Colors.black.withOpacity(0.1),
+                                          color: Colors.black.withValues(
+                                            alpha: 0.1,
+                                          ),
                                           blurRadius: 4,
                                         ),
                                       ],
@@ -298,17 +301,16 @@ class ProfileScreen extends ConsumerWidget {
 }
 
 class _StatItem extends StatelessWidget {
-  final String label;
-  final String value;
-  final IconData icon;
-  final Color color;
-
   const _StatItem({
     required this.label,
     required this.value,
     required this.icon,
     required this.color,
   });
+  final String label;
+  final String value;
+  final IconData icon;
+  final Color color;
 
   @override
   Widget build(BuildContext context) {

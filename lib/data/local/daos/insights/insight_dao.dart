@@ -28,6 +28,14 @@ class InsightDao extends DatabaseAccessor<AppDatabase> with _$InsightDaoMixin {
         .get();
   }
 
+  /// Get all dismissed insights.
+  Future<List<GeneratedInsightData>> getDismissed() {
+    return (select(generatedInsights)
+          ..where((tbl) => tbl.isDismissed.equals(true))
+          ..orderBy([(tbl) => OrderingTerm.desc(tbl.generatedAt)]))
+        .get();
+  }
+
   /// Get insights by category.
   Future<List<GeneratedInsightData>> getByCategory(String category) {
     final now = DateTime.now();
@@ -100,6 +108,14 @@ class InsightDao extends DatabaseAccessor<AppDatabase> with _$InsightDaoMixin {
             (tbl) => OrderingTerm.desc(tbl.priority),
             (tbl) => OrderingTerm.desc(tbl.generatedAt),
           ]))
+        .watch();
+  }
+
+  /// Watch dismissed insights.
+  Stream<List<GeneratedInsightData>> watchDismissed() {
+    return (select(generatedInsights)
+          ..where((tbl) => tbl.isDismissed.equals(true))
+          ..orderBy([(tbl) => OrderingTerm.desc(tbl.generatedAt)]))
         .watch();
   }
 }

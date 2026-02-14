@@ -86,13 +86,13 @@ class OnboardingScreen extends ConsumerWidget {
                                   decoration: BoxDecoration(
                                     color: index <= currentStep
                                         ? Theme.of(context).primaryColor
-                                        : Colors.grey.withOpacity(0.3),
+                                        : Colors.grey.withValues(alpha: 0.3),
                                     borderRadius: BorderRadius.circular(2),
                                   ),
                                 )
                                 .animate(target: index <= currentStep ? 1 : 0)
                                 .color(
-                                  begin: Colors.grey.withOpacity(0.3),
+                                  begin: Colors.grey.withValues(alpha: 0.3),
                                   end: Theme.of(context).primaryColor,
                                   duration: 300.ms,
                                 ),
@@ -231,9 +231,9 @@ class _WelcomePage extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.5),
+              color: Colors.white.withValues(alpha: 0.5),
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: Colors.white.withOpacity(0.8)),
+              border: Border.all(color: Colors.white.withValues(alpha: 0.8)),
             ),
             child: DropdownButtonHideUnderline(
               child: DropdownButton<String>(
@@ -317,12 +317,6 @@ class _PersonalizationPage extends ConsumerWidget {
 }
 
 class _InterestCard extends StatelessWidget {
-  final String title;
-  final IconData icon;
-  final Color color;
-  final bool isSelected;
-  final VoidCallback onTap;
-
   const _InterestCard({
     required this.title,
     required this.icon,
@@ -330,6 +324,11 @@ class _InterestCard extends StatelessWidget {
     required this.isSelected,
     required this.onTap,
   });
+  final String title;
+  final IconData icon;
+  final Color color;
+  final bool isSelected;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -340,8 +339,8 @@ class _InterestCard extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: isSelected
-              ? color.withOpacity(0.1)
-              : Colors.white.withOpacity(0.6),
+              ? color.withValues(alpha: 0.1)
+              : Colors.white.withValues(alpha: 0.6),
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
             color: isSelected ? color : Colors.transparent,
@@ -350,7 +349,7 @@ class _InterestCard extends StatelessWidget {
           boxShadow: [
             if (isSelected)
               BoxShadow(
-                color: color.withOpacity(0.2),
+                color: color.withValues(alpha: 0.2),
                 blurRadius: 10,
                 spreadRadius: 2,
               ),
@@ -361,7 +360,7 @@ class _InterestCard extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: color.withOpacity(0.2),
+                color: color.withValues(alpha: 0.2),
                 shape: BoxShape.circle,
               ),
               child: Icon(icon, color: color),
@@ -439,12 +438,6 @@ class _QuickSetupPage extends StatelessWidget {
 }
 
 class _QuickActionCard extends StatelessWidget {
-  final String title;
-  final String subtitle;
-  final IconData icon;
-  final Color color;
-  final VoidCallback onTap;
-
   const _QuickActionCard({
     required this.title,
     required this.subtitle,
@@ -452,6 +445,11 @@ class _QuickActionCard extends StatelessWidget {
     required this.color,
     required this.onTap,
   });
+  final String title;
+  final String subtitle;
+  final IconData icon;
+  final Color color;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -461,12 +459,12 @@ class _QuickActionCard extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.7),
+          color: Colors.white.withValues(alpha: 0.7),
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: Colors.white.withOpacity(0.8)),
+          border: Border.all(color: Colors.white.withValues(alpha: 0.8)),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withValues(alpha: 0.05),
               blurRadius: 10,
               offset: const Offset(0, 4),
             ),
@@ -477,7 +475,7 @@ class _QuickActionCard extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: color.withOpacity(0.1),
+                color: color.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Icon(icon, color: color, size: 28),
