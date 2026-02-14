@@ -542,5 +542,90 @@
   "exerciseAdded": "Egzersiz başarıyla eklendi",
   "@exerciseAdded": {
     "description": "Exercise added success message"
+  },
+
+  "welcomeBack": "Tekrar Hoş Geldiniz",
+  "@welcomeBack": { "description": "Welcome back title" },
+  "signInSubtitle": "Sağlıklı yolculuğunuza devam etmek için giriş yapın",
+  "@signInSubtitle": { "description": "Sign in subtitle" },
+  "email": "E-posta",
+  "@email": { "description": "Email label" },
+  "password": "Şifre",
+  "@password": { "description": "Password label" },
+  "forgotPassword": "Şifremi Unuttum?",
+  "@forgotPassword": { "description": "Forgot password button" },
+  "logIn": "Giriş Yap",
+  "@logIn": { "description": "Log in button" },
+  "orSeparator": "VEYA",
+  "@orSeparator": { "description": "OR separator" },
+  "continueWithGoogle": "Google ile Devam Et",
+  "@continueWithGoogle": { "description": "Continue with Google button" },
+  "dontHaveAccount": "Hesabınız yok mu?",
+  "@dontHaveAccount": { "description": "Don't have account text" },
+  "signUp": "Kayıt Ol",
+  "@signUp": { "description": "Sign up button" },
+  "enterEmail": "Lütfen e-postanızı girin",
+  "@enterEmail": { "description": "Enter email error" },
+  "enterPassword": "Lütfen şifrenizi girin",
+  "@enterPassword": { "description": "Enter password error" },
+  "loginFailed": "Giriş başarısız: {error}",
+  "@loginFailed": { 
+    "description": "Login failed error",
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
+  "googleLoginFailed": "Google girişi başarısız: {error}",
+  "@googleLoginFailed": { 
+    "description": "Google login failed error",
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
+
+  "createAccount": "Hesap Oluştur",
+  "@createAccount": { "description": "Create account title" },
+  "joinVitalSync": "Bugün VitalSync'e katılın",
+  "@joinVitalSync": { "description": "Join VitalSync subtitle" },
+  "confirmPassword": "Şifreyi Onayla",
+  "@confirmPassword": { "description": "Confirm password label" },
+  "alreadyHaveAccount": "Zaten hesabınız var mı?",
+  "@alreadyHaveAccount": { "description": "Already have account text" },
+  "passwordsDoNotMatch": "Şifreler eşleşmiyor",
+  "@passwordsDoNotMatch": { "description": "Passwords do not match error" },
+  "passwordLengthError": "Şifre en az 6 karakter olmalıdır",
+  "@passwordLengthError": { "description": "Password length error" },
+  "confirmPasswordError": "Lütfen şifrenizi onaylayın",
+  "@confirmPasswordError": { "description": "Confirm password error" },
+  "registrationFailed": "Kayıt başarısız: {error}",
+  "@registrationFailed": { 
+    "description": "Registration failed error",
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
+
+  "resetPassword": "Şifreyi Sıfırla",
+  "@resetPassword": { "description": "Reset password title" },
+  "resetPasswordSubtitle": "Sıfırlama bağlantısı almak için e-postanızı girin",
+  "@resetPasswordSubtitle": { "description": "Reset password subtitle" },
+  "sendResetLink": "Sıfırlama Bağlantısı Gönder",
+  "@sendResetLink": { "description": "Send reset link button" },
+  "resetEmailSent": "Şifre sıfırlama e-postası gönderildi. Gelen kutunuzu kontrol edin.",
+  "@resetEmailSent": { "description": "Reset email sent message" },
+  "resetPasswordError": "Hata: {error}",
+  "@resetPasswordError": { 
+    "description": "Reset password error",
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
   }
 }
