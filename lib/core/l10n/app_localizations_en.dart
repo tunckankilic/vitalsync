@@ -969,7 +969,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get orSeparator => 'OR';
 
   @override
-  String get continueWithGoogle => 'Continue with Google';
+  String get continueWithApple => 'Continue with Apple';
 
   @override
   String get dontHaveAccount => 'Don\'t have an account?';
@@ -989,8 +989,8 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String googleLoginFailed(Object error) {
-    return 'Google Login failed: $error';
+  String appleLoginFailed(Object error) {
+    return 'Apple Login failed: $error';
   }
 
   @override
