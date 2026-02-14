@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:vitalsync/core/l10n/app_localizations.dart';
 
 // Providers for consent state
 class AnalyticsConsentNotifier extends Notifier<bool> {
@@ -76,6 +77,7 @@ class ConsentContent extends ConsumerWidget {
     final healthConsent = ref.watch(healthDataConsentProvider);
     final fitnessConsent = ref.watch(fitnessDataConsentProvider);
     final cloudConsent = ref.watch(cloudBackupConsentProvider);
+    final l10n = AppLocalizations.of(context);
 
     // Form logic: Check if required consents are given
     final canProceed = healthConsent && fitnessConsent;
@@ -89,7 +91,7 @@ class ConsentContent extends ConsumerWidget {
             const Icon(Icons.shield_outlined, size: 48, color: Colors.indigo),
             const SizedBox(height: 16),
             Text(
-              'Your Privacy Matters',
+              l10n.privacyTitle,
               style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                 fontWeight: FontWeight.bold,
                 color: Colors.indigo,
@@ -97,7 +99,7 @@ class ConsentContent extends ConsumerWidget {
             ).animate().fadeIn().moveY(begin: 10, end: 0),
             const SizedBox(height: 8),
             Text(
-              'We believe in transparency. Please review and manage how your data is handled.',
+              l10n.privacySubtitle,
               style: Theme.of(
                 context,
               ).textTheme.bodyLarge?.copyWith(color: Colors.grey[700]),
@@ -109,17 +111,16 @@ class ConsentContent extends ConsumerWidget {
             child: ListView(
               children: [
                 _ConsentCard(
-                  title: 'Health Data Processing',
-                  description:
-                      'Required to track medications and symptoms locally.',
+                  title: l10n.consentHealthTitle,
+                  description: l10n.consentHealthDescription,
                   isRequired: true,
                   value: healthConsent,
                   onChanged: (val) {
                     if (!val) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
+                        SnackBar(
                           content: Text(
-                            'This is required for the Health module to function.',
+                            l10n.consentRequiredMessage(l10n.health),
                           ),
                         ),
                       );
@@ -130,17 +131,16 @@ class ConsentContent extends ConsumerWidget {
                   icon: Icons.medical_services_outlined,
                 ),
                 _ConsentCard(
-                  title: 'Fitness Data Processing',
-                  description:
-                      'Required to log workouts and track progress locally.',
+                  title: l10n.consentFitnessTitle,
+                  description: l10n.consentFitnessDescription,
                   isRequired: true,
                   value: fitnessConsent,
                   onChanged: (val) {
                     if (!val) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
+                        SnackBar(
                           content: Text(
-                            'This is required for the Fitness module to function.',
+                            l10n.consentRequiredMessage(l10n.fitness),
                           ),
                         ),
                       );
@@ -151,9 +151,8 @@ class ConsentContent extends ConsumerWidget {
                   icon: Icons.fitness_center_outlined,
                 ),
                 _ConsentCard(
-                  title: 'Analytics & Usage',
-                  description:
-                      'Help us improve VitalSync by sharing anonymous usage data.',
+                  title: l10n.consentAnalyticsTitle,
+                  description: l10n.consentAnalyticsDescription,
                   isRequired: false,
                   value: analyticsConsent,
                   onChanged: (val) =>
@@ -161,9 +160,8 @@ class ConsentContent extends ConsumerWidget {
                   icon: Icons.analytics_outlined,
                 ),
                 _ConsentCard(
-                  title: 'Cloud Backup',
-                  description:
-                      "Securely backup your data to the cloud so you don't lose it.",
+                  title: l10n.consentBackupTitle,
+                  description: l10n.consentBackupDescription,
                   isRequired: false,
                   value: cloudConsent,
                   onChanged: (val) =>
@@ -177,7 +175,7 @@ class ConsentContent extends ConsumerWidget {
                     onPressed: () {
                       // Open Privacy Policy
                     },
-                    child: const Text('Read Full Privacy Policy'),
+                    child: Text(l10n.readPrivacyPolicy),
                   ),
                 ),
               ],
@@ -200,7 +198,7 @@ class ConsentContent extends ConsumerWidget {
                     borderRadius: BorderRadius.circular(16),
                   ),
                 ),
-                child: const Text('Accept & Continue'),
+                child: Text(l10n.acceptContinue),
               ),
             ),
         ],
@@ -227,6 +225,7 @@ class _ConsentCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Card(
       margin: const EdgeInsets.only(bottom: 16),
       elevation: 0,
@@ -275,9 +274,9 @@ class _ConsentCard extends StatelessWidget {
                               color: Colors.redAccent.withValues(alpha: 0.5),
                             ),
                           ),
-                          child: const Text(
-                            'REQUIRED',
-                            style: TextStyle(
+                          child: Text(
+                            l10n.requiredTag,
+                            style: const TextStyle(
                               fontSize: 10,
                               fontWeight: FontWeight.bold,
                               color: Colors.redAccent,

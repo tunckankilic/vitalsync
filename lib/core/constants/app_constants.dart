@@ -37,6 +37,10 @@ abstract class AppConstants {
   /// Current theme mode (light/dark/system/highContrast)
   static const String prefKeyThemeMode = '${prefKeyPrefix}theme_mode';
 
+  /// Material You enabled flag (Android 12+)
+  static const String prefKeyMaterialYouEnabled =
+      '${prefKeyPrefix}material_you_enabled';
+
   /// Current locale (en/tr/de)
   static const String prefKeyLocale = '${prefKeyPrefix}locale';
 
