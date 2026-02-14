@@ -714,8 +714,8 @@
   "@logIn": { "description": "Log in button" },
   "orSeparator": "OR",
   "@orSeparator": { "description": "OR separator" },
-  "continueWithGoogle": "Continue with Google",
-  "@continueWithGoogle": { "description": "Continue with Google button" },
+  "continueWithApple": "Continue with Apple",
+  "@continueWithApple": { "description": "Continue with Apple button" },
   "dontHaveAccount": "Don't have an account?",
   "@dontHaveAccount": { "description": "Don't have account text" },
   "signUp": "Sign Up",
@@ -733,9 +733,9 @@
       }
     }
   },
-  "googleLoginFailed": "Google Login failed: {error}",
-  "@googleLoginFailed": { 
-    "description": "Google login failed error",
+  "appleLoginFailed": "Apple Login failed: {error}",
+  "@appleLoginFailed": {
+    "description": "Apple login failed error",
     "placeholders": {
       "error": {
         "type": "Object"

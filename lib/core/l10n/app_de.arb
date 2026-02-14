@@ -558,8 +558,8 @@
   "@logIn": { "description": "Log in button" },
   "orSeparator": "ODER",
   "@orSeparator": { "description": "OR separator" },
-  "continueWithGoogle": "Mit Google fortfahren",
-  "@continueWithGoogle": { "description": "Continue with Google button" },
+  "continueWithApple": "Mit Apple fortfahren",
+  "@continueWithApple": { "description": "Continue with Apple button" },
   "dontHaveAccount": "Noch kein Konto?",
   "@dontHaveAccount": { "description": "Don't have account text" },
   "signUp": "Registrieren",
@@ -577,9 +577,9 @@
       }
     }
   },
-  "googleLoginFailed": "Google-Anmeldung fehlgeschlagen: {error}",
-  "@googleLoginFailed": { 
-    "description": "Google login failed error",
+  "appleLoginFailed": "Apple-Anmeldung fehlgeschlagen: {error}",
+  "@appleLoginFailed": {
+    "description": "Apple login failed error",
     "placeholders": {
       "error": {
         "type": "Object"
