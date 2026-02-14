@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:vitalsync/domain/repositories/shared/auth_repository.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
@@ -40,20 +41,45 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<UserCredential> signInWithGoogle() {
-    // Implementing Google Sign-In requires google_sign_in package dependency.
-    // Assuming configured or placeholder.
-    // The prompt setup includes dependencies but specific implementation details for Google Sign-In usually involve platform channel.
-    // I'll throw UnimplementedError or implement minimal logic if package present.
-    // For now, assume it's properly handled or defer implementation.
-    throw UnimplementedError('Google Sign-In requires additional setup.');
+    // Google Sign-In has been removed in favor of Apple Sign-In
+    throw UnimplementedError('Google Sign-In is no longer supported. Use Apple Sign-In instead.');
   }
 
   @override
-  Future<UserCredential> signInWithApple() {
-    // Implementing Apple Sign-In requires sign_in_with_apple package dependency.
-    // Platform-specific setup required for iOS/macOS.
-    // For now, assume it's properly handled or defer implementation.
-    throw UnimplementedError('Apple Sign-In requires additional setup.');
+  Future<UserCredential> signInWithApple() async {
+    try {
+      // Request Apple ID credentials
+      final appleCredential = await SignInWithApple.getAppleIDCredential(
+        scopes: [
+          AppleIDAuthorizationScopes.email,
+          AppleIDAuthorizationScopes.fullName,
+        ],
+      );
+
+      // Create an OAuthCredential from the Apple ID credential
+      final oauthCredential = OAuthProvider('apple.com').credential(
+        idToken: appleCredential.identityToken,
+        accessToken: appleCredential.authorizationCode,
+      );
+
+      // Sign in to Firebase with the Apple credential
+      final userCredential = await _auth.signInWithCredential(oauthCredential);
+
+      // Create initial profile if this is a new user
+      if (userCredential.additionalUserInfo?.isNewUser ?? false) {
+        final displayName = appleCredential.givenName != null && appleCredential.familyName != null
+            ? '${appleCredential.givenName} ${appleCredential.familyName}'
+            : userCredential.user?.email?.split('@').first ?? 'User';
+
+        if (userCredential.user != null) {
+          await createInitialProfile(userCredential.user!, displayName);
+        }
+      }
+
+      return userCredential;
+    } catch (e) {
+      throw Exception('Apple Sign-In failed: $e');
+    }
   }
 
   @override

@@ -51,9 +51,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     }
   }
 
-  Future<void> _handleGoogleLogin() async {
+  Future<void> _handleAppleLogin() async {
     try {
-      await ref.read(authProvider.notifier).signInWithGoogle();
+      await ref.read(authProvider.notifier).signInWithApple();
       if (mounted) {
         context.go('/dashboard');
       }
@@ -61,7 +61,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(AppLocalizations.of(context).googleLoginFailed(e)),
+            content: Text(AppLocalizations.of(context).appleLoginFailed(e)),
           ),
         );
       }
@@ -222,14 +222,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
                       const SizedBox(height: 24),
 
-                      // Google Sign In
+                      // Apple Sign In
                       OutlinedButton.icon(
-                        onPressed: isLoading ? null : _handleGoogleLogin,
+                        onPressed: isLoading ? null : _handleAppleLogin,
                         icon: const Icon(
-                          Icons.g_mobiledata,
+                          Icons.apple,
                           size: 28,
-                        ), // Placeholder, ideally use SVG logo
-                        label: Text(l10n.continueWithGoogle),
+                        ),
+                        label: Text(l10n.continueWithApple),
                         style: OutlinedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(vertical: 16),
                           shape: RoundedRectangleBorder(
