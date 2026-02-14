@@ -950,92 +950,94 @@ class AppLocalizationsTr extends AppLocalizations {
   }
 
   @override
-  String get welcomeBack => 'Welcome Back';
+  String get welcomeBack => 'Tekrar Hoş Geldiniz';
 
   @override
-  String get signInSubtitle => 'Sign in to continue your healthy journey';
+  String get signInSubtitle =>
+      'Sağlıklı yolculuğunuza devam etmek için giriş yapın';
 
   @override
-  String get email => 'Email';
+  String get email => 'E-posta';
 
   @override
-  String get password => 'Password';
+  String get password => 'Şifre';
 
   @override
-  String get forgotPassword => 'Forgot Password?';
+  String get forgotPassword => 'Şifremi Unuttum?';
 
   @override
-  String get logIn => 'Log In';
+  String get logIn => 'Giriş Yap';
 
   @override
-  String get orSeparator => 'OR';
+  String get orSeparator => 'VEYA';
 
   @override
-  String get continueWithGoogle => 'Continue with Google';
+  String get continueWithGoogle => 'Google ile Devam Et';
 
   @override
-  String get dontHaveAccount => 'Don\'t have an account?';
+  String get dontHaveAccount => 'Hesabınız yok mu?';
 
   @override
-  String get signUp => 'Sign Up';
+  String get signUp => 'Kayıt Ol';
 
   @override
-  String get enterEmail => 'Please enter your email';
+  String get enterEmail => 'Lütfen e-postanızı girin';
 
   @override
-  String get enterPassword => 'Please enter your password';
+  String get enterPassword => 'Lütfen şifrenizi girin';
 
   @override
   String loginFailed(Object error) {
-    return 'Login failed: $error';
+    return 'Giriş başarısız: $error';
   }
 
   @override
   String googleLoginFailed(Object error) {
-    return 'Google Login failed: $error';
+    return 'Google girişi başarısız: $error';
   }
 
   @override
-  String get createAccount => 'Create Account';
+  String get createAccount => 'Hesap Oluştur';
 
   @override
-  String get joinVitalSync => 'Join VitalSync today';
+  String get joinVitalSync => 'Bugün VitalSync\'e katılın';
 
   @override
-  String get confirmPassword => 'Confirm Password';
+  String get confirmPassword => 'Şifreyi Onayla';
 
   @override
-  String get alreadyHaveAccount => 'Already have an account?';
+  String get alreadyHaveAccount => 'Zaten hesabınız var mı?';
 
   @override
-  String get passwordsDoNotMatch => 'Passwords do not match';
+  String get passwordsDoNotMatch => 'Şifreler eşleşmiyor';
 
   @override
-  String get passwordLengthError => 'Password must be at least 6 characters';
+  String get passwordLengthError => 'Şifre en az 6 karakter olmalıdır';
 
   @override
-  String get confirmPasswordError => 'Please confirm your password';
+  String get confirmPasswordError => 'Lütfen şifrenizi onaylayın';
 
   @override
   String registrationFailed(Object error) {
-    return 'Registration failed: $error';
+    return 'Kayıt başarısız: $error';
   }
 
   @override
-  String get resetPassword => 'Reset Password';
+  String get resetPassword => 'Şifreyi Sıfırla';
 
   @override
   String get resetPasswordSubtitle =>
-      'Enter your email to receive a reset link';
+      'Sıfırlama bağlantısı almak için e-postanızı girin';
 
   @override
-  String get sendResetLink => 'Send Reset Link';
+  String get sendResetLink => 'Sıfırlama Bağlantısı Gönder';
 
   @override
-  String get resetEmailSent => 'Password reset email sent. Check your inbox.';
+  String get resetEmailSent =>
+      'Şifre sıfırlama e-postası gönderildi. Gelen kutunuzu kontrol edin.';
 
   @override
   String resetPasswordError(Object error) {
-    return 'Error: $error';
+    return 'Hata: $error';
   }
 }

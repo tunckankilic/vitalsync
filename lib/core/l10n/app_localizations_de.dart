@@ -952,92 +952,95 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
-  String get welcomeBack => 'Welcome Back';
+  String get welcomeBack => 'Willkommen zurück';
 
   @override
-  String get signInSubtitle => 'Sign in to continue your healthy journey';
+  String get signInSubtitle =>
+      'Melden Sie sich an, um Ihre gesunde Reise fortzusetzen';
 
   @override
-  String get email => 'Email';
+  String get email => 'E-Mail';
 
   @override
-  String get password => 'Password';
+  String get password => 'Passwort';
 
   @override
-  String get forgotPassword => 'Forgot Password?';
+  String get forgotPassword => 'Passwort vergessen?';
 
   @override
-  String get logIn => 'Log In';
+  String get logIn => 'Anmelden';
 
   @override
-  String get orSeparator => 'OR';
+  String get orSeparator => 'ODER';
 
   @override
-  String get continueWithGoogle => 'Continue with Google';
+  String get continueWithGoogle => 'Mit Google fortfahren';
 
   @override
-  String get dontHaveAccount => 'Don\'t have an account?';
+  String get dontHaveAccount => 'Noch kein Konto?';
 
   @override
-  String get signUp => 'Sign Up';
+  String get signUp => 'Registrieren';
 
   @override
-  String get enterEmail => 'Please enter your email';
+  String get enterEmail => 'Bitte geben Sie Ihre E-Mail ein';
 
   @override
-  String get enterPassword => 'Please enter your password';
+  String get enterPassword => 'Bitte geben Sie Ihr Passwort ein';
 
   @override
   String loginFailed(Object error) {
-    return 'Login failed: $error';
+    return 'Anmeldung fehlgeschlagen: $error';
   }
 
   @override
   String googleLoginFailed(Object error) {
-    return 'Google Login failed: $error';
+    return 'Google-Anmeldung fehlgeschlagen: $error';
   }
 
   @override
-  String get createAccount => 'Create Account';
+  String get createAccount => 'Konto erstellen';
 
   @override
-  String get joinVitalSync => 'Join VitalSync today';
+  String get joinVitalSync => 'Treten Sie VitalSync heute bei';
 
   @override
-  String get confirmPassword => 'Confirm Password';
+  String get confirmPassword => 'Passwort bestätigen';
 
   @override
-  String get alreadyHaveAccount => 'Already have an account?';
+  String get alreadyHaveAccount => 'Haben Sie bereits ein Konto?';
 
   @override
-  String get passwordsDoNotMatch => 'Passwords do not match';
+  String get passwordsDoNotMatch => 'Passwörter stimmen nicht überein';
 
   @override
-  String get passwordLengthError => 'Password must be at least 6 characters';
+  String get passwordLengthError =>
+      'Passwort muss mindestens 6 Zeichen lang sein';
 
   @override
-  String get confirmPasswordError => 'Please confirm your password';
+  String get confirmPasswordError => 'Bitte bestätigen Sie Ihr Passwort';
 
   @override
   String registrationFailed(Object error) {
-    return 'Registration failed: $error';
+    return 'Registrierung fehlgeschlagen: $error';
   }
 
   @override
-  String get resetPassword => 'Reset Password';
+  String get resetPassword => 'Passwort zurücksetzen';
 
   @override
   String get resetPasswordSubtitle =>
-      'Enter your email to receive a reset link';
+      'Geben Sie Ihre E-Mail ein, um einen Zurücksetzungslink zu erhalten';
 
   @override
-  String get sendResetLink => 'Send Reset Link';
+  String get sendResetLink => 'Zurücksetzungslink senden';
 
   @override
-  String get resetEmailSent => 'Password reset email sent. Check your inbox.';
+  String get resetEmailSent =>
+      'E-Mail zum Zurücksetzen des Passworts gesendet. Überprüfen Sie Ihren Posteingang.';
 
   @override
   String resetPasswordError(Object error) {
-    return 'Error: $error';
+    return 'Fehler: $error';
   }
 }
