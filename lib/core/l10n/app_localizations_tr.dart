@@ -1139,4 +1139,367 @@ class AppLocalizationsTr extends AppLocalizations {
   @override
   String get gdprNote =>
       'Gerekli onaylar, temel uygulama işlevselliği için gereklidir. Onayları istediğiniz zaman Ayarlar\'dan yönetebilirsiniz.';
+
+  @override
+  String get workoutComplete => 'Antrenman Tamamlandı!';
+
+  @override
+  String get greatJob => 'Harika iş! Böyle devam!';
+
+  @override
+  String get workoutNotFound => 'Antrenman bulunamadı';
+
+  @override
+  String get done => 'Tamam';
+
+  @override
+  String get share => 'Paylaş';
+
+  @override
+  String get comingSoon => 'Yakında gelecek!';
+
+  @override
+  String get volumeChart => 'Hacim Grafiği';
+
+  @override
+  String get chartComingSoon => 'Grafik yakında gelecek';
+
+  @override
+  String get summary => 'Özet';
+
+  @override
+  String get avgDuration => 'Ort. Süre';
+
+  @override
+  String get prsAchieved => 'Kırılan Rekorlar';
+
+  @override
+  String get noPRsYet => 'Henüz kişisel rekor yok. Devam et!';
+
+  @override
+  String get dismissed => 'Reddedilenler';
+
+  @override
+  String get overallWellness => 'Genel Sağlık';
+
+  @override
+  String get insightDismissed => 'İçgörü reddedildi';
+
+  @override
+  String get noDismissedInsights => 'Reddedilen içgörü yok';
+
+  @override
+  String get noInsightsYet => 'Henüz içgörü yok';
+
+  @override
+  String get insightsEmptyDescription =>
+      'Veriler toplandıkça içgörüler burada görünecek';
+
+  @override
+  String dataCollectedProgress(int collected, int total) {
+    return '$collected/$total gün veri toplandı';
+  }
+
+  @override
+  String errorLoadingInsights(Object error) {
+    return 'İçgörüler yüklenirken hata: $error';
+  }
+
+  @override
+  String errorLoadingDismissedInsights(Object error) {
+    return 'Reddedilen içgörüler yüklenirken hata: $error';
+  }
+
+  @override
+  String get symptomHeadache => 'Baş Ağrısı';
+
+  @override
+  String get symptomNausea => 'Mide Bulantısı';
+
+  @override
+  String get symptomFatigue => 'Yorgunluk';
+
+  @override
+  String get symptomDizziness => 'Baş Dönmesi';
+
+  @override
+  String get symptomStomachPain => 'Karın Ağrısı';
+
+  @override
+  String get symptomBackPain => 'Bel Ağrısı';
+
+  @override
+  String get symptomJointPain => 'Eklem Ağrısı';
+
+  @override
+  String get symptomInsomnia => 'Uykusuzluk';
+
+  @override
+  String get symptomAnxiety => 'Anksiyete';
+
+  @override
+  String get symptomShortnessOfBreath => 'Nefes Darlığı';
+
+  @override
+  String get pleaseEnterSymptomName => 'Lütfen semptom adı girin';
+
+  @override
+  String get symptomLoggedSuccess => 'Semptom başarıyla kaydedildi';
+
+  @override
+  String errorLoggingSymptom(Object error) {
+    return 'Semptom kaydedilirken hata: $error';
+  }
+
+  @override
+  String get severityMild => 'Hafif';
+
+  @override
+  String get severityModerate => 'Orta';
+
+  @override
+  String get severitySevere => 'Şiddetli';
+
+  @override
+  String get severityVerySevere => 'Çok Şiddetli';
+
+  @override
+  String get severityUnbearable => 'Dayanılmaz';
+
+  @override
+  String get medicationNotFound => 'İlaç bulunamadı';
+
+  @override
+  String errorLoadingMedication(Object error) {
+    return 'İlaç yüklenirken hata: $error';
+  }
+
+  @override
+  String get medicationAddedSuccess => 'İlaç başarıyla eklendi';
+
+  @override
+  String get medicationUpdatedSuccess => 'İlaç başarıyla güncellendi';
+
+  @override
+  String errorSavingMedication(Object error) {
+    return 'İlaç kaydedilirken hata: $error';
+  }
+
+  @override
+  String get addFirstMedicationButton => 'İlk İlacı Ekle';
+
+  @override
+  String get welcomeToHealth => 'Sağlık\'a Hoş Geldiniz!';
+
+  @override
+  String get onboardingHealthMessage =>
+      'İlk ilacınızı ekleyerek başlayalım. Uyumu takip etmek sağlığınıza yardımcı olur!';
+
+  @override
+  String get weeklyReport => 'Haftalık Rapor';
+
+  @override
+  String errorLoadingReport(Object error) {
+    return 'Rapor yüklenirken hata: $error';
+  }
+
+  @override
+  String get taken => 'Alındı';
+
+  @override
+  String get missed => 'Kaçırıldı';
+
+  @override
+  String get skipped => 'Atlandı';
+
+  @override
+  String get volume => 'Hacim';
+
+  @override
+  String get healthRing => 'Sağlık';
+
+  @override
+  String get fitnessRing => 'Fitness';
+
+  @override
+  String get wellnessRing => 'İyi Oluş';
+
+  @override
+  String get activityRings => 'Aktivite Halkaları';
+
+  @override
+  String get shareAsInfographic => 'İnfografik Olarak Paylaş (1080x1920)';
+
+  @override
+  String get perfectForStories => 'Instagram Hikayeleri için ideal';
+
+  @override
+  String get shareAsCompactCard => 'Kompakt Kart Olarak Paylaş (1080x1080)';
+
+  @override
+  String get perfectForSharing => 'Genel paylaşım için ideal';
+
+  @override
+  String get exportAsJSON => 'JSON Olarak Dışa Aktar';
+
+  @override
+  String get gdprDataPortability => 'KVKK veri taşınabilirliği';
+
+  @override
+  String get generatingImage => 'Görsel oluşturuluyor...';
+
+  @override
+  String get myWeeklyReport => 'VitalSync haftalık raporum';
+
+  @override
+  String errorSharing(Object error) {
+    return 'Paylaşım hatası: $error';
+  }
+
+  @override
+  String get weeklyReportData => 'VitalSync Haftalık Rapor Verileri';
+
+  @override
+  String get reportExportedAsJSON => 'Rapor JSON olarak dışa aktarıldı';
+
+  @override
+  String errorExporting(Object error) {
+    return 'Dışa aktarma hatası: $error';
+  }
+
+  @override
+  String get wasThisInsightHelpful => 'Bu içgörü faydalı mıydı?';
+
+  @override
+  String get helpful => 'Faydalı';
+
+  @override
+  String get notHelpful => 'Faydalı Değil';
+
+  @override
+  String get dismissInsight => 'İçgörüyü Kaldır';
+
+  @override
+  String get thankYouForFeedback => 'Geri bildiriminiz için teşekkürler!';
+
+  @override
+  String errorSubmittingFeedback(Object error) {
+    return 'Geri bildirim gönderilirken hata: $error';
+  }
+
+  @override
+  String errorDismissingInsight(Object error) {
+    return 'İçgörü kaldırılırken hata: $error';
+  }
+
+  @override
+  String get privacyAndData => 'Gizlilik ve Veriler';
+
+  @override
+  String get restTimerSeconds => 'saniye';
+
+  @override
+  String get skipRestButton => 'Dinlenmeyi Atla';
+
+  @override
+  String get achievementUnlocked => 'Başarım Açıldı!';
+
+  @override
+  String errorGeneric(Object error) {
+    return 'Hata: $error';
+  }
+
+  @override
+  String get healthSummary => 'Sağlık Özeti';
+
+  @override
+  String get fitnessSummary => 'Fitness Özeti';
+
+  @override
+  String get nextWeekSuggestions => 'Gelecek Hafta Önerileri';
+
+  @override
+  String get keepUpGreatWork => 'Harika gidiyorsun, devam et!';
+
+  @override
+  String vsLastWeekPercent(String percent) {
+    return '%$percent geçen haftaya göre';
+  }
+
+  @override
+  String mostMissed(String timeSlot) {
+    return 'En çok kaçırılan: $timeSlot';
+  }
+
+  @override
+  String bestWorkout(String name, String volume) {
+    return 'En iyi antrenman: $name — ${volume}kg';
+  }
+
+  @override
+  String get newPersonalRecords => 'Yeni Kişisel Rekorlar';
+
+  @override
+  String validUntilDays(int days) {
+    return '$days gün geçerli';
+  }
+
+  @override
+  String validUntilHours(int hours) {
+    return '$hours saat geçerli';
+  }
+
+  @override
+  String get validUntilSoon => 'Yakında sona erecek';
+
+  @override
+  String get takeAction => 'Harekete Geç';
+
+  @override
+  String errorLoadingInsight(Object error) {
+    return 'İçgörü yüklenirken hata: $error';
+  }
+
+  @override
+  String get today => 'Bugün';
+
+  @override
+  String get yesterday => 'Dün';
+
+  @override
+  String daysAgo(int days) {
+    return '$days gün önce';
+  }
+
+  @override
+  String weeksAgo(int weeks) {
+    return '${weeks}h önce';
+  }
+
+  @override
+  String monthsAgo(int months) {
+    return '${months}ay önce';
+  }
+
+  @override
+  String get loading => 'Yükleniyor...';
+
+  @override
+  String errorAddingSet(Object error) {
+    return 'Set eklenirken hata: $error';
+  }
+
+  @override
+  String get chartError => 'Grafik Hatası';
+
+  @override
+  String get shareFunctionalityComingSoon => 'Paylaşım özelliği yakında!';
+
+  @override
+  String severityLabel(int severity) {
+    return 'Şiddet: $severity';
+  }
+
+  @override
+  String get errorLoadingCalendar => 'Takvim yüklenirken hata';
 }

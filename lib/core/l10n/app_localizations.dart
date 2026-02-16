@@ -1084,7 +1084,7 @@ abstract class AppLocalizations {
   /// **'Volume Progression'**
   String get volumeProgression;
 
-  /// Workout frequency section title
+  /// Workout frequency chart title
   ///
   /// In en, this message translates to:
   /// **'Workout Frequency'**
@@ -2223,6 +2223,636 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Required consents are necessary for core app functionality. You can manage consents anytime in Settings.'**
   String get gdprNote;
+
+  /// Workout complete message
+  ///
+  /// In en, this message translates to:
+  /// **'Workout Complete!'**
+  String get workoutComplete;
+
+  /// Congratulations message
+  ///
+  /// In en, this message translates to:
+  /// **'Great job! Keep it up!'**
+  String get greatJob;
+
+  /// Workout not found error message
+  ///
+  /// In en, this message translates to:
+  /// **'Workout not found'**
+  String get workoutNotFound;
+
+  /// Done button
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get done;
+
+  /// Share button
+  ///
+  /// In en, this message translates to:
+  /// **'Share'**
+  String get share;
+
+  /// Coming soon message
+  ///
+  /// In en, this message translates to:
+  /// **'Coming soon!'**
+  String get comingSoon;
+
+  /// Volume chart title
+  ///
+  /// In en, this message translates to:
+  /// **'Volume Chart'**
+  String get volumeChart;
+
+  /// Chart placeholder message
+  ///
+  /// In en, this message translates to:
+  /// **'Chart coming soon'**
+  String get chartComingSoon;
+
+  /// Summary section title
+  ///
+  /// In en, this message translates to:
+  /// **'Summary'**
+  String get summary;
+
+  /// Average duration label
+  ///
+  /// In en, this message translates to:
+  /// **'Avg Duration'**
+  String get avgDuration;
+
+  /// Personal records achieved label
+  ///
+  /// In en, this message translates to:
+  /// **'PRs Achieved'**
+  String get prsAchieved;
+
+  /// No PRs empty state message
+  ///
+  /// In en, this message translates to:
+  /// **'No personal records yet. Keep lifting!'**
+  String get noPRsYet;
+
+  /// Dismissed tab label
+  ///
+  /// In en, this message translates to:
+  /// **'Dismissed'**
+  String get dismissed;
+
+  /// Overall wellness / cross-module filter label
+  ///
+  /// In en, this message translates to:
+  /// **'Overall Wellness'**
+  String get overallWellness;
+
+  /// Snackbar message when insight is dismissed
+  ///
+  /// In en, this message translates to:
+  /// **'Insight dismissed'**
+  String get insightDismissed;
+
+  /// Empty state for dismissed insights tab
+  ///
+  /// In en, this message translates to:
+  /// **'No dismissed insights'**
+  String get noDismissedInsights;
+
+  /// Empty state title when no insights exist
+  ///
+  /// In en, this message translates to:
+  /// **'No insights yet'**
+  String get noInsightsYet;
+
+  /// Empty state description for insights
+  ///
+  /// In en, this message translates to:
+  /// **'Insights will appear here as data is collected'**
+  String get insightsEmptyDescription;
+
+  /// Progress text showing days of data collected
+  ///
+  /// In en, this message translates to:
+  /// **'{collected}/{total} days of data collected'**
+  String dataCollectedProgress(int collected, int total);
+
+  /// Error message when loading insights fails
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading insights: {error}'**
+  String errorLoadingInsights(Object error);
+
+  /// Error message when loading dismissed insights fails
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading dismissed insights: {error}'**
+  String errorLoadingDismissedInsights(Object error);
+
+  /// No description provided for @symptomHeadache.
+  ///
+  /// In en, this message translates to:
+  /// **'Headache'**
+  String get symptomHeadache;
+
+  /// No description provided for @symptomNausea.
+  ///
+  /// In en, this message translates to:
+  /// **'Nausea'**
+  String get symptomNausea;
+
+  /// No description provided for @symptomFatigue.
+  ///
+  /// In en, this message translates to:
+  /// **'Fatigue'**
+  String get symptomFatigue;
+
+  /// No description provided for @symptomDizziness.
+  ///
+  /// In en, this message translates to:
+  /// **'Dizziness'**
+  String get symptomDizziness;
+
+  /// No description provided for @symptomStomachPain.
+  ///
+  /// In en, this message translates to:
+  /// **'Stomach Pain'**
+  String get symptomStomachPain;
+
+  /// No description provided for @symptomBackPain.
+  ///
+  /// In en, this message translates to:
+  /// **'Back Pain'**
+  String get symptomBackPain;
+
+  /// No description provided for @symptomJointPain.
+  ///
+  /// In en, this message translates to:
+  /// **'Joint Pain'**
+  String get symptomJointPain;
+
+  /// No description provided for @symptomInsomnia.
+  ///
+  /// In en, this message translates to:
+  /// **'Insomnia'**
+  String get symptomInsomnia;
+
+  /// No description provided for @symptomAnxiety.
+  ///
+  /// In en, this message translates to:
+  /// **'Anxiety'**
+  String get symptomAnxiety;
+
+  /// No description provided for @symptomShortnessOfBreath.
+  ///
+  /// In en, this message translates to:
+  /// **'Shortness of Breath'**
+  String get symptomShortnessOfBreath;
+
+  /// No description provided for @pleaseEnterSymptomName.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a symptom name'**
+  String get pleaseEnterSymptomName;
+
+  /// No description provided for @symptomLoggedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Symptom logged successfully'**
+  String get symptomLoggedSuccess;
+
+  /// No description provided for @errorLoggingSymptom.
+  ///
+  /// In en, this message translates to:
+  /// **'Error logging symptom: {error}'**
+  String errorLoggingSymptom(Object error);
+
+  /// No description provided for @severityMild.
+  ///
+  /// In en, this message translates to:
+  /// **'Mild'**
+  String get severityMild;
+
+  /// No description provided for @severityModerate.
+  ///
+  /// In en, this message translates to:
+  /// **'Moderate'**
+  String get severityModerate;
+
+  /// No description provided for @severitySevere.
+  ///
+  /// In en, this message translates to:
+  /// **'Severe'**
+  String get severitySevere;
+
+  /// No description provided for @severityVerySevere.
+  ///
+  /// In en, this message translates to:
+  /// **'Very Severe'**
+  String get severityVerySevere;
+
+  /// No description provided for @severityUnbearable.
+  ///
+  /// In en, this message translates to:
+  /// **'Unbearable'**
+  String get severityUnbearable;
+
+  /// No description provided for @medicationNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Medication not found'**
+  String get medicationNotFound;
+
+  /// No description provided for @errorLoadingMedication.
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading medication: {error}'**
+  String errorLoadingMedication(Object error);
+
+  /// No description provided for @medicationAddedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Medication added successfully'**
+  String get medicationAddedSuccess;
+
+  /// No description provided for @medicationUpdatedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Medication updated successfully'**
+  String get medicationUpdatedSuccess;
+
+  /// No description provided for @errorSavingMedication.
+  ///
+  /// In en, this message translates to:
+  /// **'Error saving medication: {error}'**
+  String errorSavingMedication(Object error);
+
+  /// No description provided for @addFirstMedicationButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Add First Medication'**
+  String get addFirstMedicationButton;
+
+  /// No description provided for @welcomeToHealth.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome to Health!'**
+  String get welcomeToHealth;
+
+  /// No description provided for @onboardingHealthMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Let\'s get started by adding your first medication. Tracking adherence helps you stay healthy!'**
+  String get onboardingHealthMessage;
+
+  /// No description provided for @weeklyReport.
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly Report'**
+  String get weeklyReport;
+
+  /// No description provided for @errorLoadingReport.
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading report: {error}'**
+  String errorLoadingReport(Object error);
+
+  /// No description provided for @taken.
+  ///
+  /// In en, this message translates to:
+  /// **'Taken'**
+  String get taken;
+
+  /// No description provided for @missed.
+  ///
+  /// In en, this message translates to:
+  /// **'Missed'**
+  String get missed;
+
+  /// No description provided for @skipped.
+  ///
+  /// In en, this message translates to:
+  /// **'Skipped'**
+  String get skipped;
+
+  /// No description provided for @volume.
+  ///
+  /// In en, this message translates to:
+  /// **'Volume'**
+  String get volume;
+
+  /// No description provided for @healthRing.
+  ///
+  /// In en, this message translates to:
+  /// **'Health'**
+  String get healthRing;
+
+  /// No description provided for @fitnessRing.
+  ///
+  /// In en, this message translates to:
+  /// **'Fitness'**
+  String get fitnessRing;
+
+  /// No description provided for @wellnessRing.
+  ///
+  /// In en, this message translates to:
+  /// **'Wellness'**
+  String get wellnessRing;
+
+  /// No description provided for @activityRings.
+  ///
+  /// In en, this message translates to:
+  /// **'Activity Rings'**
+  String get activityRings;
+
+  /// No description provided for @shareAsInfographic.
+  ///
+  /// In en, this message translates to:
+  /// **'Share as Infographic (1080x1920)'**
+  String get shareAsInfographic;
+
+  /// No description provided for @perfectForStories.
+  ///
+  /// In en, this message translates to:
+  /// **'Perfect for Instagram Stories'**
+  String get perfectForStories;
+
+  /// No description provided for @shareAsCompactCard.
+  ///
+  /// In en, this message translates to:
+  /// **'Share as Compact Card (1080x1080)'**
+  String get shareAsCompactCard;
+
+  /// No description provided for @perfectForSharing.
+  ///
+  /// In en, this message translates to:
+  /// **'Perfect for general sharing'**
+  String get perfectForSharing;
+
+  /// No description provided for @exportAsJSON.
+  ///
+  /// In en, this message translates to:
+  /// **'Export as JSON'**
+  String get exportAsJSON;
+
+  /// No description provided for @gdprDataPortability.
+  ///
+  /// In en, this message translates to:
+  /// **'GDPR data portability'**
+  String get gdprDataPortability;
+
+  /// No description provided for @generatingImage.
+  ///
+  /// In en, this message translates to:
+  /// **'Generating image...'**
+  String get generatingImage;
+
+  /// No description provided for @myWeeklyReport.
+  ///
+  /// In en, this message translates to:
+  /// **'My weekly report from VitalSync'**
+  String get myWeeklyReport;
+
+  /// No description provided for @errorSharing.
+  ///
+  /// In en, this message translates to:
+  /// **'Error sharing: {error}'**
+  String errorSharing(Object error);
+
+  /// No description provided for @weeklyReportData.
+  ///
+  /// In en, this message translates to:
+  /// **'VitalSync Weekly Report Data'**
+  String get weeklyReportData;
+
+  /// No description provided for @reportExportedAsJSON.
+  ///
+  /// In en, this message translates to:
+  /// **'Report exported as JSON'**
+  String get reportExportedAsJSON;
+
+  /// No description provided for @errorExporting.
+  ///
+  /// In en, this message translates to:
+  /// **'Error exporting: {error}'**
+  String errorExporting(Object error);
+
+  /// No description provided for @wasThisInsightHelpful.
+  ///
+  /// In en, this message translates to:
+  /// **'Was this insight helpful?'**
+  String get wasThisInsightHelpful;
+
+  /// No description provided for @helpful.
+  ///
+  /// In en, this message translates to:
+  /// **'Helpful'**
+  String get helpful;
+
+  /// No description provided for @notHelpful.
+  ///
+  /// In en, this message translates to:
+  /// **'Not Helpful'**
+  String get notHelpful;
+
+  /// No description provided for @dismissInsight.
+  ///
+  /// In en, this message translates to:
+  /// **'Dismiss Insight'**
+  String get dismissInsight;
+
+  /// No description provided for @thankYouForFeedback.
+  ///
+  /// In en, this message translates to:
+  /// **'Thank you for your feedback!'**
+  String get thankYouForFeedback;
+
+  /// No description provided for @errorSubmittingFeedback.
+  ///
+  /// In en, this message translates to:
+  /// **'Error submitting feedback: {error}'**
+  String errorSubmittingFeedback(Object error);
+
+  /// No description provided for @errorDismissingInsight.
+  ///
+  /// In en, this message translates to:
+  /// **'Error dismissing insight: {error}'**
+  String errorDismissingInsight(Object error);
+
+  /// No description provided for @privacyAndData.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy & Data'**
+  String get privacyAndData;
+
+  /// No description provided for @restTimerSeconds.
+  ///
+  /// In en, this message translates to:
+  /// **'seconds'**
+  String get restTimerSeconds;
+
+  /// No description provided for @skipRestButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip Rest'**
+  String get skipRestButton;
+
+  /// No description provided for @achievementUnlocked.
+  ///
+  /// In en, this message translates to:
+  /// **'Achievement Unlocked!'**
+  String get achievementUnlocked;
+
+  /// No description provided for @errorGeneric.
+  ///
+  /// In en, this message translates to:
+  /// **'Error: {error}'**
+  String errorGeneric(Object error);
+
+  /// No description provided for @healthSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Health Summary'**
+  String get healthSummary;
+
+  /// No description provided for @fitnessSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Fitness Summary'**
+  String get fitnessSummary;
+
+  /// No description provided for @nextWeekSuggestions.
+  ///
+  /// In en, this message translates to:
+  /// **'Next Week Suggestions'**
+  String get nextWeekSuggestions;
+
+  /// No description provided for @keepUpGreatWork.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep up the great work!'**
+  String get keepUpGreatWork;
+
+  /// No description provided for @vsLastWeekPercent.
+  ///
+  /// In en, this message translates to:
+  /// **'{percent}% vs last week'**
+  String vsLastWeekPercent(String percent);
+
+  /// No description provided for @mostMissed.
+  ///
+  /// In en, this message translates to:
+  /// **'Most missed: {timeSlot}'**
+  String mostMissed(String timeSlot);
+
+  /// No description provided for @bestWorkout.
+  ///
+  /// In en, this message translates to:
+  /// **'Best workout: {name} — {volume}kg'**
+  String bestWorkout(String name, String volume);
+
+  /// No description provided for @newPersonalRecords.
+  ///
+  /// In en, this message translates to:
+  /// **'New Personal Records'**
+  String get newPersonalRecords;
+
+  /// No description provided for @validUntilDays.
+  ///
+  /// In en, this message translates to:
+  /// **'Valid until {days} days'**
+  String validUntilDays(int days);
+
+  /// No description provided for @validUntilHours.
+  ///
+  /// In en, this message translates to:
+  /// **'Valid until {hours} hours'**
+  String validUntilHours(int hours);
+
+  /// No description provided for @validUntilSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Valid until soon'**
+  String get validUntilSoon;
+
+  /// No description provided for @takeAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Take Action'**
+  String get takeAction;
+
+  /// No description provided for @errorLoadingInsight.
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading insight: {error}'**
+  String errorLoadingInsight(Object error);
+
+  /// No description provided for @today.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get today;
+
+  /// No description provided for @yesterday.
+  ///
+  /// In en, this message translates to:
+  /// **'Yesterday'**
+  String get yesterday;
+
+  /// No description provided for @daysAgo.
+  ///
+  /// In en, this message translates to:
+  /// **'{days} days ago'**
+  String daysAgo(int days);
+
+  /// No description provided for @weeksAgo.
+  ///
+  /// In en, this message translates to:
+  /// **'{weeks}w ago'**
+  String weeksAgo(int weeks);
+
+  /// No description provided for @monthsAgo.
+  ///
+  /// In en, this message translates to:
+  /// **'{months}mo ago'**
+  String monthsAgo(int months);
+
+  /// No description provided for @loading.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading...'**
+  String get loading;
+
+  /// No description provided for @errorAddingSet.
+  ///
+  /// In en, this message translates to:
+  /// **'Error adding set: {error}'**
+  String errorAddingSet(Object error);
+
+  /// No description provided for @chartError.
+  ///
+  /// In en, this message translates to:
+  /// **'Chart Error'**
+  String get chartError;
+
+  /// No description provided for @shareFunctionalityComingSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Share functionality coming soon!'**
+  String get shareFunctionalityComingSoon;
+
+  /// No description provided for @severityLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Severity: {severity}'**
+  String severityLabel(int severity);
+
+  /// No description provided for @errorLoadingCalendar.
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading calendar'**
+  String get errorLoadingCalendar;
 }
 
 class _AppLocalizationsDelegate

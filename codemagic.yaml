@@ -1,0 +1,132 @@
+workflows:
+  ios-release:
+    name: iOS Release
+    max_build_duration: 60
+    instance_type: mac_mini_m2
+    environment:
+      flutter: stable
+      xcode: latest
+      cocoapods: default
+      groups:
+        - app_store_credentials  # TODO: Add in Codemagic UI → Environment variables
+      vars:
+        BUNDLE_ID: "site.tunckankilic.vitalsync"
+      # TODO: Uncomment after adding signing in Codemagic UI
+      # ios_signing:
+      #   distribution_type: app_store
+      #   bundle_identifier: site.tunckankilic.vitalsync
+    triggering:
+      events:
+        - tag
+      tag_patterns:
+        - pattern: "v*"
+          include: true
+    scripts:
+      - name: Install dependencies
+        script: |
+          flutter pub get
+
+      - name: Run analyze
+        script: |
+          flutter analyze --no-fatal-infos
+
+      - name: Run tests
+        script: |
+          flutter test test/data/repositories/
+
+      - name: Set build number from tag
+        script: |
+          BUILD_NUMBER=$(git rev-list --count HEAD)
+          cd ios
+          agvtool new-version -all $BUILD_NUMBER
+
+      - name: Build iOS
+        script: |
+          flutter build ipa \
+            --release \
+            --build-number=$BUILD_NUMBER \
+            --export-options-plist=/Users/builder/export_options.plist
+        # TODO: export_options.plist will be auto-generated when signing is configured in Codemagic UI
+
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+      - flutter_drive.log
+
+    publishing:
+      # TODO: Uncomment after App Store Connect API key is added in Codemagic UI
+      # app_store_connect:
+      #   api_key: $APP_STORE_CONNECT_PRIVATE_KEY
+      #   key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
+      #   issuer_id: $APP_STORE_CONNECT_ISSUER_ID
+      #   submit_to_testflight: true
+      #   submit_to_app_store: false
+      email:
+        recipients:
+          - TODO_YOUR_EMAIL@example.com  # TODO: Replace with your email
+        notify:
+          success: true
+          failure: true
+
+  ios-testflight:
+    name: iOS TestFlight
+    max_build_duration: 60
+    instance_type: mac_mini_m2
+    environment:
+      flutter: stable
+      xcode: latest
+      cocoapods: default
+      groups:
+        - app_store_credentials
+      vars:
+        BUNDLE_ID: "site.tunckankilic.vitalsync"
+    triggering:
+      events:
+        - push
+      branch_patterns:
+        - pattern: "main"
+          include: true
+    scripts:
+      - name: Install dependencies
+        script: |
+          flutter pub get
+
+      - name: Run analyze
+        script: |
+          flutter analyze --no-fatal-infos
+
+      - name: Run tests
+        script: |
+          flutter test test/data/repositories/
+
+      - name: Set build number
+        script: |
+          BUILD_NUMBER=$(git rev-list --count HEAD)
+          cd ios
+          agvtool new-version -all $BUILD_NUMBER
+
+      - name: Build iOS
+        script: |
+          flutter build ipa \
+            --release \
+            --build-number=$BUILD_NUMBER \
+            --export-options-plist=/Users/builder/export_options.plist
+
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+
+    publishing:
+      # TODO: Uncomment after App Store Connect API key is added
+      # app_store_connect:
+      #   api_key: $APP_STORE_CONNECT_PRIVATE_KEY
+      #   key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
+      #   issuer_id: $APP_STORE_CONNECT_ISSUER_ID
+      #   submit_to_testflight: true
+      #   submit_to_app_store: false
+      email:
+        recipients:
+          - TODO_YOUR_EMAIL@example.com
+        notify:
+          success: true
+          failure: true

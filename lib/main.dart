@@ -25,29 +25,37 @@ void main() async {
   // Ensure Flutter bindings are initialized
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialize Firebase
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  try {
+    // Initialize Firebase
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
 
-  // Initialize GetIt dependency injection
-  await initializeDependencies();
+    // Initialize GetIt dependency injection
+    await initializeDependencies();
 
-  // Initialize notification service
-  final notificationService = getIt<NotificationService>();
-  await notificationService.initialize();
-  await notificationService.requestPermissions();
+    // Initialize notification service
+    final notificationService = getIt<NotificationService>();
+    await notificationService.initialize();
+    await notificationService.requestPermissions();
 
-  // Initialize background service
-  final backgroundService = getIt<BackgroundService>();
-  await backgroundService.initialize();
-  await backgroundService.scheduleAllPeriodicTasks();
+    // Initialize background service
+    final backgroundService = getIt<BackgroundService>();
+    await backgroundService.initialize();
+    await backgroundService.scheduleAllPeriodicTasks();
 
-  // Start connectivity service listening
-  final connectivityService = getIt<ConnectivityService>();
-  connectivityService.startListening();
+    // Start connectivity service listening
+    final connectivityService = getIt<ConnectivityService>();
+    connectivityService.startListening();
 
-  // Start auto-sync on connectivity changes
-  final syncService = getIt<SyncService>();
-  syncService.startAutoSync();
+    // Start auto-sync on connectivity changes
+    final syncService = getIt<SyncService>();
+    syncService.startAutoSync();
+  } catch (e) {
+    // If critical initialization fails, still launch the app
+    // so the user sees something instead of a crash
+    debugPrint('Initialization error: $e');
+  }
 
   // Run the app wrapped in ProviderScope for Riverpod
   runApp(const ProviderScope(child: VitalSyncApp()));

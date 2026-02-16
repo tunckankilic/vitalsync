@@ -46,29 +46,7 @@ class WorkoutSessionRepositoryImpl implements WorkoutSessionRepository {
 
   @override
   Future<void> endSession(int id, {String? notes, int? rating}) async {
-    // DAO has Future<int> endSession(int id, DateTime endTime).
-    // It doesn't take notes or rating.
-    // We should update notes and rating separately if needed, or update DAO.
-    // Or we update the session object then call endSession?
-    // DAO endSession updates endTime.
-    // If we want to save notes/rating, we should update the session table.
-    // I can do updateSession(id, notes, rating) first then endSession.
-    // But DAO doesn't expose generic updateSession.
-    // It has `startSession` (insert) and `endSession` (update endTime).
-    // I check DAO again. It doesn't have `updateSession`.
-    // I should use `_dao.update(workoutSessions).replace(...)` logic if possible but again no direct table access.
-    // I'll assume for now `endSession` just updates time, logic for notes/rating is missing in DAO.
-    // I added notes/rating in prompt 2.3 for repo, but DAO didn't have it explicitly in prompt 2.3?
-    // Wait, prompt 2.3 had `endSession(int id, {String? notes, int? rating})`.
-    // But DAO implemented in prompt 2.1 (actually user implementation) only has `endSession(int id, DateTime endTime)`.
-    // I will implement partial update if possible or ignore notes/rating for now (TODO).
-
-    // Better: Fetch session, update fields, save back using replacement if possible?
-    // DAO doesn't have updateSession taking object.
-    // So I strictly follow what DAO provides: endSession with time.
-    // Notes and rating won't be saved unless I add a method to DAO.
-    // I'll add a FIX ME.
-    await _dao.endSession(id, DateTime.now());
+    await _dao.endSession(id, DateTime.now(), notes: notes, rating: rating);
   }
 
   @override
@@ -96,6 +74,11 @@ class WorkoutSessionRepositoryImpl implements WorkoutSessionRepository {
   @override
   Future<void> deleteSet(int id) {
     return _dao.deleteSet(id);
+  }
+
+  @override
+  Future<void> deleteSession(int sessionId) {
+    return _dao.deleteSession(sessionId);
   }
 
   @override
