@@ -14,6 +14,7 @@ import '../../features/fitness/presentation/providers/workout_provider.dart';
 import '../../features/health/presentation/providers/medication_log_provider.dart';
 import '../../features/health/presentation/providers/medication_provider.dart';
 import '../../features/insights/presentation/providers/insight_provider.dart';
+import '../../features/insights/presentation/providers/weekly_report_provider.dart';
 
 part 'dashboard_provider.g.dart';
 
@@ -27,6 +28,7 @@ class DashboardSummary {
     required this.topInsights,
     required this.weeklyWorkoutCount,
     required this.weeklyComplianceRate,
+    required this.healthScore,
   });
 
   final double todayComplianceRate;
@@ -36,6 +38,7 @@ class DashboardSummary {
   final List<Insight> topInsights;
   final int weeklyWorkoutCount;
   final double weeklyComplianceRate;
+  final double healthScore; // 0-100 from weekly report
 }
 
 /// Activity item for unified timeline
@@ -114,6 +117,20 @@ Future<DashboardSummary> dashboardSummary(Ref ref) async {
       .where((w) => w.startTime.isAfter(weekStart) && w.endTime != null)
       .length;
 
+  // Get health score from weekly report
+  var healthScore = 0.0;
+  try {
+    final weeklyReport = await ref.watch(weeklyReportProvider.future);
+    final crossModule = weeklyReport['cross_module'] as Map<String, dynamic>?;
+    healthScore = (crossModule?['health_score'] as num?)?.toDouble() ?? 0.0;
+  } catch (e) {
+    // If weekly report fails, calculate basic health score
+    // Formula: compliance 40% + workout consistency 30% + 30% baseline
+    healthScore =
+        (weeklyCompliance * 0.4 + (weeklyWorkouts / 7.0) * 0.3 + 0.3) * 100;
+    healthScore = healthScore.clamp(0.0, 100.0);
+  }
+
   return DashboardSummary(
     todayComplianceRate: todayCompliance,
     currentStreak: streak,
@@ -122,6 +139,7 @@ Future<DashboardSummary> dashboardSummary(Ref ref) async {
     topInsights: topInsights,
     weeklyWorkoutCount: weeklyWorkouts,
     weeklyComplianceRate: weeklyCompliance,
+    healthScore: healthScore,
   );
 }
 

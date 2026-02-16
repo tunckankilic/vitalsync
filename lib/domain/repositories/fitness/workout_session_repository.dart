@@ -11,6 +11,7 @@ abstract class WorkoutSessionRepository {
   Future<void> addSet(WorkoutSet set);
   Future<void> updateSet(WorkoutSet set);
   Future<void> deleteSet(int id);
+  Future<void> deleteSession(int sessionId);
   Future<List<WorkoutSet>> getSessionSets(int sessionId);
   Future<double> getTotalVolume({int? days});
   Future<int> getWorkoutCount({int? days});

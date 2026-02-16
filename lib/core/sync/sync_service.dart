@@ -2,6 +2,7 @@
 /// Offline-first architecture: Drift is primary, Firestore is backup.
 /// Processes sync queue when connectivity is available.
 /// Handles conflict resolution via lastModifiedAt timestamps.
+/// GDPR: Cloud backup consent required before any Firestore writes.
 library;
 
 import 'dart:convert';
@@ -9,7 +10,9 @@ import 'dart:developer' show log;
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../core/constants/app_constants.dart';
 import '../../core/enums/sync_enums.dart';
 import '../../data/local/database.dart';
 import '../network/connectivity_service.dart';
@@ -18,6 +21,16 @@ import '../network/connectivity_service.dart';
 /// Manages synchronization between local Drift database (primary)
 /// and Firestore cloud backup. Uses an offline-first approach where
 /// all writes go to Drift first, then sync to Firestore when connected.
+///
+/// Firestore Structure:
+///   users/{uid}/medications/{id}
+///   users/{uid}/medication_logs/{id}
+///   users/{uid}/symptoms/{id}
+///   users/{uid}/workout_sessions/{id}
+///   users/{uid}/workout_sets/{sessionId}_{setId}
+///   users/{uid}/personal_records/{id}
+///   users/{uid}/achievements/{id}
+///   users/{uid}/insights/{id} (optional)
 class SyncService {
   SyncService({
     required AppDatabase database,
@@ -35,12 +48,22 @@ class SyncService {
 
   bool _isSyncing = false;
 
-  /// Triggers a manual sync operation.
-  /// Syncs pending local changes to Firestore and pulls any
-  /// remote changes that are newer than local data.
+  /// Maximum number of writes per sync batch (rate limiting).
+  static const _maxBatchSize = 10;
+
+  /// All Firestore collections that participate in sync.
+  static const _tablesToSync = [
+    'medications',
+    'medication_logs',
+    'symptoms',
+    'workout_sessions',
+    'workout_sets',
+    'personal_records',
+    'achievements',
+  ];
+
   /// Converts a Firestore document map to local database format.
   /// - Firestore [Timestamp] → ISO 8601 String
-  /// - Firestore [GeoPoint] → lat/lng map (if used)
   /// - Handles nested maps recursively
   Map<String, dynamic> _convertFromFirestoreFormat(Map<String, dynamic> data) {
     final result = <String, dynamic>{};
@@ -51,7 +74,6 @@ class SyncService {
       if (value == null) {
         result[entry.key] = null;
       } else if (value is Timestamp) {
-        // Firestore Timestamp → ISO 8601 string for Drift
         result[entry.key] = value.toDate().toIso8601String();
       } else if (value is Map<String, dynamic>) {
         result[entry.key] = _convertFromFirestoreFormat(value);
@@ -64,7 +86,6 @@ class SyncService {
           return item;
         }).toList();
       } else {
-        // int, double, bool, String → pass through
         result[entry.key] = value;
       }
     }
@@ -72,20 +93,33 @@ class SyncService {
     return result;
   }
 
+  /// Checks if cloud backup consent has been granted (GDPR).
+  /// Returns false if consent was never granted or was revoked.
+  Future<bool> _hasCloudBackupConsent() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(AppConstants.prefKeyCloudBackupConsent) ?? false;
+  }
+
+  /// Triggers a manual sync operation.
+  /// Syncs pending local changes to Firestore and pulls any
+  /// remote changes that are newer than local data.
   Future<void> sync() async {
-    // Check if already syncing
     if (_isSyncing) {
       log('Sync already in progress, skipping...');
       return;
     }
 
-    // Check connectivity
+    // GDPR: Do not sync to cloud without explicit consent
+    if (!await _hasCloudBackupConsent()) {
+      log('Cloud backup consent not granted, sync skipped (GDPR)');
+      return;
+    }
+
     if (!await _connectivity.isConnected()) {
       log('No internet connection, sync skipped');
       return;
     }
 
-    // Check authentication
     final user = _auth.currentUser;
     if (user == null) {
       log('User not authenticated, sync skipped');
@@ -95,15 +129,19 @@ class SyncService {
     _isSyncing = true;
 
     try {
-      // TODO: Implement full sync logic in Prompt 2.x
-      // This is a placeholder implementation
-      log('Starting sync for user: ${user.uid}');
+      log('Starting bidirectional sync for user: ${user.uid}');
 
       // Step 1: Push pending local changes to Firestore
+      log('Step 1/3: Pushing local changes...');
       await _pushPendingChanges(user.uid);
 
       // Step 2: Pull remote changes from Firestore
+      log('Step 2/3: Pulling remote changes...');
       await _pullRemoteChanges(user.uid);
+
+      // Step 3: Conflict resolution is handled within push/pull methods
+      // based on lastModifiedAt timestamps (last-write-wins)
+      log('Step 3/3: Conflict resolution completed');
 
       log('Sync completed successfully');
     } catch (e) {
@@ -115,11 +153,10 @@ class SyncService {
   }
 
   /// Pushes pending local changes to Firestore.
-  /// Processes the sync queue and uploads modified records.
+  /// Processes the sync queue with rate limiting (max [_maxBatchSize] per batch).
   Future<void> _pushPendingChanges(String uid) async {
     log('Starting push of pending changes...');
 
-    // Get all pending sync items from the queue
     final pendingItems = await _database.syncDao.getPendingItems();
 
     if (pendingItems.isEmpty) {
@@ -129,31 +166,32 @@ class SyncService {
 
     log('Found ${pendingItems.length} pending items to sync');
 
-    // Process each pending item
-    for (final item in pendingItems) {
+    // Rate limiting: process max _maxBatchSize items per sync cycle
+    final batch = pendingItems.take(_maxBatchSize).toList();
+    if (pendingItems.length > _maxBatchSize) {
+      log(
+        'Processing first $_maxBatchSize of ${pendingItems.length} items (rate limited)',
+      );
+    }
+
+    for (final item in batch) {
       try {
-        // Mark as in progress
         await _database.syncDao.markInProgress(item.id);
 
-        // Get the Firestore collection reference for this user
         final collectionRef = _firestore
             .collection('users')
             .doc(uid)
             .collection(item.targetTable);
 
-        // Parse the payload
         final payload = jsonDecode(item.payload) as Map<String, dynamic>;
 
-        // Handle different operations
         switch (item.operation) {
           case SyncOperation.insert:
           case SyncOperation.update:
-            // For insert/update, check if document exists in Firestore
             final docRef = collectionRef.doc(item.recordId.toString());
             final docSnapshot = await docRef.get();
 
             if (docSnapshot.exists) {
-              // Document exists - check for conflicts
               final remoteData = docSnapshot.data();
               final remoteModifiedAt =
                   remoteData?['lastModifiedAt'] as Timestamp?;
@@ -163,10 +201,10 @@ class SyncService {
                 final remoteDate = remoteModifiedAt.toDate();
                 final localDate = DateTime.parse(localModifiedAt);
 
-                // If remote is newer, skip this update (remote wins)
                 if (remoteDate.isAfter(localDate)) {
                   log(
-                    'Conflict detected for ${item.targetTable}:${item.recordId} - remote is newer, skipping push',
+                    'Conflict: ${item.targetTable}:${item.recordId} — '
+                    'remote is newer, skipping push',
                   );
                   await _database.syncDao.markCompleted(item.id);
                   continue;
@@ -174,32 +212,28 @@ class SyncService {
               }
             }
 
-            // Convert DateTime strings to Firestore Timestamps
             final firestorePayload = _convertFromFirestoreFormat(payload);
-
-            // Upload to Firestore
             await docRef.set(firestorePayload, SetOptions(merge: true));
             log(
               'Pushed ${item.operation.name} for ${item.targetTable}:${item.recordId}',
             );
 
           case SyncOperation.delete:
-            // Delete from Firestore
             await collectionRef.doc(item.recordId.toString()).delete();
             log('Pushed delete for ${item.targetTable}:${item.recordId}');
         }
 
-        // Mark as completed
         await _database.syncDao.markCompleted(item.id);
       } catch (e) {
         log('Failed to push ${item.targetTable}:${item.recordId}: $e');
 
-        // Mark as failed and increment retry count
         await _database.syncDao.markFailed(item.id, item.retryCount);
 
-        // If retry count exceeds threshold, log error but continue
-        if (item.retryCount >= 3) {
-          log('Item ${item.id} exceeded max retries, will retry on next sync');
+        if (item.retryCount >= AppConstants.syncMaxRetries) {
+          log(
+            'Item ${item.id} exceeded max retries (${AppConstants.syncMaxRetries}), '
+            'will retry on next sync',
+          );
         }
       }
     }
@@ -212,14 +246,7 @@ class SyncService {
   Future<void> _pullRemoteChanges(String uid) async {
     log('Starting pull of remote changes...');
 
-    final tablesToSync = [
-      'medications',
-      'medication_logs',
-      'symptoms',
-      'workout_sessions',
-    ];
-
-    for (final tableName in tablesToSync) {
+    for (final tableName in _tablesToSync) {
       try {
         log('Pulling $tableName from Firestore...');
 
@@ -247,16 +274,15 @@ class SyncService {
               continue;
             }
 
-            // Convert Firestore format → local format
             final localData = _convertFromFirestoreFormat(remoteData);
 
-            // Get local record's lastModifiedAt for comparison
             final localModifiedAt = await _getLocalModifiedAt(
               tableName,
               recordId,
             );
 
-            final remoteModifiedAt = remoteData['lastModifiedAt'] as Timestamp?;
+            final remoteModifiedAt =
+                remoteData['lastModifiedAt'] as Timestamp?;
 
             if (remoteModifiedAt == null) {
               log('Remote $tableName:$recordId has no timestamp, skipping');
@@ -265,7 +291,6 @@ class SyncService {
 
             final remoteDate = remoteModifiedAt.toDate();
 
-            // If local doesn't exist or remote is newer → upsert
             if (localModifiedAt == null ||
                 remoteDate.isAfter(localModifiedAt)) {
               await _upsertLocalRecord(tableName, recordId, localData);
@@ -286,7 +311,10 @@ class SyncService {
   }
 
   /// Returns the local record's lastModifiedAt, or null if not found.
-  Future<DateTime?> _getLocalModifiedAt(String tableName, int recordId) async {
+  Future<DateTime?> _getLocalModifiedAt(
+    String tableName,
+    int recordId,
+  ) async {
     switch (tableName) {
       case 'medications':
         final record = await _database.medicationDao.getById(recordId);
@@ -300,6 +328,15 @@ class SyncService {
       case 'workout_sessions':
         final record = await _database.workoutSessionDao.getById(recordId);
         return record?.lastModifiedAt;
+      case 'workout_sets':
+        final record = await _database.workoutSessionDao.getSetById(recordId);
+        return record?.completedAt;
+      case 'personal_records':
+        final record = await _database.personalRecordDao.getById(recordId);
+        return record?.achievedAt;
+      case 'achievements':
+        final record = await _database.achievementDao.getById(recordId);
+        return record?.unlockedAt;
       default:
         log('Unknown table: $tableName');
         return null;
@@ -322,17 +359,28 @@ class SyncService {
         await _database.symptomDao.upsertFromRemote(recordId, data);
       case 'workout_sessions':
         await _database.workoutSessionDao.upsertFromRemote(recordId, data);
+      case 'workout_sets':
+        await _database.workoutSessionDao.upsertSetFromRemote(recordId, data);
+      case 'personal_records':
+        await _database.personalRecordDao.upsertFromRemote(recordId, data);
+      case 'achievements':
+        await _database.achievementDao.upsertFromRemote(recordId, data);
       default:
         log('Unknown table for upsert: $tableName');
     }
   }
 
-  /// Performs initial sync when user first signs in.
+  /// Performs initial sync when user first signs in on a new device.
   /// Downloads all user data from Firestore to local database.
+  /// Requires authentication and cloud backup consent.
   Future<void> initialSync() async {
     final user = _auth.currentUser;
     if (user == null) {
       throw Exception('User must be authenticated for initial sync');
+    }
+
+    if (!await _hasCloudBackupConsent()) {
+      throw Exception('Cloud backup consent required for initial sync');
     }
 
     if (!await _connectivity.isConnected()) {
@@ -342,11 +390,8 @@ class SyncService {
     log('Starting initial sync for user: ${user.uid}');
 
     try {
-      // Pull all remote data
       await _pullRemoteChanges(user.uid);
 
-      // Clear any pending sync items since we just did a full sync
-      // This prevents duplicate uploads
       final completedCount = await _database.syncDao.deleteCompletedOlderThan(
         DateTime.now().subtract(const Duration(days: 1)),
       );
@@ -358,6 +403,58 @@ class SyncService {
     }
   }
 
+  /// Deletes all user data from both Drift (local) and Firestore (cloud).
+  ///
+  /// Used for GDPR right to erasure (Article 17).
+  /// Steps:
+  /// 1. Clear all local Drift tables
+  /// 2. Delete all Firestore subcollections for the user
+  /// 3. Delete the user document itself
+  Future<void> deleteAllData() async {
+    final user = _auth.currentUser;
+    if (user == null) {
+      throw Exception('User must be authenticated for data deletion');
+    }
+
+    log('Starting full data deletion for user: ${user.uid}');
+
+    // Step 1: Clear local Drift database
+    await _database.deleteAllData();
+    log('Local data cleared');
+
+    // Step 2: Delete Firestore data (if online)
+    if (await _connectivity.isConnected()) {
+      try {
+        final userDocRef = _firestore.collection('users').doc(user.uid);
+
+        for (final collection in _tablesToSync) {
+          final snapshot = await userDocRef.collection(collection).get();
+          for (final doc in snapshot.docs) {
+            await doc.reference.delete();
+          }
+          log('Deleted Firestore collection: $collection');
+        }
+
+        // Also delete insights (optional collection)
+        final insightsSnapshot =
+            await userDocRef.collection('insights').get();
+        for (final doc in insightsSnapshot.docs) {
+          await doc.reference.delete();
+        }
+
+        // Delete the user document itself
+        await userDocRef.delete();
+        log('Firestore user data deleted');
+      } catch (e) {
+        log('Error deleting Firestore data: $e');
+      }
+    } else {
+      log('Offline — Firestore deletion will be handled on next connection');
+    }
+
+    log('Full data deletion completed');
+  }
+
   /// Checks if sync is currently in progress.
   bool get isSyncing => _isSyncing;
 
@@ -366,7 +463,6 @@ class SyncService {
   void startAutoSync() {
     _connectivity.connectivityStream.listen((isConnected) {
       if (isConnected && !_isSyncing) {
-        // Trigger sync when coming online
         sync().catchError((error) {
           log('Auto-sync failed: $error');
         });

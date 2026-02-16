@@ -1133,4 +1133,367 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get gdprNote =>
       'Required consents are necessary for core app functionality. You can manage consents anytime in Settings.';
+
+  @override
+  String get workoutComplete => 'Workout Complete!';
+
+  @override
+  String get greatJob => 'Great job! Keep it up!';
+
+  @override
+  String get workoutNotFound => 'Workout not found';
+
+  @override
+  String get done => 'Done';
+
+  @override
+  String get share => 'Share';
+
+  @override
+  String get comingSoon => 'Coming soon!';
+
+  @override
+  String get volumeChart => 'Volume Chart';
+
+  @override
+  String get chartComingSoon => 'Chart coming soon';
+
+  @override
+  String get summary => 'Summary';
+
+  @override
+  String get avgDuration => 'Avg Duration';
+
+  @override
+  String get prsAchieved => 'PRs Achieved';
+
+  @override
+  String get noPRsYet => 'No personal records yet. Keep lifting!';
+
+  @override
+  String get dismissed => 'Dismissed';
+
+  @override
+  String get overallWellness => 'Overall Wellness';
+
+  @override
+  String get insightDismissed => 'Insight dismissed';
+
+  @override
+  String get noDismissedInsights => 'No dismissed insights';
+
+  @override
+  String get noInsightsYet => 'No insights yet';
+
+  @override
+  String get insightsEmptyDescription =>
+      'Insights will appear here as data is collected';
+
+  @override
+  String dataCollectedProgress(int collected, int total) {
+    return '$collected/$total days of data collected';
+  }
+
+  @override
+  String errorLoadingInsights(Object error) {
+    return 'Error loading insights: $error';
+  }
+
+  @override
+  String errorLoadingDismissedInsights(Object error) {
+    return 'Error loading dismissed insights: $error';
+  }
+
+  @override
+  String get symptomHeadache => 'Headache';
+
+  @override
+  String get symptomNausea => 'Nausea';
+
+  @override
+  String get symptomFatigue => 'Fatigue';
+
+  @override
+  String get symptomDizziness => 'Dizziness';
+
+  @override
+  String get symptomStomachPain => 'Stomach Pain';
+
+  @override
+  String get symptomBackPain => 'Back Pain';
+
+  @override
+  String get symptomJointPain => 'Joint Pain';
+
+  @override
+  String get symptomInsomnia => 'Insomnia';
+
+  @override
+  String get symptomAnxiety => 'Anxiety';
+
+  @override
+  String get symptomShortnessOfBreath => 'Shortness of Breath';
+
+  @override
+  String get pleaseEnterSymptomName => 'Please enter a symptom name';
+
+  @override
+  String get symptomLoggedSuccess => 'Symptom logged successfully';
+
+  @override
+  String errorLoggingSymptom(Object error) {
+    return 'Error logging symptom: $error';
+  }
+
+  @override
+  String get severityMild => 'Mild';
+
+  @override
+  String get severityModerate => 'Moderate';
+
+  @override
+  String get severitySevere => 'Severe';
+
+  @override
+  String get severityVerySevere => 'Very Severe';
+
+  @override
+  String get severityUnbearable => 'Unbearable';
+
+  @override
+  String get medicationNotFound => 'Medication not found';
+
+  @override
+  String errorLoadingMedication(Object error) {
+    return 'Error loading medication: $error';
+  }
+
+  @override
+  String get medicationAddedSuccess => 'Medication added successfully';
+
+  @override
+  String get medicationUpdatedSuccess => 'Medication updated successfully';
+
+  @override
+  String errorSavingMedication(Object error) {
+    return 'Error saving medication: $error';
+  }
+
+  @override
+  String get addFirstMedicationButton => 'Add First Medication';
+
+  @override
+  String get welcomeToHealth => 'Welcome to Health!';
+
+  @override
+  String get onboardingHealthMessage =>
+      'Let\'s get started by adding your first medication. Tracking adherence helps you stay healthy!';
+
+  @override
+  String get weeklyReport => 'Weekly Report';
+
+  @override
+  String errorLoadingReport(Object error) {
+    return 'Error loading report: $error';
+  }
+
+  @override
+  String get taken => 'Taken';
+
+  @override
+  String get missed => 'Missed';
+
+  @override
+  String get skipped => 'Skipped';
+
+  @override
+  String get volume => 'Volume';
+
+  @override
+  String get healthRing => 'Health';
+
+  @override
+  String get fitnessRing => 'Fitness';
+
+  @override
+  String get wellnessRing => 'Wellness';
+
+  @override
+  String get activityRings => 'Activity Rings';
+
+  @override
+  String get shareAsInfographic => 'Share as Infographic (1080x1920)';
+
+  @override
+  String get perfectForStories => 'Perfect for Instagram Stories';
+
+  @override
+  String get shareAsCompactCard => 'Share as Compact Card (1080x1080)';
+
+  @override
+  String get perfectForSharing => 'Perfect for general sharing';
+
+  @override
+  String get exportAsJSON => 'Export as JSON';
+
+  @override
+  String get gdprDataPortability => 'GDPR data portability';
+
+  @override
+  String get generatingImage => 'Generating image...';
+
+  @override
+  String get myWeeklyReport => 'My weekly report from VitalSync';
+
+  @override
+  String errorSharing(Object error) {
+    return 'Error sharing: $error';
+  }
+
+  @override
+  String get weeklyReportData => 'VitalSync Weekly Report Data';
+
+  @override
+  String get reportExportedAsJSON => 'Report exported as JSON';
+
+  @override
+  String errorExporting(Object error) {
+    return 'Error exporting: $error';
+  }
+
+  @override
+  String get wasThisInsightHelpful => 'Was this insight helpful?';
+
+  @override
+  String get helpful => 'Helpful';
+
+  @override
+  String get notHelpful => 'Not Helpful';
+
+  @override
+  String get dismissInsight => 'Dismiss Insight';
+
+  @override
+  String get thankYouForFeedback => 'Thank you for your feedback!';
+
+  @override
+  String errorSubmittingFeedback(Object error) {
+    return 'Error submitting feedback: $error';
+  }
+
+  @override
+  String errorDismissingInsight(Object error) {
+    return 'Error dismissing insight: $error';
+  }
+
+  @override
+  String get privacyAndData => 'Privacy & Data';
+
+  @override
+  String get restTimerSeconds => 'seconds';
+
+  @override
+  String get skipRestButton => 'Skip Rest';
+
+  @override
+  String get achievementUnlocked => 'Achievement Unlocked!';
+
+  @override
+  String errorGeneric(Object error) {
+    return 'Error: $error';
+  }
+
+  @override
+  String get healthSummary => 'Health Summary';
+
+  @override
+  String get fitnessSummary => 'Fitness Summary';
+
+  @override
+  String get nextWeekSuggestions => 'Next Week Suggestions';
+
+  @override
+  String get keepUpGreatWork => 'Keep up the great work!';
+
+  @override
+  String vsLastWeekPercent(String percent) {
+    return '$percent% vs last week';
+  }
+
+  @override
+  String mostMissed(String timeSlot) {
+    return 'Most missed: $timeSlot';
+  }
+
+  @override
+  String bestWorkout(String name, String volume) {
+    return 'Best workout: $name — ${volume}kg';
+  }
+
+  @override
+  String get newPersonalRecords => 'New Personal Records';
+
+  @override
+  String validUntilDays(int days) {
+    return 'Valid until $days days';
+  }
+
+  @override
+  String validUntilHours(int hours) {
+    return 'Valid until $hours hours';
+  }
+
+  @override
+  String get validUntilSoon => 'Valid until soon';
+
+  @override
+  String get takeAction => 'Take Action';
+
+  @override
+  String errorLoadingInsight(Object error) {
+    return 'Error loading insight: $error';
+  }
+
+  @override
+  String get today => 'Today';
+
+  @override
+  String get yesterday => 'Yesterday';
+
+  @override
+  String daysAgo(int days) {
+    return '$days days ago';
+  }
+
+  @override
+  String weeksAgo(int weeks) {
+    return '${weeks}w ago';
+  }
+
+  @override
+  String monthsAgo(int months) {
+    return '${months}mo ago';
+  }
+
+  @override
+  String get loading => 'Loading...';
+
+  @override
+  String errorAddingSet(Object error) {
+    return 'Error adding set: $error';
+  }
+
+  @override
+  String get chartError => 'Chart Error';
+
+  @override
+  String get shareFunctionalityComingSoon => 'Share functionality coming soon!';
+
+  @override
+  String severityLabel(int severity) {
+    return 'Severity: $severity';
+  }
+
+  @override
+  String get errorLoadingCalendar => 'Error loading calendar';
 }

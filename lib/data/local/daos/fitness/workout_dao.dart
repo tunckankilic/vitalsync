@@ -5,6 +5,7 @@
 library;
 
 import 'package:drift/drift.dart';
+import 'package:vitalsync/core/enums/achievement_type.dart';
 import 'package:vitalsync/core/enums/sync_status.dart';
 
 import 'package:vitalsync/data/local/database.dart';
@@ -201,11 +202,18 @@ class WorkoutSessionDao extends DatabaseAccessor<AppDatabase>
     return into(workoutSessions).insert(session);
   }
 
-  /// End a session.
-  Future<int> endSession(int id, DateTime endTime) {
+  /// End a session with optional notes and rating.
+  Future<int> endSession(
+    int id,
+    DateTime endTime, {
+    String? notes,
+    int? rating,
+  }) {
     return (update(workoutSessions)..where((tbl) => tbl.id.equals(id))).write(
       WorkoutSessionsCompanion(
         endTime: Value(endTime),
+        notes: Value(notes),
+        rating: Value(rating),
         lastModifiedAt: Value(DateTime.now()),
       ),
     );
@@ -224,6 +232,19 @@ class WorkoutSessionDao extends DatabaseAccessor<AppDatabase>
   /// Delete a set.
   Future<int> deleteSet(int id) {
     return (delete(workoutSets)..where((tbl) => tbl.id.equals(id))).go();
+  }
+
+  /// Delete a session and all its sets (CASCADE).
+  Future<void> deleteSession(int sessionId) async {
+    // First delete all sets for this session
+    await (delete(
+      workoutSets,
+    )..where((tbl) => tbl.sessionId.equals(sessionId))).go();
+
+    // Then delete the session itself
+    await (delete(
+      workoutSessions,
+    )..where((tbl) => tbl.id.equals(sessionId))).go();
   }
 
   /// Get sets for a session.
@@ -281,6 +302,30 @@ class WorkoutSessionDao extends DatabaseAccessor<AppDatabase>
       ),
     );
   }
+
+  /// Get a single workout set by ID.
+  Future<WorkoutSetData?> getSetById(int id) {
+    return (select(
+      workoutSets,
+    )..where((tbl) => tbl.id.equals(id))).getSingleOrNull();
+  }
+
+  /// Inserts or updates a workout set from Firestore remote data.
+  Future<void> upsertSetFromRemote(int id, Map<String, dynamic> data) async {
+    await into(workoutSets).insertOnConflictUpdate(
+      WorkoutSetsCompanion(
+        id: Value(id),
+        sessionId: Value(data['sessionId'] as int),
+        exerciseId: Value(data['exerciseId'] as int),
+        setNumber: Value(data['setNumber'] as int),
+        reps: Value(data['reps'] as int),
+        weight: Value((data['weight'] as num).toDouble()),
+        isWarmup: Value(data['isWarmup'] as bool? ?? false),
+        isPR: Value(data['isPR'] as bool? ?? false),
+        completedAt: Value(DateTime.parse(data['completedAt'] as String)),
+      ),
+    );
+  }
 }
 
 /// DAO for personal record operations.
@@ -325,6 +370,27 @@ class PersonalRecordDao extends DatabaseAccessor<AppDatabase>
           ..limit(limit))
         .watch();
   }
+
+  /// Get personal record by ID.
+  Future<PersonalRecordData?> getById(int id) {
+    return (select(
+      personalRecords,
+    )..where((tbl) => tbl.id.equals(id))).getSingleOrNull();
+  }
+
+  /// Inserts or updates a personal record from Firestore remote data.
+  Future<void> upsertFromRemote(int id, Map<String, dynamic> data) async {
+    await into(personalRecords).insertOnConflictUpdate(
+      PersonalRecordsCompanion(
+        id: Value(id),
+        exerciseId: Value(data['exerciseId'] as int),
+        weight: Value((data['weight'] as num).toDouble()),
+        reps: Value(data['reps'] as int),
+        estimated1RM: Value((data['estimated1RM'] as num).toDouble()),
+        achievedAt: Value(DateTime.parse(data['achievedAt'] as String)),
+      ),
+    );
+  }
 }
 
 /// DAO for achievement operations.
@@ -362,5 +428,31 @@ class AchievementDao extends DatabaseAccessor<AppDatabase>
   /// Watch all achievements.
   Stream<List<AchievementData>> watchAll() {
     return select(achievements).watch();
+  }
+
+  /// Get achievement by ID.
+  Future<AchievementData?> getById(int id) {
+    return (select(
+      achievements,
+    )..where((tbl) => tbl.id.equals(id))).getSingleOrNull();
+  }
+
+  /// Inserts or updates an achievement from Firestore remote data.
+  Future<void> upsertFromRemote(int id, Map<String, dynamic> data) async {
+    await into(achievements).insertOnConflictUpdate(
+      AchievementsCompanion(
+        id: Value(id),
+        type: Value(AchievementType.fromDbValue(data['type'] as String)),
+        title: Value(data['title'] as String),
+        description: Value(data['description'] as String),
+        requirement: Value(data['requirement'] as int),
+        unlockedAt: Value(
+          data['unlockedAt'] != null
+              ? DateTime.parse(data['unlockedAt'] as String)
+              : null,
+        ),
+        iconName: Value(data['iconName'] as String),
+      ),
+    );
   }
 }

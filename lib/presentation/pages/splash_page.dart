@@ -60,10 +60,8 @@ class _SplashPageState extends ConsumerState<SplashPage> {
 
       if (!hasGdprConsent) {
         // Navigate to GDPR consent screen
-        // TODO: Create GDPR consent screen route
-        // For now, proceed to auth check
-        // if (mounted) context.go('/gdpr-consent');
-        // return;
+        if (mounted) context.go('/gdpr-consent');
+        return;
       }
 
       // 3. Check authentication status

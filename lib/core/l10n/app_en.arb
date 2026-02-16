@@ -860,5 +860,217 @@
   "themeLight": "Light",
   "@themeLight": { "description": "Light theme option" },
   "themeDark": "Dark",
-  "@themeDark": { "description": "Dark theme option" }
+  "@themeDark": { "description": "Dark theme option" },
+
+  "workoutComplete": "Workout Complete!",
+  "@workoutComplete": { "description": "Workout complete message" },
+  "greatJob": "Great job! Keep it up!",
+  "@greatJob": { "description": "Congratulations message" },
+  "workoutNotFound": "Workout not found",
+  "@workoutNotFound": { "description": "Workout not found error message" },
+  "done": "Done",
+  "@done": { "description": "Done button" },
+  "share": "Share",
+  "@share": { "description": "Share button" },
+  "comingSoon": "Coming soon!",
+  "@comingSoon": { "description": "Coming soon message" },
+  "progress": "Progress",
+  "@progress": { "description": "Progress screen title" },
+  "volumeChart": "Volume Chart",
+  "@volumeChart": { "description": "Volume chart title" },
+  "workoutFrequency": "Workout Frequency",
+  "@workoutFrequency": { "description": "Workout frequency chart title" },
+  "chartComingSoon": "Chart coming soon",
+  "@chartComingSoon": { "description": "Chart placeholder message" },
+  "summary": "Summary",
+  "@summary": { "description": "Summary section title" },
+  "totalWorkouts": "Total Workouts",
+  "@totalWorkouts": { "description": "Total workouts label" },
+  "avgDuration": "Avg Duration",
+  "@avgDuration": { "description": "Average duration label" },
+  "prsAchieved": "PRs Achieved",
+  "@prsAchieved": { "description": "Personal records achieved label" },
+  "personalRecords": "Personal Records",
+  "@personalRecords": { "description": "Personal records section title" },
+  "noPRsYet": "No personal records yet. Keep lifting!",
+  "@noPRsYet": { "description": "No PRs empty state message" },
+  "dismissed": "Dismissed",
+  "@dismissed": { "description": "Dismissed tab label" },
+  "overallWellness": "Overall Wellness",
+  "@overallWellness": { "description": "Overall wellness / cross-module filter label" },
+  "insightDismissed": "Insight dismissed",
+  "@insightDismissed": { "description": "Snackbar message when insight is dismissed" },
+  "noDismissedInsights": "No dismissed insights",
+  "@noDismissedInsights": { "description": "Empty state for dismissed insights tab" },
+  "noInsightsYet": "No insights yet",
+  "@noInsightsYet": { "description": "Empty state title when no insights exist" },
+  "insightsEmptyDescription": "Insights will appear here as data is collected",
+  "@insightsEmptyDescription": { "description": "Empty state description for insights" },
+  "dataCollectedProgress": "{collected}/{total} days of data collected",
+  "@dataCollectedProgress": {
+    "description": "Progress text showing days of data collected",
+    "placeholders": {
+      "collected": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+  "errorLoadingInsights": "Error loading insights: {error}",
+  "@errorLoadingInsights": {
+    "description": "Error message when loading insights fails",
+    "placeholders": {
+      "error": { "type": "Object" }
+    }
+  },
+  "errorLoadingDismissedInsights": "Error loading dismissed insights: {error}",
+  "@errorLoadingDismissedInsights": {
+    "description": "Error message when loading dismissed insights fails",
+    "placeholders": {
+      "error": { "type": "Object" }
+    }
+  },
+
+  "symptomHeadache": "Headache",
+  "symptomNausea": "Nausea",
+  "symptomFatigue": "Fatigue",
+  "symptomDizziness": "Dizziness",
+  "symptomStomachPain": "Stomach Pain",
+  "symptomBackPain": "Back Pain",
+  "symptomJointPain": "Joint Pain",
+  "symptomInsomnia": "Insomnia",
+  "symptomAnxiety": "Anxiety",
+  "symptomShortnessOfBreath": "Shortness of Breath",
+  "pleaseEnterSymptomName": "Please enter a symptom name",
+  "symptomLoggedSuccess": "Symptom logged successfully",
+  "errorLoggingSymptom": "Error logging symptom: {error}",
+  "@errorLoggingSymptom": {
+    "placeholders": { "error": { "type": "Object" } }
+  },
+  "severityMild": "Mild",
+  "severityModerate": "Moderate",
+  "severitySevere": "Severe",
+  "severityVerySevere": "Very Severe",
+  "severityUnbearable": "Unbearable",
+  "medicationNotFound": "Medication not found",
+  "errorLoadingMedication": "Error loading medication: {error}",
+  "@errorLoadingMedication": {
+    "placeholders": { "error": { "type": "Object" } }
+  },
+  "medicationAddedSuccess": "Medication added successfully",
+  "medicationUpdatedSuccess": "Medication updated successfully",
+  "errorSavingMedication": "Error saving medication: {error}",
+  "@errorSavingMedication": {
+    "placeholders": { "error": { "type": "Object" } }
+  },
+  "addFirstMedicationButton": "Add First Medication",
+  "welcomeToHealth": "Welcome to Health!",
+  "onboardingHealthMessage": "Let's get started by adding your first medication. Tracking adherence helps you stay healthy!",
+  "weeklyReport": "Weekly Report",
+  "errorLoadingReport": "Error loading report: {error}",
+  "@errorLoadingReport": {
+    "placeholders": { "error": { "type": "Object" } }
+  },
+  "taken": "Taken",
+  "missed": "Missed",
+  "skipped": "Skipped",
+  "volume": "Volume",
+  "healthRing": "Health",
+  "fitnessRing": "Fitness",
+  "wellnessRing": "Wellness",
+  "activityRings": "Activity Rings",
+  "shareAsInfographic": "Share as Infographic (1080x1920)",
+  "perfectForStories": "Perfect for Instagram Stories",
+  "shareAsCompactCard": "Share as Compact Card (1080x1080)",
+  "perfectForSharing": "Perfect for general sharing",
+  "exportAsJSON": "Export as JSON",
+  "gdprDataPortability": "GDPR data portability",
+  "generatingImage": "Generating image...",
+  "myWeeklyReport": "My weekly report from VitalSync",
+  "errorSharing": "Error sharing: {error}",
+  "@errorSharing": {
+    "placeholders": { "error": { "type": "Object" } }
+  },
+  "weeklyReportData": "VitalSync Weekly Report Data",
+  "reportExportedAsJSON": "Report exported as JSON",
+  "errorExporting": "Error exporting: {error}",
+  "@errorExporting": {
+    "placeholders": { "error": { "type": "Object" } }
+  },
+  "wasThisInsightHelpful": "Was this insight helpful?",
+  "helpful": "Helpful",
+  "notHelpful": "Not Helpful",
+  "dismissInsight": "Dismiss Insight",
+  "thankYouForFeedback": "Thank you for your feedback!",
+  "errorSubmittingFeedback": "Error submitting feedback: {error}",
+  "@errorSubmittingFeedback": {
+    "placeholders": { "error": { "type": "Object" } }
+  },
+  "errorDismissingInsight": "Error dismissing insight: {error}",
+  "@errorDismissingInsight": {
+    "placeholders": { "error": { "type": "Object" } }
+  },
+  "privacyAndData": "Privacy & Data",
+  "restTimerSeconds": "seconds",
+  "skipRestButton": "Skip Rest",
+  "achievementUnlocked": "Achievement Unlocked!",
+  "errorGeneric": "Error: {error}",
+  "@errorGeneric": {
+    "placeholders": { "error": { "type": "Object" } }
+  },
+  "healthSummary": "Health Summary",
+  "fitnessSummary": "Fitness Summary",
+  "nextWeekSuggestions": "Next Week Suggestions",
+  "keepUpGreatWork": "Keep up the great work!",
+  "vsLastWeekPercent": "{percent}% vs last week",
+  "@vsLastWeekPercent": {
+    "placeholders": { "percent": { "type": "String" } }
+  },
+  "mostMissed": "Most missed: {timeSlot}",
+  "@mostMissed": {
+    "placeholders": { "timeSlot": { "type": "String" } }
+  },
+  "bestWorkout": "Best workout: {name} — {volume}kg",
+  "@bestWorkout": {
+    "placeholders": { "name": { "type": "String" }, "volume": { "type": "String" } }
+  },
+  "newPersonalRecords": "New Personal Records",
+  "validUntilDays": "Valid until {days} days",
+  "@validUntilDays": {
+    "placeholders": { "days": { "type": "int" } }
+  },
+  "validUntilHours": "Valid until {hours} hours",
+  "@validUntilHours": {
+    "placeholders": { "hours": { "type": "int" } }
+  },
+  "validUntilSoon": "Valid until soon",
+  "takeAction": "Take Action",
+  "errorLoadingInsight": "Error loading insight: {error}",
+  "@errorLoadingInsight": {
+    "placeholders": { "error": { "type": "Object" } }
+  },
+  "today": "Today",
+  "yesterday": "Yesterday",
+  "daysAgo": "{days} days ago",
+  "@daysAgo": {
+    "placeholders": { "days": { "type": "int" } }
+  },
+  "weeksAgo": "{weeks}w ago",
+  "@weeksAgo": {
+    "placeholders": { "weeks": { "type": "int" } }
+  },
+  "monthsAgo": "{months}mo ago",
+  "@monthsAgo": {
+    "placeholders": { "months": { "type": "int" } }
+  },
+  "loading": "Loading...",
+  "errorAddingSet": "Error adding set: {error}",
+  "@errorAddingSet": {
+    "placeholders": { "error": { "type": "Object" } }
+  },
+  "chartError": "Chart Error",
+  "shareFunctionalityComingSoon": "Share functionality coming soon!",
+  "severityLabel": "Severity: {severity}",
+  "@severityLabel": {
+    "placeholders": { "severity": { "type": "int" } }
+  },
+  "errorLoadingCalendar": "Error loading calendar"
 }

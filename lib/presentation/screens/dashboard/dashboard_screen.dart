@@ -14,6 +14,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 import '../../../core/l10n/app_localizations.dart';
+import '../../../features/insights/presentation/providers/insight_engine_provider.dart';
+import '../../../features/insights/presentation/providers/insight_provider.dart';
 import '../../providers/dashboard_provider.dart';
 import '../../widgets/dashboard/activity_feed_card.dart';
 import '../../widgets/dashboard/greeting_card.dart';
@@ -52,7 +54,16 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           // Refresh all dashboard data
           ref.invalidate(dashboardSummaryProvider);
           ref.invalidate(recentActivityProvider);
-          // TODO: Trigger insight generation
+
+          // Trigger insight generation
+          try {
+            final insightEngine = ref.read(insightEngineProvider);
+            await insightEngine.generateAllInsights();
+            ref.invalidate(activeInsightsProvider);
+          } catch (e) {
+            // Silently fail insight generation - not critical for dashboard refresh
+            debugPrint('Failed to generate insights: $e');
+          }
         },
         child: summaryAsync.when(
           data: (summary) => _buildDashboard(context, summary),
@@ -92,7 +103,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         return GreetingCard(
           fitnessProgress: summary.weeklyWorkoutCount / 7.0,
           healthProgress: summary.todayComplianceRate,
-          insightProgress: 0.75, // TODO: Connect to health score
+          insightProgress:
+              summary.healthScore / 100.0, // Health score 0-100 → 0-1
           centerMetric: '${summary.currentStreak}',
           centerLabel: 'day streak',
         );

@@ -57,7 +57,7 @@ class ConsentScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Privacy & Data'),
+        title: Text(AppLocalizations.of(context).privacyAndData),
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),

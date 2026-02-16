@@ -146,6 +146,8 @@ Future<void> initializeDependencies() async {
     () => SyncRepositoryImpl(
       getIt<AppDatabase>().syncDao,
       getIt<FirebaseFirestore>(),
+      getIt<AppDatabase>(),
+      getIt<FirebaseAuth>(),
     ),
   );
 

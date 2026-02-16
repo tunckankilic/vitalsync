@@ -106,7 +106,7 @@ class _InsightDetailScreenState extends ConsumerState<InsightDetailScreen> {
                                 ),
                                 const SizedBox(width: 4),
                                 Text(
-                                  'Valid until ${_formatDate(insight.validUntil)}',
+                                  _formatValidUntil(insight.validUntil, l10n),
                                   style: theme.textTheme.bodySmall?.copyWith(
                                     color: colorScheme.onSurface.withValues(
                                       alpha: 0.6,
@@ -129,7 +129,7 @@ class _InsightDetailScreenState extends ConsumerState<InsightDetailScreen> {
                 if (insight.data.containsKey('action'))
                   _buildActionButton(
                     insight.data['action'] as String,
-                    insight.data['actionLabel'] as String? ?? 'Take Action',
+                    insight.data['actionLabel'] as String? ?? l10n.takeAction,
                     theme,
                   ),
                 const SizedBox(height: 20),
@@ -141,7 +141,7 @@ class _InsightDetailScreenState extends ConsumerState<InsightDetailScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Was this insight helpful?',
+                          l10n.wasThisInsightHelpful,
                           style: theme.textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.bold,
                           ),
@@ -153,14 +153,14 @@ class _InsightDetailScreenState extends ConsumerState<InsightDetailScreen> {
                             _buildFeedbackButton(
                               context,
                               icon: Icons.thumb_up,
-                              label: 'Helpful',
+                              label: l10n.helpful,
                               isPositive: true,
                               onTap: () => _submitFeedback(insight, true),
                             ),
                             _buildFeedbackButton(
                               context,
                               icon: Icons.thumb_down,
-                              label: 'Not Helpful',
+                              label: l10n.notHelpful,
                               isPositive: false,
                               onTap: () => _submitFeedback(insight, false),
                             ),
@@ -177,7 +177,7 @@ class _InsightDetailScreenState extends ConsumerState<InsightDetailScreen> {
                       ? null
                       : () => _dismissInsight(insight),
                   icon: const Icon(Icons.close),
-                  label: const Text('Dismiss Insight'),
+                  label: Text(l10n.dismissInsight),
                   style: OutlinedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 16),
                   ),
@@ -188,7 +188,7 @@ class _InsightDetailScreenState extends ConsumerState<InsightDetailScreen> {
         },
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, stack) =>
-            Center(child: Text('Error loading insight: $error')),
+            Center(child: Text(l10n.errorLoadingInsight(error))),
       ),
     );
   }
@@ -432,13 +432,13 @@ class _InsightDetailScreenState extends ConsumerState<InsightDetailScreen> {
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Thank you for your feedback!')),
+          SnackBar(content: Text(AppLocalizations.of(context).thankYouForFeedback)),
         );
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error submitting feedback: $e')),
+          SnackBar(content: Text(AppLocalizations.of(context).errorSubmittingFeedback(e))),
         );
       }
     } finally {
@@ -454,16 +454,16 @@ class _InsightDetailScreenState extends ConsumerState<InsightDetailScreen> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Dismiss Insight'),
-        content: const Text('Are you sure you want to dismiss this insight?'),
+        title: Text(AppLocalizations.of(context).dismissInsightTitle),
+        content: Text(AppLocalizations.of(context).dismissInsightMessage),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Cancel'),
+            child: Text(AppLocalizations.of(context).cancel),
           ),
           TextButton(
             onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Dismiss'),
+            child: Text(AppLocalizations.of(context).dismiss),
           ),
         ],
       ),
@@ -483,7 +483,7 @@ class _InsightDetailScreenState extends ConsumerState<InsightDetailScreen> {
       if (mounted) {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(SnackBar(content: Text('Error dismissing insight: $e')));
+        ).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context).errorDismissingInsight(e))));
       }
     } finally {
       if (mounted) {
@@ -492,16 +492,16 @@ class _InsightDetailScreenState extends ConsumerState<InsightDetailScreen> {
     }
   }
 
-  String _formatDate(DateTime date) {
+  String _formatValidUntil(DateTime date, AppLocalizations l10n) {
     final now = DateTime.now();
     final difference = date.difference(now);
 
     if (difference.inDays > 0) {
-      return '${difference.inDays} days';
+      return l10n.validUntilDays(difference.inDays);
     } else if (difference.inHours > 0) {
-      return '${difference.inHours} hours';
+      return l10n.validUntilHours(difference.inHours);
     } else {
-      return 'soon';
+      return l10n.validUntilSoon;
     }
   }
 }

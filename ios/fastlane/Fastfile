@@ -1,0 +1,75 @@
+default_platform(:ios)
+
+platform :ios do
+
+  desc "Build and upload to TestFlight"
+  lane :beta do
+    setup_ci if ENV["CI"]
+
+    # TODO: Uncomment after App Store Connect API key is set up
+    # api_key = app_store_connect_api_key(
+    #   key_id: ENV["APP_STORE_CONNECT_KEY_ID"] || "TODO_KEY_ID",
+    #   issuer_id: ENV["APP_STORE_CONNECT_ISSUER_ID"] || "TODO_ISSUER_ID",
+    #   key_content: ENV["APP_STORE_CONNECT_API_KEY_CONTENT"],
+    #   is_key_content_base64: true,
+    # )
+
+    # TODO: Uncomment after match is configured
+    # match(type: "appstore", readonly: is_ci)
+
+    build_app(
+      workspace: "Runner.xcworkspace",
+      scheme: "Runner",
+      export_method: "app-store",
+      output_directory: "../build/ios",
+      output_name: "vitalsync.ipa",
+    )
+
+    # TODO: Uncomment after API key is ready
+    # upload_to_testflight(
+    #   api_key: api_key,
+    #   skip_waiting_for_build_processing: true,
+    # )
+  end
+
+  desc "Deploy to App Store"
+  lane :release do
+    setup_ci if ENV["CI"]
+
+    # TODO: Uncomment after App Store Connect API key is set up
+    # api_key = app_store_connect_api_key(
+    #   key_id: ENV["APP_STORE_CONNECT_KEY_ID"] || "TODO_KEY_ID",
+    #   issuer_id: ENV["APP_STORE_CONNECT_ISSUER_ID"] || "TODO_ISSUER_ID",
+    #   key_content: ENV["APP_STORE_CONNECT_API_KEY_CONTENT"],
+    #   is_key_content_base64: true,
+    # )
+
+    # TODO: Uncomment after match is configured
+    # match(type: "appstore", readonly: is_ci)
+
+    build_app(
+      workspace: "Runner.xcworkspace",
+      scheme: "Runner",
+      export_method: "app-store",
+      output_directory: "../build/ios",
+      output_name: "vitalsync.ipa",
+    )
+
+    # TODO: Uncomment after API key is ready
+    # upload_to_app_store(
+    #   api_key: api_key,
+    #   force: true,
+    #   skip_metadata: true,
+    #   skip_screenshots: true,
+    #   precheck_include_in_app_purchases: false,
+    # )
+  end
+
+  desc "Sync code signing certificates (match)"
+  lane :sync_certificates do
+    # TODO: Uncomment after match repo is created
+    # match(type: "appstore")
+    UI.message("TODO: Run 'fastlane match init' and configure a private git repo for certificates")
+  end
+
+end

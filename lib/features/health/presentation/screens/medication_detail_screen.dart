@@ -97,7 +97,7 @@ class MedicationDetailScreen extends ConsumerWidget {
               return _MedicationDetailContent(medication: medication);
             },
             loading: () => const Center(child: CircularProgressIndicator()),
-            error: (err, stack) => Center(child: Text('Error: $err')),
+            error: (err, stack) => Center(child: Text(AppLocalizations.of(context).errorGeneric(err))),
           ),
         ),
       ),
@@ -173,7 +173,7 @@ class _MedicationDetailContent extends ConsumerWidget {
             child: logsListAsync.when(
               data: (logs) => _ComplianceChart(logs: logs, periodDays: 30),
               loading: () => const Center(child: CircularProgressIndicator()),
-              error: (_, _) => const Center(child: Text('Chart Error')),
+              error: (_, _) => Center(child: Text(l10n.chartError)),
             ),
           ),
         ),
@@ -244,7 +244,7 @@ class _MedicationDetailContent extends ConsumerWidget {
           child: OutlinedButton.icon(
             onPressed: () {
               // Placeholder for share functionality
-              context.showSnackbar('Share functionality coming soon!');
+              context.showSnackbar(AppLocalizations.of(context).shareFunctionalityComingSoon);
             },
             icon: const Icon(Icons.share_rounded),
             label: Text(l10n.shareReport),

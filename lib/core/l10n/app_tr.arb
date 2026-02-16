@@ -704,5 +704,217 @@
   "themeLight": "Açık",
   "@themeLight": { "description": "Light theme option" },
   "themeDark": "Koyu",
-  "@themeDark": { "description": "Dark theme option" }
+  "@themeDark": { "description": "Dark theme option" },
+
+  "workoutComplete": "Antrenman Tamamlandı!",
+  "@workoutComplete": { "description": "Workout complete message" },
+  "greatJob": "Harika iş! Böyle devam!",
+  "@greatJob": { "description": "Congratulations message" },
+  "workoutNotFound": "Antrenman bulunamadı",
+  "@workoutNotFound": { "description": "Workout not found error message" },
+  "done": "Tamam",
+  "@done": { "description": "Done button" },
+  "share": "Paylaş",
+  "@share": { "description": "Share button" },
+  "comingSoon": "Yakında gelecek!",
+  "@comingSoon": { "description": "Coming soon message" },
+  "progress": "İlerleme",
+  "@progress": { "description": "Progress screen title" },
+  "volumeChart": "Hacim Grafiği",
+  "@volumeChart": { "description": "Volume chart title" },
+  "workoutFrequency": "Antrenman Sıklığı",
+  "@workoutFrequency": { "description": "Workout frequency chart title" },
+  "chartComingSoon": "Grafik yakında gelecek",
+  "@chartComingSoon": { "description": "Chart placeholder message" },
+  "summary": "Özet",
+  "@summary": { "description": "Summary section title" },
+  "totalWorkouts": "Toplam Antrenman",
+  "@totalWorkouts": { "description": "Total workouts label" },
+  "avgDuration": "Ort. Süre",
+  "@avgDuration": { "description": "Average duration label" },
+  "prsAchieved": "Kırılan Rekorlar",
+  "@prsAchieved": { "description": "Personal records achieved label" },
+  "personalRecords": "Kişisel Rekorlar",
+  "@personalRecords": { "description": "Personal records section title" },
+  "noPRsYet": "Henüz kişisel rekor yok. Devam et!",
+  "@noPRsYet": { "description": "No PRs empty state message" },
+  "dismissed": "Reddedilenler",
+  "@dismissed": { "description": "Dismissed tab label" },
+  "overallWellness": "Genel Sağlık",
+  "@overallWellness": { "description": "Overall wellness / cross-module filter label" },
+  "insightDismissed": "İçgörü reddedildi",
+  "@insightDismissed": { "description": "Snackbar message when insight is dismissed" },
+  "noDismissedInsights": "Reddedilen içgörü yok",
+  "@noDismissedInsights": { "description": "Empty state for dismissed insights tab" },
+  "noInsightsYet": "Henüz içgörü yok",
+  "@noInsightsYet": { "description": "Empty state title when no insights exist" },
+  "insightsEmptyDescription": "Veriler toplandıkça içgörüler burada görünecek",
+  "@insightsEmptyDescription": { "description": "Empty state description for insights" },
+  "dataCollectedProgress": "{collected}/{total} gün veri toplandı",
+  "@dataCollectedProgress": {
+    "description": "Progress text showing days of data collected",
+    "placeholders": {
+      "collected": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+  "errorLoadingInsights": "İçgörüler yüklenirken hata: {error}",
+  "@errorLoadingInsights": {
+    "description": "Error message when loading insights fails",
+    "placeholders": {
+      "error": { "type": "Object" }
+    }
+  },
+  "errorLoadingDismissedInsights": "Reddedilen içgörüler yüklenirken hata: {error}",
+  "@errorLoadingDismissedInsights": {
+    "description": "Error message when loading dismissed insights fails",
+    "placeholders": {
+      "error": { "type": "Object" }
+    }
+  },
+
+  "symptomHeadache": "Baş Ağrısı",
+  "symptomNausea": "Mide Bulantısı",
+  "symptomFatigue": "Yorgunluk",
+  "symptomDizziness": "Baş Dönmesi",
+  "symptomStomachPain": "Karın Ağrısı",
+  "symptomBackPain": "Bel Ağrısı",
+  "symptomJointPain": "Eklem Ağrısı",
+  "symptomInsomnia": "Uykusuzluk",
+  "symptomAnxiety": "Anksiyete",
+  "symptomShortnessOfBreath": "Nefes Darlığı",
+  "pleaseEnterSymptomName": "Lütfen semptom adı girin",
+  "symptomLoggedSuccess": "Semptom başarıyla kaydedildi",
+  "errorLoggingSymptom": "Semptom kaydedilirken hata: {error}",
+  "@errorLoggingSymptom": {
+    "placeholders": { "error": { "type": "Object" } }
+  },
+  "severityMild": "Hafif",
+  "severityModerate": "Orta",
+  "severitySevere": "Şiddetli",
+  "severityVerySevere": "Çok Şiddetli",
+  "severityUnbearable": "Dayanılmaz",
+  "medicationNotFound": "İlaç bulunamadı",
+  "errorLoadingMedication": "İlaç yüklenirken hata: {error}",
+  "@errorLoadingMedication": {
+    "placeholders": { "error": { "type": "Object" } }
+  },
+  "medicationAddedSuccess": "İlaç başarıyla eklendi",
+  "medicationUpdatedSuccess": "İlaç başarıyla güncellendi",
+  "errorSavingMedication": "İlaç kaydedilirken hata: {error}",
+  "@errorSavingMedication": {
+    "placeholders": { "error": { "type": "Object" } }
+  },
+  "addFirstMedicationButton": "İlk İlacı Ekle",
+  "welcomeToHealth": "Sağlık'a Hoş Geldiniz!",
+  "onboardingHealthMessage": "İlk ilacınızı ekleyerek başlayalım. Uyumu takip etmek sağlığınıza yardımcı olur!",
+  "weeklyReport": "Haftalık Rapor",
+  "errorLoadingReport": "Rapor yüklenirken hata: {error}",
+  "@errorLoadingReport": {
+    "placeholders": { "error": { "type": "Object" } }
+  },
+  "taken": "Alındı",
+  "missed": "Kaçırıldı",
+  "skipped": "Atlandı",
+  "volume": "Hacim",
+  "healthRing": "Sağlık",
+  "fitnessRing": "Fitness",
+  "wellnessRing": "İyi Oluş",
+  "activityRings": "Aktivite Halkaları",
+  "shareAsInfographic": "İnfografik Olarak Paylaş (1080x1920)",
+  "perfectForStories": "Instagram Hikayeleri için ideal",
+  "shareAsCompactCard": "Kompakt Kart Olarak Paylaş (1080x1080)",
+  "perfectForSharing": "Genel paylaşım için ideal",
+  "exportAsJSON": "JSON Olarak Dışa Aktar",
+  "gdprDataPortability": "KVKK veri taşınabilirliği",
+  "generatingImage": "Görsel oluşturuluyor...",
+  "myWeeklyReport": "VitalSync haftalık raporum",
+  "errorSharing": "Paylaşım hatası: {error}",
+  "@errorSharing": {
+    "placeholders": { "error": { "type": "Object" } }
+  },
+  "weeklyReportData": "VitalSync Haftalık Rapor Verileri",
+  "reportExportedAsJSON": "Rapor JSON olarak dışa aktarıldı",
+  "errorExporting": "Dışa aktarma hatası: {error}",
+  "@errorExporting": {
+    "placeholders": { "error": { "type": "Object" } }
+  },
+  "wasThisInsightHelpful": "Bu içgörü faydalı mıydı?",
+  "helpful": "Faydalı",
+  "notHelpful": "Faydalı Değil",
+  "dismissInsight": "İçgörüyü Kaldır",
+  "thankYouForFeedback": "Geri bildiriminiz için teşekkürler!",
+  "errorSubmittingFeedback": "Geri bildirim gönderilirken hata: {error}",
+  "@errorSubmittingFeedback": {
+    "placeholders": { "error": { "type": "Object" } }
+  },
+  "errorDismissingInsight": "İçgörü kaldırılırken hata: {error}",
+  "@errorDismissingInsight": {
+    "placeholders": { "error": { "type": "Object" } }
+  },
+  "privacyAndData": "Gizlilik ve Veriler",
+  "restTimerSeconds": "saniye",
+  "skipRestButton": "Dinlenmeyi Atla",
+  "achievementUnlocked": "Başarım Açıldı!",
+  "errorGeneric": "Hata: {error}",
+  "@errorGeneric": {
+    "placeholders": { "error": { "type": "Object" } }
+  },
+  "healthSummary": "Sağlık Özeti",
+  "fitnessSummary": "Fitness Özeti",
+  "nextWeekSuggestions": "Gelecek Hafta Önerileri",
+  "keepUpGreatWork": "Harika gidiyorsun, devam et!",
+  "vsLastWeekPercent": "%{percent} geçen haftaya göre",
+  "@vsLastWeekPercent": {
+    "placeholders": { "percent": { "type": "String" } }
+  },
+  "mostMissed": "En çok kaçırılan: {timeSlot}",
+  "@mostMissed": {
+    "placeholders": { "timeSlot": { "type": "String" } }
+  },
+  "bestWorkout": "En iyi antrenman: {name} — {volume}kg",
+  "@bestWorkout": {
+    "placeholders": { "name": { "type": "String" }, "volume": { "type": "String" } }
+  },
+  "newPersonalRecords": "Yeni Kişisel Rekorlar",
+  "validUntilDays": "{days} gün geçerli",
+  "@validUntilDays": {
+    "placeholders": { "days": { "type": "int" } }
+  },
+  "validUntilHours": "{hours} saat geçerli",
+  "@validUntilHours": {
+    "placeholders": { "hours": { "type": "int" } }
+  },
+  "validUntilSoon": "Yakında sona erecek",
+  "takeAction": "Harekete Geç",
+  "errorLoadingInsight": "İçgörü yüklenirken hata: {error}",
+  "@errorLoadingInsight": {
+    "placeholders": { "error": { "type": "Object" } }
+  },
+  "today": "Bugün",
+  "yesterday": "Dün",
+  "daysAgo": "{days} gün önce",
+  "@daysAgo": {
+    "placeholders": { "days": { "type": "int" } }
+  },
+  "weeksAgo": "{weeks}h önce",
+  "@weeksAgo": {
+    "placeholders": { "weeks": { "type": "int" } }
+  },
+  "monthsAgo": "{months}ay önce",
+  "@monthsAgo": {
+    "placeholders": { "months": { "type": "int" } }
+  },
+  "loading": "Yükleniyor...",
+  "errorAddingSet": "Set eklenirken hata: {error}",
+  "@errorAddingSet": {
+    "placeholders": { "error": { "type": "Object" } }
+  },
+  "chartError": "Grafik Hatası",
+  "shareFunctionalityComingSoon": "Paylaşım özelliği yakında!",
+  "severityLabel": "Şiddet: {severity}",
+  "@severityLabel": {
+    "placeholders": { "severity": { "type": "int" } }
+  },
+  "errorLoadingCalendar": "Takvim yüklenirken hata"
 }

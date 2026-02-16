@@ -1,5 +1,7 @@
+import 'package:drift/drift.dart';
 import 'package:vitalsync/data/local/daos/fitness/user_stats_dao.dart';
-import 'package:vitalsync/data/local/daos/fitness/workout_dao.dart'; // For getWorkoutDates
+import 'package:vitalsync/data/local/daos/fitness/workout_dao.dart';
+import 'package:vitalsync/data/local/database.dart';
 import 'package:vitalsync/domain/repositories/fitness/streak_repository.dart';
 
 class StreakRepositoryImpl implements StreakRepository {
@@ -9,32 +11,108 @@ class StreakRepositoryImpl implements StreakRepository {
 
   @override
   Future<int> getCurrentStreak() async {
-    final latest = await _statsDao.getLatest();
-    // Logic: check if latest entry is recent enough to count as active streak
-    // Or just return accumulated streak.
-    // Assuming user_stats is updated daily or after workouts.
-    // If last update was > 1 day ago (allowing for rest days?), streak might be broken.
-    // Prompt 1.1 logic says "StreakService" is responsible.
-    // Repo just returns data.
-    return latest?.streakDays ?? 0;
+    // Get all workout dates from workout sessions
+    final dates = await _sessionDao.getWorkoutDates(days: 365);
+
+    if (dates.isEmpty) return 0;
+
+    // Convert to date-only format (remove time component)
+    final uniqueDates = dates
+        .map((d) => DateTime(d.year, d.month, d.day))
+        .toSet()
+        .toList()
+      ..sort();
+
+    final today = DateTime.now();
+    final todayOnly = DateTime(today.year, today.month, today.day);
+
+    // Streak must include today or yesterday to be valid
+    final mostRecent = uniqueDates.last;
+    final daysSinceLastWorkout = todayOnly.difference(mostRecent).inDays;
+
+    // If last workout was more than 1 day ago, streak is broken
+    if (daysSinceLastWorkout > 1) return 0;
+
+    // Calculate streak by going backwards from most recent date
+    var streak = 1;
+    for (var i = uniqueDates.length - 2; i >= 0; i--) {
+      final diff = uniqueDates[i + 1].difference(uniqueDates[i]).inDays;
+      if (diff == 1) {
+        streak++;
+      } else if (diff > 1) {
+        break; // Streak broken
+      }
+      // if diff == 0, it's the same day (duplicate), skip
+    }
+
+    return streak;
   }
 
   @override
-  Future<int> getLongestStreak() {
-    return _statsDao.getMaxStreak();
+  Future<int> getLongestStreak() async {
+    // Get all workout dates from workout sessions
+    final dates = await _sessionDao.getWorkoutDates(days: 365 * 2); // 2 years
+
+    if (dates.isEmpty) return 0;
+
+    // Convert to date-only format and sort
+    final uniqueDates = dates
+        .map((d) => DateTime(d.year, d.month, d.day))
+        .toSet()
+        .toList()
+      ..sort();
+
+    var longestStreak = 1;
+    var currentStreak = 1;
+
+    for (var i = 1; i < uniqueDates.length; i++) {
+      final diff = uniqueDates[i].difference(uniqueDates[i - 1]).inDays;
+
+      if (diff == 1) {
+        currentStreak++;
+        if (currentStreak > longestStreak) {
+          longestStreak = currentStreak;
+        }
+      } else if (diff > 1) {
+        currentStreak = 1; // Reset streak
+      }
+      // if diff == 0, same day (duplicate), continue
+    }
+
+    return longestStreak;
   }
 
   @override
   Future<void> updateStreak() async {
-    // This logic belongs to StreakService.
-    // Repo updateStreak might trigger recalculation or just persist current state.
-    // But since no arguments, it implies recalculation.
-    // However, Repo shouldn't contain complex business logic if Service exists.
-    // I'll leave as TODO or call a helper if accessible.
-    // Realistically, this method in repo is likely intended to be called by Service.
-    // But since it's defined here, maybe it persists data provided by service?
-    // The signature `void updateStreak()` suggests it does the calculation internally.
-    // I'll skip implementing complex logic here as it requires reading session history etc.
+    // Update user_stats table with current streak
+    final currentStreak = await getCurrentStreak();
+
+    // Get or create today's user stats entry
+    final today = DateTime.now();
+    final todayOnly = DateTime(today.year, today.month, today.day);
+
+    final existing = await _statsDao.getByDate(todayOnly);
+
+    if (existing != null) {
+      // Update existing entry
+      await _statsDao.insertOrUpdate(
+        existing.toCompanion(true).copyWith(
+          streakDays: Value(currentStreak),
+        ),
+      );
+    } else {
+      // Create new entry with current streak
+      await _statsDao.insertOrUpdate(
+        UserStatsCompanion.insert(
+          date: todayOnly,
+          streakDays: currentStreak,
+          totalWorkouts: 0,
+          totalVolume: 0.0,
+          totalDuration: 0,
+          medicationCompliance: 0.0,
+        ),
+      );
+    }
   }
 
   @override

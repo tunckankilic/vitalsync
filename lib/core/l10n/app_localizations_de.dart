@@ -539,7 +539,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get monthlyStats => 'Monatsstatistik';
 
   @override
-  String get totalWorkouts => 'Gesamttrainings';
+  String get totalWorkouts => 'Gesamte Trainings';
 
   @override
   String get streak => 'Serie';
@@ -1142,4 +1142,367 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get gdprNote =>
       'Erforderliche Zustimmungen sind für die Kernfunktionalität der App notwendig. Sie können Zustimmungen jederzeit in den Einstellungen verwalten.';
+
+  @override
+  String get workoutComplete => 'Training Abgeschlossen!';
+
+  @override
+  String get greatJob => 'Tolle Arbeit! Weiter so!';
+
+  @override
+  String get workoutNotFound => 'Training nicht gefunden';
+
+  @override
+  String get done => 'Fertig';
+
+  @override
+  String get share => 'Teilen';
+
+  @override
+  String get comingSoon => 'Demnächst!';
+
+  @override
+  String get volumeChart => 'Volumen Diagramm';
+
+  @override
+  String get chartComingSoon => 'Diagramm kommt bald';
+
+  @override
+  String get summary => 'Zusammenfassung';
+
+  @override
+  String get avgDuration => 'Durchschn. Dauer';
+
+  @override
+  String get prsAchieved => 'PRs Erreicht';
+
+  @override
+  String get noPRsYet => 'Noch keine persönlichen Rekorde. Weiter so!';
+
+  @override
+  String get dismissed => 'Abgelehnt';
+
+  @override
+  String get overallWellness => 'Gesamtwellness';
+
+  @override
+  String get insightDismissed => 'Einsicht abgelehnt';
+
+  @override
+  String get noDismissedInsights => 'Keine abgelehnten Einsichten';
+
+  @override
+  String get noInsightsYet => 'Noch keine Einsichten';
+
+  @override
+  String get insightsEmptyDescription =>
+      'Einsichten werden hier angezeigt, sobald Daten gesammelt werden';
+
+  @override
+  String dataCollectedProgress(int collected, int total) {
+    return '$collected/$total Tage Daten gesammelt';
+  }
+
+  @override
+  String errorLoadingInsights(Object error) {
+    return 'Fehler beim Laden der Einsichten: $error';
+  }
+
+  @override
+  String errorLoadingDismissedInsights(Object error) {
+    return 'Fehler beim Laden der abgelehnten Einsichten: $error';
+  }
+
+  @override
+  String get symptomHeadache => 'Kopfschmerzen';
+
+  @override
+  String get symptomNausea => 'Übelkeit';
+
+  @override
+  String get symptomFatigue => 'Müdigkeit';
+
+  @override
+  String get symptomDizziness => 'Schwindel';
+
+  @override
+  String get symptomStomachPain => 'Bauchschmerzen';
+
+  @override
+  String get symptomBackPain => 'Rückenschmerzen';
+
+  @override
+  String get symptomJointPain => 'Gelenkschmerzen';
+
+  @override
+  String get symptomInsomnia => 'Schlaflosigkeit';
+
+  @override
+  String get symptomAnxiety => 'Angst';
+
+  @override
+  String get symptomShortnessOfBreath => 'Atemnot';
+
+  @override
+  String get pleaseEnterSymptomName => 'Bitte geben Sie einen Symptomname ein';
+
+  @override
+  String get symptomLoggedSuccess => 'Symptom erfolgreich erfasst';
+
+  @override
+  String errorLoggingSymptom(Object error) {
+    return 'Fehler beim Erfassen des Symptoms: $error';
+  }
+
+  @override
+  String get severityMild => 'Leicht';
+
+  @override
+  String get severityModerate => 'Mäßig';
+
+  @override
+  String get severitySevere => 'Schwer';
+
+  @override
+  String get severityVerySevere => 'Sehr Schwer';
+
+  @override
+  String get severityUnbearable => 'Unerträglich';
+
+  @override
+  String get medicationNotFound => 'Medikament nicht gefunden';
+
+  @override
+  String errorLoadingMedication(Object error) {
+    return 'Fehler beim Laden des Medikaments: $error';
+  }
+
+  @override
+  String get medicationAddedSuccess => 'Medikament erfolgreich hinzugefügt';
+
+  @override
+  String get medicationUpdatedSuccess => 'Medikament erfolgreich aktualisiert';
+
+  @override
+  String errorSavingMedication(Object error) {
+    return 'Fehler beim Speichern des Medikaments: $error';
+  }
+
+  @override
+  String get addFirstMedicationButton => 'Erstes Medikament hinzufügen';
+
+  @override
+  String get welcomeToHealth => 'Willkommen bei Gesundheit!';
+
+  @override
+  String get onboardingHealthMessage =>
+      'Beginnen wir damit, Ihr erstes Medikament hinzuzufügen. Die Einhaltung zu verfolgen hilft Ihnen, gesund zu bleiben!';
+
+  @override
+  String get weeklyReport => 'Wochenbericht';
+
+  @override
+  String errorLoadingReport(Object error) {
+    return 'Fehler beim Laden des Berichts: $error';
+  }
+
+  @override
+  String get taken => 'Eingenommen';
+
+  @override
+  String get missed => 'Verpasst';
+
+  @override
+  String get skipped => 'Übersprungen';
+
+  @override
+  String get volume => 'Volumen';
+
+  @override
+  String get healthRing => 'Gesundheit';
+
+  @override
+  String get fitnessRing => 'Fitness';
+
+  @override
+  String get wellnessRing => 'Wohlbefinden';
+
+  @override
+  String get activityRings => 'Aktivitätsringe';
+
+  @override
+  String get shareAsInfographic => 'Als Infografik teilen (1080x1920)';
+
+  @override
+  String get perfectForStories => 'Ideal für Instagram Stories';
+
+  @override
+  String get shareAsCompactCard => 'Als kompakte Karte teilen (1080x1080)';
+
+  @override
+  String get perfectForSharing => 'Ideal zum allgemeinen Teilen';
+
+  @override
+  String get exportAsJSON => 'Als JSON exportieren';
+
+  @override
+  String get gdprDataPortability => 'DSGVO-Datenportabilität';
+
+  @override
+  String get generatingImage => 'Bild wird generiert...';
+
+  @override
+  String get myWeeklyReport => 'Mein Wochenbericht von VitalSync';
+
+  @override
+  String errorSharing(Object error) {
+    return 'Fehler beim Teilen: $error';
+  }
+
+  @override
+  String get weeklyReportData => 'VitalSync Wochenbericht-Daten';
+
+  @override
+  String get reportExportedAsJSON => 'Bericht als JSON exportiert';
+
+  @override
+  String errorExporting(Object error) {
+    return 'Fehler beim Exportieren: $error';
+  }
+
+  @override
+  String get wasThisInsightHelpful => 'War diese Einsicht hilfreich?';
+
+  @override
+  String get helpful => 'Hilfreich';
+
+  @override
+  String get notHelpful => 'Nicht Hilfreich';
+
+  @override
+  String get dismissInsight => 'Einsicht ablehnen';
+
+  @override
+  String get thankYouForFeedback => 'Vielen Dank für Ihr Feedback!';
+
+  @override
+  String errorSubmittingFeedback(Object error) {
+    return 'Fehler beim Senden des Feedbacks: $error';
+  }
+
+  @override
+  String errorDismissingInsight(Object error) {
+    return 'Fehler beim Ablehnen der Einsicht: $error';
+  }
+
+  @override
+  String get privacyAndData => 'Datenschutz & Daten';
+
+  @override
+  String get restTimerSeconds => 'Sekunden';
+
+  @override
+  String get skipRestButton => 'Pause überspringen';
+
+  @override
+  String get achievementUnlocked => 'Erfolg freigeschaltet!';
+
+  @override
+  String errorGeneric(Object error) {
+    return 'Fehler: $error';
+  }
+
+  @override
+  String get healthSummary => 'Gesundheitsübersicht';
+
+  @override
+  String get fitnessSummary => 'Fitnessübersicht';
+
+  @override
+  String get nextWeekSuggestions => 'Vorschläge für nächste Woche';
+
+  @override
+  String get keepUpGreatWork => 'Weiter so, tolle Arbeit!';
+
+  @override
+  String vsLastWeekPercent(String percent) {
+    return '$percent% vs. letzte Woche';
+  }
+
+  @override
+  String mostMissed(String timeSlot) {
+    return 'Am meisten verpasst: $timeSlot';
+  }
+
+  @override
+  String bestWorkout(String name, String volume) {
+    return 'Bestes Training: $name — ${volume}kg';
+  }
+
+  @override
+  String get newPersonalRecords => 'Neue persönliche Rekorde';
+
+  @override
+  String validUntilDays(int days) {
+    return 'Gültig für $days Tage';
+  }
+
+  @override
+  String validUntilHours(int hours) {
+    return 'Gültig für $hours Stunden';
+  }
+
+  @override
+  String get validUntilSoon => 'Bald ablaufend';
+
+  @override
+  String get takeAction => 'Handeln';
+
+  @override
+  String errorLoadingInsight(Object error) {
+    return 'Fehler beim Laden der Einsicht: $error';
+  }
+
+  @override
+  String get today => 'Heute';
+
+  @override
+  String get yesterday => 'Gestern';
+
+  @override
+  String daysAgo(int days) {
+    return 'vor $days Tagen';
+  }
+
+  @override
+  String weeksAgo(int weeks) {
+    return 'vor ${weeks}W';
+  }
+
+  @override
+  String monthsAgo(int months) {
+    return 'vor ${months}M';
+  }
+
+  @override
+  String get loading => 'Laden...';
+
+  @override
+  String errorAddingSet(Object error) {
+    return 'Fehler beim Hinzufügen des Satzes: $error';
+  }
+
+  @override
+  String get chartError => 'Diagrammfehler';
+
+  @override
+  String get shareFunctionalityComingSoon => 'Teilen-Funktion kommt bald!';
+
+  @override
+  String severityLabel(int severity) {
+    return 'Schweregrad: $severity';
+  }
+
+  @override
+  String get errorLoadingCalendar => 'Fehler beim Laden des Kalenders';
 }

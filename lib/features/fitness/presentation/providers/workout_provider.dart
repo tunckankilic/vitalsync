@@ -51,6 +51,20 @@ Stream<WorkoutSession?> activeSession(Ref ref) {
   return repository.watchActiveSession();
 }
 
+/// Provider for workout session by ID
+@riverpod
+Future<WorkoutSession?> workoutSessionById(Ref ref, int id) async {
+  final repository = ref.watch(workoutSessionRepositoryProvider);
+  return repository.getById(id);
+}
+
+/// Provider for sets of a specific session
+@riverpod
+Stream<List<WorkoutSet>> sessionSets(Ref ref, int sessionId) {
+  final repository = ref.watch(workoutSessionRepositoryProvider);
+  return repository.watchSessionSets(sessionId);
+}
+
 /// Provider for recent workout sessions (last 5)
 @riverpod
 Future<List<WorkoutSession>> recentWorkouts(Ref ref) async {
@@ -373,8 +387,11 @@ class WorkoutNotifier extends _$WorkoutNotifier {
       // Fire analytics event
       await analytics.logWorkoutCancelled(durationMinutes: durationMinutes);
 
-      // TODO: Implement proper session cancellation in repository
-      // For now, this is a placeholder
+      // Delete session and all its sets from database
+      await repository.deleteSession(activeSession.id);
+
+      // Clear state - no active session
+      return;
     });
 
     if (state.hasError) {

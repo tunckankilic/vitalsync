@@ -19,6 +19,7 @@ import 'package:vitalsync/data/local/daos/fitness/workout_dao.dart';
 import 'package:vitalsync/data/local/daos/health/medication_dao.dart';
 import 'package:vitalsync/data/local/daos/insights/insight_dao.dart';
 import 'package:vitalsync/data/local/daos/shared/user_profile_dao.dart';
+import 'package:vitalsync/data/local/migrations.dart';
 // Table imports - Fitness
 import 'package:vitalsync/data/local/tables/fitness/achievements_table.dart';
 import 'package:vitalsync/data/local/tables/fitness/exercises_table.dart';
@@ -110,11 +111,7 @@ class AppDatabase extends _$AppDatabase {
         await m.createAll();
       },
       onUpgrade: (Migrator m, int from, int to) async {
-        // TODO: Add migration logic when schema changes
-        // Example:
-        // if (from < 2) {
-        //   await m.addColumn(medications, medications.newColumn);
-        // }
+        await runMigrations(m, this, from, to);
       },
     );
   }

@@ -1,0 +1,5 @@
+# TODO: Replace with your Apple Developer account details
+app_identifier("site.tunckankilic.vitalsync")
+apple_id("TODO_YOUR_APPLE_ID@example.com")        # Your Apple Developer email
+team_id("TODO_TEAM_ID")                            # Apple Developer Team ID
+itc_team_id("TODO_ITC_TEAM_ID")                    # App Store Connect Team ID

@@ -139,7 +139,7 @@ class _ActiveWorkoutScreenState extends ConsumerState<ActiveWorkoutScreen> {
             return _buildActiveWorkout(context, session);
           },
           loading: () => const Center(child: CircularProgressIndicator()),
-          error: (error, stack) => Center(child: Text('Error: $error')),
+          error: (error, stack) => Center(child: Text(l10n.errorGeneric(error))),
         ),
       ),
     );
@@ -174,7 +174,7 @@ class _ActiveWorkoutScreenState extends ConsumerState<ActiveWorkoutScreen> {
 
     return exercisesAsync.when(
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (err, stack) => Center(child: Text('Error: $err')),
+      error: (err, stack) => Center(child: Text(l10n.errorGeneric(err))),
       data: (exercises) {
         // Merge provider exercises with ad-hoc exercises
         // Use a Set to avoid duplicates (if ad-hoc exercise gets a set logged, it appears in provider)
@@ -205,7 +205,7 @@ class _ActiveWorkoutScreenState extends ConsumerState<ActiveWorkoutScreen> {
 
         return setsAsync.when(
           loading: () => const Center(child: CircularProgressIndicator()),
-          error: (err, stack) => Center(child: Text('Error: $err')),
+          error: (err, stack) => Center(child: Text(l10n.errorGeneric(err))),
           data: (sets) {
             final currentExerciseSets = sets
                 .where((s) => s.exerciseId == currentExercise.id)
@@ -213,7 +213,7 @@ class _ActiveWorkoutScreenState extends ConsumerState<ActiveWorkoutScreen> {
 
             // Calculate previous sets string (Mock for now or fetch from history)
             // Ideally we need a provider for "previous session sets for exercise"
-            const previousSetsStr = 'Loading...'; // Placeholder
+            final previousSetsStr = l10n.loading; // Placeholder
 
             return Column(
               children: [
@@ -311,7 +311,7 @@ class _ActiveWorkoutScreenState extends ConsumerState<ActiveWorkoutScreen> {
       if (mounted) {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(SnackBar(content: Text('Error adding set: $e')));
+        ).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context).errorAddingSet(e))));
       }
       return;
     }

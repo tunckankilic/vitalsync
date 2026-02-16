@@ -28,18 +28,18 @@ class _AddSymptomScreenState extends ConsumerState<AddSymptomScreen> {
   final List<String> _selectedTags = [];
   bool _isLoading = false;
 
-  final List<String> _commonSymptoms = [
-    'Headache',
-    'Nausea',
-    'Fatigue',
-    'Dizziness',
-    'Stomach Pain',
-    'Back Pain',
-    'Joint Pain',
-    'Insomnia',
-    'Anxiety',
-    'Shortness of Breath',
-  ]; // Ideally localized
+  List<String> _getCommonSymptoms(AppLocalizations l10n) => [
+    l10n.symptomHeadache,
+    l10n.symptomNausea,
+    l10n.symptomFatigue,
+    l10n.symptomDizziness,
+    l10n.symptomStomachPain,
+    l10n.symptomBackPain,
+    l10n.symptomJointPain,
+    l10n.symptomInsomnia,
+    l10n.symptomAnxiety,
+    l10n.symptomShortnessOfBreath,
+  ];
 
   @override
   void dispose() {
@@ -50,7 +50,7 @@ class _AddSymptomScreenState extends ConsumerState<AddSymptomScreen> {
 
   Future<void> _save() async {
     if (_nameController.text.isEmpty) {
-      context.showErrorSnackbar('Please enter a symptom name');
+      context.showErrorSnackbar(AppLocalizations.of(context).pleaseEnterSymptomName);
       return;
     }
 
@@ -78,11 +78,11 @@ class _AddSymptomScreenState extends ConsumerState<AddSymptomScreen> {
       await ref.read(symptomProvider.notifier).addSymptom(symptom);
 
       if (mounted) {
-        context.showSuccessSnackbar('Symptom logged successfully');
+        context.showSuccessSnackbar(AppLocalizations.of(context).symptomLoggedSuccess);
         context.pop();
       }
     } catch (e) {
-      if (mounted) context.showErrorSnackbar('Error logging symptom: $e');
+      if (mounted) context.showErrorSnackbar(AppLocalizations.of(context).errorLoggingSymptom(e));
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -93,7 +93,7 @@ class _AddSymptomScreenState extends ConsumerState<AddSymptomScreen> {
     final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
 
-    // Need localized common symptoms in real app
+    final commonSymptoms = _getCommonSymptoms(l10n);
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -131,7 +131,7 @@ class _AddSymptomScreenState extends ConsumerState<AddSymptomScreen> {
                     Wrap(
                       spacing: 8,
                       runSpacing: 8,
-                      children: _commonSymptoms.take(6).map((symptom) {
+                      children: commonSymptoms.take(6).map((symptom) {
                         return ActionChip(
                           label: Text(symptom),
                           onPressed: () {
@@ -160,7 +160,7 @@ class _AddSymptomScreenState extends ConsumerState<AddSymptomScreen> {
                       children: [
                         Text(l10n.severity, style: theme.textTheme.titleSmall),
                         Text(
-                          _getSeverityLabel(_severity),
+                          _getSeverityLabel(_severity, l10n),
                           style: TextStyle(
                             color: _getSeverityColor(_severity),
                             fontWeight: FontWeight.bold,
@@ -187,11 +187,11 @@ class _AddSymptomScreenState extends ConsumerState<AddSymptomScreen> {
                             setState(() => _severity = val.toInt()),
                       ),
                     ),
-                    const Row(
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Mild', style: TextStyle(fontSize: 10)),
-                        Text('Unbearable', style: TextStyle(fontSize: 10)),
+                        Text(l10n.severityMild, style: const TextStyle(fontSize: 10)),
+                        Text(l10n.severityUnbearable, style: const TextStyle(fontSize: 10)),
                       ],
                     ),
                   ],
@@ -287,18 +287,18 @@ class _AddSymptomScreenState extends ConsumerState<AddSymptomScreen> {
     );
   }
 
-  String _getSeverityLabel(int severity) {
+  String _getSeverityLabel(int severity, AppLocalizations l10n) {
     switch (severity) {
       case 1:
-        return '😊 Mild';
+        return '😊 ${l10n.severityMild}';
       case 2:
-        return '😐 Moderate';
+        return '😐 ${l10n.severityModerate}';
       case 3:
-        return '😟 Severe';
+        return '😟 ${l10n.severitySevere}';
       case 4:
-        return '😣 Very Severe';
+        return '😣 ${l10n.severityVerySevere}';
       case 5:
-        return '😫 Unbearable';
+        return '😫 ${l10n.severityUnbearable}';
       default:
         return '';
     }

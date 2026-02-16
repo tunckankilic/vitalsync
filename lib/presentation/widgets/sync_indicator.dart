@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/l10n/app_localizations.dart';
+import '../../core/sync/sync_provider.dart';
 
 /// Sync status indicator widget.
 ///
@@ -24,19 +25,46 @@ class SyncIndicator extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
 
-    // TODO: Replace with actual providers once they exist
-    // For now, show static online state
-    const isOnline = true; // ref.watch(connectivityProvider)
-    const isSyncing = false; // ref.watch(syncStatusProvider)
+    // Watch connectivity and sync status
+    final connectivityAsync = ref.watch(connectivityProvider);
+    final syncStatus = ref.watch(syncStatusProvider);
 
-    // TODO: Add back offline/syncing states once providers are implemented
-    final semanticsLabel = l10n.syncSemanticsOnline;
-    final tooltip = l10n.syncOnlineTooltip;
+    // Determine states from providers
+    final isOnline = connectivityAsync.when(
+      data: (isConnected) => isConnected,
+      loading: () => false,
+      error: (_, _) => false,
+    );
+
+    final isSyncing = syncStatus == SyncStatus.syncing;
+    final hasError = syncStatus == SyncStatus.error;
+
+    // Dynamic semantics and tooltip based on state
+    final semanticsLabel = hasError
+        ? 'Sync error' // TODO: Add l10n.syncSemanticsError when available
+        : isSyncing
+        ? l10n.syncSemanticsSyncing
+        : isOnline
+        ? l10n.syncSemanticsOnline
+        : l10n.syncSemanticsOffline;
+
+    final tooltip = hasError
+        ? 'Sync error - tap to retry' // TODO: Add l10n.syncErrorTooltip when available
+        : isSyncing
+        ? l10n.syncingTooltip
+        : isOnline
+        ? l10n.syncOnlineTooltip
+        : l10n.syncOfflineTooltip;
 
     return Semantics(
       label: semanticsLabel,
       child: IconButton(
-        icon: _buildSyncIcon(context, isOnline: isOnline, isSyncing: isSyncing),
+        icon: _buildSyncIcon(
+          context,
+          isOnline: isOnline,
+          isSyncing: isSyncing,
+          hasError: hasError,
+        ),
         onPressed: null, // Non-interactive, just an indicator
         tooltip: tooltip,
       ),
@@ -47,7 +75,17 @@ class SyncIndicator extends ConsumerWidget {
     BuildContext context, {
     required bool isOnline,
     required bool isSyncing,
+    required bool hasError,
   }) {
+    if (hasError) {
+      // Red error icon for sync error
+      return const Icon(
+        Icons.sync_problem_rounded,
+        color: Colors.red,
+        size: 20,
+      );
+    }
+
     if (isSyncing) {
       // Rotating arrows for syncing state
       return const _RotatingIcon(icon: Icons.sync_rounded, color: Colors.blue);

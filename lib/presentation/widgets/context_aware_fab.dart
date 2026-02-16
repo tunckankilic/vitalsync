@@ -8,6 +8,7 @@ library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../core/l10n/app_localizations.dart';
 import '../../core/theme/app_theme.dart';
@@ -75,21 +76,18 @@ class _ContextAwareFabState extends ConsumerState<ContextAwareFab>
   }
 
   void _onAddMedication() {
-    // TODO: Navigate to add medication screen
-    debugPrint('Add Medication');
     if (_isExpanded) _toggleExpanded();
+    context.push('/health/add-medication');
   }
 
   void _onLogSymptom() {
-    // TODO: Navigate to log symptom screen
-    debugPrint('Log Symptom');
     if (_isExpanded) _toggleExpanded();
+    context.push('/health/add-symptom');
   }
 
   void _onStartWorkout() {
-    // TODO: Navigate to start workout screen
-    debugPrint('Start Workout');
     if (_isExpanded) _toggleExpanded();
+    context.push('/fitness/exercises');
   }
 
   @override
