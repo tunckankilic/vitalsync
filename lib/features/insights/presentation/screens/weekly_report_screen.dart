@@ -62,7 +62,7 @@ class _WeeklyReportScreenState extends ConsumerState<WeeklyReportScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Weekly Report'),
+        title: Text(l10n.weeklyReport),
         backgroundColor: Colors.transparent,
         elevation: 0,
         actions: [
@@ -83,7 +83,7 @@ class _WeeklyReportScreenState extends ConsumerState<WeeklyReportScreen> {
               data: (report) => _buildReportContent(report, theme, colorScheme),
               loading: () => const Center(child: CircularProgressIndicator()),
               error: (error, stack) =>
-                  Center(child: Text('Error loading report: $error')),
+                  Center(child: Text(l10n.errorLoadingReport(error))),
             ),
           ),
         ],
@@ -191,6 +191,8 @@ class _WeeklyReportScreenState extends ConsumerState<WeeklyReportScreen> {
 
     final complianceChange = complianceRate - previousComplianceRate;
 
+    final l10n = AppLocalizations.of(context);
+
     return GlassmorphicCard(
       child: Padding(
         padding: const EdgeInsets.all(20),
@@ -198,7 +200,7 @@ class _WeeklyReportScreenState extends ConsumerState<WeeklyReportScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Health Summary',
+              l10n.healthSummary,
               style: theme.textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
@@ -208,23 +210,23 @@ class _WeeklyReportScreenState extends ConsumerState<WeeklyReportScreen> {
             DonutChart(
               segments: [
                 DonutSegment(
-                  label: 'Taken',
+                  label: l10n.taken,
                   value: takenCount.toDouble(),
                   color: Colors.green,
                 ),
                 DonutSegment(
-                  label: 'Missed',
+                  label: l10n.missed,
                   value: missedCount.toDouble(),
                   color: Colors.red,
                 ),
                 DonutSegment(
-                  label: 'Skipped',
+                  label: l10n.skipped,
                   value: skippedCount.toDouble(),
                   color: Colors.grey,
                 ),
               ],
               centerValue: '${(complianceRate * 100).toInt()}%',
-              centerLabel: 'Compliance',
+              centerLabel: l10n.compliance,
               size: 180,
             ),
             const SizedBox(height: 16),
@@ -247,7 +249,9 @@ class _WeeklyReportScreenState extends ConsumerState<WeeklyReportScreen> {
                 ),
                 const SizedBox(width: 4),
                 Text(
-                  '${(complianceChange.abs() * 100).toStringAsFixed(1)}% vs last week',
+                  l10n.vsLastWeekPercent(
+                    (complianceChange.abs() * 100).toStringAsFixed(1),
+                  ),
                   style: theme.textTheme.bodyMedium?.copyWith(
                     color: complianceChange > 0
                         ? Colors.green
@@ -282,7 +286,7 @@ class _WeeklyReportScreenState extends ConsumerState<WeeklyReportScreen> {
                     ),
                     const SizedBox(width: 6),
                     Text(
-                      'Most missed: $problematicTimeSlot',
+                      l10n.mostMissed(problematicTimeSlot),
                       style: theme.textTheme.bodySmall?.copyWith(
                         color: Colors.red,
                         fontWeight: FontWeight.bold,
@@ -311,6 +315,7 @@ class _WeeklyReportScreenState extends ConsumerState<WeeklyReportScreen> {
     final previousDailyVolumes =
         (report['previous_daily_volumes'] as List<dynamic>?) ?? [];
     final bestWorkout = report['best_workout'] as Map<String, dynamic>?;
+    final l10n = AppLocalizations.of(context);
 
     return GlassmorphicCard(
       child: Padding(
@@ -319,7 +324,7 @@ class _WeeklyReportScreenState extends ConsumerState<WeeklyReportScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Fitness Summary',
+              l10n.fitnessSummary,
               style: theme.textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
@@ -349,19 +354,19 @@ class _WeeklyReportScreenState extends ConsumerState<WeeklyReportScreen> {
               children: [
                 _buildStatItem(
                   icon: Icons.fitness_center,
-                  label: 'Workouts',
+                  label: l10n.workouts,
                   value: workoutCount.toString(),
                   theme: theme,
                 ),
                 _buildStatItem(
                   icon: Icons.trending_up,
-                  label: 'Volume',
+                  label: l10n.volume,
                   value: '${totalVolume.toInt()}kg',
                   theme: theme,
                 ),
                 _buildStatItem(
                   icon: Icons.timer,
-                  label: 'Duration',
+                  label: l10n.duration,
                   value: '${(totalDuration / 60).toInt()}h',
                   theme: theme,
                 ),
@@ -385,7 +390,10 @@ class _WeeklyReportScreenState extends ConsumerState<WeeklyReportScreen> {
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
-                        'Best workout: ${bestWorkout['name']} — ${bestWorkout['volume']}kg',
+                        l10n.bestWorkout(
+                          bestWorkout['name'].toString(),
+                          bestWorkout['volume'].toString(),
+                        ),
                         style: theme.textTheme.bodyMedium?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
@@ -400,7 +408,7 @@ class _WeeklyReportScreenState extends ConsumerState<WeeklyReportScreen> {
               const Divider(),
               const SizedBox(height: 12),
               Text(
-                'New Personal Records 🏆',
+                '${l10n.newPersonalRecords} 🏆',
                 style: theme.textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                   color: Colors.amber,
@@ -438,6 +446,7 @@ class _WeeklyReportScreenState extends ConsumerState<WeeklyReportScreen> {
 
     final healthScore =
         complianceRate * 0.4 + workoutConsistency * 0.3 + symptomInverse * 0.3;
+    final l10n = AppLocalizations.of(context);
 
     return GlassmorphicCard(
       child: Padding(
@@ -446,7 +455,7 @@ class _WeeklyReportScreenState extends ConsumerState<WeeklyReportScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Overall Wellness',
+              l10n.overallWellness,
               style: theme.textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
@@ -486,6 +495,7 @@ class _WeeklyReportScreenState extends ConsumerState<WeeklyReportScreen> {
 
     final workoutConsistency = (workoutCount / 7).clamp(0.0, 1.0);
     final symptomInverse = 1.0 - (symptomCount / 10).clamp(0.0, 1.0);
+    final l10n = AppLocalizations.of(context);
 
     List<ActivityRingData>? previousRings;
     if (previousReport != null) {
@@ -498,17 +508,17 @@ class _WeeklyReportScreenState extends ConsumerState<WeeklyReportScreen> {
 
       previousRings = [
         ActivityRingData(
-          label: 'Health',
+          label: l10n.healthRing,
           progress: prevCompliance,
           color: Colors.green,
         ),
         ActivityRingData(
-          label: 'Fitness',
+          label: l10n.fitnessRing,
           progress: prevWorkoutConsistency,
           color: Colors.orange,
         ),
         ActivityRingData(
-          label: 'Wellness',
+          label: l10n.wellnessRing,
           progress: prevSymptomInverse,
           color: Colors.blue,
         ),
@@ -522,7 +532,7 @@ class _WeeklyReportScreenState extends ConsumerState<WeeklyReportScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Activity Rings',
+              l10n.activityRings,
               style: theme.textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
@@ -531,17 +541,17 @@ class _WeeklyReportScreenState extends ConsumerState<WeeklyReportScreen> {
             ActivityRings(
               rings: [
                 ActivityRingData(
-                  label: 'Health',
+                  label: l10n.healthRing,
                   progress: complianceRate,
                   color: Colors.green,
                 ),
                 ActivityRingData(
-                  label: 'Fitness',
+                  label: l10n.fitnessRing,
                   progress: workoutConsistency,
                   color: Colors.orange,
                 ),
                 ActivityRingData(
-                  label: 'Wellness',
+                  label: l10n.wellnessRing,
                   progress: symptomInverse,
                   color: Colors.blue,
                 ),
@@ -562,6 +572,7 @@ class _WeeklyReportScreenState extends ConsumerState<WeeklyReportScreen> {
     ColorScheme colorScheme,
   ) {
     final suggestions = (report['suggestions'] as List<dynamic>?) ?? [];
+    final l10n = AppLocalizations.of(context);
 
     return GlassmorphicCard(
       child: Padding(
@@ -570,7 +581,7 @@ class _WeeklyReportScreenState extends ConsumerState<WeeklyReportScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Next Week Suggestions',
+              l10n.nextWeekSuggestions,
               style: theme.textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
@@ -578,7 +589,7 @@ class _WeeklyReportScreenState extends ConsumerState<WeeklyReportScreen> {
             const SizedBox(height: 16),
             if (suggestions.isEmpty)
               Text(
-                'Keep up the great work!',
+                l10n.keepUpGreatWork,
                 style: theme.textTheme.bodyMedium?.copyWith(
                   color: colorScheme.onSurface.withValues(alpha: 0.7),
                 ),
@@ -651,8 +662,8 @@ class _WeeklyReportScreenState extends ConsumerState<WeeklyReportScreen> {
             children: [
               ListTile(
                 leading: const Icon(Icons.photo),
-                title: const Text('Share as Infographic (1080x1920)'),
-                subtitle: const Text('Perfect for Instagram Stories'),
+                title: Text(AppLocalizations.of(context).shareAsInfographic),
+                subtitle: Text(AppLocalizations.of(context).perfectForStories),
                 onTap: () {
                   Navigator.pop(context);
                   reportAsync.whenData((report) {
@@ -671,8 +682,8 @@ class _WeeklyReportScreenState extends ConsumerState<WeeklyReportScreen> {
               ),
               ListTile(
                 leading: const Icon(Icons.image),
-                title: const Text('Share as Compact Card (1080x1080)'),
-                subtitle: const Text('Perfect for general sharing'),
+                title: Text(AppLocalizations.of(context).shareAsCompactCard),
+                subtitle: Text(AppLocalizations.of(context).perfectForSharing),
                 onTap: () {
                   Navigator.pop(context);
                   reportAsync.whenData((report) {
@@ -691,8 +702,10 @@ class _WeeklyReportScreenState extends ConsumerState<WeeklyReportScreen> {
               ),
               ListTile(
                 leading: const Icon(Icons.code),
-                title: const Text('Export as JSON'),
-                subtitle: const Text('GDPR data portability'),
+                title: Text(AppLocalizations.of(context).exportAsJSON),
+                subtitle: Text(
+                  AppLocalizations.of(context).gdprDataPortability,
+                ),
                 onTap: () {
                   Navigator.pop(context);
                   reportAsync.whenData(_exportAsJson);
@@ -714,9 +727,9 @@ class _WeeklyReportScreenState extends ConsumerState<WeeklyReportScreen> {
     try {
       // Show loading
       if (!mounted) return;
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Generating image...')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(AppLocalizations.of(context).generatingImage)),
+      );
 
       // Create a temporary widget tree to render
       final overlay = OverlayEntry(
@@ -749,15 +762,15 @@ class _WeeklyReportScreenState extends ConsumerState<WeeklyReportScreen> {
       // Share the image
       await Share.shareXFiles([
         XFile.fromData(pngBytes, name: filename, mimeType: 'image/png'),
-      ], text: 'My weekly report from VitalSync');
+      ], text: AppLocalizations.of(context).myWeeklyReport);
 
       if (!mounted) return;
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Error sharing: $e')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(AppLocalizations.of(context).errorSharing(e))),
+      );
     }
   }
 
@@ -773,17 +786,19 @@ class _WeeklyReportScreenState extends ConsumerState<WeeklyReportScreen> {
               'vitalsync_report_${DateFormat('yyyy-MM-dd').format(_selectedWeekStart)}.json',
           mimeType: 'application/json',
         ),
-      ], text: 'VitalSync Weekly Report Data');
+      ], text: AppLocalizations.of(context).weeklyReportData);
 
       if (!mounted) return;
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Report exported as JSON')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(AppLocalizations.of(context).reportExportedAsJSON),
+        ),
+      );
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Error exporting: $e')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(AppLocalizations.of(context).errorExporting(e))),
+      );
     }
   }
 }

@@ -380,7 +380,7 @@ class _DayDetailSheet extends ConsumerWidget {
                   );
                 },
                 loading: () => const LinearProgressIndicator(),
-                error: (e, _) => Text('Error: $e'),
+                error: (e, _) => Text(l10n.errorGeneric(e)),
               ),
 
               const SizedBox(height: 24),
@@ -400,14 +400,14 @@ class _DayDetailSheet extends ConsumerWidget {
                               color: Colors.orange,
                             ),
                             title: Text(s.name),
-                            trailing: Text('Severity: ${s.severity}'),
+                            trailing: Text(l10n.severityLabel(s.severity)),
                           ),
                         )
                         .toList(),
                   );
                 },
                 loading: () => const LinearProgressIndicator(),
-                error: (e, _) => Text('Error: $e'),
+                error: (e, _) => Text(l10n.errorGeneric(e)),
               ),
             ],
           ),

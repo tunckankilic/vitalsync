@@ -34,7 +34,7 @@ class _AddEditMedicationScreenState
   // State
   MedicationFrequency _frequency = MedicationFrequency.daily;
   List<TimeOfDay> _scheduledTimes = [const TimeOfDay(hour: 9, minute: 0)];
-  final DateTime _startDate = DateTime.now();
+  DateTime _startDate = DateTime.now();
   DateTime? _endDate;
   int _selectedColor = 0xFF4CAF50; // Default green
   bool _isLoading = false;
@@ -48,15 +48,48 @@ class _AddEditMedicationScreenState
   void _loadMedication() async {
     if (widget.medicationId == null) return;
 
-    // We ideally should fetch from provider or repo
-    // For now assuming we passed ID and fetch from active list or repo
-    // Let's defer to ref.read when we have the provider ready to fetch by ID.
-    // Since we don't have getByIdProvider easily accessible here without knowing implementation,
-    // we will simulate fetching or assume passed medication effectively.
-    // However, typical pattern is to fetch.
-    // Let's act as if it's a new medication for now if ID is null.
-    // If ID is not null, we should fetch.
-    // TODO: Implement fetching logic when repo provider is fully ready.
+    setState(() => _isLoading = true);
+
+    try {
+      final repository = ref.read(medicationRepositoryProvider);
+      final medication = await repository.getById(widget.medicationId!);
+
+      if (medication != null && mounted) {
+        setState(() {
+          _nameController.text = medication.name;
+          _dosageController.text = medication.dosage;
+          _frequency = medication.frequency;
+
+          // Parse times from string format "HH:mm" to TimeOfDay
+          _scheduledTimes = medication.times.map((timeStr) {
+            final parts = timeStr.split(':');
+            return TimeOfDay(
+              hour: int.parse(parts[0]),
+              minute: int.parse(parts[1]),
+            );
+          }).toList();
+
+          _startDate = medication.startDate;
+          _endDate = medication.endDate;
+          _selectedColor = medication.color;
+          _notesController.text = medication.notes ?? '';
+          _isLoading = false;
+        });
+      } else if (mounted) {
+        // Medication not found
+        context.showErrorSnackbar(AppLocalizations.of(context).medicationNotFound);
+        context.pop();
+      }
+    } catch (e) {
+      if (mounted) {
+        context.showErrorSnackbar(AppLocalizations.of(context).errorLoadingMedication(e));
+        context.pop();
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
+    }
   }
 
   @override
@@ -126,18 +159,18 @@ class _AddEditMedicationScreenState
       if (widget.medicationId == null) {
         await notifier.addMedication(medication);
         if (mounted) {
-          context.showSuccessSnackbar('Medication added successfully');
+          context.showSuccessSnackbar(AppLocalizations.of(context).medicationAddedSuccess);
         }
       } else {
         await notifier.updateMedication(medication);
         if (mounted) {
-          context.showSuccessSnackbar('Medication updated successfully');
+          context.showSuccessSnackbar(AppLocalizations.of(context).medicationUpdatedSuccess);
         }
       }
 
       if (mounted) context.pop();
     } catch (e) {
-      if (mounted) context.showErrorSnackbar('Error saving medication: $e');
+      if (mounted) context.showErrorSnackbar(AppLocalizations.of(context).errorSavingMedication(e));
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -166,10 +199,12 @@ class _AddEditMedicationScreenState
             ],
           ),
         ),
-        child: SafeArea(
-          child: Form(
-            key: _formKey,
-            child: ListView(
+        child: _isLoading && widget.medicationId != null
+            ? const Center(child: CircularProgressIndicator())
+            : SafeArea(
+                child: Form(
+                  key: _formKey,
+                  child: ListView(
               padding: const EdgeInsets.all(16),
               children: [
                 // Basic Info Card
@@ -350,10 +385,10 @@ class _AddEditMedicationScreenState
                     ),
                   ),
                 ),
-              ],
+                ],
+              ),
             ),
           ),
-        ),
       ),
     );
   }

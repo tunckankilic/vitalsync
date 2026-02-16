@@ -9,11 +9,16 @@
 /// (3 tabs: Dashboard, Health, Fitness).
 library;
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../features/fitness/presentation/screens/achievements_screen.dart';
+import '../../features/fitness/presentation/screens/calendar_screen.dart';
 import '../../features/fitness/presentation/screens/exercise_library_screen.dart';
+import '../../features/fitness/presentation/screens/progress_screen.dart';
 import '../../features/fitness/presentation/screens/workout_home_screen.dart';
+import '../../features/fitness/presentation/screens/workout_summary_screen.dart';
 import '../../features/health/presentation/screens/add_edit_medication_screen.dart';
 import '../../features/health/presentation/screens/add_symptom_screen.dart';
 import '../../features/health/presentation/screens/health_timeline_screen.dart';
@@ -27,6 +32,7 @@ import '../../presentation/screens/app_shell.dart';
 import '../../presentation/screens/auth/forgot_password_screen.dart';
 import '../../presentation/screens/auth/login_screen.dart';
 import '../../presentation/screens/auth/register_screen.dart';
+import '../../presentation/screens/gdpr/consent_screen.dart';
 import '../../presentation/screens/profile/edit_profile_screen.dart';
 import '../../presentation/screens/profile/profile_screen.dart';
 import '../../presentation/screens/settings/settings_screen.dart';
@@ -60,6 +66,14 @@ final GoRouter appRouter = GoRouter(
       name: 'onboarding',
       pageBuilder: (context, state) =>
           _buildPageWithFadeTransition(context, state, const OnboardingPage()),
+    ),
+
+    // GDPR CONSENT
+    GoRoute(
+      path: '/gdpr-consent',
+      name: 'gdpr_consent',
+      pageBuilder: (context, state) =>
+          _buildPageWithFadeTransition(context, state, const ConsentScreen()),
     ),
 
     // AUTH ROUTES
@@ -217,6 +231,49 @@ final GoRouter appRouter = GoRouter(
                 );
               },
             ),
+            GoRoute(
+              path: 'workout-summary/:sessionId',
+              name: 'workout_summary',
+              parentNavigatorKey: _rootNavigatorKey,
+              pageBuilder: (context, state) {
+                final sessionId = int.parse(state.pathParameters['sessionId']!);
+                return _buildPageWithSlideUpTransition(
+                  context,
+                  state,
+                  WorkoutSummaryScreen(sessionId: sessionId),
+                );
+              },
+            ),
+            GoRoute(
+              path: 'progress',
+              name: 'progress',
+              parentNavigatorKey: _rootNavigatorKey,
+              pageBuilder: (context, state) => _buildPageWithSlideTransition(
+                context,
+                state,
+                const ProgressScreen(),
+              ),
+            ),
+            GoRoute(
+              path: 'achievements',
+              name: 'achievements',
+              parentNavigatorKey: _rootNavigatorKey,
+              pageBuilder: (context, state) => _buildPageWithSlideTransition(
+                context,
+                state,
+                const AchievementsScreen(),
+              ),
+            ),
+            GoRoute(
+              path: 'calendar',
+              name: 'calendar',
+              parentNavigatorKey: _rootNavigatorKey,
+              pageBuilder: (context, state) => _buildPageWithSlideTransition(
+                context,
+                state,
+                const CalendarScreen(),
+              ),
+            ),
           ],
         ),
       ],
@@ -251,8 +308,37 @@ final GoRouter appRouter = GoRouter(
           _buildPageWithSlideTransition(context, state, const SettingsScreen()),
     ),
   ],
-  // TODO: Add redirect logic for auth
-  // redirect: (context, state) { ... }
+  redirect: (context, state) {
+    final user = FirebaseAuth.instance.currentUser;
+    final isLoggedIn = user != null;
+    final currentPath = state.uri.path;
+
+    // Public routes that don't require authentication
+    const publicRoutes = [
+      '/splash',
+      '/onboarding',
+      '/gdpr-consent',
+      '/auth/login',
+      '/auth/register',
+      '/auth/forgot-password',
+    ];
+
+    // Check if current route is public
+    final isPublicRoute = publicRoutes.any(currentPath.startsWith);
+
+    // If user is not logged in and trying to access protected route
+    if (!isLoggedIn && !isPublicRoute) {
+      return '/auth/login';
+    }
+
+    // If user is logged in and trying to access auth pages, redirect to dashboard
+    if (isLoggedIn && currentPath.startsWith('/auth')) {
+      return '/dashboard';
+    }
+
+    // No redirect needed
+    return null;
+  },
 );
 
 // PAGE TRANSITION BUILDERS
@@ -311,6 +397,30 @@ Page _buildPageWithSlideTransition(
       const begin = Offset(1.0, 0.0); // Slide from right
       const end = Offset.zero;
       const curve = Curves.easeInOutCubic;
+
+      final tween = Tween(
+        begin: begin,
+        end: end,
+      ).chain(CurveTween(curve: curve));
+
+      return SlideTransition(position: animation.drive(tween), child: child);
+    },
+  );
+}
+
+/// Slide up transition for modal-style screens (e.g., workout summary).
+Page _buildPageWithSlideUpTransition(
+  BuildContext context,
+  GoRouterState state,
+  Widget child,
+) {
+  return CustomTransitionPage(
+    key: state.pageKey,
+    child: child,
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      const begin = Offset(0.0, 1.0); // Slide from bottom
+      const end = Offset.zero;
+      const curve = Curves.easeOutCubic;
 
       final tween = Tween(
         begin: begin,

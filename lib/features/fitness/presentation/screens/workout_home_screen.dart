@@ -414,7 +414,7 @@ class _RecentWorkoutCard extends StatelessWidget {
             ),
             const Spacer(),
             Text(
-              _formatDate(workout.startedAt),
+              _formatDate(workout.startedAt, l10n),
               style: theme.textTheme.bodySmall,
             ),
           ],
@@ -423,14 +423,14 @@ class _RecentWorkoutCard extends StatelessWidget {
     );
   }
 
-  String _formatDate(DateTime? date) {
+  String _formatDate(DateTime? date, AppLocalizations l10n) {
     if (date == null) return '';
     final now = DateTime.now();
     final difference = now.difference(date);
 
-    if (difference.inDays == 0) return 'Today';
-    if (difference.inDays == 1) return 'Yesterday';
-    return '${difference.inDays} days ago';
+    if (difference.inDays == 0) return l10n.today;
+    if (difference.inDays == 1) return l10n.yesterday;
+    return l10n.daysAgo(difference.inDays);
   }
 }
 

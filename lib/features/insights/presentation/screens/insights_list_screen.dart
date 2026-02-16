@@ -58,7 +58,7 @@ class _InsightsListScreenState extends ConsumerState<InsightsListScreen>
           controller: _tabController,
           tabs: [
             Tab(text: l10n.active),
-            const Tab(text: 'Dismissed'),
+            Tab(text: l10n.dismissed),
           ],
         ),
       ),
@@ -96,7 +96,7 @@ class _InsightsListScreenState extends ConsumerState<InsightsListScreen>
                 ),
                 const SizedBox(width: 8),
                 _buildFilterChip(
-                  label: 'Overall Wellness',
+                  label: l10n.overallWellness,
                   isSelected: _selectedCategory == InsightCategory.crossModule,
                   onTap: () => setState(
                     () => _selectedCategory = InsightCategory.crossModule,
@@ -155,6 +155,7 @@ class _InsightsListScreenState extends ConsumerState<InsightsListScreen>
   }
 
   Widget _buildActiveInsightsList() {
+    final l10n = AppLocalizations.of(context);
     final activeInsightsAsync = ref.watch(activeInsightsProvider);
 
     return activeInsightsAsync.when(
@@ -193,18 +194,16 @@ class _InsightsListScreenState extends ConsumerState<InsightsListScreen>
                   return await showDialog<bool>(
                     context: context,
                     builder: (context) => AlertDialog(
-                      title: const Text('Dismiss Insight'),
-                      content: const Text(
-                        'Are you sure you want to dismiss this insight?',
-                      ),
+                      title: Text(l10n.dismissInsightTitle),
+                      content: Text(l10n.dismissInsightMessage),
                       actions: [
                         TextButton(
                           onPressed: () => Navigator.of(context).pop(false),
-                          child: const Text('Cancel'),
+                          child: Text(l10n.cancel),
                         ),
                         TextButton(
                           onPressed: () => Navigator.of(context).pop(true),
-                          child: const Text('Dismiss'),
+                          child: Text(l10n.dismiss),
                         ),
                       ],
                     ),
@@ -213,7 +212,7 @@ class _InsightsListScreenState extends ConsumerState<InsightsListScreen>
                 onDismissed: (direction) {
                   ref.read(insightProvider.notifier).dismiss(insight.id);
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Insight dismissed')),
+                    SnackBar(content: Text(l10n.insightDismissed)),
                   );
                 },
                 child: InsightCard(
@@ -229,11 +228,12 @@ class _InsightsListScreenState extends ConsumerState<InsightsListScreen>
       },
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (error, stack) =>
-          Center(child: Text('Error loading insights: $error')),
+          Center(child: Text(l10n.errorLoadingInsights(error))),
     );
   }
 
   Widget _buildDismissedInsightsList() {
+    final l10n = AppLocalizations.of(context);
     final dismissedInsightsAsync = ref.watch(dismissedInsightsProvider);
 
     return dismissedInsightsAsync.when(
@@ -250,7 +250,7 @@ class _InsightsListScreenState extends ConsumerState<InsightsListScreen>
             child: Padding(
               padding: const EdgeInsets.all(32),
               child: Text(
-                'No dismissed insights',
+                l10n.noDismissedInsights,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: Theme.of(
                     context,
@@ -283,11 +283,12 @@ class _InsightsListScreenState extends ConsumerState<InsightsListScreen>
       },
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (error, stack) =>
-          Center(child: Text('Error loading dismissed insights: $error')),
+          Center(child: Text(l10n.errorLoadingDismissedInsights(error))),
     );
   }
 
   Widget _buildEmptyState() {
+    final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
@@ -304,14 +305,14 @@ class _InsightsListScreenState extends ConsumerState<InsightsListScreen>
             ),
             const SizedBox(height: 16),
             Text(
-              'No insights yet',
+              l10n.noInsightsYet,
               style: theme.textTheme.titleMedium?.copyWith(
                 color: colorScheme.onSurface.withValues(alpha: 0.6),
               ),
             ),
             const SizedBox(height: 8),
             Text(
-              'Insights will appear here as data is collected',
+              l10n.insightsEmptyDescription,
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: colorScheme.onSurface.withValues(alpha: 0.5),
               ),
@@ -325,7 +326,7 @@ class _InsightsListScreenState extends ConsumerState<InsightsListScreen>
             ),
             const SizedBox(height: 8),
             Text(
-              '3/7 days of data collected',
+              l10n.dataCollectedProgress(3, 7),
               style: theme.textTheme.bodySmall?.copyWith(
                 color: colorScheme.onSurface.withValues(alpha: 0.5),
               ),
