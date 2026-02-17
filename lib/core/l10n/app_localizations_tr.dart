@@ -9,7 +9,7 @@ class AppLocalizationsTr extends AppLocalizations {
   AppLocalizationsTr([String locale = 'tr']) : super(locale);
 
   @override
-  String get appTitle => 'VitalSync';
+  String get appTitle => 'VitalSynch';
 
   @override
   String get dashboard => 'Gösterge Paneli';
@@ -448,7 +448,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get exportJSON => 'JSON Dışa Aktar';
 
   @override
-  String get trackedWithVitalSync => 'VitalSync ile takip edildi';
+  String get trackedWithVitalSynch => 'VitalSynch ile takip edildi';
 
   @override
   String get exerciseLibrary => 'Egzersiz Kütüphanesi';
@@ -861,7 +861,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get next => 'İleri';
 
   @override
-  String get welcomeTitle => 'Welcome to VitalSync';
+  String get welcomeTitle => 'Welcome to VitalSynch';
 
   @override
   String get welcomeSubtitle => 'Manage your health and fitness in one place.';
@@ -926,7 +926,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get consentAnalyticsDescription =>
-      'Help us improve VitalSync by sharing anonymous usage data.';
+      'Help us improve VitalSynch by sharing anonymous usage data.';
 
   @override
   String get consentBackupTitle => 'Cloud Backup';
@@ -1000,7 +1000,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get createAccount => 'Hesap Oluştur';
 
   @override
-  String get joinVitalSync => 'Bugün VitalSync\'e katılın';
+  String get joinVitalSynch => 'Bugün VitalSynch\'e katılın';
 
   @override
   String get confirmPassword => 'Şifreyi Onayla';
@@ -1042,7 +1042,7 @@ class AppLocalizationsTr extends AppLocalizations {
   }
 
   @override
-  String get onboardingWelcomeTitle => 'VitalSync\'e Hoş Geldiniz';
+  String get onboardingWelcomeTitle => 'VitalSynch\'e Hoş Geldiniz';
 
   @override
   String get onboardingWelcomeSubtitle =>
@@ -1349,7 +1349,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get generatingImage => 'Görsel oluşturuluyor...';
 
   @override
-  String get myWeeklyReport => 'VitalSync haftalık raporum';
+  String get myWeeklyReport => 'VitalSynch haftalık raporum';
 
   @override
   String errorSharing(Object error) {
@@ -1357,7 +1357,7 @@ class AppLocalizationsTr extends AppLocalizations {
   }
 
   @override
-  String get weeklyReportData => 'VitalSync Haftalık Rapor Verileri';
+  String get weeklyReportData => 'VitalSynch Haftalık Rapor Verileri';
 
   @override
   String get reportExportedAsJSON => 'Rapor JSON olarak dışa aktarıldı';

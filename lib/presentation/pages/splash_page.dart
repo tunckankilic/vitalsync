@@ -103,7 +103,7 @@ class _SplashPageState extends ConsumerState<SplashPage> {
 
             // App Name
             Text(
-              'VitalSync',
+              'VitalSynch',
               style: theme.textTheme.headlineLarge?.copyWith(
                 color: theme.colorScheme.onPrimary,
                 fontWeight: FontWeight.bold,

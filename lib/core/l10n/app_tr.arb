@@ -1,6 +1,6 @@
 {
   "@@locale": "tr",
-  "appTitle": "VitalSync",
+  "appTitle": "VitalSynch",
   "dashboard": "Gösterge Paneli",
   "health": "Sağlık",
   "fitness": "Fitness",
@@ -475,8 +475,8 @@
   "@totalWorkouts": {
     "description": "Total workouts label"
   },
-  "trackedWithVitalSync": "VitalSync ile takip edildi",
-  "@trackedWithVitalSync": {
+  "trackedWithVitalSynch": "VitalSynch ile takip edildi",
+  "@trackedWithVitalSynch": {
     "description": "Share template watermark"
   },
   "unlocked": "Açıldı",
@@ -589,8 +589,8 @@
 
   "createAccount": "Hesap Oluştur",
   "@createAccount": { "description": "Create account title" },
-  "joinVitalSync": "Bugün VitalSync'e katılın",
-  "@joinVitalSync": { "description": "Join VitalSync subtitle" },
+  "joinVitalSynch": "Bugün VitalSynch'e katılın",
+  "@joinVitalSynch": { "description": "Join VitalSynch subtitle" },
   "confirmPassword": "Şifreyi Onayla",
   "@confirmPassword": { "description": "Confirm password label" },
   "alreadyHaveAccount": "Zaten hesabınız var mı?",
@@ -629,7 +629,7 @@
     }
   },
 
-  "onboardingWelcomeTitle": "VitalSync'e Hoş Geldiniz",
+  "onboardingWelcomeTitle": "VitalSynch'e Hoş Geldiniz",
   "@onboardingWelcomeTitle": { "description": "Onboarding welcome title" },
   "onboardingWelcomeSubtitle": "Hepsi bir arada sağlık ve fitness yardımcınız",
   "@onboardingWelcomeSubtitle": { "description": "Onboarding welcome subtitle" },
@@ -828,12 +828,12 @@
   "exportAsJSON": "JSON Olarak Dışa Aktar",
   "gdprDataPortability": "KVKK veri taşınabilirliği",
   "generatingImage": "Görsel oluşturuluyor...",
-  "myWeeklyReport": "VitalSync haftalık raporum",
+  "myWeeklyReport": "VitalSynch haftalık raporum",
   "errorSharing": "Paylaşım hatası: {error}",
   "@errorSharing": {
     "placeholders": { "error": { "type": "Object" } }
   },
-  "weeklyReportData": "VitalSync Haftalık Rapor Verileri",
+  "weeklyReportData": "VitalSynch Haftalık Rapor Verileri",
   "reportExportedAsJSON": "Rapor JSON olarak dışa aktarıldı",
   "errorExporting": "Dışa aktarma hatası: {error}",
   "@errorExporting": {

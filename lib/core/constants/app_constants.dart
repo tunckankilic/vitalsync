@@ -15,7 +15,7 @@ abstract class AppConstants {
   // ═══════════════════════════════════════════════════════════════════════
 
   /// Application name
-  static const String appName = 'VitalSync';
+  static const String appName = 'VitalSynch';
 
   /// Application version (semantic versioning)
   static const String appVersion = '1.0.0';
