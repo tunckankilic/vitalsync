@@ -9,7 +9,7 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
-  String get appTitle => 'VitalSync';
+  String get appTitle => 'VitalSynch';
 
   @override
   String get dashboard => 'Dashboard';
@@ -447,7 +447,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get exportJSON => 'Export JSON';
 
   @override
-  String get trackedWithVitalSync => 'Tracked with VitalSync';
+  String get trackedWithVitalSynch => 'Tracked with VitalSynch';
 
   @override
   String get exerciseLibrary => 'Exercise Library';
@@ -859,7 +859,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get next => 'Next';
 
   @override
-  String get welcomeTitle => 'Welcome to VitalSync';
+  String get welcomeTitle => 'Welcome to VitalSynch';
 
   @override
   String get welcomeSubtitle => 'Manage your health and fitness in one place.';
@@ -924,7 +924,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get consentAnalyticsDescription =>
-      'Help us improve VitalSync by sharing anonymous usage data.';
+      'Help us improve VitalSynch by sharing anonymous usage data.';
 
   @override
   String get consentBackupTitle => 'Cloud Backup';
@@ -997,7 +997,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get createAccount => 'Create Account';
 
   @override
-  String get joinVitalSync => 'Join VitalSync today';
+  String get joinVitalSynch => 'Join VitalSynch today';
 
   @override
   String get confirmPassword => 'Confirm Password';
@@ -1038,7 +1038,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get onboardingWelcomeTitle => 'Welcome to VitalSync';
+  String get onboardingWelcomeTitle => 'Welcome to VitalSynch';
 
   @override
   String get onboardingWelcomeSubtitle =>
@@ -1343,7 +1343,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get generatingImage => 'Generating image...';
 
   @override
-  String get myWeeklyReport => 'My weekly report from VitalSync';
+  String get myWeeklyReport => 'My weekly report from VitalSynch';
 
   @override
   String errorSharing(Object error) {
@@ -1351,7 +1351,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get weeklyReportData => 'VitalSync Weekly Report Data';
+  String get weeklyReportData => 'VitalSynch Weekly Report Data';
 
   @override
   String get reportExportedAsJSON => 'Report exported as JSON';

@@ -1,4 +1,4 @@
-/// VitalSync — Weekly Report Share Card (Infographic).
+/// VitalSynch — Weekly Report Share Card (Infographic).
 ///
 /// Branded 1080x1920 vertical card for Instagram Stories.
 library;
@@ -12,7 +12,7 @@ import '../health_score_gauge.dart';
 ///
 /// Dimensions: 1080x1920 (9:16 ratio for Instagram Stories)
 /// Features:
-/// - VitalSync branded header
+/// - VitalSynch branded header
 /// - Health Score gauge
 /// - Key metrics
 /// - Activity Rings
@@ -138,7 +138,7 @@ class WeeklyReportShareCard extends StatelessWidget {
         ),
         const SizedBox(height: 16),
         const Text(
-          'VitalSync',
+          'VitalSynch',
           style: TextStyle(
             color: Colors.white,
             fontSize: 48,
@@ -252,7 +252,7 @@ class WeeklyReportShareCard extends StatelessWidget {
     return Column(
       children: [
         Text(
-          'My week with VitalSync',
+          'My week with VitalSynch',
           style: TextStyle(
             color: Colors.white.withValues(alpha: 0.9),
             fontSize: 24,

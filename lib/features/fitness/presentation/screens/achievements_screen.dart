@@ -18,8 +18,7 @@ class AchievementsScreen extends ConsumerStatefulWidget {
   const AchievementsScreen({super.key});
 
   @override
-  ConsumerState<AchievementsScreen> createState() =>
-      _AchievementsScreenState();
+  ConsumerState<AchievementsScreen> createState() => _AchievementsScreenState();
 }
 
 class _AchievementsScreenState extends ConsumerState<AchievementsScreen> {
@@ -48,26 +47,20 @@ class _AchievementsScreenState extends ConsumerState<AchievementsScreen> {
         child: SafeArea(
           child: achievementsAsync.when(
             data: (allAchievements) {
-              final unlocked =
-                  allAchievements
-                      .where((a) => a.unlockedAt != null)
-                      .toList();
-              final locked =
-                  allAchievements
-                      .where((a) => a.unlockedAt == null)
-                      .toList();
+              final unlocked = allAchievements
+                  .where((a) => a.unlockedAt != null)
+                  .toList();
+              final locked = allAchievements
+                  .where((a) => a.unlockedAt == null)
+                  .toList();
 
               // Apply category filter
               final filteredUnlocked = _selectedCategory == null
                   ? unlocked
-                  : unlocked
-                        .where((a) => a.type == _selectedCategory)
-                        .toList();
+                  : unlocked.where((a) => a.type == _selectedCategory).toList();
               final filteredLocked = _selectedCategory == null
                   ? locked
-                  : locked
-                        .where((a) => a.type == _selectedCategory)
-                        .toList();
+                  : locked.where((a) => a.type == _selectedCategory).toList();
 
               return ListView(
                 padding: const EdgeInsets.all(16),
@@ -158,7 +151,9 @@ class _AchievementsScreenState extends ConsumerState<AchievementsScreen> {
               );
             },
             loading: () => const Center(child: CircularProgressIndicator()),
-            error: (error, stack) => Center(child: Text(AppLocalizations.of(context).errorGeneric(error))),
+            error: (error, stack) => Center(
+              child: Text(AppLocalizations.of(context).errorGeneric(error)),
+            ),
           ),
         ),
       ),
@@ -360,7 +355,10 @@ class _UnlockedAchievementCard extends StatelessWidget {
               if (achievement.unlockedAt != null) ...[
                 const SizedBox(height: 4),
                 Text(
-                  _formatRelativeDate(achievement.unlockedAt!, AppLocalizations.of(context)),
+                  _formatRelativeDate(
+                    achievement.unlockedAt!,
+                    AppLocalizations.of(context),
+                  ),
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: AppTheme.fitnessPrimary,
                     fontSize: 10,

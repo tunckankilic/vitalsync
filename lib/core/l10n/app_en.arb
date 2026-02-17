@@ -1,6 +1,6 @@
 {
   "@@locale": "en",
-  "appTitle": "VitalSync",
+  "appTitle": "VitalSynch",
   "@appTitle": { "description": "Application title" },
   
   "dashboard": "Dashboard",
@@ -326,8 +326,8 @@
   "@compactCard": { "description": "Compact card share option" },
   "exportJSON": "Export JSON",
   "@exportJSON": { "description": "Export JSON option" },
-  "trackedWithVitalSync": "Tracked with VitalSync",
-  "@trackedWithVitalSync": { "description": "Share template watermark" },
+  "trackedWithVitalSynch": "Tracked with VitalSynch",
+  "@trackedWithVitalSynch": { "description": "Share template watermark" },
   
   "exerciseLibrary": "Exercise Library",
   "@exerciseLibrary": { "description": "Exercise library screen title" },
@@ -637,7 +637,7 @@
   "@getStarted": { "description": "Get started button" },
   "next": "Next",
   "@next": { "description": "Next button" },
-  "welcomeTitle": "Welcome to VitalSync",
+  "welcomeTitle": "Welcome to VitalSynch",
   "@welcomeTitle": { "description": "Welcome screen title" },
   "welcomeSubtitle": "Manage your health and fitness in one place.",
   "@welcomeSubtitle": { "description": "Welcome screen subtitle" },
@@ -678,7 +678,7 @@
   "@consentFitnessDescription": { "description": "Fitness data consent description" },
   "consentAnalyticsTitle": "Analytics & Usage",
   "@consentAnalyticsTitle": { "description": "Analytics consent title" },
-  "consentAnalyticsDescription": "Help us improve VitalSync by sharing anonymous usage data.",
+  "consentAnalyticsDescription": "Help us improve VitalSynch by sharing anonymous usage data.",
   "@consentAnalyticsDescription": { "description": "Analytics consent description" },
   "consentBackupTitle": "Cloud Backup",
   "@consentBackupTitle": { "description": "Backup consent title" },
@@ -745,8 +745,8 @@
 
   "createAccount": "Create Account",
   "@createAccount": { "description": "Create account title" },
-  "joinVitalSync": "Join VitalSync today",
-  "@joinVitalSync": { "description": "Join VitalSync subtitle" },
+  "joinVitalSynch": "Join VitalSynch today",
+  "@joinVitalSynch": { "description": "Join VitalSynch subtitle" },
   "confirmPassword": "Confirm Password",
   "@confirmPassword": { "description": "Confirm password label" },
   "alreadyHaveAccount": "Already have an account?",
@@ -785,7 +785,7 @@
     }
   },
 
-  "onboardingWelcomeTitle": "Welcome to VitalSync",
+  "onboardingWelcomeTitle": "Welcome to VitalSynch",
   "@onboardingWelcomeTitle": { "description": "Onboarding welcome title" },
   "onboardingWelcomeSubtitle": "Your all-in-one health & fitness companion",
   "@onboardingWelcomeSubtitle": { "description": "Onboarding welcome subtitle" },
@@ -984,12 +984,12 @@
   "exportAsJSON": "Export as JSON",
   "gdprDataPortability": "GDPR data portability",
   "generatingImage": "Generating image...",
-  "myWeeklyReport": "My weekly report from VitalSync",
+  "myWeeklyReport": "My weekly report from VitalSynch",
   "errorSharing": "Error sharing: {error}",
   "@errorSharing": {
     "placeholders": { "error": { "type": "Object" } }
   },
-  "weeklyReportData": "VitalSync Weekly Report Data",
+  "weeklyReportData": "VitalSynch Weekly Report Data",
   "reportExportedAsJSON": "Report exported as JSON",
   "errorExporting": "Error exporting: {error}",
   "@errorExporting": {
