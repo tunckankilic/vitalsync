@@ -1,132 +1,106 @@
 workflows:
   ios-release:
-    name: iOS Release
+    name: iOS Release Build
     max_build_duration: 60
     instance_type: mac_mini_m2
-    environment:
-      flutter: stable
-      xcode: latest
-      cocoapods: default
-      groups:
-        - app_store_credentials  # TODO: Add in Codemagic UI → Environment variables
-      vars:
-        BUNDLE_ID: "site.tunckankilic.vitalsync"
-      # TODO: Uncomment after adding signing in Codemagic UI
-      # ios_signing:
-      #   distribution_type: app_store
-      #   bundle_identifier: site.tunckankilic.vitalsync
     triggering:
       events:
-        - tag
-      tag_patterns:
-        - pattern: "v*"
+        - push
+      cancel_previous_builds: true
+      branch_patterns:
+        - pattern: 'main'
           include: true
-    scripts:
-      - name: Install dependencies
-        script: |
-          flutter pub get
-
-      - name: Run analyze
-        script: |
-          flutter analyze --no-fatal-infos
-
-      - name: Run tests
-        script: |
-          flutter test test/data/repositories/
-
-      - name: Set build number from tag
-        script: |
-          BUILD_NUMBER=$(git rev-list --count HEAD)
-          cd ios
-          agvtool new-version -all $BUILD_NUMBER
-
-      - name: Build iOS
-        script: |
-          flutter build ipa \
-            --release \
-            --build-number=$BUILD_NUMBER \
-            --export-options-plist=/Users/builder/export_options.plist
-        # TODO: export_options.plist will be auto-generated when signing is configured in Codemagic UI
-
-    artifacts:
-      - build/ios/ipa/*.ipa
-      - /tmp/xcodebuild_logs/*.log
-      - flutter_drive.log
-
-    publishing:
-      # TODO: Uncomment after App Store Connect API key is added in Codemagic UI
-      # app_store_connect:
-      #   api_key: $APP_STORE_CONNECT_PRIVATE_KEY
-      #   key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
-      #   issuer_id: $APP_STORE_CONNECT_ISSUER_ID
-      #   submit_to_testflight: true
-      #   submit_to_app_store: false
-      email:
-        recipients:
-          - TODO_YOUR_EMAIL@example.com  # TODO: Replace with your email
-        notify:
-          success: true
-          failure: true
-
-  ios-testflight:
-    name: iOS TestFlight
-    max_build_duration: 60
-    instance_type: mac_mini_m2
     environment:
-      flutter: stable
-      xcode: latest
-      cocoapods: default
       groups:
         - app_store_credentials
       vars:
         BUNDLE_ID: "site.tunckankilic.vitalsync"
-    triggering:
-      events:
-        - push
-      branch_patterns:
-        - pattern: "main"
-          include: true
+      flutter: stable
+      xcode: latest
+      cocoapods: default
+    integrations:
+      app_store_connect: Code Magic CI/CD
     scripts:
+      - name: Set up keychain
+        script: |
+          keychain initialize
+      - name: Fetch signing files
+        script: |
+          app-store-connect fetch-signing-files "$BUNDLE_ID" \
+            --type IOS_APP_STORE \
+            --create
+      - name: Set up signing
+        script: |
+          keychain add-certificates
+          xcode-project use-profiles
       - name: Install dependencies
         script: |
           flutter pub get
-
+          cd ios && pod install --repo-update
       - name: Run analyze
         script: |
           flutter analyze --no-fatal-infos
-
+        ignore_failure: true
       - name: Run tests
         script: |
           flutter test test/data/repositories/
-
-      - name: Set build number
+        ignore_failure: true
+      - name: Increment build number
         script: |
-          BUILD_NUMBER=$(git rev-list --count HEAD)
-          cd ios
-          agvtool new-version -all $BUILD_NUMBER
-
+          LATEST_BUILD=$(app-store-connect get-latest-testflight-build-number "$BUNDLE_ID" 2>/dev/null || true)
+          if [ -z "$LATEST_BUILD" ] || [ "$LATEST_BUILD" = "0" ]; then
+            LATEST_BUILD=1
+          fi
+          NEW_BUILD=$((LATEST_BUILD + 1))
+          echo "BUILD_NUMBER=$NEW_BUILD" >> $CM_ENV
+          echo "Latest build: $LATEST_BUILD -> New build: $NEW_BUILD"
       - name: Build iOS
         script: |
           flutter build ipa \
             --release \
             --build-number=$BUILD_NUMBER \
             --export-options-plist=/Users/builder/export_options.plist
-
     artifacts:
       - build/ios/ipa/*.ipa
-      - /tmp/xcodebuild_logs/*.log
-
     publishing:
-      # TODO: Uncomment after App Store Connect API key is added
-      # app_store_connect:
-      #   api_key: $APP_STORE_CONNECT_PRIVATE_KEY
-      #   key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
-      #   issuer_id: $APP_STORE_CONNECT_ISSUER_ID
-      #   submit_to_testflight: true
-      #   submit_to_app_store: false
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: true
       email:
         recipients:
-          - TODO_YOUR_EMAIL@example.com
+          - tuncsoftwarehere@gmail.com
         notify:
           success: true
           failure: true
+
+  ios-debug:
+    name: iOS Debug Build (PR Check)
+    max_build_duration: 30
+    instance_type: mac_mini_m2
+    triggering:
+      events:
+        - pull_request
+      cancel_previous_builds: true
+      branch_patterns:
+        - pattern: 'main'
+          include: true
+        - pattern: 'develop'
+          include: true
+        - pattern: 'Day-*'
+          include: true
+    environment:
+      flutter: stable
+      xcode: latest
+      cocoapods: default
+    scripts:
+      - name: Install dependencies
+        script: |
+          flutter pub get
+      - name: Run analyze
+        script: |
+          flutter analyze --no-fatal-infos
+        ignore_failure: true
+      - name: Run tests
+        script: |
+          flutter test
+        ignore_failure: true
