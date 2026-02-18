@@ -41,7 +41,7 @@ class SyncIndicator extends ConsumerWidget {
 
     // Dynamic semantics and tooltip based on state
     final semanticsLabel = hasError
-        ? 'Sync error' // TODO: Add l10n.syncSemanticsError when available
+        ? l10n.syncSemanticsError
         : isSyncing
         ? l10n.syncSemanticsSyncing
         : isOnline
@@ -49,7 +49,7 @@ class SyncIndicator extends ConsumerWidget {
         : l10n.syncSemanticsOffline;
 
     final tooltip = hasError
-        ? 'Sync error - tap to retry' // TODO: Add l10n.syncErrorTooltip when available
+        ? l10n.syncErrorTooltip
         : isSyncing
         ? l10n.syncingTooltip
         : isOnline

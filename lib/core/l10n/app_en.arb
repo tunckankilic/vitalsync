@@ -33,7 +33,11 @@
   "@syncSemanticsOffline": { "description": "Semantics label for offline status" },
   "syncSemanticsSyncing": "Syncing data",
   "@syncSemanticsSyncing": { "description": "Semantics label for syncing status" },
-  
+  "syncSemanticsError": "Sync error",
+  "@syncSemanticsError": { "description": "Semantics label for sync error status" },
+  "syncErrorTooltip": "Sync error - tap to retry",
+  "@syncErrorTooltip": { "description": "Tooltip for sync error status" },
+
   "insights": "Insights",
   "@insights": { "description": "Insights label" },
   "insightsCountSemantics": "Insights, {count} unread",

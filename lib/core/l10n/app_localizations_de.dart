@@ -55,6 +55,13 @@ class AppLocalizationsDe extends AppLocalizations {
   String get syncSemanticsSyncing => 'Daten werden synchronisiert';
 
   @override
+  String get syncSemanticsError => 'Synchronisierungsfehler';
+
+  @override
+  String get syncErrorTooltip =>
+      'Synchronisierungsfehler - zum Wiederholen tippen';
+
+  @override
   String get insights => 'Einblicke';
 
   @override

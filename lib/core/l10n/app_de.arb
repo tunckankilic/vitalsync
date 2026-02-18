@@ -15,6 +15,8 @@
   "syncSemanticsOnline": "Online",
   "syncSemanticsOffline": "Offline",
   "syncSemanticsSyncing": "Daten werden synchronisiert",
+  "syncSemanticsError": "Synchronisierungsfehler",
+  "syncErrorTooltip": "Synchronisierungsfehler - zum Wiederholen tippen",
   "insights": "Einblicke",
   "insightsCountSemantics": "Einblicke, {count} ungelesen",
   "insightsCountTooltip": "{count} {count, plural, =1{neuer Einblick} other{neue Einblicke}}",

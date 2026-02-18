@@ -5,8 +5,10 @@ library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../core/l10n/app_localizations.dart';
+import '../../features/insights/presentation/providers/insight_provider.dart';
 
 /// Insight badge widget with unread count.
 ///
@@ -21,8 +23,11 @@ class InsightBadge extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
 
-    // TODO: Replace with actual provider once it exists
-    const unreadCount = 0; // ref.watch(unreadInsightsCountProvider)
+    final unreadCount = ref.watch(unreadInsightCountProvider).when(
+      data: (count) => count,
+      loading: () => 0,
+      error: (_, _) => 0,
+    );
 
     if (unreadCount == 0) {
       return const SizedBox.shrink();
@@ -35,8 +40,7 @@ class InsightBadge extends ConsumerWidget {
         count: unreadCount,
         tooltip: l10n.insightsCountTooltip(unreadCount),
         onTap: () {
-          // TODO: Navigate to insights list
-          debugPrint('Navigate to insights');
+          context.push('/insights');
         },
       ),
     );
