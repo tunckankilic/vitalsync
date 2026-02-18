@@ -54,6 +54,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get syncSemanticsSyncing => 'Syncing data';
 
   @override
+  String get syncSemanticsError => 'Sync error';
+
+  @override
+  String get syncErrorTooltip => 'Sync error - tap to retry';
+
+  @override
   String get insights => 'Insights';
 
   @override

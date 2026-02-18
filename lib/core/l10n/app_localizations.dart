@@ -190,6 +190,18 @@ abstract class AppLocalizations {
   /// **'Syncing data'**
   String get syncSemanticsSyncing;
 
+  /// Semantics label for sync error status
+  ///
+  /// In en, this message translates to:
+  /// **'Sync error'**
+  String get syncSemanticsError;
+
+  /// Tooltip for sync error status
+  ///
+  /// In en, this message translates to:
+  /// **'Sync error - tap to retry'**
+  String get syncErrorTooltip;
+
   /// Insights label
   ///
   /// In en, this message translates to:

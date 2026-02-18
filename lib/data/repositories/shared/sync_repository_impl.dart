@@ -8,7 +8,12 @@ import 'package:vitalsync/data/local/database.dart';
 import 'package:vitalsync/domain/repositories/shared/sync_repository.dart';
 
 class SyncRepositoryImpl implements SyncRepository {
-  SyncRepositoryImpl(this._syncDao, this._firestore, this._database, this._auth);
+  SyncRepositoryImpl(
+    this._syncDao,
+    this._firestore,
+    this._database,
+    this._auth,
+  );
   final SyncDao _syncDao;
   final FirebaseFirestore _firestore;
   final AppDatabase _database;
@@ -118,8 +123,9 @@ class SyncRepositoryImpl implements SyncRepository {
       'medication_logs',
       'symptoms',
       'workout_sessions',
-      // TODO: Add these when DAO methods are implemented:
-      // 'workout_sets', 'personal_records', 'user_stats'
+      'workout_sets',
+      'personal_records',
+      'user_stats',
     ];
 
     var totalPulled = 0;
@@ -242,6 +248,15 @@ class SyncRepositoryImpl implements SyncRepository {
       case 'workout_sessions':
         final record = await _database.workoutSessionDao.getById(recordId);
         return record?.lastModifiedAt;
+      case 'workout_sets':
+        final record = await _database.workoutSessionDao.getSetById(recordId);
+        return record?.completedAt;
+      case 'personal_records':
+        final record = await _database.personalRecordDao.getById(recordId);
+        return record?.achievedAt;
+      case 'user_stats':
+        final record = await _database.userStatsDao.getById(recordId);
+        return record?.date;
       default:
         log('Unknown table: $tableName');
         return null;
@@ -264,6 +279,12 @@ class SyncRepositoryImpl implements SyncRepository {
         await _database.symptomDao.upsertFromRemote(recordId, data);
       case 'workout_sessions':
         await _database.workoutSessionDao.upsertFromRemote(recordId, data);
+      case 'workout_sets':
+        await _database.workoutSessionDao.upsertSetFromRemote(recordId, data);
+      case 'personal_records':
+        await _database.personalRecordDao.upsertFromRemote(recordId, data);
+      case 'user_stats':
+        await _database.userStatsDao.upsertFromRemote(recordId, data);
       default:
         log('Unknown table for upsert: $tableName');
     }

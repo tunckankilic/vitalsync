@@ -3,6 +3,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:vitalsync/core/l10n/app_localizations.dart';
+import 'package:vitalsync/core/settings/settings_provider.dart';
 import 'package:vitalsync/presentation/screens/gdpr/consent_screen.dart'; // Will be created later
 
 final onboardingStepProvider = NotifierProvider<OnboardingStepNotifier, int>(
@@ -191,12 +192,13 @@ class OnboardingScreen extends ConsumerWidget {
   }
 }
 
-class _WelcomePage extends StatelessWidget {
+class _WelcomePage extends ConsumerWidget {
   const _WelcomePage();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
+    final currentLocale = ref.watch(localeSettingProvider);
     return Padding(
       padding: const EdgeInsets.all(24.0),
       child: Column(
@@ -237,14 +239,18 @@ class _WelcomePage extends StatelessWidget {
             ),
             child: DropdownButtonHideUnderline(
               child: DropdownButton<String>(
-                value: 'EN',
+                value: currentLocale.languageCode.toUpperCase(),
                 items: const [
                   DropdownMenuItem(value: 'EN', child: Text('English')),
                   DropdownMenuItem(value: 'TR', child: Text('Türkçe')),
                   DropdownMenuItem(value: 'DE', child: Text('Deutsch')),
                 ],
                 onChanged: (val) {
-                  // TODO: Implement localization change
+                  if (val != null) {
+                    ref.read(localeSettingProvider.notifier).setLocale(
+                      Locale(val.toLowerCase()),
+                    );
+                  }
                 },
               ),
             ),

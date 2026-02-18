@@ -7,6 +7,8 @@ library;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:vitalsync/core/l10n/app_localizations.dart';
 import 'package:vitalsync/core/theme/app_theme.dart';
 import 'package:vitalsync/features/fitness/presentation/providers/workout_provider.dart';
@@ -216,12 +218,21 @@ class _WorkoutSummaryScreenState extends ConsumerState<WorkoutSummaryScreen>
                         Expanded(
                           child: OutlinedButton.icon(
                             onPressed: () {
-                              // TODO: Implement share functionality
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(l10n.comingSoon),
-                                ),
+                              final totalSets = setsAsync.when(
+                                data: (sets) => sets.length,
+                                loading: () => 0,
+                                error: (_, _) => 0,
                               );
+                              final dateStr = DateFormat.yMMMd().format(
+                                session.startTime,
+                              );
+                              final text =
+                                  '${session.name} — $dateStr\n'
+                                  '${l10n.duration}: ${_formatDuration(duration)}\n'
+                                  '${l10n.totalVolume}: ${session.totalVolume.toStringAsFixed(0)} kg\n'
+                                  '${l10n.totalSets}: $totalSets\n\n'
+                                  '${l10n.trackedWithVitalSynch}';
+                              SharePlus.instance.share(ShareParams(text: text));
                             },
                             icon: const Icon(Icons.share),
                             label: Text(l10n.share),
@@ -249,7 +260,9 @@ class _WorkoutSummaryScreenState extends ConsumerState<WorkoutSummaryScreen>
               );
             },
             loading: () => const Center(child: CircularProgressIndicator()),
-            error: (error, stack) => Center(child: Text(AppLocalizations.of(context).errorGeneric(error))),
+            error: (error, stack) => Center(
+              child: Text(AppLocalizations.of(context).errorGeneric(error)),
+            ),
           ),
         ),
       ),

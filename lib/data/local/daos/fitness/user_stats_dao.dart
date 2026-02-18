@@ -49,4 +49,27 @@ class UserStatsDao extends DatabaseAccessor<AppDatabase>
         ))
         .get();
   }
+
+  /// Get user stats by ID.
+  Future<UserStatsData?> getById(int id) {
+    return (select(
+      userStats,
+    )..where((tbl) => tbl.id.equals(id))).getSingleOrNull();
+  }
+
+  /// Inserts or updates user stats from Firestore remote data.
+  Future<void> upsertFromRemote(int id, Map<String, dynamic> data) async {
+    await into(userStats).insertOnConflictUpdate(
+      UserStatsCompanion(
+        id: Value(id),
+        date: Value(DateTime.parse(data['date'] as String)),
+        totalWorkouts: Value(data['totalWorkouts'] as int),
+        totalVolume: Value((data['totalVolume'] as num).toDouble()),
+        totalDuration: Value(data['totalDuration'] as int),
+        streakDays: Value(data['streakDays'] as int),
+        medicationCompliance:
+            Value((data['medicationCompliance'] as num).toDouble()),
+      ),
+    );
+  }
 }

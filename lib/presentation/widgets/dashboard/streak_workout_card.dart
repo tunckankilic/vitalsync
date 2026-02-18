@@ -16,6 +16,7 @@ import '../../../core/l10n/app_localizations.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/extensions.dart';
 
+import '../../../features/fitness/presentation/providers/progress_provider.dart';
 import '../../../features/fitness/presentation/providers/streak_provider.dart';
 import '../../../presentation/providers/dashboard_provider.dart';
 import '../glassmorphic_card.dart';
@@ -147,10 +148,18 @@ class StreakWorkoutCard extends ConsumerWidget {
 
             const SizedBox(height: 8),
 
-            // 7-day volume sparkline (mock data for now)
-            // TODO: Connect to actual volume data provider
+            // 7-day volume sparkline from provider
             SparklineChart(
-              data: const [0.3, 0.5, 0.4, 0.7, 0.6, 0.8, 0.9],
+              data: ref.watch(volumeChartDataProvider(TimeRange.oneWeek)).when(
+                data: (points) {
+                  if (points.isEmpty) return const [0.0];
+                  final maxVal = points.map((p) => p.value).reduce((a, b) => a > b ? a : b);
+                  if (maxVal == 0) return List.filled(points.length, 0.0);
+                  return points.map((p) => p.value / maxVal).toList();
+                },
+                loading: () => const [0.0],
+                error: (_, _) => const [0.0],
+              ),
               height: 30,
               lineColor: AppTheme.fitnessPrimary,
               fillGradient: LinearGradient(

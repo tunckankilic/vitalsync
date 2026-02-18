@@ -55,6 +55,13 @@ class AppLocalizationsTr extends AppLocalizations {
   String get syncSemanticsSyncing => 'Veriler senkronize ediliyor';
 
   @override
+  String get syncSemanticsError => 'Senkronizasyon hatası';
+
+  @override
+  String get syncErrorTooltip =>
+      'Senkronizasyon hatası - tekrar denemek için dokunun';
+
+  @override
   String get insights => 'İçgörüler';
 
   @override
