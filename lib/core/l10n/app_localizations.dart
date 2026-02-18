@@ -103,7 +103,7 @@ abstract class AppLocalizations {
   /// Application title
   ///
   /// In en, this message translates to:
-  /// **'VitalSync'**
+  /// **'VitalSynch'**
   String get appTitle;
 
   /// Dashboard tab label
@@ -189,6 +189,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Syncing data'**
   String get syncSemanticsSyncing;
+
+  /// Semantics label for sync error status
+  ///
+  /// In en, this message translates to:
+  /// **'Sync error'**
+  String get syncSemanticsError;
+
+  /// Tooltip for sync error status
+  ///
+  /// In en, this message translates to:
+  /// **'Sync error - tap to retry'**
+  String get syncErrorTooltip;
 
   /// Insights label
   ///
@@ -943,8 +955,8 @@ abstract class AppLocalizations {
   /// Share template watermark
   ///
   /// In en, this message translates to:
-  /// **'Tracked with VitalSync'**
-  String get trackedWithVitalSync;
+  /// **'Tracked with VitalSynch'**
+  String get trackedWithVitalSynch;
 
   /// Exercise library screen title
   ///
@@ -1741,7 +1753,7 @@ abstract class AppLocalizations {
   /// Welcome screen title
   ///
   /// In en, this message translates to:
-  /// **'Welcome to VitalSync'**
+  /// **'Welcome to VitalSynch'**
   String get welcomeTitle;
 
   /// Welcome screen subtitle
@@ -1861,7 +1873,7 @@ abstract class AppLocalizations {
   /// Analytics consent description
   ///
   /// In en, this message translates to:
-  /// **'Help us improve VitalSync by sharing anonymous usage data.'**
+  /// **'Help us improve VitalSynch by sharing anonymous usage data.'**
   String get consentAnalyticsDescription;
 
   /// Backup consent title
@@ -1990,11 +2002,11 @@ abstract class AppLocalizations {
   /// **'Create Account'**
   String get createAccount;
 
-  /// Join VitalSync subtitle
+  /// Join VitalSynch subtitle
   ///
   /// In en, this message translates to:
-  /// **'Join VitalSync today'**
-  String get joinVitalSync;
+  /// **'Join VitalSynch today'**
+  String get joinVitalSynch;
 
   /// Confirm password label
   ///
@@ -2065,7 +2077,7 @@ abstract class AppLocalizations {
   /// Onboarding welcome title
   ///
   /// In en, this message translates to:
-  /// **'Welcome to VitalSync'**
+  /// **'Welcome to VitalSynch'**
   String get onboardingWelcomeTitle;
 
   /// Onboarding welcome subtitle
@@ -2611,7 +2623,7 @@ abstract class AppLocalizations {
   /// No description provided for @myWeeklyReport.
   ///
   /// In en, this message translates to:
-  /// **'My weekly report from VitalSync'**
+  /// **'My weekly report from VitalSynch'**
   String get myWeeklyReport;
 
   /// No description provided for @errorSharing.
@@ -2623,7 +2635,7 @@ abstract class AppLocalizations {
   /// No description provided for @weeklyReportData.
   ///
   /// In en, this message translates to:
-  /// **'VitalSync Weekly Report Data'**
+  /// **'VitalSynch Weekly Report Data'**
   String get weeklyReportData;
 
   /// No description provided for @reportExportedAsJSON.

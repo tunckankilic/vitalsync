@@ -103,7 +103,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       ).animate().fadeIn().moveY(begin: 10, end: 0),
                       const SizedBox(height: 8),
                       Text(
-                        l10n.joinVitalSync,
+                        l10n.joinVitalSynch,
                         textAlign: TextAlign.center,
                         style: TextStyle(color: Colors.grey[600]),
                       ),

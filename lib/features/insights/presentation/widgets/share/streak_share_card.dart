@@ -1,4 +1,4 @@
-/// VitalSync — Streak Share Card.
+/// VitalSynch — Streak Share Card.
 ///
 /// Branded streak milestone card with fire effect.
 library;
@@ -13,7 +13,7 @@ import 'package:intl/intl.dart';
 /// - Large streak number with fire effect
 /// - Milestone badge
 /// - Date range
-/// - VitalSync branding
+/// - VitalSynch branding
 class StreakShareCard extends StatelessWidget {
   const StreakShareCard({
     required this.streakDays,
@@ -122,7 +122,7 @@ class StreakShareCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 80),
 
-                // VitalSync branding
+                // VitalSynch branding
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -141,7 +141,7 @@ class StreakShareCard extends StatelessWidget {
                     ),
                     const SizedBox(width: 16),
                     const Text(
-                      'VitalSync',
+                      'VitalSynch',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 40,

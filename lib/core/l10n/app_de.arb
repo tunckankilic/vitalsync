@@ -1,6 +1,6 @@
 {
   "@@locale": "de",
-  "appTitle": "VitalSync",
+  "appTitle": "VitalSynch",
   "dashboard": "Dashboard",
   "health": "Gesundheit",
   "fitness": "Fitness",
@@ -15,6 +15,8 @@
   "syncSemanticsOnline": "Online",
   "syncSemanticsOffline": "Offline",
   "syncSemanticsSyncing": "Daten werden synchronisiert",
+  "syncSemanticsError": "Synchronisierungsfehler",
+  "syncErrorTooltip": "Synchronisierungsfehler - zum Wiederholen tippen",
   "insights": "Einblicke",
   "insightsCountSemantics": "Einblicke, {count} ungelesen",
   "insightsCountTooltip": "{count} {count, plural, =1{neuer Einblick} other{neue Einblicke}}",
@@ -475,8 +477,8 @@
   "@totalWorkouts": {
     "description": "Total workouts label"
   },
-  "trackedWithVitalSync": "Verfolgt mit VitalSync",
-  "@trackedWithVitalSync": {
+  "trackedWithVitalSynch": "Verfolgt mit VitalSynch",
+  "@trackedWithVitalSynch": {
     "description": "Share template watermark"
   },
   "unlocked": "Freigeschaltet",
@@ -589,8 +591,8 @@
 
   "createAccount": "Konto erstellen",
   "@createAccount": { "description": "Create account title" },
-  "joinVitalSync": "Treten Sie VitalSync heute bei",
-  "@joinVitalSync": { "description": "Join VitalSync subtitle" },
+  "joinVitalSynch": "Treten Sie VitalSynch heute bei",
+  "@joinVitalSynch": { "description": "Join VitalSynch subtitle" },
   "confirmPassword": "Passwort bestätigen",
   "@confirmPassword": { "description": "Confirm password label" },
   "alreadyHaveAccount": "Haben Sie bereits ein Konto?",
@@ -629,7 +631,7 @@
     }
   },
 
-  "onboardingWelcomeTitle": "Willkommen bei VitalSync",
+  "onboardingWelcomeTitle": "Willkommen bei VitalSynch",
   "@onboardingWelcomeTitle": { "description": "Onboarding welcome title" },
   "onboardingWelcomeSubtitle": "Ihr All-in-One-Begleiter für Gesundheit & Fitness",
   "@onboardingWelcomeSubtitle": { "description": "Onboarding welcome subtitle" },
@@ -828,12 +830,12 @@
   "exportAsJSON": "Als JSON exportieren",
   "gdprDataPortability": "DSGVO-Datenportabilität",
   "generatingImage": "Bild wird generiert...",
-  "myWeeklyReport": "Mein Wochenbericht von VitalSync",
+  "myWeeklyReport": "Mein Wochenbericht von VitalSynch",
   "errorSharing": "Fehler beim Teilen: {error}",
   "@errorSharing": {
     "placeholders": { "error": { "type": "Object" } }
   },
-  "weeklyReportData": "VitalSync Wochenbericht-Daten",
+  "weeklyReportData": "VitalSynch Wochenbericht-Daten",
   "reportExportedAsJSON": "Bericht als JSON exportiert",
   "errorExporting": "Fehler beim Exportieren: {error}",
   "@errorExporting": {

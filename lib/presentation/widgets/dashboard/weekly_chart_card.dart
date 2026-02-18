@@ -15,6 +15,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/l10n/app_localizations.dart';
 import '../../../core/theme/app_theme.dart';
+import '../../../features/health/presentation/providers/medication_log_provider.dart';
 import '../glassmorphic_card.dart';
 
 /// Weekly overview chart card (2x1 grid size).
@@ -41,12 +42,13 @@ class _WeeklyChartCardState extends ConsumerState<WeeklyChartCard> {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context);
 
-    // TODO: Connect to actual data providers
-    // Mock data for now
-    final complianceData = [0.8, 0.9, 0.7, 1.0, 0.85, 0.6, 0.95];
-    // TODO: Add workout volume and previous week data for line overlay
-    // final volumeData = [0.6, 0.7, 0.8, 0.75, 0.9, 0.85, 0.95];
-    // final previousVolumeData = [0.5, 0.6, 0.7, 0.65, 0.7, 0.8, 0.75];
+    // Compliance data from provider (weekday 1=Mon to 7=Sun)
+    final complianceAsync = ref.watch(weekdayComplianceMapProvider(days: _showThisWeek ? 7 : 30));
+    final complianceData = complianceAsync.when(
+      data: (map) => List.generate(7, (i) => map[i + 1] ?? 0.0),
+      loading: () => List.filled(7, 0.0),
+      error: (_, _) => List.filled(7, 0.0),
+    );
 
     return GlassmorphicCard(
       child: Column(

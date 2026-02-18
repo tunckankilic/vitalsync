@@ -1,4 +1,4 @@
-/// VitalSync — Weekly Report Compact Share Card.
+/// VitalSynch — Weekly Report Compact Share Card.
 ///
 /// Branded 1080x1080 square card for general social sharing.
 library;
@@ -13,7 +13,7 @@ import 'package:intl/intl.dart';
 /// - Compact layout
 /// - Key metrics in grid
 /// - Health score badge
-/// - VitalSync branding
+/// - VitalSynch branding
 class WeeklyReportCompactCard extends StatelessWidget {
   const WeeklyReportCompactCard({
     required this.report,
@@ -64,7 +64,7 @@ class WeeklyReportCompactCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
-                      'VitalSync',
+                      'VitalSynch',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 48,

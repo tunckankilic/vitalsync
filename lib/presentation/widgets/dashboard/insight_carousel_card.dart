@@ -244,8 +244,7 @@ class _InsightCarouselCardState extends ConsumerState<InsightCarouselCard> {
           ),
           TextButton(
             onPressed: () {
-              // TODO: Add dismiss functionality when insight notifier is implemented
-              // ref.read(insightNotifierProvider.notifier).dismiss(insight.id);
+              ref.read(insightProvider.notifier).dismiss(insight.id);
               Navigator.pop(context);
             },
             child: Text(l10n.dismiss),

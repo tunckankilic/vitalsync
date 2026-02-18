@@ -9,6 +9,8 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/enums/insight_category.dart';
 import '../../../../core/l10n/app_localizations.dart';
+import '../../../fitness/presentation/providers/progress_provider.dart';
+import '../../../health/presentation/providers/medication_log_provider.dart';
 import '../providers/insight_provider.dart';
 import '../widgets/insight_card.dart';
 
@@ -319,18 +321,37 @@ class _InsightsListScreenState extends ConsumerState<InsightsListScreen>
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 16),
-            // Progress indicator
-            LinearProgressIndicator(
-              value: 0.4, // TODO: Calculate actual progress
-              backgroundColor: colorScheme.surfaceContainerHighest,
-            ),
-            const SizedBox(height: 8),
-            Text(
-              l10n.dataCollectedProgress(3, 7),
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: colorScheme.onSurface.withValues(alpha: 0.5),
-              ),
-            ),
+            // Progress indicator — data collection status
+            Builder(builder: (context) {
+              final workoutCount = ref.watch(progressStatsProvider(TimeRange.oneWeek)).when(
+                data: (stats) => stats.workoutCount,
+                loading: () => 0,
+                error: (_, _) => 0,
+              );
+              final hasCompliance = ref.watch(weeklyComplianceProvider).when(
+                data: (rate) => rate > 0,
+                loading: () => false,
+                error: (_, _) => false,
+              );
+              final collected = (workoutCount > 0 ? 1 : 0) + (hasCompliance ? 1 : 0);
+              const total = 2;
+              final progress = total > 0 ? collected / total : 0.0;
+              return Column(
+                children: [
+                  LinearProgressIndicator(
+                    value: progress,
+                    backgroundColor: colorScheme.surfaceContainerHighest,
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    l10n.dataCollectedProgress(collected, total),
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: colorScheme.onSurface.withValues(alpha: 0.5),
+                    ),
+                  ),
+                ],
+              );
+            }),
           ],
         ),
       ),
