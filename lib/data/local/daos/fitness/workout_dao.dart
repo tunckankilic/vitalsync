@@ -7,6 +7,7 @@ library;
 import 'package:drift/drift.dart';
 import 'package:vitalsync/core/enums/achievement_type.dart';
 import 'package:vitalsync/core/enums/sync_status.dart';
+import 'package:vitalsync/core/enums/workout_rating.dart';
 
 import 'package:vitalsync/data/local/database.dart';
 import '../../tables/fitness/achievements_table.dart';
@@ -213,7 +214,7 @@ class WorkoutSessionDao extends DatabaseAccessor<AppDatabase>
       WorkoutSessionsCompanion(
         endTime: Value(endTime),
         notes: Value(notes),
-        rating: Value(rating),
+        rating: Value(WorkoutRating.fromValue(rating!)),
         lastModifiedAt: Value(DateTime.now()),
       ),
     );
@@ -295,7 +296,7 @@ class WorkoutSessionDao extends DatabaseAccessor<AppDatabase>
         ),
         totalVolume: Value((data['totalVolume'] as num?)?.toDouble() ?? 0.0),
         notes: Value(data['notes'] as String?),
-        rating: Value(data['rating'] as int?),
+        rating: Value(WorkoutRating.fromValue(data['rating']! as int)),
         syncStatus: const Value(SyncStatus.synced),
         lastModifiedAt: Value(DateTime.parse(data['lastModifiedAt'] as String)),
         createdAt: Value(DateTime.parse(data['createdAt'] as String)),

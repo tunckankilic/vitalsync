@@ -12,7 +12,18 @@ import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
+import 'package:vitalsync/core/enums/achievement_type.dart';
+import 'package:vitalsync/core/enums/equipment.dart';
+import 'package:vitalsync/core/enums/exercise_category.dart';
+import 'package:vitalsync/core/enums/gender.dart';
+import 'package:vitalsync/core/enums/insight_category.dart';
+import 'package:vitalsync/core/enums/insight_priority.dart';
+import 'package:vitalsync/core/enums/insight_type.dart';
+import 'package:vitalsync/core/enums/medication_frequency.dart';
+import 'package:vitalsync/core/enums/medication_log_status.dart';
 import 'package:vitalsync/core/enums/sync_enums.dart';
+import 'package:vitalsync/core/enums/sync_status.dart';
+import 'package:vitalsync/core/enums/workout_rating.dart';
 import 'package:vitalsync/data/local/daos/fitness/user_stats_dao.dart';
 // DAO imports
 import 'package:vitalsync/data/local/daos/fitness/workout_dao.dart';
