@@ -225,10 +225,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       // Apple Sign In
                       OutlinedButton.icon(
                         onPressed: isLoading ? null : _handleAppleLogin,
-                        icon: const Icon(
-                          Icons.apple,
-                          size: 28,
-                        ),
+                        icon: const Icon(Icons.apple, size: 28),
                         label: Text(l10n.continueWithApple),
                         style: OutlinedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(vertical: 16),

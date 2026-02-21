@@ -73,7 +73,7 @@ class WorkoutSessionModel extends WorkoutSession {
       totalVolume: data.totalVolume,
       notes: data.notes,
       rating: data.rating != null
-          ? WorkoutRating.values.elementAtOrNull(data.rating!)
+          ? WorkoutRating.fromValue(data.rating as int)
           : null,
       syncStatus: data.syncStatus,
       lastModifiedAt: data.lastModifiedAt,
@@ -106,26 +106,10 @@ class WorkoutSessionModel extends WorkoutSession {
       endTime: Value(endTime),
       totalVolume: Value(totalVolume),
       notes: Value(notes),
-      rating: Value(rating?.index),
+      rating: Value(rating ?? WorkoutRating.okay),
       syncStatus: Value(syncStatus),
       lastModifiedAt: Value(lastModifiedAt),
       createdAt: Value(createdAt),
     );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'templateId': templateId,
-      'name': name,
-      'startTime': startTime.toIso8601String(),
-      'endTime': endTime?.toIso8601String(),
-      'totalVolume': totalVolume,
-      'notes': notes,
-      'rating': rating?.name,
-      'syncStatus': syncStatus.name,
-      'lastModifiedAt': lastModifiedAt.toIso8601String(),
-      'createdAt': createdAt.toIso8601String(),
-    };
   }
 }

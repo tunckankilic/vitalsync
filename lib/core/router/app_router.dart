@@ -80,7 +80,13 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: '/auth',
       name: 'auth',
-      redirect: (context, state) => '/auth/login',
+      redirect: (context, state) {
+        // Only redirect when navigating to /auth exactly, not child routes
+        if (state.uri.path == '/auth') {
+          return '/auth/login';
+        }
+        return null;
+      },
       routes: [
         GoRoute(
           path: 'login',
