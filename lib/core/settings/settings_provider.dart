@@ -230,6 +230,23 @@ class GdprConsentSetting extends _$GdprConsentSetting {
   }
 }
 
+/// Biometric login enabled provider with SharedPreferences persistence
+@riverpod
+class BiometricSetting extends _$BiometricSetting {
+  @override
+  bool build() {
+    final prefs = ref.watch(sharedPreferencesProvider);
+    return prefs.getBool(AppConstants.prefKeyBiometricEnabled) ?? false;
+  }
+
+  /// Toggle biometric login
+  Future<void> setEnabled(bool enabled) async {
+    final prefs = ref.read(sharedPreferencesProvider);
+    await prefs.setBool(AppConstants.prefKeyBiometricEnabled, enabled);
+    state = enabled;
+  }
+}
+
 /// Unit system enum
 enum UnitSystem { metric, imperial }
 

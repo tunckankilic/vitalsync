@@ -86,6 +86,7 @@ class GlassmorphicCardWithStrip extends StatelessWidget {
     this.padding = const EdgeInsets.all(16),
     this.borderRadius = 16,
     this.stripWidth = 4,
+    this.onTap,
     super.key,
   });
 
@@ -103,6 +104,9 @@ class GlassmorphicCardWithStrip extends StatelessWidget {
 
   /// Width of the color strip.
   final double stripWidth;
+
+  // On tap callback.
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {

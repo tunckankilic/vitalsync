@@ -131,6 +131,30 @@ class SettingsScreen extends ConsumerWidget {
 
           const SizedBox(height: 24),
 
+          // Security Section
+          _SettingsSection(
+            title: l10n.security,
+            children: [
+              SwitchListTile(
+                title: Text(l10n.biometricLogin),
+                subtitle: Text(l10n.biometricLoginDescription),
+                secondary: const Icon(Icons.fingerprint),
+                value: ref.watch(biometricSettingProvider),
+                onChanged: (val) {
+                  ref
+                      .read(biometricSettingProvider.notifier)
+                      .setEnabled(val);
+                },
+                activeThumbColor: Theme.of(context).primaryColor,
+                activeTrackColor: Theme.of(
+                  context,
+                ).primaryColor.withValues(alpha: 0.5),
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 24),
+
           // Units Section
           _SettingsSection(
             title: l10n.units,

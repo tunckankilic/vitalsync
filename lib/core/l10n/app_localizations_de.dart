@@ -1512,4 +1512,52 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get errorLoadingCalendar => 'Fehler beim Laden des Kalenders';
+
+  @override
+  String get createTemplate => 'Vorlage erstellen';
+
+  @override
+  String get createFirstTemplate =>
+      'Erstelle deine erste Vorlage, um schnell Trainings zu starten';
+
+  @override
+  String get templateSaved => 'Vorlage gespeichert';
+
+  @override
+  String get selectExercises => 'Wähle Übungen für deine Vorlage';
+
+  @override
+  String get defaultValues => 'Standardwerte';
+
+  @override
+  String get shareAsStory => 'Story-Format';
+
+  @override
+  String get shareAsCompact => 'Kompakte Karte';
+
+  @override
+  String get exportAsJson => 'JSON exportieren';
+
+  @override
+  String get trackedWithVitalSync => 'Verfolgt mit VitalSync';
+
+  @override
+  String get biometricLogin => 'Biometrische Anmeldung';
+
+  @override
+  String get biometricLoginDescription =>
+      'Fingerabdruck oder Gesichtserkennung für schnelle Anmeldung verwenden';
+
+  @override
+  String get dashboardEditMode => 'Dashboard bearbeiten';
+
+  @override
+  String get longPressToReorder =>
+      'Lange drücken und ziehen, um Karten neu anzuordnen';
+
+  @override
+  String get previousWeek => 'Vorwoche';
+
+  @override
+  String get security => 'Sicherheit';
 }

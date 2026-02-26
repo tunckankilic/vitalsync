@@ -13,12 +13,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../domain/entities/fitness/workout_template.dart';
 import '../../features/fitness/presentation/screens/achievements_screen.dart';
+import '../../features/fitness/presentation/screens/add_edit_template_screen.dart';
 import '../../features/fitness/presentation/screens/calendar_screen.dart';
 import '../../features/fitness/presentation/screens/exercise_library_screen.dart';
 import '../../features/fitness/presentation/screens/progress_screen.dart';
 import '../../features/fitness/presentation/screens/workout_home_screen.dart';
 import '../../features/fitness/presentation/screens/workout_summary_screen.dart';
+import '../../features/fitness/presentation/screens/workout_templates_screen.dart';
 import '../../features/health/presentation/screens/add_edit_medication_screen.dart';
 import '../../features/health/presentation/screens/add_symptom_screen.dart';
 import '../../features/health/presentation/screens/health_timeline_screen.dart';
@@ -223,6 +226,42 @@ final GoRouter appRouter = GoRouter(
             const WorkoutHomeScreen(),
           ),
           routes: [
+            GoRoute(
+              path: 'templates',
+              name: 'workout_templates',
+              parentNavigatorKey: _rootNavigatorKey,
+              pageBuilder: (context, state) => _buildPageWithSlideTransition(
+                context,
+                state,
+                const WorkoutTemplatesScreen(),
+              ),
+              routes: [
+                GoRoute(
+                  path: 'add',
+                  name: 'add_template',
+                  parentNavigatorKey: _rootNavigatorKey,
+                  pageBuilder: (context, state) =>
+                      _buildPageWithSlideUpTransition(
+                    context,
+                    state,
+                    const AddEditTemplateScreen(),
+                  ),
+                ),
+                GoRoute(
+                  path: 'edit',
+                  name: 'edit_template',
+                  parentNavigatorKey: _rootNavigatorKey,
+                  pageBuilder: (context, state) {
+                    final template = state.extra as WorkoutTemplate?;
+                    return _buildPageWithSlideTransition(
+                      context,
+                      state,
+                      AddEditTemplateScreen(template: template),
+                    );
+                  },
+                ),
+              ],
+            ),
             GoRoute(
               path: 'exercises',
               name: 'exercise_library',

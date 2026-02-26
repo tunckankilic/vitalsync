@@ -2865,6 +2865,96 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Error loading calendar'**
   String get errorLoadingCalendar;
+
+  /// Create template button label
+  ///
+  /// In en, this message translates to:
+  /// **'Create Template'**
+  String get createTemplate;
+
+  /// Create first template guidance
+  ///
+  /// In en, this message translates to:
+  /// **'Create your first template to quickly start workouts'**
+  String get createFirstTemplate;
+
+  /// Template saved confirmation
+  ///
+  /// In en, this message translates to:
+  /// **'Template saved'**
+  String get templateSaved;
+
+  /// Select exercises guidance
+  ///
+  /// In en, this message translates to:
+  /// **'Select exercises for your template'**
+  String get selectExercises;
+
+  /// Default values section header
+  ///
+  /// In en, this message translates to:
+  /// **'Default Values'**
+  String get defaultValues;
+
+  /// Share as Instagram story format
+  ///
+  /// In en, this message translates to:
+  /// **'Story Format'**
+  String get shareAsStory;
+
+  /// Share as compact card format
+  ///
+  /// In en, this message translates to:
+  /// **'Compact Card'**
+  String get shareAsCompact;
+
+  /// Export as JSON format
+  ///
+  /// In en, this message translates to:
+  /// **'Export JSON'**
+  String get exportAsJson;
+
+  /// Branded watermark text
+  ///
+  /// In en, this message translates to:
+  /// **'Tracked with VitalSync'**
+  String get trackedWithVitalSync;
+
+  /// Biometric login setting
+  ///
+  /// In en, this message translates to:
+  /// **'Biometric Login'**
+  String get biometricLogin;
+
+  /// Biometric login description
+  ///
+  /// In en, this message translates to:
+  /// **'Use fingerprint or face recognition to sign in quickly'**
+  String get biometricLoginDescription;
+
+  /// Dashboard edit mode title
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Dashboard'**
+  String get dashboardEditMode;
+
+  /// Reorder hint text
+  ///
+  /// In en, this message translates to:
+  /// **'Long press and drag to reorder cards'**
+  String get longPressToReorder;
+
+  /// Previous week legend label
+  ///
+  /// In en, this message translates to:
+  /// **'Prev. Week'**
+  String get previousWeek;
+
+  /// Security settings section title
+  ///
+  /// In en, this message translates to:
+  /// **'Security'**
+  String get security;
 }
 
 class _AppLocalizationsDelegate

@@ -918,5 +918,22 @@
   "@severityLabel": {
     "placeholders": { "severity": { "type": "int" } }
   },
-  "errorLoadingCalendar": "Takvim yüklenirken hata"
+  "errorLoadingCalendar": "Takvim yüklenirken hata",
+
+  "createTemplate": "Şablon Oluştur",
+  "createFirstTemplate": "Hızlıca antrenman başlatmak için ilk şablonunu oluştur",
+  "templateSaved": "Şablon kaydedildi",
+  "selectExercises": "Şablonun için egzersiz seç",
+  "defaultValues": "Varsayılan Değerler",
+  "shareAsStory": "Story Formatı",
+  "shareAsCompact": "Kompakt Kart",
+  "exportAsJson": "JSON Dışa Aktar",
+  "shareWorkout": "Antrenmanı Paylaş",
+  "trackedWithVitalSync": "VitalSync ile takip edildi",
+  "biometricLogin": "Biyometrik Giriş",
+  "biometricLoginDescription": "Hızlı giriş için parmak izi veya yüz tanıma kullan",
+  "dashboardEditMode": "Dashboard Düzenle",
+  "longPressToReorder": "Kartları yeniden sıralamak için basılı tutup sürükle",
+  "previousWeek": "Önceki Hafta",
+  "security": "Güvenlik"
 }
