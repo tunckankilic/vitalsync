@@ -9,6 +9,8 @@
 /// - Layout persistence via SharedPreferences
 library;
 
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -16,6 +18,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import '../../../core/l10n/app_localizations.dart';
 import '../../../features/insights/presentation/providers/insight_engine_provider.dart';
 import '../../../features/insights/presentation/providers/insight_provider.dart';
+import '../../providers/dashboard_layout_provider.dart';
 import '../../providers/dashboard_provider.dart';
 import '../../widgets/dashboard/activity_feed_card.dart';
 import '../../widgets/dashboard/greeting_card.dart';
@@ -41,34 +44,81 @@ class DashboardScreen extends ConsumerStatefulWidget {
   ConsumerState<DashboardScreen> createState() => _DashboardScreenState();
 }
 
-class _DashboardScreenState extends ConsumerState<DashboardScreen> {
-  //  // bool _isEditMode = false; // TODO: Implement drag & drop reordering // TODO: Implement drag & drop reordering
+class _DashboardScreenState extends ConsumerState<DashboardScreen>
+    with SingleTickerProviderStateMixin {
+  bool _isEditMode = false;
+  late AnimationController _jiggleController;
+
+  @override
+  void initState() {
+    super.initState();
+    _jiggleController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 300),
+    );
+  }
+
+  @override
+  void dispose() {
+    _jiggleController.dispose();
+    super.dispose();
+  }
+
+  void _toggleEditMode() {
+    setState(() {
+      _isEditMode = !_isEditMode;
+      if (_isEditMode) {
+        _jiggleController.repeat(reverse: true);
+      } else {
+        _jiggleController.stop();
+        _jiggleController.reset();
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final summaryAsync = ref.watch(dashboardSummaryProvider);
+    final l10n = AppLocalizations.of(context);
 
     return Scaffold(
       body: RefreshIndicator(
         onRefresh: () async {
-          // Refresh all dashboard data
           ref.invalidate(dashboardSummaryProvider);
           ref.invalidate(recentActivityProvider);
 
-          // Trigger insight generation
           try {
             final insightEngine = ref.read(insightEngineProvider);
             await insightEngine.generateAllInsights();
             ref.invalidate(activeInsightsProvider);
           } catch (e) {
-            // Silently fail insight generation - not critical for dashboard refresh
             debugPrint('Failed to generate insights: $e');
           }
         },
-        child: summaryAsync.when(
-          data: (summary) => _buildDashboard(context, summary),
-          loading: _buildLoadingState,
-          error: _buildErrorState,
+        child: Column(
+          children: [
+            // Edit mode banner
+            if (_isEditMode)
+              MaterialBanner(
+                content: Text(l10n.longPressToReorder),
+                leading: const Icon(Icons.drag_indicator),
+                actions: [
+                  TextButton(
+                    onPressed: _toggleEditMode,
+                    child: Text(l10n.done),
+                  ),
+                ],
+              ),
+            Expanded(
+              child: summaryAsync.when(
+                data: (summary) => _isEditMode
+                    ? _buildEditableDashboard(context, summary)
+                    : _buildDashboard(context, summary),
+                loading: _buildLoadingState,
+                error: _buildErrorState,
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -77,23 +127,77 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   Widget _buildDashboard(BuildContext context, DashboardSummary summary) {
     final isTablet = MediaQuery.of(context).size.width > 600;
     final crossAxisCount = isTablet ? 4 : 2;
+    final cardOrder = ref.watch(dashboardLayoutProvider);
 
-    return CustomScrollView(
-      slivers: [
-        // Sliver padding for content
-        SliverPadding(
-          padding: const EdgeInsets.all(16),
-          sliver: SliverMasonryGrid.count(
-            crossAxisCount: crossAxisCount,
-            mainAxisSpacing: 12,
-            crossAxisSpacing: 12,
-            childCount: 7,
-            itemBuilder: (context, index) {
-              return _buildCard(index, summary);
-            },
+    return GestureDetector(
+      onLongPress: _toggleEditMode,
+      child: CustomScrollView(
+        slivers: [
+          SliverPadding(
+            padding: const EdgeInsets.all(16),
+            sliver: SliverMasonryGrid.count(
+              crossAxisCount: crossAxisCount,
+              mainAxisSpacing: 12,
+              crossAxisSpacing: 12,
+              childCount: 7,
+              itemBuilder: (context, index) {
+                return _buildCard(cardOrder[index], summary);
+              },
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildEditableDashboard(
+      BuildContext context, DashboardSummary summary) {
+    final cardOrder = ref.watch(dashboardLayoutProvider);
+
+    return ReorderableListView.builder(
+      padding: const EdgeInsets.all(16),
+      proxyDecorator: (child, index, animation) {
+        return AnimatedBuilder(
+          animation: animation,
+          builder: (context, child) {
+            final scale =
+                1.0 + Curves.easeInOut.transform(animation.value) * 0.03;
+            return Transform.scale(
+              scale: scale,
+              child: Material(
+                elevation: 8,
+                color: Colors.transparent,
+                borderRadius: BorderRadius.circular(20),
+                child: child,
+              ),
+            );
+          },
+          child: child,
+        );
+      },
+      onReorder: (oldIndex, newIndex) {
+        ref.read(dashboardLayoutProvider.notifier).reorder(oldIndex, newIndex);
+      },
+      itemCount: 7,
+      itemBuilder: (context, index) {
+        final cardIndex = cardOrder[index];
+        return Padding(
+          key: ValueKey('dashboard_card_$cardIndex'),
+          padding: const EdgeInsets.only(bottom: 12),
+          child: AnimatedBuilder(
+            animation: _jiggleController,
+            builder: (context, child) {
+              final jiggle =
+                  math.sin(_jiggleController.value * math.pi * 2) * 0.5;
+              return Transform.rotate(
+                angle: jiggle * math.pi / 180,
+                child: child,
+              );
+            },
+            child: _buildCard(cardIndex, summary),
+          ),
+        );
+      },
     );
   }
 

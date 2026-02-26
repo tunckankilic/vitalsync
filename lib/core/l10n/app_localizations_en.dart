@@ -1502,4 +1502,51 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get errorLoadingCalendar => 'Error loading calendar';
+
+  @override
+  String get createTemplate => 'Create Template';
+
+  @override
+  String get createFirstTemplate =>
+      'Create your first template to quickly start workouts';
+
+  @override
+  String get templateSaved => 'Template saved';
+
+  @override
+  String get selectExercises => 'Select exercises for your template';
+
+  @override
+  String get defaultValues => 'Default Values';
+
+  @override
+  String get shareAsStory => 'Story Format';
+
+  @override
+  String get shareAsCompact => 'Compact Card';
+
+  @override
+  String get exportAsJson => 'Export JSON';
+
+  @override
+  String get trackedWithVitalSync => 'Tracked with VitalSync';
+
+  @override
+  String get biometricLogin => 'Biometric Login';
+
+  @override
+  String get biometricLoginDescription =>
+      'Use fingerprint or face recognition to sign in quickly';
+
+  @override
+  String get dashboardEditMode => 'Edit Dashboard';
+
+  @override
+  String get longPressToReorder => 'Long press and drag to reorder cards';
+
+  @override
+  String get previousWeek => 'Prev. Week';
+
+  @override
+  String get security => 'Security';
 }

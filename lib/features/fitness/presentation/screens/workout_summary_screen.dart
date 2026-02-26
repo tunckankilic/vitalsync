@@ -4,7 +4,11 @@
 /// Shows duration, volume, sets, exercises, and new PRs.
 library;
 
+import 'dart:convert';
+import 'dart:ui' as ui;
+
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
@@ -12,6 +16,8 @@ import 'package:share_plus/share_plus.dart';
 import 'package:vitalsync/core/l10n/app_localizations.dart';
 import 'package:vitalsync/core/theme/app_theme.dart';
 import 'package:vitalsync/features/fitness/presentation/providers/workout_provider.dart';
+import 'package:vitalsync/features/fitness/presentation/widgets/share/workout_compact_card.dart';
+import 'package:vitalsync/features/fitness/presentation/widgets/share/workout_share_card.dart';
 import 'package:vitalsync/presentation/widgets/glassmorphic_app_bar.dart';
 import 'package:vitalsync/presentation/widgets/glassmorphic_card.dart';
 
@@ -217,23 +223,27 @@ class _WorkoutSummaryScreenState extends ConsumerState<WorkoutSummaryScreen>
                       children: [
                         Expanded(
                           child: OutlinedButton.icon(
-                            onPressed: () {
-                              final totalSets = setsAsync.when(
+                            onPressed: () => _showShareOptions(
+                              context,
+                              session.name,
+                              session.startTime,
+                              duration,
+                              session.totalVolume,
+                              setsAsync.when(
                                 data: (sets) => sets.length,
                                 loading: () => 0,
                                 error: (_, _) => 0,
-                              );
-                              final dateStr = DateFormat.yMMMd().format(
-                                session.startTime,
-                              );
-                              final text =
-                                  '${session.name} — $dateStr\n'
-                                  '${l10n.duration}: ${_formatDuration(duration)}\n'
-                                  '${l10n.totalVolume}: ${session.totalVolume.toStringAsFixed(0)} kg\n'
-                                  '${l10n.totalSets}: $totalSets\n\n'
-                                  '${l10n.trackedWithVitalSynch}';
-                              SharePlus.instance.share(ShareParams(text: text));
-                            },
+                              ),
+                              setsAsync.when(
+                                data: (sets) => sets
+                                    .map((s) => s.exerciseId)
+                                    .toSet()
+                                    .length,
+                                loading: () => 0,
+                                error: (_, _) => 0,
+                              ),
+                              l10n,
+                            ),
                             icon: const Icon(Icons.share),
                             label: Text(l10n.share),
                             style: OutlinedButton.styleFrom(
@@ -281,6 +291,179 @@ class _WorkoutSummaryScreenState extends ConsumerState<WorkoutSummaryScreen>
     } else {
       return '${seconds}s';
     }
+  }
+
+  void _showShareOptions(
+    BuildContext context,
+    String name,
+    DateTime date,
+    Duration duration,
+    double volume,
+    int sets,
+    int exercises,
+    AppLocalizations l10n,
+  ) {
+    showModalBottomSheet<void>(
+      context: context,
+      builder: (ctx) => SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                l10n.shareWorkout,
+                style: Theme.of(
+                  ctx,
+                ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 16),
+              ListTile(
+                leading: const Icon(
+                  Icons.image,
+                  color: AppTheme.fitnessPrimary,
+                ),
+                title: Text(l10n.shareAsStory),
+                subtitle: const Text('1080 × 1920'),
+                onTap: () {
+                  Navigator.pop(ctx);
+                  _shareAsImage(
+                    WorkoutShareCard(
+                      workoutName: name,
+                      date: date,
+                      duration: duration,
+                      totalVolume: volume,
+                      totalSets: sets,
+                      exerciseCount: exercises,
+                    ),
+                    const Size(1080, 1920),
+                  );
+                },
+              ),
+              ListTile(
+                leading: const Icon(
+                  Icons.crop_square,
+                  color: AppTheme.fitnessPrimary,
+                ),
+                title: Text(l10n.shareAsCompact),
+                subtitle: const Text('1080 × 1080'),
+                onTap: () {
+                  Navigator.pop(ctx);
+                  _shareAsImage(
+                    WorkoutCompactCard(
+                      workoutName: name,
+                      date: date,
+                      duration: duration,
+                      totalVolume: volume,
+                      totalSets: sets,
+                    ),
+                    const Size(1080, 1080),
+                  );
+                },
+              ),
+              ListTile(
+                leading: const Icon(
+                  Icons.data_object,
+                  color: AppTheme.fitnessPrimary,
+                ),
+                title: Text(l10n.exportAsJson),
+                onTap: () {
+                  Navigator.pop(ctx);
+                  _exportAsJson(name, date, duration, volume, sets, exercises);
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _shareAsImage(Widget card, Size size) async {
+    final key = GlobalKey();
+    final overlay = OverlayEntry(
+      builder: (context) => Positioned(
+        left: -size.width * 2,
+        top: -size.height * 2,
+        child: RepaintBoundary(
+          key: key,
+          child: SizedBox(
+            width: size.width,
+            height: size.height,
+            child: MediaQuery(
+              data: const MediaQueryData(),
+              child: Directionality(
+                textDirection: ui.TextDirection.ltr,
+                child: card,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    Overlay.of(context).insert(overlay);
+
+    // Wait for rendering
+    await Future<void>.delayed(const Duration(milliseconds: 200));
+
+    try {
+      final boundary =
+          key.currentContext!.findRenderObject()! as RenderRepaintBoundary;
+      final image = await boundary.toImage(pixelRatio: 1.0);
+      final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+
+      if (byteData != null) {
+        final bytes = byteData.buffer.asUint8List();
+        await SharePlus.instance.share(
+          ShareParams(
+            files: [
+              XFile.fromData(
+                bytes,
+                mimeType: 'image/png',
+                name: 'vitalsync_workout.png',
+              ),
+            ],
+          ),
+        );
+      }
+    } finally {
+      overlay.remove();
+    }
+  }
+
+  void _exportAsJson(
+    String name,
+    DateTime date,
+    Duration duration,
+    double volume,
+    int sets,
+    int exercises,
+  ) {
+    final data = {
+      'workout_name': name,
+      'date': date.toIso8601String(),
+      'duration_seconds': duration.inSeconds,
+      'total_volume_kg': volume,
+      'total_sets': sets,
+      'exercise_count': exercises,
+      'exported_at': DateTime.now().toIso8601String(),
+    };
+    final jsonStr = const JsonEncoder.withIndent('  ').convert(data);
+    final bytes = utf8.encode(jsonStr);
+    SharePlus.instance.share(
+      ShareParams(
+        files: [
+          XFile.fromData(
+            bytes,
+            mimeType: 'application/json',
+            name:
+                'vitalsync_workout_${DateFormat('yyyy-MM-dd').format(date)}.json',
+          ),
+        ],
+      ),
+    );
   }
 }
 

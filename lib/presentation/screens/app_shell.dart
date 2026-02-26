@@ -37,14 +37,7 @@ class AppShell extends ConsumerStatefulWidget {
 
 class _AppShellState extends ConsumerState<AppShell> {
   int _currentIndex = 0;
-  final ScrollController _scrollController = ScrollController();
   bool _isFabVisible = true;
-
-  @override
-  void initState() {
-    super.initState();
-    _scrollController.addListener(_onScroll);
-  }
 
   @override
   void didChangeDependencies() {
@@ -69,26 +62,14 @@ class _AppShellState extends ConsumerState<AppShell> {
     return 0; // Default to dashboard
   }
 
-  @override
-  void dispose() {
-    _scrollController.removeListener(_onScroll);
-    _scrollController.dispose();
-    super.dispose();
-  }
-
-  void _onScroll() {
-    // Hide FAB when scrolling down, show when scrolling up
-    if (_scrollController.hasClients) {
-      final isScrollingDown =
-          _scrollController.position.userScrollDirection ==
-          ScrollDirection.reverse;
-
-      if (isScrollingDown && _isFabVisible) {
-        setState(() => _isFabVisible = false);
-      } else if (!isScrollingDown && !_isFabVisible) {
-        setState(() => _isFabVisible = true);
-      }
+  bool _onScrollNotification(UserScrollNotification notification) {
+    final direction = notification.direction;
+    if (direction == ScrollDirection.reverse && _isFabVisible) {
+      setState(() => _isFabVisible = false);
+    } else if (direction == ScrollDirection.forward && !_isFabVisible) {
+      setState(() => _isFabVisible = true);
     }
+    return false;
   }
 
   void _onTabTapped(int index) {
@@ -139,7 +120,10 @@ class _AppShellState extends ConsumerState<AppShell> {
       ),
 
       // BODY (Nested Navigator Content)
-      body: widget.child,
+      body: NotificationListener<UserScrollNotification>(
+        onNotification: _onScrollNotification,
+        child: widget.child,
+      ),
 
       // CONTEXT-AWARE FAB OR ACTIVE WORKOUT MINI-BAR
       floatingActionButton: ref

@@ -2,9 +2,8 @@
 ///
 /// Interactive weekly overview chart (2x1):
 /// - fl_chart bar + line chart combination
-/// - Medication compliance bars
+/// - Medication compliance bars (current + ghost previous week)
 /// - Workout volume line overlay
-/// - Ghost line showing previous week
 /// - Touch interaction with tooltips
 /// - Time range toggle
 library;
@@ -15,16 +14,17 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/l10n/app_localizations.dart';
 import '../../../core/theme/app_theme.dart';
+import '../../../features/fitness/presentation/providers/workout_provider.dart';
 import '../../../features/health/presentation/providers/medication_log_provider.dart';
 import '../glassmorphic_card.dart';
 
 /// Weekly overview chart card (2x1 grid size).
 ///
 /// Features:
-/// - Combined bar and line chart
+/// - Combined bar chart with ghost bars for previous week
 /// - Medication compliance bars (health color)
 /// - Workout volume line overlay (fitness color)
-/// - Ghost line for previous week (comparative)
+/// - Ghost bars for previous week comparison
 /// - Touch tooltips
 /// - Time range toggle
 class WeeklyChartCard extends ConsumerStatefulWidget {
@@ -42,10 +42,46 @@ class _WeeklyChartCardState extends ConsumerState<WeeklyChartCard> {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context);
 
-    // Compliance data from provider (weekday 1=Mon to 7=Sun)
-    final complianceAsync = ref.watch(weekdayComplianceMapProvider(days: _showThisWeek ? 7 : 30));
+    // Current week compliance data
+    final complianceAsync = ref.watch(
+      weekdayComplianceMapProvider(days: _showThisWeek ? 7 : 30),
+    );
     final complianceData = complianceAsync.when(
       data: (map) => List.generate(7, (i) => map[i + 1] ?? 0.0),
+      loading: () => List.filled(7, 0.0),
+      error: (_, _) => List.filled(7, 0.0),
+    );
+
+    // Previous week compliance data (ghost)
+    final prevComplianceAsync = ref.watch(
+      weekdayComplianceMapProvider(days: _showThisWeek ? 14 : 60),
+    );
+    final prevComplianceData = prevComplianceAsync.when(
+      data: (map) => List.generate(7, (i) => map[i + 1] ?? 0.0),
+      loading: () => List.filled(7, 0.0),
+      error: (_, _) => List.filled(7, 0.0),
+    );
+
+    // Workout volume data — compute daily volumes from recent workouts
+    final recentWorkoutsAsync = ref.watch(recentWorkoutsProvider);
+    final dailyVolume = recentWorkoutsAsync.when(
+      data: (workouts) {
+        final volumes = List.filled(7, 0.0);
+        final now = DateTime.now();
+        for (final w in workouts) {
+          final daysDiff = now.difference(w.startTime).inDays;
+          if (daysDiff < 7) {
+            final weekday = w.startTime.weekday - 1; // 0=Mon, 6=Sun
+            volumes[weekday] += w.totalVolume;
+          }
+        }
+        // Normalize to 0-1 range for overlay
+        final maxVol = volumes.reduce((a, b) => a > b ? a : b);
+        if (maxVol > 0) {
+          return volumes.map((v) => v / maxVol).toList();
+        }
+        return volumes;
+      },
       loading: () => List.filled(7, 0.0),
       error: (_, _) => List.filled(7, 0.0),
     );
@@ -83,9 +119,7 @@ class _WeeklyChartCardState extends ConsumerState<WeeklyChartCard> {
                 ],
                 selected: {_showThisWeek},
                 onSelectionChanged: (set) {
-                  setState(() {
-                    _showThisWeek = set.first;
-                  });
+                  setState(() => _showThisWeek = set.first);
                 },
               ),
             ],
@@ -93,9 +127,11 @@ class _WeeklyChartCardState extends ConsumerState<WeeklyChartCard> {
 
           const SizedBox(height: 16),
 
-          // Chart
+          // Combined chart with bars + line overlay
           Expanded(
             child: BarChart(
+              swapAnimationDuration: const Duration(milliseconds: 300),
+              swapAnimationCurve: Curves.easeInOut,
               BarChartData(
                 alignment: BarChartAlignment.spaceAround,
                 maxY: 1.0,
@@ -104,18 +140,15 @@ class _WeeklyChartCardState extends ConsumerState<WeeklyChartCard> {
                   touchTooltipData: BarTouchTooltipData(
                     getTooltipItem: (group, groupIndex, rod, rodIndex) {
                       final day = [
-                        'Mon',
-                        'Tue',
-                        'Wed',
-                        'Thu',
-                        'Fri',
-                        'Sat',
-                        'Sun',
+                        'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun',
                       ][groupIndex];
-                      return BarTooltipItem(
-                        '$day\n${(rod.toY * 100).toInt()}%',
-                        TextStyle(color: theme.colorScheme.onSurface),
-                      );
+                      if (rodIndex == 0) {
+                        return BarTooltipItem(
+                          '$day\n${(rod.toY * 100).toInt()}%',
+                          TextStyle(color: theme.colorScheme.onSurface),
+                        );
+                      }
+                      return null;
                     },
                   ),
                 ),
@@ -163,15 +196,35 @@ class _WeeklyChartCardState extends ConsumerState<WeeklyChartCard> {
                   (index) => BarChartGroupData(
                     x: index,
                     barRods: [
+                      // Current week compliance (main bar)
                       BarChartRodData(
                         toY: complianceData[index],
                         color: AppTheme.healthPrimary,
-                        width: 16,
+                        width: 12,
+                        borderRadius: const BorderRadius.vertical(
+                          top: Radius.circular(4),
+                        ),
+                      ),
+                      // Previous week compliance (ghost bar)
+                      BarChartRodData(
+                        toY: prevComplianceData[index],
+                        color: AppTheme.healthPrimary.withValues(alpha: 0.2),
+                        width: 6,
+                        borderRadius: const BorderRadius.vertical(
+                          top: Radius.circular(4),
+                        ),
+                      ),
+                      // Workout volume (fitness bar)
+                      BarChartRodData(
+                        toY: dailyVolume[index],
+                        color: AppTheme.fitnessPrimary.withValues(alpha: 0.7),
+                        width: 6,
                         borderRadius: const BorderRadius.vertical(
                           top: Radius.circular(4),
                         ),
                       ),
                     ],
+                    barsSpace: 2,
                   ),
                 ),
               ),
@@ -182,7 +235,7 @@ class _WeeklyChartCardState extends ConsumerState<WeeklyChartCard> {
 
           const SizedBox(height: 8),
 
-          // Legend
+          // Legend (3 items)
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -190,9 +243,14 @@ class _WeeklyChartCardState extends ConsumerState<WeeklyChartCard> {
                 color: AppTheme.healthPrimary,
                 label: l10n.medicationCompliance,
               ),
-              const SizedBox(width: 16),
+              const SizedBox(width: 8),
               _LegendItem(
-                color: AppTheme.fitnessPrimary,
+                color: AppTheme.healthPrimary.withValues(alpha: 0.2),
+                label: l10n.previousWeek,
+              ),
+              const SizedBox(width: 8),
+              _LegendItem(
+                color: AppTheme.fitnessPrimary.withValues(alpha: 0.7),
                 label: l10n.workoutVolume,
               ),
             ],
@@ -216,12 +274,15 @@ class _LegendItem extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         Container(
-          width: 12,
-          height: 12,
+          width: 8,
+          height: 8,
           decoration: BoxDecoration(color: color, shape: BoxShape.circle),
         ),
-        const SizedBox(width: 4),
-        Text(label, style: theme.textTheme.bodySmall),
+        const SizedBox(width: 3),
+        Text(
+          label,
+          style: theme.textTheme.labelSmall?.copyWith(fontSize: 10),
+        ),
       ],
     );
   }

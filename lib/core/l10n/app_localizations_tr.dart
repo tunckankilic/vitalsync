@@ -1509,4 +1509,52 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get errorLoadingCalendar => 'Takvim yüklenirken hata';
+
+  @override
+  String get createTemplate => 'Şablon Oluştur';
+
+  @override
+  String get createFirstTemplate =>
+      'Hızlıca antrenman başlatmak için ilk şablonunu oluştur';
+
+  @override
+  String get templateSaved => 'Şablon kaydedildi';
+
+  @override
+  String get selectExercises => 'Şablonun için egzersiz seç';
+
+  @override
+  String get defaultValues => 'Varsayılan Değerler';
+
+  @override
+  String get shareAsStory => 'Story Formatı';
+
+  @override
+  String get shareAsCompact => 'Kompakt Kart';
+
+  @override
+  String get exportAsJson => 'JSON Dışa Aktar';
+
+  @override
+  String get trackedWithVitalSync => 'VitalSync ile takip edildi';
+
+  @override
+  String get biometricLogin => 'Biyometrik Giriş';
+
+  @override
+  String get biometricLoginDescription =>
+      'Hızlı giriş için parmak izi veya yüz tanıma kullan';
+
+  @override
+  String get dashboardEditMode => 'Dashboard Düzenle';
+
+  @override
+  String get longPressToReorder =>
+      'Kartları yeniden sıralamak için basılı tutup sürükle';
+
+  @override
+  String get previousWeek => 'Önceki Hafta';
+
+  @override
+  String get security => 'Güvenlik';
 }

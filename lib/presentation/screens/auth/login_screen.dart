@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:local_auth/local_auth.dart';
 import 'package:vitalsync/core/auth/auth_provider.dart';
 import 'package:vitalsync/core/l10n/app_localizations.dart';
+import 'package:vitalsync/core/services/biometric_service.dart';
+import 'package:vitalsync/core/settings/settings_provider.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -17,6 +20,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool _isPasswordVisible = false;
+  final _biometricService = BiometricService();
 
   @override
   void dispose() {
@@ -47,6 +51,24 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             ),
           );
         }
+      }
+    }
+  }
+
+  Future<void> _handleBiometricLogin() async {
+    final l10n = AppLocalizations.of(context);
+    try {
+      final authenticated = await _biometricService.authenticate(
+        reason: l10n.biometricLogin,
+      );
+      if (authenticated && mounted) {
+        context.go('/dashboard');
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(l10n.loginFailed(e))),
+        );
       }
     }
   }
@@ -236,6 +258,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         ),
                       ),
 
+                      // Biometric Login
+                      _BiometricLoginButton(
+                        biometricService: _biometricService,
+                        isLoading: isLoading,
+                        onPressed: _handleBiometricLogin,
+                      ),
+
                       const SizedBox(height: 24),
 
                       // Register Link
@@ -311,6 +340,74 @@ class _GlassTextField extends StatelessWidget {
             vertical: 16,
           ),
           suffixIcon: suffixIcon,
+        ),
+      ),
+    );
+  }
+}
+
+/// Shows biometric login button only when device supports it and user enabled it.
+class _BiometricLoginButton extends ConsumerStatefulWidget {
+  const _BiometricLoginButton({
+    required this.biometricService,
+    required this.isLoading,
+    required this.onPressed,
+  });
+
+  final BiometricService biometricService;
+  final bool isLoading;
+  final VoidCallback onPressed;
+
+  @override
+  ConsumerState<_BiometricLoginButton> createState() =>
+      _BiometricLoginButtonState();
+}
+
+class _BiometricLoginButtonState extends ConsumerState<_BiometricLoginButton> {
+  bool _isAvailable = false;
+  IconData _biometricIcon = Icons.fingerprint;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkBiometric();
+  }
+
+  Future<void> _checkBiometric() async {
+    final available = await widget.biometricService.isAvailable();
+    if (!available || !mounted) return;
+
+    final types = await widget.biometricService.getAvailableBiometrics();
+    setState(() {
+      _isAvailable = true;
+      _biometricIcon = types.contains(BiometricType.face)
+          ? Icons.face
+          : Icons.fingerprint;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final biometricEnabled = ref.watch(biometricSettingProvider);
+
+    if (!_isAvailable || !biometricEnabled) {
+      return const SizedBox.shrink();
+    }
+
+    final l10n = AppLocalizations.of(context);
+
+    return Padding(
+      padding: const EdgeInsets.only(top: 12),
+      child: OutlinedButton.icon(
+        onPressed: widget.isLoading ? null : widget.onPressed,
+        icon: Icon(_biometricIcon, size: 28),
+        label: Text(l10n.biometricLogin),
+        style: OutlinedButton.styleFrom(
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          side: BorderSide(color: Colors.blue.withValues(alpha: 0.5)),
         ),
       ),
     );

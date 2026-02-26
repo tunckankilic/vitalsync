@@ -78,6 +78,10 @@ abstract class AppConstants {
   static const String prefKeyCloudBackupConsent =
       '${prefKeyPrefix}cloud_backup_consent';
 
+  /// Biometric login enabled flag
+  static const String prefKeyBiometricEnabled =
+      '${prefKeyPrefix}biometric_enabled';
+
   /// Last sync timestamp
   static const String prefKeyLastSyncTimestamp =
       '${prefKeyPrefix}last_sync_timestamp';
