@@ -13,11 +13,13 @@ import firebase_analytics
 import firebase_auth
 import firebase_core
 import flutter_local_notifications
+import flutter_secure_storage_macos
 import local_auth_darwin
 import share_plus
 import shared_preferences_foundation
 import sign_in_with_apple
 import sqflite_darwin
+import sqlcipher_flutter_libs
 import sqlite3_flutter_libs
 
 func RegisterGeneratedPlugins(registry: FlutterPluginRegistry) {
@@ -29,10 +31,12 @@ func RegisterGeneratedPlugins(registry: FlutterPluginRegistry) {
   FLTFirebaseAuthPlugin.register(with: registry.registrar(forPlugin: "FLTFirebaseAuthPlugin"))
   FLTFirebaseCorePlugin.register(with: registry.registrar(forPlugin: "FLTFirebaseCorePlugin"))
   FlutterLocalNotificationsPlugin.register(with: registry.registrar(forPlugin: "FlutterLocalNotificationsPlugin"))
+  FlutterSecureStoragePlugin.register(with: registry.registrar(forPlugin: "FlutterSecureStoragePlugin"))
   LocalAuthPlugin.register(with: registry.registrar(forPlugin: "LocalAuthPlugin"))
   SharePlusMacosPlugin.register(with: registry.registrar(forPlugin: "SharePlusMacosPlugin"))
   SharedPreferencesPlugin.register(with: registry.registrar(forPlugin: "SharedPreferencesPlugin"))
   SignInWithApplePlugin.register(with: registry.registrar(forPlugin: "SignInWithApplePlugin"))
   SqflitePlugin.register(with: registry.registrar(forPlugin: "SqflitePlugin"))
+  Sqlite3FlutterLibsPlugin.register(with: registry.registrar(forPlugin: "Sqlite3FlutterLibsPlugin"))
   Sqlite3FlutterLibsPlugin.register(with: registry.registrar(forPlugin: "Sqlite3FlutterLibsPlugin"))
 }

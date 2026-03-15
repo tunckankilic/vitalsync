@@ -1549,4 +1549,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get security => 'Security';
+
+  @override
+  String get invalidEmail => 'Please enter a valid email address';
+
+  @override
+  String get enterValidWeightAndReps => 'Please enter valid weight and reps';
+
+  @override
+  String get weightOutOfRange => 'Weight must be between 0 and 999 kg';
+
+  @override
+  String get repsOutOfRange => 'Reps must be between 1 and 999';
 }

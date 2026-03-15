@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:vitalsync/core/l10n/app_localizations.dart';
 import 'package:vitalsync/core/settings/settings_provider.dart';
 import 'package:vitalsync/core/sync/sync_provider.dart';
-import 'package:vitalsync/presentation/screens/gdpr/consent_screen.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -196,11 +196,7 @@ class SettingsScreen extends ConsumerWidget {
                 subtitle: l10n.manageConsentsSubtitle,
                 icon: Icons.shield_outlined,
                 onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (_) => const ConsentScreen(isOnboarding: false),
-                    ),
-                  );
+                  context.pushNamed('gdpr_consent');
                 },
               ),
               _SettingsTile(

@@ -2955,6 +2955,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Security'**
   String get security;
+
+  /// Invalid email format error
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid email address'**
+  String get invalidEmail;
+
+  /// Weight/reps parse error
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter valid weight and reps'**
+  String get enterValidWeightAndReps;
+
+  /// Weight bounds validation
+  ///
+  /// In en, this message translates to:
+  /// **'Weight must be between 0 and 999 kg'**
+  String get weightOutOfRange;
+
+  /// Reps bounds validation
+  ///
+  /// In en, this message translates to:
+  /// **'Reps must be between 1 and 999'**
+  String get repsOutOfRange;
 }
 
 class _AppLocalizationsDelegate

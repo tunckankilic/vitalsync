@@ -935,5 +935,9 @@
   "dashboardEditMode": "Dashboard Düzenle",
   "longPressToReorder": "Kartları yeniden sıralamak için basılı tutup sürükle",
   "previousWeek": "Önceki Hafta",
-  "security": "Güvenlik"
+  "security": "Güvenlik",
+  "invalidEmail": "Lütfen geçerli bir e-posta adresi girin",
+  "enterValidWeightAndReps": "Lütfen geçerli ağırlık ve tekrar sayısı girin",
+  "weightOutOfRange": "Ağırlık 0–999 kg arasında olmalıdır",
+  "repsOutOfRange": "Tekrar sayısı 1–999 arasında olmalıdır"
 }

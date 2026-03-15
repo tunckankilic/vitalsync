@@ -1557,4 +1557,17 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get security => 'Güvenlik';
+
+  @override
+  String get invalidEmail => 'Lütfen geçerli bir e-posta adresi girin';
+
+  @override
+  String get enterValidWeightAndReps =>
+      'Lütfen geçerli ağırlık ve tekrar sayısı girin';
+
+  @override
+  String get weightOutOfRange => 'Ağırlık 0–999 kg arasında olmalıdır';
+
+  @override
+  String get repsOutOfRange => 'Tekrar sayısı 1–999 arasında olmalıdır';
 }

@@ -1109,5 +1109,13 @@
   "previousWeek": "Prev. Week",
   "@previousWeek": { "description": "Previous week legend label" },
   "security": "Security",
-  "@security": { "description": "Security settings section title" }
+  "@security": { "description": "Security settings section title" },
+  "invalidEmail": "Please enter a valid email address",
+  "@invalidEmail": { "description": "Invalid email format error" },
+  "enterValidWeightAndReps": "Please enter valid weight and reps",
+  "@enterValidWeightAndReps": { "description": "Weight/reps parse error" },
+  "weightOutOfRange": "Weight must be between 0 and 999 kg",
+  "@weightOutOfRange": { "description": "Weight bounds validation" },
+  "repsOutOfRange": "Reps must be between 1 and 999",
+  "@repsOutOfRange": { "description": "Reps bounds validation" }
 }

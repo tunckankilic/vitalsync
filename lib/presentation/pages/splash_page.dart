@@ -12,6 +12,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../core/constants/app_constants.dart';
 import '../../core/di/injection_container.dart';
 import '../../core/gdpr/gdpr_manager.dart';
+import '../../main.dart' show appInitError;
 
 /// Splash screen widget.
 ///
@@ -39,6 +40,13 @@ class _SplashPageState extends ConsumerState<SplashPage> {
     await Future.delayed(const Duration(seconds: 2));
 
     if (!mounted) return;
+
+    // Check for critical initialization errors
+    if (appInitError != null) {
+      if (!mounted) return;
+      _showInitErrorDialog(appInitError!);
+      return;
+    }
 
     try {
       final prefs = await SharedPreferences.getInstance();
@@ -81,6 +89,29 @@ class _SplashPageState extends ConsumerState<SplashPage> {
       // On error, default to login screen
       if (mounted) context.go('/auth/login');
     }
+  }
+
+  void _showInitErrorDialog(Object error) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Initialization Error'),
+        content: Text(
+          'The app could not start properly. Please check your internet '
+          'connection and try again.\n\nDetails: $error',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(ctx);
+              context.go('/auth/login');
+            },
+            child: const Text('Continue Anyway'),
+          ),
+        ],
+      ),
+    );
   }
 
   @override

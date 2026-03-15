@@ -5,6 +5,7 @@
 /// GDPR: Cloud backup consent required before any Firestore writes.
 library;
 
+import 'dart:async';
 import 'dart:convert';
 import 'dart:developer' show log;
 
@@ -47,6 +48,7 @@ class SyncService {
   final ConnectivityService _connectivity;
 
   bool _isSyncing = false;
+  StreamSubscription<bool>? _autoSyncSubscription;
 
   /// Maximum number of writes per sync batch (rate limiting).
   static const _maxBatchSize = 10;
@@ -241,10 +243,17 @@ class SyncService {
     log('Finished pushing pending changes');
   }
 
-  /// Pulls remote changes from Firestore.
-  /// Downloads records that are newer than local copies.
+  /// Key prefix for persisting per-table last-synced timestamps.
+  static const _lastSyncPrefix = 'vitalsync_last_sync_';
+
+  /// Pulls remote changes from Firestore **incrementally**.
+  ///
+  /// Only fetches documents whose `lastModifiedAt` is after the
+  /// locally persisted `_lastSyncPrefix + tableName` timestamp,
+  /// dramatically reducing read costs on large collections.
   Future<void> _pullRemoteChanges(String uid) async {
-    log('Starting pull of remote changes...');
+    log('Starting incremental pull of remote changes...');
+    final prefs = await SharedPreferences.getInstance();
 
     for (final tableName in _tablesToSync) {
       try {
@@ -255,14 +264,31 @@ class SyncService {
             .doc(uid)
             .collection(tableName);
 
-        final snapshot = await collectionRef.get();
+        // Incremental: only fetch docs modified after last sync
+        final lastSyncMs = prefs.getInt('$_lastSyncPrefix$tableName');
+        Query<Map<String, dynamic>> query;
+        if (lastSyncMs != null) {
+          final lastSync = Timestamp.fromMillisecondsSinceEpoch(lastSyncMs);
+          query = collectionRef
+              .where('lastModifiedAt', isGreaterThan: lastSync)
+              .orderBy('lastModifiedAt');
+          log('Incremental pull for $tableName since '
+              '${DateTime.fromMillisecondsSinceEpoch(lastSyncMs).toIso8601String()}');
+        } else {
+          query = collectionRef;
+          log('Full pull for $tableName (no previous sync)');
+        }
+
+        final snapshot = await query.get();
 
         if (snapshot.docs.isEmpty) {
-          log('No remote data for $tableName');
+          log('No new remote data for $tableName');
           continue;
         }
 
-        log('Found ${snapshot.docs.length} remote records for $tableName');
+        log('Found ${snapshot.docs.length} changed records for $tableName');
+
+        Timestamp? latestTimestamp;
 
         for (final doc in snapshot.docs) {
           try {
@@ -289,6 +315,12 @@ class SyncService {
               continue;
             }
 
+            // Track the latest timestamp for bookmark update
+            if (latestTimestamp == null ||
+                remoteModifiedAt.compareTo(latestTimestamp) > 0) {
+              latestTimestamp = remoteModifiedAt;
+            }
+
             final remoteDate = remoteModifiedAt.toDate();
 
             if (localModifiedAt == null ||
@@ -301,6 +333,14 @@ class SyncService {
           } catch (e) {
             log('Failed to process remote document ${doc.id}: $e');
           }
+        }
+
+        // Persist the latest timestamp as bookmark for next sync
+        if (latestTimestamp != null) {
+          await prefs.setInt(
+            '$_lastSyncPrefix$tableName',
+            latestTimestamp.millisecondsSinceEpoch,
+          );
         }
       } catch (e) {
         log('Failed to pull $tableName: $e');
@@ -460,13 +500,23 @@ class SyncService {
 
   /// Starts automatic sync on connectivity changes.
   /// Listens to connectivity stream and triggers sync when online.
+  /// Safe to call multiple times — cancels any existing subscription first.
   void startAutoSync() {
-    _connectivity.connectivityStream.listen((isConnected) {
-      if (isConnected && !_isSyncing) {
-        sync().catchError((error) {
-          log('Auto-sync failed: $error');
-        });
-      }
-    });
+    _autoSyncSubscription?.cancel();
+    _autoSyncSubscription = _connectivity.connectivityStream.listen(
+      (isConnected) {
+        if (isConnected && !_isSyncing) {
+          sync().catchError((error) {
+            log('Auto-sync failed: $error');
+          });
+        }
+      },
+    );
+  }
+
+  /// Stops automatic sync and releases stream subscription.
+  Future<void> stopAutoSync() async {
+    await _autoSyncSubscription?.cancel();
+    _autoSyncSubscription = null;
   }
 }

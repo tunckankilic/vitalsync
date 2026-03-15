@@ -935,5 +935,9 @@
   "dashboardEditMode": "Dashboard bearbeiten",
   "longPressToReorder": "Lange drücken und ziehen, um Karten neu anzuordnen",
   "previousWeek": "Vorwoche",
-  "security": "Sicherheit"
+  "security": "Sicherheit",
+  "invalidEmail": "Bitte geben Sie eine gültige E-Mail-Adresse ein",
+  "enterValidWeightAndReps": "Bitte gültiges Gewicht und Wiederholungen eingeben",
+  "weightOutOfRange": "Gewicht muss zwischen 0 und 999 kg liegen",
+  "repsOutOfRange": "Wiederholungen müssen zwischen 1 und 999 liegen"
 }

@@ -1560,4 +1560,18 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get security => 'Sicherheit';
+
+  @override
+  String get invalidEmail => 'Bitte geben Sie eine gültige E-Mail-Adresse ein';
+
+  @override
+  String get enterValidWeightAndReps =>
+      'Bitte gültiges Gewicht und Wiederholungen eingeben';
+
+  @override
+  String get weightOutOfRange => 'Gewicht muss zwischen 0 und 999 kg liegen';
+
+  @override
+  String get repsOutOfRange =>
+      'Wiederholungen müssen zwischen 1 und 999 liegen';
 }

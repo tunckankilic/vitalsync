@@ -65,6 +65,12 @@ class ExerciseDao extends DatabaseAccessor<AppDatabase>
     )..where((tbl) => tbl.id.equals(id) & tbl.isCustom.equals(true))).go();
   }
 
+  /// Batch-load exercises by a list of IDs in a single query.
+  Future<List<ExerciseData>> getByIds(List<int> ids) {
+    if (ids.isEmpty) return Future.value([]);
+    return (select(exercises)..where((tbl) => tbl.id.isIn(ids))).get();
+  }
+
   /// Watch all exercises.
   Stream<List<ExerciseData>> watchAll() {
     return select(exercises).watch();

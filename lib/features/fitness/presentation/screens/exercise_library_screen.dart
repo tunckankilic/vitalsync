@@ -13,7 +13,6 @@ import 'package:vitalsync/presentation/widgets/fitness/glassmorphic_card.dart';
 
 import '../providers/exercise_provider.dart';
 import '../widgets/add_exercise_dialog.dart';
-import 'exercise_detail_screen.dart';
 
 /// Screen for browsing exercises or selecting one.
 class ExerciseLibraryScreen extends ConsumerStatefulWidget {
@@ -93,11 +92,9 @@ class _ExerciseLibraryScreenState extends ConsumerState<ExerciseLibraryScreen> {
                         if (widget.isSelectionMode) {
                           context.pop(exercise);
                         } else {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  ExerciseDetailScreen(exercise: exercise),
-                            ),
+                          context.pushNamed(
+                            'exercise_detail',
+                            extra: exercise,
                           );
                         }
                       },

@@ -1,6 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:vitalsync/core/auth/auth_provider.dart';
@@ -20,7 +22,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool _isPasswordVisible = false;
-  final _biometricService = BiometricService();
+  final _biometricService = GetIt.instance<BiometricService>();
 
   @override
   void dispose() {
@@ -61,9 +63,21 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       final authenticated = await _biometricService.authenticate(
         reason: l10n.biometricLogin,
       );
-      if (authenticated && mounted) {
-        context.go('/dashboard');
+      if (!authenticated || !mounted) return;
+
+      // Verify Firebase session is still valid before navigating
+      final firebaseUser = FirebaseAuth.instance.currentUser;
+      if (firebaseUser == null) {
+        // No cached Firebase user — biometric alone is not enough
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(l10n.loginFailed('Session expired'))),
+          );
+        }
+        return;
       }
+
+      context.go('/dashboard');
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -96,20 +110,22 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     final authState = ref.watch(authProvider);
     final isLoading = authState.isLoading;
     final l10n = AppLocalizations.of(context);
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
 
     return Scaffold(
       body: Stack(
         children: [
-          // Background
+          // Background — uses theme's primary/tertiary containers for adaptive theming
           Container(
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [
-                  Color(0xFFE3F2FD),
-                  Color(0xFFF3E5F5),
-                ], // Light Blue to Light Purple
+                  theme.colorScheme.primaryContainer,
+                  theme.colorScheme.tertiaryContainer,
+                ],
               ),
             ),
           ),
@@ -124,23 +140,23 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      const Icon(
+                      Icon(
                         Icons.health_and_safety,
                         size: 64,
-                        color: Colors.blueAccent,
+                        color: colorScheme.primary,
                       ).animate().scale(duration: 600.ms),
                       const SizedBox(height: 24),
                       Text(
                         l10n.welcomeBack,
                         textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.headlineMedium
+                        style: theme.textTheme.headlineMedium
                             ?.copyWith(fontWeight: FontWeight.bold),
                       ).animate().fadeIn().moveY(begin: 10, end: 0),
                       const SizedBox(height: 8),
                       Text(
                         l10n.signInSubtitle,
                         textAlign: TextAlign.center,
-                        style: TextStyle(color: Colors.grey[600]),
+                        style: TextStyle(color: colorScheme.onSurfaceVariant),
                       ),
                       const SizedBox(height: 48),
 
@@ -153,6 +169,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return l10n.enterEmail;
+                          }
+                          // Basic email format check
+                          final emailRegex = RegExp(
+                            r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
+                          );
+                          if (!emailRegex.hasMatch(value.trim())) {
+                            return l10n.invalidEmail;
                           }
                           return null;
                         },
@@ -176,7 +199,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             _isPasswordVisible
                                 ? Icons.visibility
                                 : Icons.visibility_off,
-                            color: Colors.grey,
+                            color: colorScheme.outline,
                           ),
                           onPressed: () {
                             setState(() {
@@ -197,7 +220,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
                       const SizedBox(height: 24),
 
-                      // Login Button
+                      // Login Button — uses colorScheme for adaptive theming
                       ElevatedButton(
                         onPressed: isLoading ? null : _handleLogin,
                         style: ElevatedButton.styleFrom(
@@ -205,8 +228,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(16),
                           ),
-                          backgroundColor: Theme.of(context).primaryColor,
-                          foregroundColor: Colors.white,
+                          backgroundColor: colorScheme.primary,
+                          foregroundColor: colorScheme.onPrimary,
                         ),
                         child: isLoading
                             ? const SizedBox(
@@ -235,7 +258,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             padding: const EdgeInsets.symmetric(horizontal: 16),
                             child: Text(
                               l10n.orSeparator,
-                              style: const TextStyle(color: Colors.grey),
+                              style: TextStyle(color: colorScheme.outline),
                             ),
                           ),
                           const Expanded(child: Divider()),
@@ -254,7 +277,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(16),
                           ),
-                          side: const BorderSide(color: Colors.grey),
+                          side: BorderSide(color: colorScheme.outline),
                         ),
                       ),
 
@@ -273,7 +296,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         children: [
                           Text(
                             l10n.dontHaveAccount,
-                            style: TextStyle(color: Colors.grey[700]),
+                            style: TextStyle(color: colorScheme.onSurfaceVariant),
                           ),
                           TextButton(
                             onPressed: () => context.go('/auth/register'),
@@ -313,13 +336,15 @@ class _GlassTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.7),
+        color: colorScheme.surface.withValues(alpha: 0.7),
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
+            color: colorScheme.shadow.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -331,9 +356,9 @@ class _GlassTextField extends StatelessWidget {
         keyboardType: keyboardType,
         validator: validator,
         decoration: InputDecoration(
-          prefixIcon: Icon(icon, color: Colors.grey[600]),
+          prefixIcon: Icon(icon, color: colorScheme.onSurfaceVariant),
           hintText: label,
-          hintStyle: TextStyle(color: Colors.grey[500]),
+          hintStyle: TextStyle(color: colorScheme.outline),
           border: InputBorder.none,
           contentPadding: const EdgeInsets.symmetric(
             horizontal: 20,
@@ -395,6 +420,7 @@ class _BiometricLoginButtonState extends ConsumerState<_BiometricLoginButton> {
     }
 
     final l10n = AppLocalizations.of(context);
+    final colorScheme = Theme.of(context).colorScheme;
 
     return Padding(
       padding: const EdgeInsets.only(top: 12),
@@ -407,7 +433,7 @@ class _BiometricLoginButtonState extends ConsumerState<_BiometricLoginButton> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
-          side: BorderSide(color: Colors.blue.withValues(alpha: 0.5)),
+          side: BorderSide(color: colorScheme.primary.withValues(alpha: 0.5)),
         ),
       ),
     );

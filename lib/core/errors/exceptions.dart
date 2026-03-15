@@ -1,48 +1,58 @@
-class DatabaseException implements Exception {
-  DatabaseException(this.message);
+/// VitalSync — Typed Exception Hierarchy.
+///
+/// All app-specific exceptions extend [VitalSyncException] which
+/// carries a human-readable [message] and an optional [cause].
+/// This gives every catch-site a consistent interface for logging
+/// and user-facing error strings.
+library;
+
+/// Base exception for all VitalSync-specific errors.
+///
+/// Carries a [message] (user-readable) and an optional wrapped [cause].
+/// All concrete exceptions should extend this class.
+class VitalSyncException implements Exception {
+  const VitalSyncException(this.message, {this.cause});
+
+  /// Human-readable error description.
   final String message;
+
+  /// Optional underlying error that triggered this exception.
+  final Object? cause;
+
   @override
-  String toString() => 'DatabaseException: $message';
+  String toString() {
+    final buffer = StringBuffer('$runtimeType: $message');
+    if (cause != null) {
+      buffer.write(' (cause: $cause)');
+    }
+    return buffer.toString();
+  }
 }
 
-class NetworkException implements Exception {
-  NetworkException(this.message);
-  final String message;
-  @override
-  String toString() => 'NetworkException: $message';
+class DatabaseException extends VitalSyncException {
+  const DatabaseException(super.message, {super.cause});
 }
 
-class AuthException implements Exception {
-  AuthException(this.message);
-  final String message;
-  @override
-  String toString() => 'AuthException: $message';
+class NetworkException extends VitalSyncException {
+  const NetworkException(super.message, {super.cause});
 }
 
-class WorkoutInProgressException implements Exception {
-  WorkoutInProgressException(this.message);
-  final String message;
-  @override
-  String toString() => 'WorkoutInProgressException: $message';
+class AuthException extends VitalSyncException {
+  const AuthException(super.message, {super.cause});
 }
 
-class GDPRConsentRequiredException implements Exception {
-  GDPRConsentRequiredException(this.message);
-  final String message;
-  @override
-  String toString() => 'GDPRConsentRequiredException: $message';
+class WorkoutInProgressException extends VitalSyncException {
+  const WorkoutInProgressException(super.message, {super.cause});
 }
 
-class SyncConflictException implements Exception {
-  SyncConflictException(this.message);
-  final String message;
-  @override
-  String toString() => 'SyncConflictException: $message';
+class GDPRConsentRequiredException extends VitalSyncException {
+  const GDPRConsentRequiredException(super.message, {super.cause});
 }
 
-class InsightGenerationException implements Exception {
-  InsightGenerationException(this.message);
-  final String message;
-  @override
-  String toString() => 'InsightGenerationException: $message';
+class SyncConflictException extends VitalSyncException {
+  const SyncConflictException(super.message, {super.cause});
+}
+
+class InsightGenerationException extends VitalSyncException {
+  const InsightGenerationException(super.message, {super.cause});
 }

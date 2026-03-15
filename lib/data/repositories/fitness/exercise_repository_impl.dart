@@ -30,6 +30,12 @@ class ExerciseRepositoryImpl implements ExerciseRepository {
   }
 
   @override
+  Future<List<Exercise>> getByIds(List<int> ids) async {
+    final results = await _dao.getByIds(ids);
+    return results.map(ExerciseModel.fromDrift).toList();
+  }
+
+  @override
   Future<List<Exercise>> search(String query) async {
     final results = await _dao.search(query);
     return results.map(ExerciseModel.fromDrift).toList();

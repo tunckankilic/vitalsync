@@ -7,6 +7,7 @@ library;
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:vitalsync/core/l10n/app_localizations.dart';
 import '../../../../presentation/widgets/fitness/glassmorphic_card.dart';
 import '../../../../presentation/widgets/fitness/sparkline_chart.dart';
@@ -166,9 +167,7 @@ class WorkoutHomeScreen extends ConsumerWidget {
   }
 
   void _handleStartWorkout(BuildContext context, WidgetRef ref) {
-    // Navigate to active workout screen
-    // Implementation depends on router setup
-    Navigator.pushNamed(context, '/fitness/active');
+    context.pushNamed('active_workout');
   }
 
   void _handleTemplateSelected(
@@ -176,16 +175,14 @@ class WorkoutHomeScreen extends ConsumerWidget {
     WidgetRef ref,
     dynamic template,
   ) {
-    // Start workout from template
-    Navigator.pushNamed(
-      context,
-      '/fitness/active',
-      arguments: {'templateId': template.id},
+    context.pushNamed(
+      'active_workout',
+      extra: {'templateId': template.id},
     );
   }
 
   void _navigateToTemplates(BuildContext context) {
-    Navigator.pushNamed(context, '/fitness/templates');
+    context.pushNamed('workout_templates');
   }
 
   void _showTemplateContextMenu(BuildContext context, dynamic template) {

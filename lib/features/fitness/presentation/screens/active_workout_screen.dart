@@ -15,6 +15,7 @@ import 'package:vitalsync/domain/entities/fitness/exercise.dart';
 import 'package:vitalsync/presentation/widgets/fitness/glassmorphic_card.dart';
 import 'package:vitalsync/presentation/widgets/fitness/pr_badge.dart';
 
+import '../../../../domain/entities/fitness/workout_session.dart';
 import '../../../../domain/entities/fitness/workout_set.dart';
 import '../../../../presentation/widgets/fitness/rest_timer_widget.dart';
 import '../providers/workout_provider.dart';
@@ -40,7 +41,7 @@ class ActiveWorkoutScreen extends ConsumerStatefulWidget {
 
 class _ActiveWorkoutScreenState extends ConsumerState<ActiveWorkoutScreen> {
   Timer? _elapsedTimer;
-  int _elapsedSeconds = 0;
+  final _elapsedNotifier = ValueNotifier<int>(0);
   bool _showRestTimer = false;
   final int _restDuration = 90; // Default 90 seconds
   int _currentExerciseIndex = 0;
@@ -55,6 +56,7 @@ class _ActiveWorkoutScreenState extends ConsumerState<ActiveWorkoutScreen> {
   @override
   void dispose() {
     _elapsedTimer?.cancel();
+    _elapsedNotifier.dispose();
     super.dispose();
   }
 
@@ -64,24 +66,19 @@ class _ActiveWorkoutScreenState extends ConsumerState<ActiveWorkoutScreen> {
 
       final session = ref.read(activeSessionProvider).value;
       if (session != null) {
-        setState(() {
-          _elapsedSeconds = DateTime.now()
-              .difference(session.startTime)
-              .inSeconds;
-        });
+        _elapsedNotifier.value = DateTime.now()
+            .difference(session.startTime)
+            .inSeconds;
       } else {
-        // Fallback or just increment if we trust initial state
-        setState(() {
-          _elapsedSeconds++;
-        });
+        _elapsedNotifier.value++;
       }
     });
   }
 
-  String _formatElapsedTime() {
-    final hours = _elapsedSeconds ~/ 3600;
-    final minutes = (_elapsedSeconds % 3600) ~/ 60;
-    final seconds = _elapsedSeconds % 60;
+  static String _formatTime(int totalSeconds) {
+    final hours = totalSeconds ~/ 3600;
+    final minutes = (totalSeconds % 3600) ~/ 60;
+    final seconds = totalSeconds % 60;
 
     if (hours > 0) {
       return '${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
@@ -111,15 +108,18 @@ class _ActiveWorkoutScreenState extends ConsumerState<ActiveWorkoutScreen> {
           ),
           centerTitle: false,
           actions: [
-            // Elapsed timer
+            // Elapsed timer — isolated rebuild via ValueListenableBuilder
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Center(
-                child: Text(
-                  _formatElapsedTime(),
-                  style: theme.textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    fontFeatures: const [FontFeature.tabularFigures()],
+                child: ValueListenableBuilder<int>(
+                  valueListenable: _elapsedNotifier,
+                  builder: (context, seconds, _) => Text(
+                    _formatTime(seconds),
+                    style: theme.textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      fontFeatures: const [FontFeature.tabularFigures()],
+                    ),
                   ),
                 ),
               ),
@@ -165,7 +165,7 @@ class _ActiveWorkoutScreenState extends ConsumerState<ActiveWorkoutScreen> {
     );
   }
 
-  Widget _buildActiveWorkout(BuildContext context, dynamic session) {
+  Widget _buildActiveWorkout(BuildContext context, WorkoutSession session) {
     final l10n = AppLocalizations.of(context);
 
     // Watch derived providers
@@ -316,14 +316,16 @@ class _ActiveWorkoutScreenState extends ConsumerState<ActiveWorkoutScreen> {
       return;
     }
 
-    // Check for PR (mock logic - needs real PR logic from repo)
-    // For now we assume repo handles PR flag on the set.
-    // We can check if the added set was a PR by watching the list again,
-    // but the notification might be delayed.
-    // Simplified: just check weight > 100 for demo visual
-    final isPR = weight > 100; // Simplified
-    if (isPR) {
-      // ...
+    // Check for PR based on existing sets for this exercise
+    if (!isWarmup) {
+      final sets = ref.read(activeSessionSetsProvider).value ?? [];
+      final previousMax = sets
+          .where((s) => s.exerciseId == exerciseId && !s.isWarmup)
+          .fold<double>(0, (max, s) => s.weight > max ? s.weight : max);
+      final isPR = weight > previousMax && previousMax > 0;
+      if (isPR) {
+        await HapticFeedback.heavyImpact();
+      }
     }
 
     // Start rest timer
@@ -360,7 +362,13 @@ class _ActiveWorkoutScreenState extends ConsumerState<ActiveWorkoutScreen> {
   }
 
   void _handleFinishWorkout(BuildContext context) {
-    Navigator.pushReplacementNamed(context, '/fitness/summary');
+    final session = ref.read(activeSessionProvider).value;
+    if (session != null) {
+      context.goNamed(
+        'workout_summary',
+        pathParameters: {'sessionId': session.id.toString()},
+      );
+    }
   }
 
   Future<void> _handleAddExercise() async {
@@ -572,8 +580,28 @@ class _SetLoggerSectionState extends State<_SetLoggerSection> {
   void _handleComplete() {
     final weight = double.tryParse(_weightController.text);
     final reps = int.tryParse(_repsController.text);
+    final l10n = AppLocalizations.of(context);
 
-    if (weight == null || reps == null) return;
+    if (weight == null || reps == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(l10n.enterValidWeightAndReps)),
+      );
+      return;
+    }
+
+    // Input bounds validation
+    if (weight < 0 || weight > 999) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(l10n.weightOutOfRange)),
+      );
+      return;
+    }
+    if (reps < 1 || reps > 999) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(l10n.repsOutOfRange)),
+      );
+      return;
+    }
 
     widget.onSetCompleted(weight, reps, _isWarmup);
 

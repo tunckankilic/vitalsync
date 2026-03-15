@@ -56,6 +56,7 @@ import '../background/background_service.dart';
 import '../gdpr/gdpr_manager.dart';
 import '../network/connectivity_service.dart';
 import '../notifications/notification_service.dart';
+import '../services/biometric_service.dart';
 import '../sync/sync_service.dart';
 
 /// The GetIt service locator instance.
@@ -116,6 +117,8 @@ Future<void> initializeDependencies() async {
   getIt.registerLazySingleton<ConnectivityService>(
     () => ConnectivityService(connectivity: getIt<Connectivity>()),
   );
+
+  getIt.registerLazySingleton<BiometricService>(BiometricService.new);
 
   // SyncService likely depends on SyncRepository, so register after repos
   // But here we register lazy singleton so order doesn't strictly matter for definition

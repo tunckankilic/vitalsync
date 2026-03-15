@@ -9,14 +9,20 @@
 /// (3 tabs: Dashboard, Health, Fitness).
 library;
 
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../domain/entities/fitness/exercise.dart';
 import '../../domain/entities/fitness/workout_template.dart';
 import '../../features/fitness/presentation/screens/achievements_screen.dart';
+import '../../features/fitness/presentation/screens/active_workout_screen.dart';
 import '../../features/fitness/presentation/screens/add_edit_template_screen.dart';
 import '../../features/fitness/presentation/screens/calendar_screen.dart';
+import '../../features/fitness/presentation/screens/exercise_detail_screen.dart';
 import '../../features/fitness/presentation/screens/exercise_library_screen.dart';
 import '../../features/fitness/presentation/screens/progress_screen.dart';
 import '../../features/fitness/presentation/screens/workout_home_screen.dart';
@@ -52,10 +58,19 @@ final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>();
 final GlobalKey<NavigatorState> _shellNavigatorKey =
     GlobalKey<NavigatorState>();
 
+/// Riverpod provider for the GoRouter instance.
+///
+/// Enables DI-friendly access and makes the router react to
+/// Firebase auth-state changes via [refreshListenable].
+final routerProvider = Provider<GoRouter>((ref) => appRouter);
+
 final GoRouter appRouter = GoRouter(
   navigatorKey: _rootNavigatorKey,
   initialLocation: '/splash',
   debugLogDiagnostics: true,
+  refreshListenable: GoRouterRefreshStream(
+    FirebaseAuth.instance.authStateChanges(),
+  ),
   routes: [
     // SPLASH & ONBOARDING
     GoRoute(
@@ -75,8 +90,15 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: '/gdpr-consent',
       name: 'gdpr_consent',
-      pageBuilder: (context, state) =>
-          _buildPageWithFadeTransition(context, state, const ConsentScreen()),
+      pageBuilder: (context, state) {
+        final isOnboarding =
+            state.uri.queryParameters['onboarding'] == 'true';
+        return _buildPageWithFadeTransition(
+          context,
+          state,
+          ConsentScreen(isOnboarding: isOnboarding),
+        );
+      },
     ),
 
     // AUTH ROUTES
@@ -263,6 +285,18 @@ final GoRouter appRouter = GoRouter(
               ],
             ),
             GoRoute(
+              path: 'active-workout',
+              name: 'active_workout',
+              parentNavigatorKey: _rootNavigatorKey,
+              pageBuilder: (context, state) {
+                return _buildPageWithSlideUpTransition(
+                  context,
+                  state,
+                  const ActiveWorkoutScreen(),
+                );
+              },
+            ),
+            GoRoute(
               path: 'exercises',
               name: 'exercise_library',
               parentNavigatorKey: _rootNavigatorKey,
@@ -273,6 +307,19 @@ final GoRouter appRouter = GoRouter(
                   context,
                   state,
                   ExerciseLibraryScreen(isSelectionMode: isSelectionMode),
+                );
+              },
+            ),
+            GoRoute(
+              path: 'exercise-detail',
+              name: 'exercise_detail',
+              parentNavigatorKey: _rootNavigatorKey,
+              pageBuilder: (context, state) {
+                final exercise = state.extra as Exercise?;
+                return _buildPageWithSlideTransition(
+                  context,
+                  state,
+                  ExerciseDetailScreen(exercise: exercise!),
                 );
               },
             ),
@@ -475,4 +522,23 @@ Page _buildPageWithSlideUpTransition(
       return SlideTransition(position: animation.drive(tween), child: child);
     },
   );
+}
+
+/// Converts a [Stream] into a [ChangeNotifier] so GoRouter can listen
+/// to auth-state changes and re-evaluate its [redirect] callback.
+class GoRouterRefreshStream extends ChangeNotifier {
+  GoRouterRefreshStream(Stream<dynamic> stream) {
+    notifyListeners();
+    _subscription = stream.asBroadcastStream().listen((_) {
+      notifyListeners();
+    });
+  }
+
+  late final StreamSubscription<dynamic> _subscription;
+
+  @override
+  void dispose() {
+    _subscription.cancel();
+    super.dispose();
+  }
 }

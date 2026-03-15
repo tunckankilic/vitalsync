@@ -21,40 +21,59 @@ import 'core/sync/sync_service.dart';
 import 'core/theme/app_theme.dart';
 import 'firebase_options.dart';
 
+/// Holds initialization error (if any) for display on splash screen.
+Object? _initError;
+
+/// Exposes the initialization error for the splash screen to check.
+Object? get appInitError => _initError;
+
 void main() async {
   // Ensure Flutter bindings are initialized
   WidgetsFlutterBinding.ensureInitialized();
 
   try {
-    // Initialize Firebase
+    // Initialize Firebase — critical, app cannot function without it
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
 
     // Initialize GetIt dependency injection
     await initializeDependencies();
+  } on FirebaseException catch (e, stack) {
+    _initError = e;
+    FlutterError.reportError(
+      FlutterErrorDetails(exception: e, stack: stack, library: 'main'),
+    );
+  } catch (e, stack) {
+    _initError = e;
+    FlutterError.reportError(
+      FlutterErrorDetails(exception: e, stack: stack, library: 'main'),
+    );
+  }
 
-    // Initialize notification service
-    final notificationService = getIt<NotificationService>();
-    await notificationService.initialize();
-    await notificationService.requestPermissions();
+  // Non-critical services — failures here should not prevent app launch
+  if (_initError == null) {
+    try {
+      final notificationService = getIt<NotificationService>();
+      await notificationService.initialize();
+      await notificationService.requestPermissions();
 
-    // Initialize background service
-    final backgroundService = getIt<BackgroundService>();
-    await backgroundService.initialize();
-    await backgroundService.scheduleAllPeriodicTasks();
+      final backgroundService = getIt<BackgroundService>();
+      await backgroundService.initialize();
+      await backgroundService.scheduleAllPeriodicTasks();
 
-    // Start connectivity service listening
-    final connectivityService = getIt<ConnectivityService>();
-    connectivityService.startListening();
+      final connectivityService = getIt<ConnectivityService>();
+      connectivityService.startListening();
 
-    // Start auto-sync on connectivity changes
-    final syncService = getIt<SyncService>();
-    syncService.startAutoSync();
-  } catch (e) {
-    // If critical initialization fails, still launch the app
-    // so the user sees something instead of a crash
-    debugPrint('Initialization error: $e');
+      final syncService = getIt<SyncService>();
+      syncService.startAutoSync();
+    } catch (e, stack) {
+      // Non-critical — log but don't block app launch
+      debugPrint('Non-critical initialization error: $e');
+      FlutterError.reportError(
+        FlutterErrorDetails(exception: e, stack: stack, library: 'main'),
+      );
+    }
   }
 
   // Run the app wrapped in ProviderScope for Riverpod

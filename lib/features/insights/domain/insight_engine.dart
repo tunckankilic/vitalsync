@@ -22,6 +22,7 @@ import 'package:vitalsync/core/enums/insight_priority.dart';
 import 'package:vitalsync/core/enums/insight_type.dart';
 import 'package:vitalsync/core/enums/medication_log_status.dart';
 import 'package:vitalsync/domain/entities/fitness/workout_set.dart';
+import 'package:vitalsync/domain/entities/health/symptom.dart';
 import 'package:vitalsync/domain/entities/insights/insight.dart';
 import 'package:vitalsync/domain/repositories/fitness/exercise_repository.dart';
 import 'package:vitalsync/domain/repositories/fitness/personal_record_repository.dart';
@@ -30,6 +31,7 @@ import 'package:vitalsync/domain/repositories/fitness/workout_session_repository
 import 'package:vitalsync/domain/repositories/health/medication_log_repository.dart';
 import 'package:vitalsync/domain/repositories/health/symptom_repository.dart';
 import 'package:vitalsync/domain/repositories/insights/insight_repository.dart';
+import 'package:vitalsync/features/insights/domain/insight_strings.dart';
 
 class InsightEngine {
   InsightEngine({
@@ -268,14 +270,14 @@ class InsightEngine {
     if (percentDiff.abs() < 5) return null; // Too small to be meaningful
 
     final message = percentDiff > 0
-        ? 'Your workout performance is $percentDiff% higher on days when you take all your medications on time.'
-        : 'Interesting pattern: your workout volume is slightly different on medication-compliant days.';
+        ? InsightStrings.medWorkoutCorrelationPositive(percentDiff)
+        : InsightStrings.medWorkoutCorrelationNeutral;
 
     return Insight(
       id: 0, // Auto-assigned by DB
       type: InsightType.correlation,
       category: InsightCategory.crossModule,
-      title: 'Medication & Workout Correlation',
+      title: InsightStrings.medWorkoutCorrelationTitle,
       message: message,
       data: {
         'ruleId': _ruleMedWorkoutCorrelation,
@@ -369,10 +371,12 @@ class InsightEngine {
               id: 0,
               type: InsightType.correlation,
               category: InsightCategory.crossModule,
-              title: 'Symptom-Exercise Pattern',
-              message:
-                  'Your $symptomName complaints tend to appear after $category workouts '
-                  '(${(rate * 100).round()}% of the time).',
+              title: InsightStrings.symptomExercisePatternTitle,
+              message: InsightStrings.symptomExercisePatternMessage(
+                symptomName,
+                category,
+                (rate * 100).round(),
+              ),
               data: {
                 'ruleId': _ruleSymptomExercisePattern,
                 'symptom': symptomName,
@@ -414,30 +418,29 @@ class InsightEngine {
     String message;
     InsightPriority priority;
 
+    final compliancePercent = (complianceRate * 100).round();
+
     if (highCompliance && highStreak) {
-      message =
-          'Both your health and fitness routines are going great — '
-          '$workoutStreak-day workout streak with '
-          '${(complianceRate * 100).round()}% medication compliance!';
+      message = InsightStrings.complianceStreakBothHigh(
+        workoutStreak,
+        compliancePercent,
+      );
       priority = InsightPriority.medium;
     } else if (highCompliance && !highStreak) {
-      message =
-          'Your medication compliance is excellent at '
-          '${(complianceRate * 100).round()}%, but your workout streak could '
-          'use a boost. Try a quick session today!';
+      message = InsightStrings.complianceStreakHighComplianceLowStreak(
+        compliancePercent,
+      );
       priority = InsightPriority.medium;
     } else if (!highCompliance && highStreak) {
-      message =
-          'Your workouts are on fire with a $workoutStreak-day streak! '
-          'Don\'t forget your medications — compliance is at '
-          '${(complianceRate * 100).round()}% this week.';
+      message = InsightStrings.complianceStreakLowComplianceHighStreak(
+        workoutStreak,
+        compliancePercent,
+      );
       priority = InsightPriority.high;
     } else {
       // Both low — only show if there's some data
       if (complianceRate == 0 && workoutStreak == 0) return null;
-      message =
-          'This week has been quiet — let\'s get back on track with both '
-          'medications and workouts!';
+      message = InsightStrings.complianceStreakBothLow;
       priority = InsightPriority.low;
     }
 
@@ -445,7 +448,7 @@ class InsightEngine {
       id: 0,
       type: InsightType.trend,
       category: InsightCategory.crossModule,
-      title: 'Health & Fitness Balance',
+      title: InsightStrings.complianceStreakTitle,
       message: message,
       data: {
         'ruleId': _ruleComplianceStreakCorrelation,
@@ -498,10 +501,8 @@ class InsightEngine {
       id: 0,
       type: InsightType.trend,
       category: InsightCategory.health,
-      title: 'Medication Pattern',
-      message:
-          'Your medication compliance drops by $percentDrop% on ${dayName}s '
-          '— would you like to adjust your reminder times?',
+      title: InsightStrings.complianceWeekdayTitle,
+      message: InsightStrings.complianceWeekdayMessage(dayName, percentDrop),
       data: {
         'ruleId': _ruleComplianceWeekdayPattern,
         'worstDay': worstDay,
@@ -557,11 +558,12 @@ class InsightEngine {
           id: 0,
           type: InsightType.anomaly,
           category: InsightCategory.health,
-          title: 'Symptom Trend Alert',
-          message:
-              'Your $name severity has increased from '
-              '${prior.toStringAsFixed(1)} to ${recent.toStringAsFixed(1)} '
-              'over the past week — you may want to discuss this with your doctor.',
+          title: InsightStrings.symptomTrendTitle,
+          message: InsightStrings.symptomTrendMessage(
+            name,
+            prior.toStringAsFixed(1),
+            recent.toStringAsFixed(1),
+          ),
           data: {
             'ruleId': _ruleSymptomTrend,
             'symptom': name,
@@ -598,10 +600,8 @@ class InsightEngine {
           id: 0,
           type: InsightType.milestone,
           category: InsightCategory.health,
-          title: 'Medication Milestone 🎉',
-          message:
-              'You\'ve taken all your medications on time for $days days '
-              'straight! Incredible consistency!',
+          title: InsightStrings.medMilestoneTitle,
+          message: InsightStrings.medMilestoneMessage(days),
           data: {
             'ruleId': _ruleMedAdherenceMilestone,
             'consecutiveDays': days,
@@ -663,10 +663,8 @@ class InsightEngine {
       id: 0,
       type: InsightType.trend,
       category: InsightCategory.fitness,
-      title: 'Volume Plateau Detected',
-      message:
-          'Your workout volume has been flat for 3 weeks at ~${avg.round()} kg/week. '
-          'Consider a deload week or progressive overload to break through!',
+      title: InsightStrings.volumePlateauTitle,
+      message: InsightStrings.volumePlateauMessage(avg.round()),
       data: {
         'ruleId': _ruleVolumePlateau,
         'weekVolumes': weekVolumes,
@@ -701,10 +699,8 @@ class InsightEngine {
       id: 0,
       type: InsightType.suggestion,
       category: InsightCategory.fitness,
-      title: 'Rest Day Recommended',
-      message:
-          'You\'ve worked out ${recentDays.length} out of the last 5 days — '
-          'a rest day today could be great for muscle recovery and growth!',
+      title: InsightStrings.restDayTitle,
+      message: InsightStrings.restDayMessage(recentDays.length),
       data: {
         'ruleId': _ruleRestDaySuggestion,
         'workoutDaysInLast5': recentDays.length,
@@ -746,10 +742,8 @@ class InsightEngine {
       id: 0,
       type: InsightType.trend,
       category: InsightCategory.fitness,
-      title: 'Workout Pattern',
-      message:
-          'You typically work out on $topDayStr — this consistency is great '
-          'for building long-term habits!',
+      title: InsightStrings.workoutConsistencyTitle,
+      message: InsightStrings.workoutConsistencyMessage(topDayStr),
       data: {
         'ruleId': _ruleWorkoutConsistency,
         'weekdayCounts': weekdayCounts,
@@ -830,11 +824,14 @@ class InsightEngine {
             id: 0,
             type: InsightType.suggestion,
             category: InsightCategory.fitness,
-            title: 'PR Proximity Alert 🔥',
-            message:
-                'You\'re very close to your $exerciseName PR! Your recent set '
-                'was ${bestSet.weight}kg × ${bestSet.reps} — '
-                'PR is ${pr.weight}kg × ${pr.reps}.',
+            title: InsightStrings.prProximityTitle,
+            message: InsightStrings.prProximityMessage(
+              exerciseName,
+              bestSet.weight,
+              bestSet.reps,
+              pr.weight,
+              pr.reps,
+            ),
             data: {
               'ruleId': _rulePrProximity,
               'exerciseId': exerciseId,
@@ -910,27 +907,16 @@ class InsightEngine {
     return values.reduce((a, b) => a + b) / values.length;
   }
 
-  /// Weekday number to name.
-  String _weekdayName(int weekday) {
-    const names = {
-      1: 'Monday',
-      2: 'Tuesday',
-      3: 'Wednesday',
-      4: 'Thursday',
-      5: 'Friday',
-      6: 'Saturday',
-      7: 'Sunday',
-    };
-    return names[weekday] ?? 'Unknown';
-  }
+  /// Weekday number to name — delegates to [InsightStrings] for l10n readiness.
+  String _weekdayName(int weekday) => InsightStrings.weekdayName(weekday);
 
   /// Average severity grouped by symptom name.
-  Map<String, double> _averageSeverityByName(List<dynamic> symptoms) {
+  Map<String, double> _averageSeverityByName(List<Symptom> symptoms) {
     final sums = <String, double>{};
     final counts = <String, int>{};
     for (final s in symptoms) {
-      final name = s.name as String;
-      final severity = (s.severity as int).toDouble();
+      final name = s.name;
+      final severity = s.severity.toDouble();
       sums[name] = (sums[name] ?? 0) + severity;
       counts[name] = (counts[name] ?? 0) + 1;
     }
