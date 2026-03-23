@@ -3,7 +3,6 @@
 /// Initial loading screen shown on app launch.
 library;
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -12,6 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../core/constants/app_constants.dart';
 import '../../core/di/injection_container.dart';
 import '../../core/gdpr/gdpr_manager.dart';
+import '../../domain/repositories/shared/auth_repository.dart';
 import '../../main.dart' show appInitError;
 
 /// Splash screen widget.
@@ -73,7 +73,7 @@ class _SplashPageState extends ConsumerState<SplashPage> {
       }
 
       // 3. Check authentication status
-      final authRepo = getIt<FirebaseAuth>();
+      final authRepo = getIt<AuthRepository>();
       final currentUser = authRepo.currentUser;
 
       if (!mounted) return;

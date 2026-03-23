@@ -3,6 +3,10 @@
 /// Registers all services, repositories, and external dependencies.
 /// Lazy singleton pattern with async initialization.
 /// DI = GetIt, State = Riverpod (separation of concerns).
+///
+/// Cloud provider abstracted via [CloudSyncClient] interface.
+/// Currently uses [FirestoreSyncClient] — swap to [RestSyncClient]
+/// after AWS migration.
 library;
 
 import 'dart:developer' show log;
@@ -28,7 +32,7 @@ import '../../data/repositories/health/medication_log_repository_impl.dart';
 import '../../data/repositories/health/medication_repository_impl.dart';
 import '../../data/repositories/health/symptom_repository_impl.dart';
 import '../../data/repositories/insights/insight_repository_impl.dart';
-import '../../data/repositories/shared/auth_repository_impl.dart'; // Assuming this exists or will be created
+import '../../data/repositories/shared/auth_repository_impl.dart';
 import '../../data/repositories/shared/sync_repository_impl.dart';
 import '../../data/repositories/shared/user_repository_impl.dart';
 import '../../domain/repositories/fitness/achievement_repository.dart';
@@ -42,7 +46,7 @@ import '../../domain/repositories/health/medication_log_repository.dart';
 import '../../domain/repositories/health/medication_repository.dart';
 import '../../domain/repositories/health/symptom_repository.dart';
 import '../../domain/repositories/insights/insight_repository.dart';
-import '../../domain/repositories/shared/auth_repository.dart'; // Assuming this exists
+import '../../domain/repositories/shared/auth_repository.dart';
 import '../../domain/repositories/shared/sync_repository.dart';
 import '../../domain/repositories/shared/user_repository.dart';
 // Services
@@ -57,6 +61,8 @@ import '../gdpr/gdpr_manager.dart';
 import '../network/connectivity_service.dart';
 import '../notifications/notification_service.dart';
 import '../services/biometric_service.dart';
+import '../sync/cloud_sync_client.dart';
+import '../sync/firestore_sync_client.dart';
 import '../sync/sync_service.dart';
 
 /// The GetIt service locator instance.
@@ -69,6 +75,7 @@ Future<void> initializeDependencies() async {
   final sharedPreferences = await SharedPreferences.getInstance();
   getIt.registerSingleton<SharedPreferences>(sharedPreferences);
 
+  // Firebase instances (will be removed after AWS migration)
   getIt.registerLazySingleton<FirebaseAuth>(() => FirebaseAuth.instance);
   getIt.registerLazySingleton<FirebaseFirestore>(
     () => FirebaseFirestore.instance,
@@ -76,6 +83,7 @@ Future<void> initializeDependencies() async {
   getIt.registerLazySingleton<FirebaseAnalytics>(
     () => FirebaseAnalytics.instance,
   );
+
   getIt.registerLazySingleton<Connectivity>(Connectivity.new);
   getIt.registerLazySingleton<FlutterLocalNotificationsPlugin>(
     FlutterLocalNotificationsPlugin.new,
@@ -86,13 +94,28 @@ Future<void> initializeDependencies() async {
 
   getIt.registerSingleton<AppDatabase>(AppDatabase.connect());
 
+  // CLOUD SYNC CLIENT (abstraction layer)
+  // Currently: FirestoreSyncClient
+  // After AWS migration: RestSyncClient
+  getIt.registerLazySingleton<CloudSyncClient>(
+    () => FirestoreSyncClient(firestore: getIt<FirebaseFirestore>()),
+  );
+
+  // AUTH REPOSITORY (abstraction layer)
+  getIt.registerLazySingleton<AuthRepository>(
+    () => AuthRepositoryImpl(
+      auth: getIt<FirebaseAuth>(),
+      firestore: getIt<FirebaseFirestore>(),
+    ),
+  );
+
   // SHARED SERVICES
 
   getIt.registerLazySingleton<GDPRManager>(
     () => GDPRManager(
       prefs: getIt<SharedPreferences>(),
-      firestore: getIt<FirebaseFirestore>(),
-      auth: getIt<FirebaseAuth>(),
+      cloudClient: getIt<CloudSyncClient>(),
+      auth: getIt<AuthRepository>(),
     ),
   );
 
@@ -120,25 +143,16 @@ Future<void> initializeDependencies() async {
 
   getIt.registerLazySingleton<BiometricService>(BiometricService.new);
 
-  // SyncService likely depends on SyncRepository, so register after repos
-  // But here we register lazy singleton so order doesn't strictly matter for definition
   getIt.registerLazySingleton<SyncService>(
     () => SyncService(
       database: getIt<AppDatabase>(),
-      firestore: getIt<FirebaseFirestore>(),
-      auth: getIt<FirebaseAuth>(),
+      cloudClient: getIt<CloudSyncClient>(),
+      auth: getIt<AuthRepository>(),
       connectivity: getIt<ConnectivityService>(),
     ),
   );
 
   // SHARED REPOSITORIES
-
-  getIt.registerLazySingleton<AuthRepository>(
-    () => AuthRepositoryImpl(
-      auth: getIt<FirebaseAuth>(),
-      firestore: getIt<FirebaseFirestore>(),
-    ),
-  );
 
   getIt.registerLazySingleton<UserRepository>(
     () =>
@@ -148,9 +162,9 @@ Future<void> initializeDependencies() async {
   getIt.registerLazySingleton<SyncRepository>(
     () => SyncRepositoryImpl(
       getIt<AppDatabase>().syncDao,
-      getIt<FirebaseFirestore>(),
+      getIt<CloudSyncClient>(),
       getIt<AppDatabase>(),
-      getIt<FirebaseAuth>(),
+      getIt<AuthRepository>(),
     ),
   );
 

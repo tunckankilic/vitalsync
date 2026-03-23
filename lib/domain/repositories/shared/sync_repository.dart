@@ -34,5 +34,5 @@ abstract class SyncRepository {
   Future<void> markCompleted(int id);
   Future<void> markFailed(int id);
   Future<void> processQueue();
-  Future<void> pullFromFirestore();
+  Future<void> pullFromCloud();
 }

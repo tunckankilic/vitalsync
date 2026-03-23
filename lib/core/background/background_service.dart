@@ -26,6 +26,8 @@ import '../../data/repositories/health/medication_log_repository_impl.dart';
 import '../../data/repositories/health/medication_repository_impl.dart';
 import '../../data/repositories/health/symptom_repository_impl.dart';
 import '../../data/repositories/insights/insight_repository_impl.dart';
+import '../../data/repositories/shared/auth_repository_impl.dart';
+import '../../domain/repositories/shared/auth_repository.dart';
 import '../../features/fitness/domain/services/streak_service.dart';
 import '../../features/insights/domain/insight_engine.dart';
 import '../../features/insights/domain/weekly_report_service.dart';
@@ -33,6 +35,8 @@ import '../constants/app_constants.dart';
 import '../enums/insight_priority.dart';
 import '../enums/medication_log_status.dart';
 import '../network/connectivity_service.dart';
+import '../sync/cloud_sync_client.dart';
+import '../sync/firestore_sync_client.dart';
 import '../sync/sync_service.dart';
 
 /// Background Service for VitalSync.
@@ -618,19 +622,32 @@ Future<void> _handleGenerateInsights(_BackgroundDeps deps) async {
   }
 }
 
-/// Syncs pending local changes to Firestore.
+/// Syncs pending local changes to the cloud.
 ///
-/// 1. Creates a SyncService with Firebase and connectivity dependencies
+/// 1. Creates a SyncService with cloud client and connectivity dependencies
 /// 2. Calls sync() which handles push/pull logic internally
+///
+/// NOTE: Background isolate cannot access GetIt, so we create instances
+/// directly here. After AWS migration, swap FirestoreSyncClient → RestSyncClient.
 Future<void> _handleSyncPendingData(_BackgroundDeps deps) async {
   log('Syncing pending data...');
 
   final connectivity = ConnectivityService(connectivity: Connectivity());
 
+  // Create cloud sync client and auth repo for background isolate
+  final firestore = FirebaseFirestore.instance;
+  final firebaseAuth = FirebaseAuth.instance;
+
+  final CloudSyncClient cloudClient = FirestoreSyncClient(firestore: firestore);
+  final AuthRepository authRepo = AuthRepositoryImpl(
+    auth: firebaseAuth,
+    firestore: firestore,
+  );
+
   final syncService = SyncService(
     database: deps.db,
-    firestore: FirebaseFirestore.instance,
-    auth: FirebaseAuth.instance,
+    cloudClient: cloudClient,
+    auth: authRepo,
     connectivity: connectivity,
   );
 

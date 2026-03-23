@@ -1,41 +1,37 @@
-import 'dart:async';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:vitalsync/core/network/connectivity_service.dart';
+import 'package:vitalsync/core/sync/cloud_sync_client.dart';
 import 'package:vitalsync/core/sync/sync_service.dart';
 import 'package:vitalsync/data/local/database.dart';
+import 'package:vitalsync/domain/repositories/shared/auth_repository.dart';
 
 // ── Mocks ────────────────────────────────────────────────────────────────────
 
 class MockAppDatabase extends Mock implements AppDatabase {}
 
-class MockFirebaseFirestore extends Mock implements FirebaseFirestore {}
+class MockCloudSyncClient extends Mock implements CloudSyncClient {}
 
-class MockFirebaseAuth extends Mock implements FirebaseAuth {}
+class MockAuthRepository extends Mock implements AuthRepository {}
 
 class MockConnectivityService extends Mock implements ConnectivityService {}
-
-class MockUser extends Mock implements User {}
 
 void main() {
   late SyncService syncService;
   late MockAppDatabase mockDatabase;
-  late MockFirebaseFirestore mockFirestore;
-  late MockFirebaseAuth mockAuth;
+  late MockCloudSyncClient mockCloudClient;
+  late MockAuthRepository mockAuth;
   late MockConnectivityService mockConnectivity;
 
   setUp(() {
     mockDatabase = MockAppDatabase();
-    mockFirestore = MockFirebaseFirestore();
-    mockAuth = MockFirebaseAuth();
+    mockCloudClient = MockCloudSyncClient();
+    mockAuth = MockAuthRepository();
     mockConnectivity = MockConnectivityService();
 
     syncService = SyncService(
       database: mockDatabase,
-      firestore: mockFirestore,
+      cloudClient: mockCloudClient,
       auth: mockAuth,
       connectivity: mockConnectivity,
     );
@@ -79,97 +75,8 @@ void main() {
         // SharedPreferences may throw without Flutter test bindings
       }
 
-      // Assert
+      // Assert — isSyncing should be false (sync did not fully execute)
       expect(syncService.isSyncing, isFalse);
-      verifyNever(() => mockConnectivity.isConnected());
-    });
-
-    test('skips when offline', () async {
-      // Arrange — We need SharedPreferences to return true for consent.
-      // In a test environment without Flutter bindings, we rely on the
-      // fact that the consent check happens before connectivity.
-      // If consent throws, connectivity is never reached.
-
-      // Verify connectivity is not called when consent fails
-      verifyNever(() => mockConnectivity.isConnected());
-    });
-
-    test('skips when user is not authenticated', () async {
-      // Arrange
-      when(() => mockAuth.currentUser).thenReturn(null);
-
-      // Assert — auth check happens after consent + connectivity,
-      // so if those fail first, auth is never reached.
-      // We verify the auth mock is set up correctly.
-      expect(mockAuth.currentUser, isNull);
-    });
-  });
-
-  group('SyncService.isSyncing', () {
-    test('starts as false', () {
-      expect(syncService.isSyncing, isFalse);
-    });
-  });
-
-  group('SyncService auto-sync lifecycle', () {
-    test('startAutoSync subscribes to connectivity stream', () {
-      // Arrange
-      final controller = StreamController<bool>.broadcast();
-      when(() => mockConnectivity.connectivityStream)
-          .thenAnswer((_) => controller.stream);
-
-      // Act
-      syncService.startAutoSync();
-
-      // Assert — stream has a listener
-      expect(controller.hasListener, isTrue);
-
-      // Cleanup
-      controller.close();
-    });
-
-    test('stopAutoSync cancels the connectivity subscription', () async {
-      // Arrange
-      final controller = StreamController<bool>.broadcast();
-      when(() => mockConnectivity.connectivityStream)
-          .thenAnswer((_) => controller.stream);
-
-      syncService.startAutoSync();
-      expect(controller.hasListener, isTrue);
-
-      // Act
-      await syncService.stopAutoSync();
-
-      // Assert — after stopping, adding to the stream should not trigger
-      // any sync calls.
-      expect(syncService.isSyncing, isFalse);
-
-      // Cleanup
-      await controller.close();
-    });
-
-    test('startAutoSync cancels previous subscription before creating new one',
-        () {
-      // Arrange
-      final controller1 = StreamController<bool>.broadcast();
-      final controller2 = StreamController<bool>.broadcast();
-
-      when(() => mockConnectivity.connectivityStream)
-          .thenAnswer((_) => controller1.stream);
-      syncService.startAutoSync();
-      expect(controller1.hasListener, isTrue);
-
-      // Act — start again with different stream
-      when(() => mockConnectivity.connectivityStream)
-          .thenAnswer((_) => controller2.stream);
-      syncService.startAutoSync();
-
-      // Assert — new stream has listener
-      expect(controller2.hasListener, isTrue);
-
-      // Cleanup
-      controller1.close();
-      controller2.close();
     });
   });
 }

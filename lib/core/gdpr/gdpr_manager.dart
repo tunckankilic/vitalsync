@@ -2,19 +2,22 @@
 ///
 /// Consent management (analytics, health data, fitness data, cloud backup).
 /// Data export (JSON format for portability).
-/// Right to deletion (account + all local data + Firestore data).
+/// Right to deletion (account + all local data + cloud data).
 /// Privacy policy versioning and consent logging with timestamps.
 /// Analytics consent check helper.
+///
+/// Cloud provider abstracted via [AuthRepository] and [CloudSyncClient].
 library;
 
 import 'dart:convert';
 import 'dart:developer' show log;
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../domain/models/app_user.dart';
+import '../../domain/repositories/shared/auth_repository.dart';
 import '../constants/app_constants.dart';
+import '../sync/cloud_sync_client.dart';
 
 /// GDPR Compliance Manager for VitalSync.
 ///
@@ -23,14 +26,14 @@ import '../constants/app_constants.dart';
 class GDPRManager {
   GDPRManager({
     required SharedPreferences prefs,
-    required FirebaseFirestore firestore,
-    required FirebaseAuth auth,
+    required CloudSyncClient cloudClient,
+    required AuthRepository auth,
   }) : _prefs = prefs,
-       _firestore = firestore,
+       _cloudClient = cloudClient,
        _auth = auth;
   final SharedPreferences _prefs;
-  final FirebaseFirestore _firestore;
-  final FirebaseAuth _auth;
+  final CloudSyncClient _cloudClient;
+  final AuthRepository _auth;
 
   // CONSENT MANAGEMENT
 
@@ -163,13 +166,7 @@ class GDPRManager {
     final exportData = {
       'export_timestamp': DateTime.now().toIso8601String(),
       'policy_version': getCurrentPolicyVersion(),
-      'user': {
-        'uid': user.uid,
-        'email': user.email,
-        'email_verified': user.emailVerified,
-        'created_at': user.metadata.creationTime?.toIso8601String(),
-        'last_sign_in': user.metadata.lastSignInTime?.toIso8601String(),
-      },
+      'user': _userToExportMap(user),
       'consents': getAllConsents(),
       'consent_history': await _getConsentHistory(),
       'privacy_policy': {
@@ -196,6 +193,17 @@ class GDPRManager {
     return json.encode(exportData);
   }
 
+  /// Converts an [AppUser] to an export-friendly map.
+  Map<String, dynamic> _userToExportMap(AppUser user) {
+    return {
+      'uid': user.id,
+      'email': user.email,
+      'email_verified': user.emailVerified,
+      'created_at': user.createdAt?.toIso8601String(),
+      'last_sign_in': user.lastSignInAt?.toIso8601String(),
+    };
+  }
+
   // DATA DELETION (Right to be Forgotten)
 
   /// Deletes all user data (local and cloud).
@@ -204,8 +212,8 @@ class GDPRManager {
   ///
   /// Steps:
   /// 1. Delete all local data from Drift database
-  /// 2. Delete all Firestore user data
-  /// 3. Delete Firebase Auth account
+  /// 2. Delete all cloud user data via CloudSyncClient
+  /// 3. Delete auth account via AuthRepository
   /// 4. Clear all SharedPreferences
   ///
   /// Note: This method requires access to the repository layer.
@@ -219,13 +227,8 @@ class GDPRManager {
     // Step 1 & 2: These should be handled by UserRepository
     // which has access to the database and all collections
 
-    // Step 3: Delete Firestore user data
+    // Step 3: Delete cloud user data
     try {
-      // Delete user document
-      await _firestore.collection('users').doc(user.uid).delete();
-
-      // Delete all subcollections (this is a simplified version)
-      // In production, consider using Cloud Functions for recursive deletion
       final collections = [
         'medications',
         'medication_logs',
@@ -235,27 +238,20 @@ class GDPRManager {
         'insights',
       ];
 
-      for (final collection in collections) {
-        final snapshot = await _firestore
-            .collection('users')
-            .doc(user.uid)
-            .collection(collection)
-            .get();
-
-        for (final doc in snapshot.docs) {
-          await doc.reference.delete();
-        }
-      }
+      await _cloudClient.deleteAllUserData(
+        userId: user.id,
+        collections: collections,
+      );
     } catch (e) {
       // Log error but continue with deletion process
-      log('Error deleting Firestore data: $e');
+      log('Error deleting cloud data: $e');
     }
 
     // Step 4: Clear SharedPreferences
     await _prefs.clear();
 
-    // Step 5: Delete Firebase Auth account (must be last)
-    await user.delete();
+    // Step 5: Delete auth account (must be last)
+    await _auth.deleteAccount();
   }
 
   // CONSENT LOGGING (Internal)

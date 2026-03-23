@@ -1,0 +1,37 @@
+{
+  "resourceName": "vitalsynchDB",
+  "tableName": "vitalsynchDBtable",
+  "partitionKey": {
+    "fieldName": "PK",
+    "fieldType": "string"
+  },
+  "sortKey": {
+    "fieldName": "SK",
+    "fieldType": "string"
+  },
+  "gsi": [
+    {
+      "name": "lastModifiedAt-index",
+      "partitionKey": {
+        "fieldName": "PK",
+        "fieldType": "string"
+      },
+      "sortKey": {
+        "fieldName": "lastModifiedAt",
+        "fieldType": "string"
+      }
+    },
+    {
+      "name": "SK-index",
+      "partitionKey": {
+        "fieldName": "PK",
+        "fieldType": "string"
+      },
+      "sortKey": {
+        "fieldName": "SK",
+        "fieldType": "string"
+      }
+    }
+  ],
+  "triggerFunctions": []
+}

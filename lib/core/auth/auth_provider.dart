@@ -1,15 +1,16 @@
 /// VitalSync — Auth Riverpod Providers.
 ///
-/// Firebase Auth integration:
-///  - authStateProvider (stream from FirebaseAuth.authStateChanges)
+/// Auth integration (provider-agnostic):
+///  - authStateProvider (stream from AuthRepository.authStateChanges)
 ///  - currentUserProvider (UserProfile from local DB)
 ///  - authNotifier (signIn, signUp, signInWithGoogle, signInWithApple, signOut, resetPassword).
 library;
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../domain/entities/shared/user_profile.dart';
+import '../../domain/models/app_auth_result.dart';
+import '../../domain/models/app_user.dart';
 import '../../domain/repositories/shared/auth_repository.dart';
 import '../../domain/repositories/shared/user_repository.dart';
 import '../analytics/analytics_service.dart';
@@ -35,9 +36,9 @@ AnalyticsService analyticsService(Ref ref) {
   return getIt<AnalyticsService>();
 }
 
-/// Stream provider for Firebase Auth state changes
+/// Stream provider for auth state changes (provider-agnostic)
 @riverpod
-Stream<User?> authState(Ref ref) {
+Stream<AppUser?> authState(Ref ref) {
   final repository = ref.watch(authRepositoryProvider);
   return repository.authStateChanges;
 }
@@ -58,14 +59,14 @@ class AuthNotifier extends _$AuthNotifier {
   }
 
   /// Sign in with email and password
-  Future<UserCredential> signIn(String email, String password) async {
+  Future<AppAuthResult> signIn(String email, String password) async {
     state = const AsyncValue.loading();
 
     final authRepo = ref.read(authRepositoryProvider);
 
     final result = await AsyncValue.guard(() async {
-      final credential = await authRepo.signIn(email, password);
-      return credential;
+      final authResult = await authRepo.signIn(email, password);
+      return authResult;
     });
 
     state = result.when(
@@ -78,11 +79,11 @@ class AuthNotifier extends _$AuthNotifier {
       throw result.error!;
     }
 
-    return result.value as UserCredential;
+    return result.value as AppAuthResult;
   }
 
   /// Sign up with email, password, and name
-  Future<UserCredential> signUp(
+  Future<AppAuthResult> signUp(
     String email,
     String password,
     String name,
@@ -92,8 +93,8 @@ class AuthNotifier extends _$AuthNotifier {
     final authRepo = ref.read(authRepositoryProvider);
 
     final result = await AsyncValue.guard(() async {
-      final credential = await authRepo.signUp(email, password, name);
-      return credential;
+      final authResult = await authRepo.signUp(email, password, name);
+      return authResult;
     });
 
     state = result.when(
@@ -106,18 +107,18 @@ class AuthNotifier extends _$AuthNotifier {
       throw result.error!;
     }
 
-    return result.value as UserCredential;
+    return result.value as AppAuthResult;
   }
 
   /// Sign in with Google
-  Future<UserCredential> signInWithGoogle() async {
+  Future<AppAuthResult> signInWithGoogle() async {
     state = const AsyncValue.loading();
 
     final authRepo = ref.read(authRepositoryProvider);
 
     final result = await AsyncValue.guard(() async {
-      final credential = await authRepo.signInWithGoogle();
-      return credential;
+      final authResult = await authRepo.signInWithGoogle();
+      return authResult;
     });
 
     state = result.when(
@@ -130,18 +131,18 @@ class AuthNotifier extends _$AuthNotifier {
       throw result.error!;
     }
 
-    return result.value as UserCredential;
+    return result.value as AppAuthResult;
   }
 
   /// Sign in with Apple
-  Future<UserCredential> signInWithApple() async {
+  Future<AppAuthResult> signInWithApple() async {
     state = const AsyncValue.loading();
 
     final authRepo = ref.read(authRepositoryProvider);
 
     final result = await AsyncValue.guard(() async {
-      final credential = await authRepo.signInWithApple();
-      return credential;
+      final authResult = await authRepo.signInWithApple();
+      return authResult;
     });
 
     state = result.when(
@@ -154,7 +155,7 @@ class AuthNotifier extends _$AuthNotifier {
       throw result.error!;
     }
 
-    return result.value as UserCredential;
+    return result.value as AppAuthResult;
   }
 
   /// Sign out

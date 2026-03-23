@@ -1,0 +1,21 @@
+{
+    "appName": "vitalsynchAnalytics",
+    "roleName": "pinpointLambdaRolec2c390cc",
+    "cloudformationPolicyName": "cloudformationPolicyc2c390cc",
+    "cloudWatchPolicyName": "cloudWatchPolicyc2c390cc",
+    "pinpointPolicyName": "pinpointPolicyc2c390cc",
+    "authPolicyName": "pinpoint_amplify_c2c390cc",
+    "unauthPolicyName": "pinpoint_amplify_c2c390cc",
+    "authRoleName": {
+        "Ref": "AuthRoleName"
+    },
+    "unauthRoleName": {
+        "Ref": "UnauthRoleName"
+    },
+    "authRoleArn": {
+        "Fn::GetAtt": [
+            "AuthRole",
+            "Arn"
+        ]
+    }
+}

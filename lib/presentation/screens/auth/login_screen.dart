@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -9,6 +8,7 @@ import 'package:vitalsync/core/auth/auth_provider.dart';
 import 'package:vitalsync/core/l10n/app_localizations.dart';
 import 'package:vitalsync/core/services/biometric_service.dart';
 import 'package:vitalsync/core/settings/settings_provider.dart';
+import 'package:vitalsync/domain/repositories/shared/auth_repository.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -65,10 +65,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       );
       if (!authenticated || !mounted) return;
 
-      // Verify Firebase session is still valid before navigating
-      final firebaseUser = FirebaseAuth.instance.currentUser;
-      if (firebaseUser == null) {
-        // No cached Firebase user — biometric alone is not enough
+      // Verify auth session is still valid before navigating
+      final authRepo = GetIt.instance<AuthRepository>();
+      final currentUser = authRepo.currentUser;
+      if (currentUser == null) {
+        // No cached auth user — biometric alone is not enough
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(l10n.loginFailed('Session expired'))),
