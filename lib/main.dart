@@ -4,12 +4,16 @@
 /// GDPR-compliant, multi-language, accessibility-first.
 library;
 
+import 'package:amplify_analytics_pinpoint/amplify_analytics_pinpoint.dart';
+import 'package:amplify_api/amplify_api.dart';
+import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
+import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:dynamic_color/dynamic_color.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vitalsync/core/l10n/app_localizations.dart';
+import 'amplifyconfiguration.dart';
 import 'core/background/background_service.dart';
 import 'core/constants/app_constants.dart';
 import 'core/di/injection_container.dart';
@@ -19,7 +23,6 @@ import 'core/router/app_router.dart';
 import 'core/settings/settings_provider.dart';
 import 'core/sync/sync_service.dart';
 import 'core/theme/app_theme.dart';
-import 'firebase_options.dart';
 
 /// Holds initialization error (if any) for display on splash screen.
 Object? _initError;
@@ -32,18 +35,18 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   try {
-    // Initialize Firebase — critical, app cannot function without it
-    await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
-    );
+    // Initialize AWS Amplify — critical, app cannot function without it
+    if (!Amplify.isConfigured) {
+      await Amplify.addPlugins([
+        AmplifyAuthCognito(),
+        AmplifyAPI(),
+        AmplifyAnalyticsPinpoint(),
+      ]);
+      await Amplify.configure(amplifyconfig);
+    }
 
     // Initialize GetIt dependency injection
     await initializeDependencies();
-  } on FirebaseException catch (e, stack) {
-    _initError = e;
-    FlutterError.reportError(
-      FlutterErrorDetails(exception: e, stack: stack, library: 'main'),
-    );
   } catch (e, stack) {
     _initError = e;
     FlutterError.reportError(

@@ -11,10 +11,7 @@ library;
 
 import 'dart:developer' show log;
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -32,7 +29,7 @@ import '../../data/repositories/health/medication_log_repository_impl.dart';
 import '../../data/repositories/health/medication_repository_impl.dart';
 import '../../data/repositories/health/symptom_repository_impl.dart';
 import '../../data/repositories/insights/insight_repository_impl.dart';
-import '../../data/repositories/shared/auth_repository_impl.dart';
+import '../../data/repositories/shared/cognito_auth_repository_impl.dart';
 import '../../data/repositories/shared/sync_repository_impl.dart';
 import '../../data/repositories/shared/user_repository_impl.dart';
 import '../../domain/repositories/fitness/achievement_repository.dart';
@@ -62,7 +59,7 @@ import '../network/connectivity_service.dart';
 import '../notifications/notification_service.dart';
 import '../services/biometric_service.dart';
 import '../sync/cloud_sync_client.dart';
-import '../sync/firestore_sync_client.dart';
+import '../sync/rest_sync_client.dart';
 import '../sync/sync_service.dart';
 
 /// The GetIt service locator instance.
@@ -75,15 +72,6 @@ Future<void> initializeDependencies() async {
   final sharedPreferences = await SharedPreferences.getInstance();
   getIt.registerSingleton<SharedPreferences>(sharedPreferences);
 
-  // Firebase instances (will be removed after AWS migration)
-  getIt.registerLazySingleton<FirebaseAuth>(() => FirebaseAuth.instance);
-  getIt.registerLazySingleton<FirebaseFirestore>(
-    () => FirebaseFirestore.instance,
-  );
-  getIt.registerLazySingleton<FirebaseAnalytics>(
-    () => FirebaseAnalytics.instance,
-  );
-
   getIt.registerLazySingleton<Connectivity>(Connectivity.new);
   getIt.registerLazySingleton<FlutterLocalNotificationsPlugin>(
     FlutterLocalNotificationsPlugin.new,
@@ -94,20 +82,11 @@ Future<void> initializeDependencies() async {
 
   getIt.registerSingleton<AppDatabase>(AppDatabase.connect());
 
-  // CLOUD SYNC CLIENT (abstraction layer)
-  // Currently: FirestoreSyncClient
-  // After AWS migration: RestSyncClient
-  getIt.registerLazySingleton<CloudSyncClient>(
-    () => FirestoreSyncClient(firestore: getIt<FirebaseFirestore>()),
-  );
+  // CLOUD SYNC CLIENT (AWS REST API via Amplify)
+  getIt.registerLazySingleton<CloudSyncClient>(RestSyncClient.new);
 
-  // AUTH REPOSITORY (abstraction layer)
-  getIt.registerLazySingleton<AuthRepository>(
-    () => AuthRepositoryImpl(
-      auth: getIt<FirebaseAuth>(),
-      firestore: getIt<FirebaseFirestore>(),
-    ),
-  );
+  // AUTH REPOSITORY (AWS Cognito via Amplify)
+  getIt.registerLazySingleton<AuthRepository>(CognitoAuthRepositoryImpl.new);
 
   // SHARED SERVICES
 
@@ -120,10 +99,7 @@ Future<void> initializeDependencies() async {
   );
 
   getIt.registerLazySingleton<AnalyticsService>(
-    () => AnalyticsService(
-      analytics: getIt<FirebaseAnalytics>(),
-      gdprManager: getIt<GDPRManager>(),
-    ),
+    () => AnalyticsService(gdprManager: getIt<GDPRManager>()),
   );
 
   getIt.registerLazySingleton<NotificationService>(

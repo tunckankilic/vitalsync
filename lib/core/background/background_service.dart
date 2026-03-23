@@ -11,12 +11,14 @@ library;
 
 import 'dart:developer' show log;
 
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:amplify_api/amplify_api.dart';
+import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
+import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:workmanager/workmanager.dart';
 
+import '../../amplifyconfiguration.dart';
 import '../../data/local/database.dart';
 import '../../data/repositories/fitness/exercise_repository_impl.dart';
 import '../../data/repositories/fitness/personal_record_repository_impl.dart';
@@ -26,7 +28,7 @@ import '../../data/repositories/health/medication_log_repository_impl.dart';
 import '../../data/repositories/health/medication_repository_impl.dart';
 import '../../data/repositories/health/symptom_repository_impl.dart';
 import '../../data/repositories/insights/insight_repository_impl.dart';
-import '../../data/repositories/shared/auth_repository_impl.dart';
+import '../../data/repositories/shared/cognito_auth_repository_impl.dart';
 import '../../domain/repositories/shared/auth_repository.dart';
 import '../../features/fitness/domain/services/streak_service.dart';
 import '../../features/insights/domain/insight_engine.dart';
@@ -36,7 +38,7 @@ import '../enums/insight_priority.dart';
 import '../enums/medication_log_status.dart';
 import '../network/connectivity_service.dart';
 import '../sync/cloud_sync_client.dart';
-import '../sync/firestore_sync_client.dart';
+import '../sync/rest_sync_client.dart';
 import '../sync/sync_service.dart';
 
 /// Background Service for VitalSync.
@@ -264,9 +266,21 @@ class _BackgroundDeps {
 
   /// Creates a new [_BackgroundDeps] with a fresh database connection
   /// and a pre-initialized notification helper.
+  /// Also configures Amplify for the background isolate if needed.
   static Future<_BackgroundDeps> init() async {
     final db = AppDatabase.connect();
     final notifHelper = await _BackgroundNotificationHelper.init();
+
+    // Configure Amplify for background isolate (sync task needs it)
+    if (!Amplify.isConfigured) {
+      try {
+        await Amplify.addPlugins([AmplifyAuthCognito(), AmplifyAPI()]);
+        await Amplify.configure(amplifyconfig);
+      } catch (e) {
+        log('Amplify configuration in background isolate: $e');
+      }
+    }
+
     return _BackgroundDeps._(db, notifHelper);
   }
 
@@ -628,21 +642,15 @@ Future<void> _handleGenerateInsights(_BackgroundDeps deps) async {
 /// 2. Calls sync() which handles push/pull logic internally
 ///
 /// NOTE: Background isolate cannot access GetIt, so we create instances
-/// directly here. After AWS migration, swap FirestoreSyncClient → RestSyncClient.
+/// directly here. Uses RestSyncClient (AWS) and CognitoAuthRepositoryImpl.
 Future<void> _handleSyncPendingData(_BackgroundDeps deps) async {
   log('Syncing pending data...');
 
   final connectivity = ConnectivityService(connectivity: Connectivity());
 
   // Create cloud sync client and auth repo for background isolate
-  final firestore = FirebaseFirestore.instance;
-  final firebaseAuth = FirebaseAuth.instance;
-
-  final CloudSyncClient cloudClient = FirestoreSyncClient(firestore: firestore);
-  final AuthRepository authRepo = AuthRepositoryImpl(
-    auth: firebaseAuth,
-    firestore: firestore,
-  );
+  final CloudSyncClient cloudClient = RestSyncClient();
+  final AuthRepository authRepo = CognitoAuthRepositoryImpl();
 
   final syncService = SyncService(
     database: deps.db,

@@ -10,6 +10,12 @@ abstract class AuthRepository {
   Future<AppAuthResult> signInWithApple();
   Future<void> signOut();
   Future<void> resetPassword(String email);
+  Future<void> confirmSignUp(String email, String confirmationCode);
+  Future<void> confirmResetPassword(
+    String email,
+    String code,
+    String newPassword,
+  );
   Future<void> createInitialProfile(AppUser user, String name);
   Future<void> deleteAccount();
 }

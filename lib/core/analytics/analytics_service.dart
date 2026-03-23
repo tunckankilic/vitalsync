@@ -1,4 +1,4 @@
-/// VitalSync — Firebase Analytics Service (GDPR-aware).
+/// VitalSync — Analytics Service (AWS Pinpoint, GDPR-aware).
 ///
 /// GDPR consent check before firing any event.
 /// Predefined event methods for onboarding, health, fitness,
@@ -6,21 +6,17 @@
 /// User property setters and screen view tracking.
 library;
 
-import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:amplify_flutter/amplify_flutter.dart';
 
 import '../constants/app_constants.dart';
 import '../gdpr/gdpr_manager.dart';
 
-/// Firebase Analytics Service for VitalSync.
-/// Wrapper around Firebase Analytics that ensures GDPR compliance
-/// by checking consent before logging any events.
+/// Analytics Service for VitalSync.
+/// Wrapper around AWS Pinpoint (via Amplify Analytics) that ensures
+/// GDPR compliance by checking consent before logging any events.
 class AnalyticsService {
-  AnalyticsService({
-    required FirebaseAnalytics analytics,
-    required GDPRManager gdprManager,
-  }) : _analytics = analytics,
-       _gdprManager = gdprManager;
-  final FirebaseAnalytics _analytics;
+  AnalyticsService({required GDPRManager gdprManager})
+    : _gdprManager = gdprManager;
   final GDPRManager _gdprManager;
 
   // ONBOARDING EVENTS
@@ -324,19 +320,34 @@ class AnalyticsService {
   /// Sets user locale property.
   Future<void> setUserLocale(String locale) async {
     if (!_gdprManager.canTrackAnalytics()) return;
-    await _analytics.setUserProperty(name: 'locale', value: locale);
+    final properties = CustomProperties();
+    properties.addStringProperty('locale', locale);
+    await Amplify.Analytics.identifyUser(
+      userId: _currentUserId ?? 'anonymous',
+      userProfile: UserProfile(customProperties: properties),
+    );
   }
 
   /// Sets user theme property.
   Future<void> setUserTheme(String theme) async {
     if (!_gdprManager.canTrackAnalytics()) return;
-    await _analytics.setUserProperty(name: 'theme', value: theme);
+    final properties = CustomProperties();
+    properties.addStringProperty('theme', theme);
+    await Amplify.Analytics.identifyUser(
+      userId: _currentUserId ?? 'anonymous',
+      userProfile: UserProfile(customProperties: properties),
+    );
   }
 
   /// Sets unit system property (metric/imperial).
   Future<void> setUnitSystem(String unitSystem) async {
     if (!_gdprManager.canTrackAnalytics()) return;
-    await _analytics.setUserProperty(name: 'unit_system', value: unitSystem);
+    final properties = CustomProperties();
+    properties.addStringProperty('unit_system', unitSystem);
+    await Amplify.Analytics.identifyUser(
+      userId: _currentUserId ?? 'anonymous',
+      userProfile: UserProfile(customProperties: properties),
+    );
   }
 
   // SCREEN VIEW TRACKING
@@ -350,13 +361,25 @@ class AnalyticsService {
   }) async {
     if (!_gdprManager.canTrackAnalytics()) return;
 
-    await _analytics.logScreenView(
-      screenName: screenName,
-      screenClass: screenClass ?? screenName,
-    );
+    final event = AnalyticsEvent('screen_view');
+    event.customProperties.addStringProperty('screen_name', screenName);
+    if (screenClass != null) {
+      event.customProperties.addStringProperty('screen_class', screenClass);
+    }
+    await Amplify.Analytics.recordEvent(event: event);
   }
 
   // INTERNAL HELPERS
+
+  /// Try to get current user ID for analytics identification.
+  String? get _currentUserId {
+    try {
+      // This is synchronous and may not be available
+      return null; // Will be set by identifyUser calls
+    } catch (_) {
+      return null;
+    }
+  }
 
   /// Internal method to log an event with GDPR consent check.
   /// All public log methods should use this internally.
@@ -369,6 +392,27 @@ class AnalyticsService {
       return; // Silent return, no error thrown
     }
 
-    await _analytics.logEvent(name: eventName, parameters: parameters);
+    final event = AnalyticsEvent(eventName);
+    if (parameters != null) {
+      for (final entry in parameters.entries) {
+        final value = entry.value;
+        switch (value) {
+          case final String s:
+            event.customProperties.addStringProperty(entry.key, s);
+          case final int i:
+            event.customProperties.addIntProperty(entry.key, i);
+          case final double d:
+            event.customProperties.addDoubleProperty(entry.key, d);
+          case final bool b:
+            event.customProperties.addBoolProperty(entry.key, b);
+          default:
+            event.customProperties.addStringProperty(
+              entry.key,
+              value.toString(),
+            );
+        }
+      }
+    }
+    await Amplify.Analytics.recordEvent(event: event);
   }
 }

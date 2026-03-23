@@ -173,7 +173,7 @@ class AuthNotifier extends _$AuthNotifier {
     }
   }
 
-  /// Reset password
+  /// Reset password (sends verification code to email)
   Future<void> resetPassword(String email) async {
     state = const AsyncValue.loading();
 
@@ -181,6 +181,40 @@ class AuthNotifier extends _$AuthNotifier {
 
     state = await AsyncValue.guard(() async {
       await authRepo.resetPassword(email);
+    });
+
+    if (state.hasError) {
+      throw state.error!;
+    }
+  }
+
+  /// Confirm sign-up with email verification code
+  Future<void> confirmSignUp(String email, String confirmationCode) async {
+    state = const AsyncValue.loading();
+
+    final authRepo = ref.read(authRepositoryProvider);
+
+    state = await AsyncValue.guard(() async {
+      await authRepo.confirmSignUp(email, confirmationCode);
+    });
+
+    if (state.hasError) {
+      throw state.error!;
+    }
+  }
+
+  /// Confirm password reset with code and new password
+  Future<void> confirmResetPassword(
+    String email,
+    String code,
+    String newPassword,
+  ) async {
+    state = const AsyncValue.loading();
+
+    final authRepo = ref.read(authRepositoryProvider);
+
+    state = await AsyncValue.guard(() async {
+      await authRepo.confirmResetPassword(email, code, newPassword);
     });
 
     if (state.hasError) {

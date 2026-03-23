@@ -11,13 +11,13 @@ library;
 
 import 'dart:async';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../domain/entities/fitness/exercise.dart';
 import '../../domain/entities/fitness/workout_template.dart';
+import '../../domain/repositories/shared/auth_repository.dart';
 import '../../features/fitness/presentation/screens/achievements_screen.dart';
 import '../../features/fitness/presentation/screens/active_workout_screen.dart';
 import '../../features/fitness/presentation/screens/add_edit_template_screen.dart';
@@ -45,6 +45,7 @@ import '../../presentation/screens/gdpr/consent_screen.dart';
 import '../../presentation/screens/profile/edit_profile_screen.dart';
 import '../../presentation/screens/profile/profile_screen.dart';
 import '../../presentation/screens/settings/settings_screen.dart';
+import '../di/injection_container.dart';
 
 /// GoRouter configuration for VitalSync app navigation.
 ///
@@ -69,7 +70,7 @@ final GoRouter appRouter = GoRouter(
   initialLocation: '/splash',
   debugLogDiagnostics: true,
   refreshListenable: GoRouterRefreshStream(
-    FirebaseAuth.instance.authStateChanges(),
+    getIt<AuthRepository>().authStateChanges,
   ),
   routes: [
     // SPLASH & ONBOARDING
@@ -401,8 +402,8 @@ final GoRouter appRouter = GoRouter(
     ),
   ],
   redirect: (context, state) {
-    final user = FirebaseAuth.instance.currentUser;
-    final isLoggedIn = user != null;
+    final currentUser = getIt<AuthRepository>().currentUser;
+    final isLoggedIn = currentUser != null;
     final currentPath = state.uri.path;
 
     // Public routes that don't require authentication
