@@ -120,7 +120,7 @@ class BackgroundService {
   /// Schedules periodic data synchronization.
   ///
   /// Runs every **15 minutes** when online. Pushes pending sync queue
-  /// items to Firestore.
+  /// items to cloud.
   Future<void> scheduleSyncPendingData() async {
     await _workmanager.registerPeriodicTask(
       AppConstants.taskSyncPendingData,
@@ -256,7 +256,7 @@ class BackgroundService {
 /// minimal dependencies needed for each background task.
 ///
 /// Uses [_BackgroundNotificationHelper] instead of the full
-/// [NotificationService] to avoid pulling in Firebase Analytics and
+/// [NotificationService] to avoid pulling in analytics and
 /// GDPRManager, which aren't available in the background isolate.
 class _BackgroundDeps {
   _BackgroundDeps._(this.db, this.notifications);
@@ -294,8 +294,8 @@ class _BackgroundDeps {
 ///
 /// Provides only the notification methods needed by the background task
 /// handlers, using [FlutterLocalNotificationsPlugin] directly.
-/// This avoids depending on [AnalyticsService] / [GDPRManager] / Firebase
-/// Analytics, none of which are available in the WorkManager isolate.
+/// This avoids depending on [AnalyticsService] / [GDPRManager],
+/// none of which are available in the WorkManager isolate.
 class _BackgroundNotificationHelper {
   _BackgroundNotificationHelper._(this._plugin);
 

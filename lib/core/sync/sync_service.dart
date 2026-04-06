@@ -5,8 +5,7 @@
 /// GDPR: Cloud backup consent required before any cloud writes.
 ///
 /// Cloud provider is abstracted via [CloudSyncClient] interface.
-/// Current implementation uses Firestore; will be swapped to REST API
-/// after AWS migration.
+/// Current implementation uses REST API with DynamoDB via AWS Lambda.
 library;
 
 import 'dart:async';

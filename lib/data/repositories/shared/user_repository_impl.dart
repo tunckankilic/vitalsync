@@ -27,7 +27,7 @@ class UserRepositoryImpl implements UserRepository {
       final model = UserProfileModel.fromEntity(profile);
       final data = UserProfileData(
         id: existing.id, // Keep existing ID
-        firebaseUid: model.firebaseUid,
+        authUid: model.authUid,
         name: model.name,
         birthDate: model.birthDate,
         gender: model.gender,
@@ -60,7 +60,7 @@ class UserRepositoryImpl implements UserRepository {
 
     final data = UserProfileData(
       id: id,
-      firebaseUid: model.firebaseUid,
+      authUid: model.authUid,
       name: model.name,
       birthDate: model.birthDate,
       gender: model.gender,

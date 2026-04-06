@@ -62,7 +62,7 @@ final GlobalKey<NavigatorState> _shellNavigatorKey =
 /// Riverpod provider for the GoRouter instance.
 ///
 /// Enables DI-friendly access and makes the router react to
-/// Firebase auth-state changes via [refreshListenable].
+/// auth-state changes via [refreshListenable].
 final routerProvider = Provider<GoRouter>((ref) => appRouter);
 
 final GoRouter appRouter = GoRouter(

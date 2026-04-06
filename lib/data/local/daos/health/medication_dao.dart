@@ -77,7 +77,7 @@ class MedicationDao extends DatabaseAccessor<AppDatabase>
     )..where((tbl) => tbl.isActive.equals(true))).watch();
   }
 
-  /// Inserts or updates a medication from Firestore remote data.
+  /// Inserts or updates a medication from cloud remote data.
   /// Sets [syncStatus] to [SyncStatus.synced] to prevent re-pushing.
   /// Does NOT trigger sync queue insertion.
   Future<void> upsertFromRemote(int id, Map<String, dynamic> data) async {
@@ -192,7 +192,7 @@ class MedicationLogDao extends DatabaseAccessor<AppDatabase>
         .get();
   }
 
-  /// Inserts or updates a medication log from Firestore remote data.
+  /// Inserts or updates a medication log from cloud remote data.
   Future<void> upsertFromRemote(int id, Map<String, dynamic> data) async {
     await into(medicationLogs).insertOnConflictUpdate(
       MedicationLogsCompanion(
@@ -281,7 +281,7 @@ class SymptomDao extends DatabaseAccessor<AppDatabase> with _$SymptomDaoMixin {
         .watch();
   }
 
-  /// Inserts or updates a symptom record from Firestore remote data.
+  /// Inserts or updates a symptom record from cloud remote data.
   Future<void> upsertFromRemote(int id, Map<String, dynamic> data) async {
     await into(symptoms).insertOnConflictUpdate(
       SymptomsCompanion(

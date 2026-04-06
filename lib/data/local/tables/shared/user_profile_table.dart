@@ -18,9 +18,9 @@ class UserProfiles extends Table {
   /// Primary key.
   IntColumn get id => integer().autoIncrement()();
 
-  /// Firebase Authentication UID.
-  /// Must be unique - each Firebase user has exactly one profile.
-  TextColumn get firebaseUid => text().unique()();
+  /// Authentication provider UID (Cognito sub).
+  /// Must be unique - each authenticated user has exactly one profile.
+  TextColumn get authUid => text().named('firebase_uid').unique()();
 
   /// User's display name.
   TextColumn get name => text()();

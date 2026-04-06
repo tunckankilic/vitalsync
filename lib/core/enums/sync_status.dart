@@ -6,7 +6,7 @@ library;
 
 /// Synchronization status for offline-first data model.
 ///
-/// - [synced]: Data is in sync with Firestore
+/// - [synced]: Data is in sync with cloud
 /// - [pending]: Local changes waiting to be synced
 /// - [conflict]: Sync conflict detected, needs resolution
 enum SyncStatus {

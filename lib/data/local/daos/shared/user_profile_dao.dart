@@ -20,11 +20,11 @@ class UserDao extends DatabaseAccessor<AppDatabase> with _$UserDaoMixin {
     return (select(userProfiles)..limit(1)).getSingleOrNull();
   }
 
-  /// Get user by Firebase UID.
-  Future<UserProfileData?> getUserByFirebaseUid(String firebaseUid) {
+  /// Get user by auth provider UID.
+  Future<UserProfileData?> getUserByAuthUid(String authUid) {
     return (select(
       userProfiles,
-    )..where((tbl) => tbl.firebaseUid.equals(firebaseUid))).getSingleOrNull();
+    )..where((tbl) => tbl.authUid.equals(authUid))).getSingleOrNull();
   }
 
   /// Insert a new user profile.

@@ -1,7 +1,7 @@
 /// VitalSync — Abstract Cloud Sync Client.
 ///
 /// Defines the contract for cloud sync operations.
-/// Implementations can use Firestore, REST API, or any other backend.
+/// Implementations can use REST API or any other backend.
 /// This abstraction allows swapping the cloud provider without
 /// changing sync logic in SyncService.
 library;
@@ -27,8 +27,7 @@ class CloudSyncRecord {
 /// Abstract interface for cloud sync operations.
 ///
 /// Implementations:
-/// - [FirestoreSyncClient] — Current Firebase Firestore implementation
-/// - [RestSyncClient] — Future AWS REST API implementation
+/// - [RestSyncClient] — AWS REST API (Lambda + DynamoDB)
 abstract class CloudSyncClient {
   /// Pushes a single record to the cloud.
   ///

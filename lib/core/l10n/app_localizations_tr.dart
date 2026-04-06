@@ -1141,7 +1141,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get gdprCloudBackupDescription =>
-      'Cihazlar arasında senkronizasyon için verilerinizi Firebase\'e yedekleyin';
+      'Cihazlar arası senkronizasyon için verilerinizi buluta yedekleyin';
 
   @override
   String get gdprNote =>

@@ -2227,7 +2227,7 @@ abstract class AppLocalizations {
   /// GDPR cloud backup consent description
   ///
   /// In en, this message translates to:
-  /// **'Backup your data to Firebase for sync across devices'**
+  /// **'Backup your data to the cloud for sync across devices'**
   String get gdprCloudBackupDescription;
 
   /// GDPR consent note

@@ -207,7 +207,7 @@ class CognitoAuthRepositoryImpl implements AuthRepository {
   @override
   Future<void> createInitialProfile(AppUser user, String name) async {
     // Cognito stores name as a user attribute — already set during signUp.
-    // No additional profile creation needed (unlike Firestore).
+    // No additional profile creation needed.
     // If needed later, push a profile record via RestSyncClient.
   }
 

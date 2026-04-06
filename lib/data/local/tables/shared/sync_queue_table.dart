@@ -1,5 +1,5 @@
 /// VitalSync — Sync Queue Table (Shared).
-/// Manages offline-first sync queue for Firestore synchronization.
+/// Manages offline-first sync queue for cloud synchronization.
 library;
 
 import 'package:drift/drift.dart';
@@ -7,9 +7,9 @@ import 'package:drift/drift.dart';
 import 'package:vitalsync/core/enums/sync_enums.dart';
 
 /// Sync queue table for offline-first architecture.
-/// When data is modified locally while offline (or before Firestore sync),
+/// When data is modified locally while offline (or before cloud sync),
 /// entries are added to this queue. When connectivity is restored,
-/// the sync service processes the queue to push changes to Firestore.
+/// the sync service processes the queue to push changes to the cloud.
 @DataClassName('SyncQueueData')
 class SyncQueue extends Table {
   /// Primary key.
@@ -27,7 +27,7 @@ class SyncQueue extends Table {
   TextColumn get operation => textEnum<SyncOperation>()();
 
   /// JSON payload containing the full record data.
-  /// This allows the sync service to reconstruct the data for Firestore.
+  /// This allows the sync service to reconstruct the data for cloud sync.
   TextColumn get payload => text()();
 
   /// Current status of this sync item.

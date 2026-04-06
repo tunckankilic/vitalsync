@@ -8,7 +8,7 @@ library;
 /// Application-wide constants for VitalSync.
 ///
 /// Provides centralized configuration for all app modules including
-/// metadata, Firebase settings, notifications, achievements, and analytics.
+/// metadata, cloud settings, notifications, achievements, and analytics.
 abstract class AppConstants {
   // ═══════════════════════════════════════════════════════════════════════
   // APP METADATA
@@ -86,7 +86,7 @@ abstract class AppConstants {
   static const String prefKeyLastSyncTimestamp =
       '${prefKeyPrefix}last_sync_timestamp';
 
-  /// User ID (Firebase UID)
+  /// User ID (Auth UID)
   static const String prefKeyUserId = '${prefKeyPrefix}user_id';
 
   // NOTIFICATION CHANNEL IDs

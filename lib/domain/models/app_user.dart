@@ -1,13 +1,11 @@
 /// VitalSync — Domain-agnostic user model.
 ///
-/// Replaces direct usage of `firebase_auth.User` in the domain layer.
-/// This model is infrastructure-independent and can be constructed
-/// from any auth provider (Firebase, Cognito, custom backend, etc.).
+/// Domain-agnostic user model, independent of any auth provider.
+/// Can be constructed from any auth backend (Cognito, custom, etc.).
 library;
 
 /// Represents an authenticated user in the domain layer.
 ///
-/// This is the domain model that replaces `firebase_auth.User`.
 /// All auth consumers (providers, UI, services) should use this
 /// instead of any provider-specific user type.
 class AppUser {
@@ -21,7 +19,7 @@ class AppUser {
     this.lastSignInAt,
   });
 
-  /// Unique user identifier (Firebase UID, Cognito sub, etc.)
+  /// Unique user identifier (Cognito sub, etc.)
   final String id;
 
   /// User's email address.

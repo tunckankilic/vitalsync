@@ -10,7 +10,7 @@ import '../../local/database.dart';
 class UserProfileModel extends UserProfile {
   const UserProfileModel({
     required super.id,
-    required super.firebaseUid,
+    required super.authUid,
     required super.name,
     required super.gdprConsentVersion,
     required super.gdprConsentDate,
@@ -27,7 +27,7 @@ class UserProfileModel extends UserProfile {
   factory UserProfileModel.fromEntity(UserProfile entity) {
     return UserProfileModel(
       id: entity.id,
-      firebaseUid: entity.firebaseUid,
+      authUid: entity.authUid,
       name: entity.name,
       birthDate: entity.birthDate,
       gender: entity.gender,
@@ -45,7 +45,7 @@ class UserProfileModel extends UserProfile {
   factory UserProfileModel.fromDrift(UserProfileData data) {
     return UserProfileModel(
       id: data.id,
-      firebaseUid: data.firebaseUid,
+      authUid: data.authUid,
       name: data.name,
       birthDate: data.birthDate,
       gender: data.gender,
@@ -59,11 +59,11 @@ class UserProfileModel extends UserProfile {
     );
   }
 
-  /// Creates a UserProfileModel from a JSON map (Firestore).
+  /// Creates a UserProfileModel from a JSON map.
   factory UserProfileModel.fromJson(Map<String, dynamic> json) {
     return UserProfileModel(
-      id: json['id'] as int? ?? 0, // ID might not be in Firestore or different
-      firebaseUid: json['firebaseUid'] as String,
+      id: json['id'] as int? ?? 0,
+      authUid: json['authUid'] as String,
       name: json['name'] as String,
       birthDate: json['birthDate'] != null
           ? DateTime.parse(json['birthDate'] as String)
@@ -83,7 +83,7 @@ class UserProfileModel extends UserProfile {
   UserProfile toEntity() {
     return UserProfile(
       id: id,
-      firebaseUid: firebaseUid,
+      authUid: authUid,
       name: name,
       birthDate: birthDate,
       gender: gender,
@@ -101,7 +101,7 @@ class UserProfileModel extends UserProfile {
   UserProfilesCompanion toCompanion() {
     return UserProfilesCompanion(
       id: Value(id),
-      firebaseUid: Value(firebaseUid),
+      authUid: Value(authUid),
       name: Value(name),
       birthDate: Value(birthDate),
       gender: Value(gender),
@@ -115,11 +115,11 @@ class UserProfileModel extends UserProfile {
     );
   }
 
-  /// Converts this model to a JSON map (Firestore).
+  /// Converts this model to a JSON map.
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'firebaseUid': firebaseUid,
+      'authUid': authUid,
       'name': name,
       'birthDate': birthDate?.toIso8601String(),
       'gender': gender.toDbValue(),

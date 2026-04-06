@@ -5,8 +5,7 @@
 /// DI = GetIt, State = Riverpod (separation of concerns).
 ///
 /// Cloud provider abstracted via [CloudSyncClient] interface.
-/// Currently uses [FirestoreSyncClient] — swap to [RestSyncClient]
-/// after AWS migration.
+/// Uses [RestSyncClient] with AWS Lambda + DynamoDB.
 library;
 
 import 'dart:developer' show log;

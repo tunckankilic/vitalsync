@@ -56,7 +56,7 @@ part 'database.g.dart';
 /// VitalSync Application Database.
 /// Central Drift database containing all application data.
 /// Uses offline-first architecture where Drift is the primary data source
-/// and Firestore serves as cloud backup.
+/// and DynamoDB serves as cloud backup.
 @DriftDatabase(
   tables: [
     // Shared tables

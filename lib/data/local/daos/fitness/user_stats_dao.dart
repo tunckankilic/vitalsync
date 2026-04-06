@@ -57,7 +57,7 @@ class UserStatsDao extends DatabaseAccessor<AppDatabase>
     )..where((tbl) => tbl.id.equals(id))).getSingleOrNull();
   }
 
-  /// Inserts or updates user stats from Firestore remote data.
+  /// Inserts or updates user stats from cloud remote data.
   Future<void> upsertFromRemote(int id, Map<String, dynamic> data) async {
     await into(userStats).insertOnConflictUpdate(
       UserStatsCompanion(

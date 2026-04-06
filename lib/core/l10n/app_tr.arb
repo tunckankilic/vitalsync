@@ -686,7 +686,7 @@
   "@gdprFitnessDataDescription": { "description": "GDPR fitness data consent description" },
   "gdprCloudBackupTitle": "Bulut Yedekleme",
   "@gdprCloudBackupTitle": { "description": "GDPR cloud backup consent title" },
-  "gdprCloudBackupDescription": "Cihazlar arasında senkronizasyon için verilerinizi Firebase'e yedekleyin",
+  "gdprCloudBackupDescription": "Cihazlar arası senkronizasyon için verilerinizi buluta yedekleyin",
   "@gdprCloudBackupDescription": { "description": "GDPR cloud backup consent description" },
   "gdprNote": "Gerekli onaylar, temel uygulama işlevselliği için gereklidir. Onayları istediğiniz zaman Ayarlar'dan yönetebilirsiniz.",
   "@gdprNote": { "description": "GDPR consent note" },

@@ -1134,7 +1134,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get gdprCloudBackupDescription =>
-      'Backup your data to Firebase for sync across devices';
+      'Backup your data to the cloud for sync across devices';
 
   @override
   String get gdprNote =>

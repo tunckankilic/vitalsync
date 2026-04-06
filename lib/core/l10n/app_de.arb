@@ -686,7 +686,7 @@
   "@gdprFitnessDataDescription": { "description": "GDPR fitness data consent description" },
   "gdprCloudBackupTitle": "Cloud-Backup",
   "@gdprCloudBackupTitle": { "description": "GDPR cloud backup consent title" },
-  "gdprCloudBackupDescription": "Sichern Sie Ihre Daten in Firebase für die Synchronisierung zwischen Geräten",
+  "gdprCloudBackupDescription": "Sichern Sie Ihre Daten in der Cloud für die Synchronisierung zwischen Geräten",
   "@gdprCloudBackupDescription": { "description": "GDPR cloud backup consent description" },
   "gdprNote": "Erforderliche Zustimmungen sind für die Kernfunktionalität der App notwendig. Sie können Zustimmungen jederzeit in den Einstellungen verwalten.",
   "@gdprNote": { "description": "GDPR consent note" },

@@ -52,7 +52,7 @@ class Medications extends Table {
       textEnum<SyncStatus>().withDefault(const Constant('synced'))();
 
   /// Last modification timestamp for conflict resolution.
-  /// Used when syncing with Firestore to determine which version is newer.
+  /// Used when syncing with cloud to determine which version is newer.
   DateTimeColumn get lastModifiedAt =>
       dateTime().withDefault(currentDateAndTime)();
 

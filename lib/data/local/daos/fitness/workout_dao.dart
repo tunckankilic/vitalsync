@@ -287,7 +287,7 @@ class WorkoutSessionDao extends DatabaseAccessor<AppDatabase>
     return query.map((row) => row.startTime).get();
   }
 
-  /// Inserts or updates a workout session from Firestore remote data.
+  /// Inserts or updates a workout session from cloud remote data.
   Future<void> upsertFromRemote(int id, Map<String, dynamic> data) async {
     await into(workoutSessions).insertOnConflictUpdate(
       WorkoutSessionsCompanion(
@@ -317,7 +317,7 @@ class WorkoutSessionDao extends DatabaseAccessor<AppDatabase>
     )..where((tbl) => tbl.id.equals(id))).getSingleOrNull();
   }
 
-  /// Inserts or updates a workout set from Firestore remote data.
+  /// Inserts or updates a workout set from cloud remote data.
   Future<void> upsertSetFromRemote(int id, Map<String, dynamic> data) async {
     await into(workoutSets).insertOnConflictUpdate(
       WorkoutSetsCompanion(
@@ -385,7 +385,7 @@ class PersonalRecordDao extends DatabaseAccessor<AppDatabase>
     )..where((tbl) => tbl.id.equals(id))).getSingleOrNull();
   }
 
-  /// Inserts or updates a personal record from Firestore remote data.
+  /// Inserts or updates a personal record from cloud remote data.
   Future<void> upsertFromRemote(int id, Map<String, dynamic> data) async {
     await into(personalRecords).insertOnConflictUpdate(
       PersonalRecordsCompanion(
@@ -444,7 +444,7 @@ class AchievementDao extends DatabaseAccessor<AppDatabase>
     )..where((tbl) => tbl.id.equals(id))).getSingleOrNull();
   }
 
-  /// Inserts or updates an achievement from Firestore remote data.
+  /// Inserts or updates an achievement from cloud remote data.
   Future<void> upsertFromRemote(int id, Map<String, dynamic> data) async {
     await into(achievements).insertOnConflictUpdate(
       AchievementsCompanion(

@@ -6,7 +6,7 @@ import '../../../core/enums/gender.dart';
 class UserProfile {
   const UserProfile({
     required this.id,
-    required this.firebaseUid,
+    required this.authUid,
     required this.name,
     required this.gdprConsentVersion,
     required this.gdprConsentDate,
@@ -19,7 +19,7 @@ class UserProfile {
     this.emergencyPhone,
   });
   final int id;
-  final String firebaseUid;
+  final String authUid;
   final String name;
   final DateTime? birthDate;
   final Gender gender;
@@ -34,7 +34,7 @@ class UserProfile {
   /// Creates a copy of this UserProfile with the given fields replaced with the new values.
   UserProfile copyWith({
     int? id,
-    String? firebaseUid,
+    String? authUid,
     String? name,
     DateTime? birthDate,
     Gender? gender,
@@ -48,7 +48,7 @@ class UserProfile {
   }) {
     return UserProfile(
       id: id ?? this.id,
-      firebaseUid: firebaseUid ?? this.firebaseUid,
+      authUid: authUid ?? this.authUid,
       name: name ?? this.name,
       birthDate: birthDate ?? this.birthDate,
       gender: gender ?? this.gender,
@@ -68,7 +68,7 @@ class UserProfile {
 
     return other is UserProfile &&
         other.id == id &&
-        other.firebaseUid == firebaseUid &&
+        other.authUid == authUid &&
         other.name == name &&
         other.birthDate == birthDate &&
         other.gender == gender &&
@@ -84,7 +84,7 @@ class UserProfile {
   @override
   int get hashCode {
     return id.hashCode ^
-        firebaseUid.hashCode ^
+        authUid.hashCode ^
         name.hashCode ^
         birthDate.hashCode ^
         gender.hashCode ^
@@ -99,6 +99,6 @@ class UserProfile {
 
   @override
   String toString() {
-    return 'UserProfile(id: $id, firebaseUid: $firebaseUid, name: $name, birthDate: $birthDate, gender: $gender, locale: $locale, emergencyContact: $emergencyContact, emergencyPhone: $emergencyPhone, gdprConsentVersion: $gdprConsentVersion, gdprConsentDate: $gdprConsentDate, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'UserProfile(id: $id, authUid: $authUid, name: $name, birthDate: $birthDate, gender: $gender, locale: $locale, emergencyContact: $emergencyContact, emergencyPhone: $emergencyPhone, gdprConsentVersion: $gdprConsentVersion, gdprConsentDate: $gdprConsentDate, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 }
