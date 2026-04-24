@@ -7,7 +7,9 @@ library;
 import 'dart:async';
 import 'dart:developer' show log;
 
+import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
+import 'package:vitalsync/core/errors/auth_exceptions.dart';
 import 'package:vitalsync/domain/models/app_auth_result.dart';
 import 'package:vitalsync/domain/models/app_user.dart';
 import 'package:vitalsync/domain/repositories/shared/auth_repository.dart';
@@ -101,11 +103,13 @@ class CognitoAuthRepositoryImpl implements AuthRepository {
 
     if (!result.isSignedIn) {
       if (result.nextStep.signInStep == AuthSignInStep.confirmSignUp) {
-        throw Exception(
+        throw const EmailNotVerifiedException(
           'Email doğrulaması gerekli. Lütfen e-postanıza gelen kodu girin.',
         );
       }
-      throw Exception('Giriş başarısız: ${result.nextStep.signInStep}');
+      throw SignInFailedException(
+        'Giriş başarısız: ${result.nextStep.signInStep}',
+      );
     }
 
     _cachedUser = await _fetchCurrentUser();
@@ -143,7 +147,9 @@ class CognitoAuthRepositoryImpl implements AuthRepository {
       return AppAuthResult(user: signInResult.user, isNewUser: true);
     }
 
-    throw Exception('Kayıt başarısız: ${result.nextStep.signUpStep}');
+    throw SignUpFailedException(
+      'Kayıt başarısız: ${result.nextStep.signUpStep}',
+    );
   }
 
   @override
@@ -157,7 +163,9 @@ class CognitoAuthRepositoryImpl implements AuthRepository {
     );
 
     if (!result.isSignUpComplete) {
-      throw Exception('Doğrulama başarısız: ${result.nextStep.signUpStep}');
+      throw ConfirmationFailedException(
+        'Doğrulama başarısız: ${result.nextStep.signUpStep}',
+      );
     }
   }
 
@@ -169,13 +177,29 @@ class CognitoAuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<AppAuthResult> signInWithApple() {
-    // Apple Sign-In requires OIDC federation setup in Cognito User Pool.
-    // This will be configured separately via AWS Console.
-    throw UnimplementedError(
-      'Apple Sign-In OIDC is not configured yet. '
-      'Configure Apple as a social identity provider in Cognito first.',
+  Future<AppAuthResult> signInWithApple() async {
+    final result = await Amplify.Auth.signInWithWebUI(
+      provider: AuthProvider.apple,
+      options: const SignInWithWebUIOptions(
+        pluginOptions: CognitoSignInWithWebUIPluginOptions(
+          isPreferPrivateSession: false,
+        ),
+      ),
     );
+
+    if (!result.isSignedIn) {
+      throw const SignInFailedException(
+        'Apple Sign-In tamamlanamadı.',
+      );
+    }
+
+    _cachedUser = await _fetchCurrentUser();
+    if (_cachedUser == null) {
+      throw const SignInFailedException(
+        'Apple Sign-In sonrası kullanıcı bilgileri alınamadı.',
+      );
+    }
+    return AppAuthResult(user: _cachedUser!, isNewUser: false);
   }
 
   @override

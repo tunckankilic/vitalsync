@@ -345,6 +345,18 @@ abstract class AppConstants {
   /// Current GDPR privacy policy version
   static const String gdprPolicyVersion = '1.0.0';
 
+  /// Privacy policy URL (App Store Connect ve in-app linki için)
+  static const String privacyPolicyUrl =
+      'https://tunckankilic.github.io/vitalsync/privacy.html';
+
+  /// Terms of service URL
+  static const String termsOfServiceUrl =
+      'https://tunckankilic.github.io/vitalsync/terms.html';
+
+  /// Support / contact URL
+  static const String supportUrl =
+      'https://tunckankilic.github.io/vitalsync/support.html';
+
   /// GDPR consent types
   static const String gdprConsentTypeAnalytics = 'analytics';
   static const String gdprConsentTypeHealthData = 'health_data';

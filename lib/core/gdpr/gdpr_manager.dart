@@ -14,6 +14,7 @@ import 'dart:developer' show log;
 
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../data/local/database.dart';
 import '../../domain/models/app_user.dart';
 import '../../domain/repositories/shared/auth_repository.dart';
 import '../constants/app_constants.dart';
@@ -28,12 +29,15 @@ class GDPRManager {
     required SharedPreferences prefs,
     required CloudSyncClient cloudClient,
     required AuthRepository auth,
+    required AppDatabase database,
   }) : _prefs = prefs,
        _cloudClient = cloudClient,
-       _auth = auth;
+       _auth = auth,
+       _database = database;
   final SharedPreferences _prefs;
   final CloudSyncClient _cloudClient;
   final AuthRepository _auth;
+  final AppDatabase _database;
 
   // CONSENT MANAGEMENT
 
@@ -160,13 +164,15 @@ class GDPRManager {
   Future<String> exportAllUserData() async {
     final user = _auth.currentUser;
     if (user == null) {
-      throw Exception('No authenticated user for data export');
+      throw StateError('No authenticated user for data export');
     }
 
-    final exportData = {
+    final databaseExport = await _database.exportAllData();
+
+    final exportData = <String, dynamic>{
       'export_timestamp': DateTime.now().toIso8601String(),
       'policy_version': getCurrentPolicyVersion(),
-      'user': _userToExportMap(user),
+      'auth_user': _userToExportMap(user),
       'consents': getAllConsents(),
       'consent_history': await _getConsentHistory(),
       'privacy_policy': {
@@ -175,19 +181,7 @@ class GDPRManager {
             ?.toIso8601String(),
         'current_version': getCurrentPolicyVersion(),
       },
-      // Note: Full data export should include:
-      // - user_profile
-      // - medications
-      // - medication_logs
-      // - symptoms
-      // - exercises
-      // - workout_templates
-      // - workout_sessions
-      // - workout_sets
-      // - personal_records
-      // - achievements
-      // - generated_insights
-      // These should be added by UserRepository using this as a base.
+      ...databaseExport,
     };
 
     return json.encode(exportData);

@@ -94,6 +94,7 @@ Future<void> initializeDependencies() async {
       prefs: getIt<SharedPreferences>(),
       cloudClient: getIt<CloudSyncClient>(),
       auth: getIt<AuthRepository>(),
+      database: getIt<AppDatabase>(),
     ),
   );
 

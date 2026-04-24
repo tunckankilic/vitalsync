@@ -4,6 +4,8 @@
 /// Falls back gracefully on unsupported devices.
 library;
 
+import 'dart:developer' show log;
+
 import 'package:local_auth/local_auth.dart';
 
 /// Service for biometric authentication.
@@ -19,7 +21,8 @@ class BiometricService {
       final canAuthenticate =
           canAuthenticateWithBiometrics || await _auth.isDeviceSupported();
       return canAuthenticate;
-    } catch (_) {
+    } catch (e, st) {
+      log('BiometricService.isAvailable failed', error: e, stackTrace: st);
       return false;
     }
   }
@@ -28,7 +31,12 @@ class BiometricService {
   Future<List<BiometricType>> getAvailableBiometrics() async {
     try {
       return await _auth.getAvailableBiometrics();
-    } catch (_) {
+    } catch (e, st) {
+      log(
+        'BiometricService.getAvailableBiometrics failed',
+        error: e,
+        stackTrace: st,
+      );
       return [];
     }
   }
@@ -41,7 +49,8 @@ class BiometricService {
         localizedReason: reason,
         persistAcrossBackgrounding: true,
       );
-    } catch (_) {
+    } catch (e, st) {
+      log('BiometricService.authenticate failed', error: e, stackTrace: st);
       return false;
     }
   }
