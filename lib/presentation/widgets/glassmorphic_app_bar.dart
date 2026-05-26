@@ -121,7 +121,7 @@ class GlassmorphicAppBar extends ConsumerWidget implements PreferredSizeWidget {
               ),
 
               // Actions
-              if (actions != null) ...actions!,
+              ...?actions,
 
               const SizedBox(width: 8),
 

@@ -82,6 +82,8 @@ class ConnectivityService {
         case ConnectivityResult.none:
           // These don't guarantee internet connectivity
           continue;
+        case ConnectivityResult.satellite:
+          return true;
       }
     }
     return false;
