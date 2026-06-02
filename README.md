@@ -12,6 +12,7 @@ A production-grade Flutter application that unifies **medication management**, *
 [![Platform](https://img.shields.io/badge/Platform-iOS-000000?logo=apple&logoColor=white)](https://www.apple.com/ios/)
 [![Architecture](https://img.shields.io/badge/Architecture-Clean-success)](#-architecture)
 [![Analyzer](https://img.shields.io/badge/flutter%20analyze-0%20issues-brightgreen)](#)
+[![Tests](https://img.shields.io/badge/tests-84%20passing-brightgreen)](#-testing)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 </div>
@@ -30,6 +31,7 @@ A production-grade Flutter application that unifies **medication management**, *
 - [Tech Stack & Rationale](#-tech-stack--rationale)
 - [Data Model](#-data-model)
 - [Security & Privacy](#-security--privacy)
+- [Observability](#-observability)
 - [Project Structure](#-project-structure)
 - [Getting Started](#-getting-started)
 - [Testing](#-testing)
@@ -47,6 +49,8 @@ VitalSync is built as a **real product**, not a tutorial demo:
 - **Offline-first** — full functionality without a network; changes sync when connectivity returns.
 - **Privacy by design** — local database is encrypted at rest (SQLCipher / AES-256); GDPR consent, data export, and a Privacy Manifest are first-class.
 - **Cloud-backed** — AWS Cognito auth (incl. Sign in with Apple) and a serverless sync backend.
+- **Observable** — global crash & async-error reporting via Sentry, wired so production failures are never silent.
+- **Build-time environments** — a single `--dart-define=ENV=dev|prod` switch selects the backend; no file edits to ship a prod build.
 - **Localized** — English, Turkish, and German out of the box.
 
 > **Scale:** ~40K hand-written lines of Dart across 240+ files, 15 database tables, 34 screens, 3 feature modules, and a rule-based analytics engine — **with `flutter analyze` reporting 0 issues.**
@@ -107,11 +111,13 @@ It runs **10 correlation rules** across health and fitness data, each with minim
 
 ## 📸 Screenshots
 
-> _Add screenshots/GIFs here. Recommended: Dashboard, an Insight card, Active Workout, Weekly Report, and the sync indicator in action._
+> Drop the images at the paths below (suggested: `docs/images/`) and they will
+> render automatically — no further README edits needed. Recommended set:
+> Dashboard, an Insight card, Active Workout, and the Weekly Report.
 
 | Dashboard | Insights | Active Workout | Weekly Report |
 |:---:|:---:|:---:|:---:|
-| _coming soon_ | _coming soon_ | _coming soon_ | _coming soon_ |
+| ![Dashboard](docs/images/dashboard.png) | ![Insights](docs/images/insights.png) | ![Active Workout](docs/images/active_workout.png) | ![Weekly Report](docs/images/weekly_report.png) |
 
 ---
 
@@ -199,6 +205,12 @@ flowchart LR
 | **Pinpoint** | Product analytics and push-notification delivery |
 
 > **Why IAM auth on the API?** Each request is signed with the authenticated user's short-lived AWS credentials, so authorization is enforced at the AWS layer — no bearer tokens to leak, and per-user data isolation can be expressed directly in IAM policies.
+
+**Backend hardening** (see [`docs/AWS_HARDENING.md`](docs/AWS_HARDENING.md) for apply/verify/rollback commands):
+
+- **DynamoDB Point-in-Time Recovery** — enabled on the data table (35-day restore window) to protect health data against accidental writes/deletes.
+- **API Gateway throttling** — the `dev` stage is capped at 50 rps / 100 burst (down from the account default of 10 000 / 5 000), limiting abuse without affecting normal sync.
+- **Cognito Threat Protection** — *planned* (see [Roadmap](#-roadmap)); deferred because it requires the paid `PLUS` user-pool tier.
 
 ---
 
@@ -305,6 +317,25 @@ Health data demands a higher bar — VitalSync treats privacy as a feature:
 
 ---
 
+## 📡 Observability
+
+For health data, an unseen crash is the biggest risk — it can corrupt user data
+silently. VitalSync reports failures to **[Sentry](https://sentry.io)** so they
+are never invisible in production:
+
+- **Crash reporting** — `sentry_flutter` is initialized in `main.dart` and the
+  app bootstrap runs inside its guarded zone (`appRunner`).
+- **Global error handling** — both synchronous Flutter errors
+  (`FlutterError.onError`) and uncaught asynchronous errors
+  (`PlatformDispatcher.onError`) are forwarded to Sentry, while the existing
+  init-error flow (splash error surfacing, graceful degradation of non-critical
+  services) is preserved.
+- **No secrets in source** — the DSN is supplied at build time via
+  `--dart-define=SENTRY_DSN`. When empty (local/dev), Sentry is skipped so there
+  is no noise and the app behaves exactly as before.
+
+---
+
 ## 📁 Project Structure
 
 ```
@@ -361,10 +392,22 @@ flutter pub get
 dart run build_runner build --delete-conflicting-outputs
 
 # 4. Run (physical device recommended for biometrics & Material You)
-flutter run
+#    ENV selects the backend at build time; it defaults to dev.
+flutter run --dart-define=ENV=dev
+
+# Production build (prod backend + Sentry crash reporting):
+flutter run --dart-define=ENV=prod --dart-define=SENTRY_DSN=<your_sentry_dsn>
 ```
 
-> **Backend note:** Amplify configuration (`lib/amplifyconfiguration.dart`) is environment-specific. Provision your own Amplify environment (`amplify env add`) and push (`amplify push`) to generate a matching config.
+> **Environments:** the dev/prod backend is chosen at build time via
+> `--dart-define=ENV` — no file edits required, and an omitted/unknown value
+> safely falls back to `dev`. See [`docs/ENVIRONMENTS.md`](docs/ENVIRONMENTS.md)
+> for the full command reference and config-file setup.
+>
+> **Backend note:** Amplify configs are environment-specific and git-ignored
+> (only `.example` templates are committed). Provision your own Amplify
+> environment (`amplify env add`) and push (`amplify push`) to generate a
+> matching `lib/amplifyconfiguration.dart`.
 
 ---
 
@@ -374,18 +417,30 @@ flutter run
 flutter test
 ```
 
-The suite focuses on the highest-value logic — the **InsightEngine**, repository implementations, and sync — using `mocktail` for dependency isolation.
+**84 tests passing.** The suite spans the highest-value logic — the
+**InsightEngine**, repository implementations, sync, **authentication flows**,
+**sync failure paths**, and **critical-screen widget tests** — using `mocktail`
+for dependency isolation (no new test dependencies).
 
 ```
 test/
+├── core/auth/auth_notifier_test.dart                 # sign-in/up/Apple/out + failure paths
+├── core/sync/sync_service_test.dart                  # offline/consent guards, conflict resolution, retry
 ├── features/insights/domain/insight_engine_test.dart
 ├── features/health/domain/services/medication_reminder_service_test.dart
 ├── features/fitness/presentation/providers/workout_notifier_test.dart
 ├── data/repositories/health/medication_log_repository_impl_test.dart
 ├── data/repositories/fitness/workout_session_repository_impl_test.dart
 ├── data/repositories/fitness/streak_repository_impl_test.dart
-└── core/sync/sync_service_test.dart
+├── presentation/screens/auth/register_screen_test.dart   # widget: form + validation + failure
+├── presentation/screens/gdpr/consent_screen_test.dart    # widget: GDPR consent gate
+├── widget_test.dart                                       # widget: login screen
+└── support/pump_app.dart                                  # shared widget-test harness
 ```
+
+- **Auth flow** — sign-in / sign-up / Sign in with Apple / sign-out / reset, each with happy *and* failure paths.
+- **Sync failure paths** — offline / no-consent / unauthenticated guards, timestamp **conflict resolution** (last-write-wins), and **retry** marking on push failure.
+- **Critical-screen widget tests** — Login, Register, and the GDPR consent gate (rendering, form validation, failure handling).
 
 Static analysis is clean: **`flutter analyze` → 0 issues.**
 
@@ -393,9 +448,12 @@ Static analysis is clean: **`flutter analyze` → 0 issues.**
 
 ## 🗺 Roadmap
 
+- [x] **Crash & async-error observability** — Sentry crash reporting with global error handling (see [Observability](#-observability)).
+- [x] **Auth, sync-failure & widget test coverage** — auth flows, sync failure paths, and critical-screen widget tests.
+- [ ] **Cognito Threat Protection** — compromised-credential / adaptive-auth detection; deferred pending the paid `PLUS` user-pool tier (see [`docs/AWS_HARDENING.md`](docs/AWS_HARDENING.md)).
 - [ ] **AI-assisted insights** — pluggable LLM layer (AWS Bedrock / Claude) for natural-language data entry and visit summaries, layered on top of the existing rule engine.
-- [ ] Expanded widget & integration test coverage.
-- [ ] Crash & performance observability (e.g. Sentry).
+- [ ] Performance tracing & release-health monitoring.
+- [ ] Integration / end-to-end test coverage.
 - [ ] Wearable / HealthKit data import.
 - [ ] Android release.
 

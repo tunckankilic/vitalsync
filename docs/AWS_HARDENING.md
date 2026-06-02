@@ -1,9 +1,14 @@
 # AWS Backend Hardening
 
 Operational record of backend hardening applied directly to the live AWS
-resources (account `***REDACTED***`, region `eu-central-1`). These changes were
-made with the AWS CLI rather than CloudFormation, so this file is the source of
-truth for what was changed, why, how to verify it, and how to roll it back.
+resources (region `eu-central-1`). These changes were made with the AWS CLI
+rather than CloudFormation, so this file is the source of truth for what was
+changed, why, how to verify it, and how to roll it back.
+
+> **Identifiers are redacted.** Concrete account / API / user-pool ids are
+> deliberately kept out of this committed (public) file — substitute your own.
+> Get them from the AWS console or the git-ignored `lib/amplifyconfiguration.dart`:
+> `<AWS_ACCOUNT_ID>`, `<REST_API_ID>`, `<USER_POOL_ID>`.
 
 > Scope: only VitalSync resources were touched. This AWS account hosts other
 > unrelated projects; none were affected.
@@ -11,8 +16,8 @@ truth for what was changed, why, how to verify it, and how to roll it back.
 | Resource | Identifier |
 | -------- | ---------- |
 | DynamoDB table | `vitalsynchDBtable-dev` |
-| REST API (API Gateway) | `vitalsynchApi` — id `***REDACTED***`, stage `dev` |
-| Cognito User Pool | `vitalsyncf9e02078_userpool_f9e02078-dev` — `***REDACTED***` |
+| REST API (API Gateway) | `vitalsynchApi` — id `<REST_API_ID>`, stage `dev` |
+| Cognito User Pool | `<USER_POOL_ID>` |
 
 ---
 
@@ -57,7 +62,7 @@ writes). Values are conservative and adjustable.
 **Applied**
 ```bash
 aws apigateway update-stage --region eu-central-1 \
-  --rest-api-id ***REDACTED*** --stage-name dev \
+  --rest-api-id <REST_API_ID> --stage-name dev \
   --patch-operations \
     'op=replace,path=/*/*/throttling/rateLimit,value=50' \
     'op=replace,path=/*/*/throttling/burstLimit,value=100'
@@ -66,14 +71,14 @@ aws apigateway update-stage --region eu-central-1 \
 **Verify** → expect `rate: 50.0`, `burst: 100`
 ```bash
 aws apigateway get-stage --region eu-central-1 \
-  --rest-api-id ***REDACTED*** --stage-name dev \
+  --rest-api-id <REST_API_ID> --stage-name dev \
   --query 'methodSettings."*/*".{rate:throttlingRateLimit,burst:throttlingBurstLimit}'
 ```
 
 **Rollback** (reverts to the account default)
 ```bash
 aws apigateway update-stage --region eu-central-1 \
-  --rest-api-id ***REDACTED*** --stage-name dev \
+  --rest-api-id <REST_API_ID> --stage-name dev \
   --patch-operations \
     'op=remove,path=/*/*/throttling/rateLimit' \
     'op=remove,path=/*/*/throttling/burstLimit'

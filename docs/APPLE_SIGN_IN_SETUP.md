@@ -2,6 +2,8 @@
 
 Bu doküman, AWS Cognito User Pool'da Apple Sign-In federated identity provider'ını kurmak için gerekli manuel adımları içerir. Kod tarafı `Amplify.Auth.signInWithWebUI(provider: AuthProvider.apple)` çağrısı ile hazırdır; backend konfigürasyonu yapılmadan çalışmaz.
 
+> **Identifiers redacted.** Instance-specific values (`<USER_POOL_ID>`, `<APP_CLIENT_ID>`, `<COGNITO_DOMAIN_PREFIX>`) are placeholders — substitute your own from the AWS Cognito console / git-ignored `amplifyconfiguration.dart`. Public app identifiers (bundle id, URL schemes) are kept as-is.
+
 ## 1. Apple Developer Portal
 
 ### 1.1 App ID kontrolü
@@ -15,8 +17,8 @@ Bu doküman, AWS Cognito User Pool'da Apple Sign-In federated identity provider'
 - Identifier: `site.tunckankilic.vitalsync.signin` (App ID'den farklı olmak zorunda)
 - Sign In with Apple aktif et → Configure
   - Primary App ID: `site.tunckankilic.vitalsync`
-  - Domains and Subdomains: `***REDACTED***`
-  - Return URLs: `https://***REDACTED***/oauth2/idpresponse`
+  - Domains and Subdomains: `<COGNITO_DOMAIN_PREFIX>.auth.eu-central-1.amazoncognito.com`
+  - Return URLs: `https://<COGNITO_DOMAIN_PREFIX>.auth.eu-central-1.amazoncognito.com/oauth2/idpresponse`
 
 ### 1.3 Sign In with Apple Key oluştur
 - Keys → "+" → Sign in with Apple aktif et → Configure
@@ -29,10 +31,10 @@ Bu doküman, AWS Cognito User Pool'da Apple Sign-In federated identity provider'
 ## 2. AWS Cognito Console
 
 ### 2.1 Hosted UI Domain ayarla
-- Cognito → User Pools → `***REDACTED***`
+- Cognito → User Pools → `<USER_POOL_ID>`
 - App integration tab → Domain → Cognito domain
-- Domain prefix: `***REDACTED***`
-- Save (tam adres: `https://***REDACTED***`)
+- Domain prefix: `<COGNITO_DOMAIN_PREFIX>`
+- Save (tam adres: `https://<COGNITO_DOMAIN_PREFIX>.auth.eu-central-1.amazoncognito.com`)
 
 ### 2.2 Apple Identity Provider ekle
 - Same User Pool → Sign-in experience → Federated identity provider sign-in → Add identity provider → **Sign in with Apple**
@@ -47,7 +49,7 @@ Bu doküman, AWS Cognito User Pool'da Apple Sign-In federated identity provider'
 - Create
 
 ### 2.3 App client güncelle
-- App integration → App clients → mevcut app client (`***REDACTED***`)
+- App integration → App clients → mevcut app client (`<APP_CLIENT_ID>`)
 - Edit Hosted UI:
   - Allowed callback URLs: `site.tunckankilic.vitalsync://callback/`
   - Allowed sign-out URLs: `site.tunckankilic.vitalsync://signout/`
@@ -60,7 +62,7 @@ Bu doküman, AWS Cognito User Pool'da Apple Sign-In federated identity provider'
 
 Hosted UI test URL'inde manuel doğrulama:
 ```
-https://***REDACTED***/login?response_type=code&client_id=***REDACTED***&redirect_uri=site.tunckankilic.vitalsync://callback/&identity_provider=SignInWithApple
+https://<COGNITO_DOMAIN_PREFIX>.auth.eu-central-1.amazoncognito.com/login?response_type=code&client_id=<APP_CLIENT_ID>&redirect_uri=site.tunckankilic.vitalsync://callback/&identity_provider=SignInWithApple
 ```
 
 Tarayıcıda açılınca Apple login ekranı görünmeli. Mobil uygulamada `Amplify.Auth.signInWithWebUI(provider: AuthProvider.apple)` çağrısı ASWebAuthenticationSession ile bu URL'i açar.
