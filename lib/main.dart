@@ -12,6 +12,7 @@ import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:vitalsync/core/l10n/app_localizations.dart';
 import 'amplifyconfiguration.dart';
 import 'core/background/background_service.dart';
@@ -30,7 +31,39 @@ Object? _initError;
 /// Exposes the initialization error for the splash screen to check.
 Object? get appInitError => _initError;
 
+/// Application entry point.
+///
+/// Wires up crash reporting before running the app:
+/// - The DSN is read from `--dart-define=SENTRY_DSN=...` (proper env wiring
+///   lands in a later step). When empty (local/dev), Sentry is skipped so we
+///   don't generate noise and the app behaves exactly as before.
+/// - When a DSN is present, [SentryFlutter.init] runs [_bootstrap] inside its
+///   guarded zone (`appRunner`) and installs its `FlutterError.onError` and
+///   `PlatformDispatcher.onError` integrations. Those chain to the previous
+///   handlers, so the existing `FlutterError.reportError` calls below keep
+///   working AND are now forwarded to Sentry, including uncaught async errors.
 void main() async {
+  const sentryDsn = String.fromEnvironment('SENTRY_DSN');
+
+  if (sentryDsn.isEmpty) {
+    await _bootstrap();
+    return;
+  }
+
+  await SentryFlutter.init(
+    (options) {
+      options.dsn = sentryDsn;
+    },
+    appRunner: _bootstrap,
+  );
+}
+
+/// Initializes services and runs the app.
+///
+/// This preserves the original launch flow unchanged: critical init is guarded
+/// so a failure is captured in [_initError] (surfaced on the splash screen),
+/// and non-critical services degrade gracefully without blocking launch.
+Future<void> _bootstrap() async {
   // Ensure Flutter bindings are initialized
   WidgetsFlutterBinding.ensureInitialized();
 
