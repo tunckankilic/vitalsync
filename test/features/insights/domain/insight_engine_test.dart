@@ -250,20 +250,21 @@ void main() {
           ),
         );
 
-        // The engine calls getByDateRange twice for symptom trend:
-        //   1) recent (7 days ago → now)
-        //   2) prior  (14 days ago → 7 days ago)
-        // We use thenAnswer with invocation index to differentiate.
-        var symptomCallCount = 0;
+        // The engine calls getByDateRange with different windows:
+        //   - rule 2 (symptom-exercise): 30 days ago → now
+        //   - rule 5 (symptom trend) recent: 7 days ago → now
+        //   - rule 5 (symptom trend) prior:  14 days ago → 7 days ago
+        // Match on the start-date argument rather than call order, so the
+        // stub stays correct regardless of how many rules call this or in
+        // what sequence.
         when(
           () => mockSymptomRepo.getByDateRange(any(), any()),
-        ).thenAnswer((_) async {
-          symptomCallCount++;
-          // First two calls are for rule 2 (symptom-exercise) — no data
-          // Calls 3 and 4 are for rule 5 (symptom trend)
-          if (symptomCallCount == 3) return recentSymptoms;
-          if (symptomCallCount == 4) return priorSymptoms;
-          return [];
+        ).thenAnswer((invocation) async {
+          final start = invocation.positionalArguments[0] as DateTime;
+          final daysAgo = now.difference(start).inDays;
+          if (daysAgo <= 8) return recentSymptoms; // recent week (~7d)
+          if (daysAgo <= 15) return priorSymptoms; // prior week (~14d)
+          return []; // wider windows (e.g. rule 2's 30d) — no data
         });
 
         // Act
