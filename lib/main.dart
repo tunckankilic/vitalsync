@@ -14,8 +14,8 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:vitalsync/core/l10n/app_localizations.dart';
-import 'amplifyconfiguration.dart';
 import 'core/background/background_service.dart';
+import 'core/config/app_environment.dart';
 import 'core/constants/app_constants.dart';
 import 'core/di/injection_container.dart';
 import 'core/network/connectivity_service.dart';
@@ -34,16 +34,17 @@ Object? get appInitError => _initError;
 /// Application entry point.
 ///
 /// Wires up crash reporting before running the app:
-/// - The DSN is read from `--dart-define=SENTRY_DSN=...` (proper env wiring
-///   lands in a later step). When empty (local/dev), Sentry is skipped so we
-///   don't generate noise and the app behaves exactly as before.
+/// - The DSN comes from the build-time environment ([AppEnvironment.sentryDsn],
+///   supplied via `--dart-define=SENTRY_DSN=...`). When empty (local/dev),
+///   Sentry is skipped so we don't generate noise and the app behaves exactly
+///   as before.
 /// - When a DSN is present, [SentryFlutter.init] runs [_bootstrap] inside its
 ///   guarded zone (`appRunner`) and installs its `FlutterError.onError` and
 ///   `PlatformDispatcher.onError` integrations. Those chain to the previous
 ///   handlers, so the existing `FlutterError.reportError` calls below keep
 ///   working AND are now forwarded to Sentry, including uncaught async errors.
 void main() async {
-  const sentryDsn = String.fromEnvironment('SENTRY_DSN');
+  const sentryDsn = AppEnvironment.sentryDsn;
 
   if (sentryDsn.isEmpty) {
     await _bootstrap();
@@ -75,7 +76,7 @@ Future<void> _bootstrap() async {
         AmplifyAPI(),
         AmplifyAnalyticsPinpoint(),
       ]);
-      await Amplify.configure(amplifyconfig);
+      await Amplify.configure(AppEnvironment.amplifyConfig);
     }
 
     // Initialize GetIt dependency injection

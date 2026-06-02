@@ -1,0 +1,135 @@
+// VitalSync — PRODUCTION Amplify configuration TEMPLATE.
+//
+// Copy this file to `lib/amplifyconfiguration_prod.dart` and fill in the real
+// values from your PRODUCTION Amplify environment. The real file is
+// git-ignored on purpose — production resource identifiers must not enter the
+// repository. This template (placeholders only) is the one that is committed.
+//
+// To generate the real values, point the Amplify CLI at the prod environment
+// (e.g. `amplify env checkout prod` / `amplify pull --envName prod`) and copy
+// the resulting config here, or fill the fields below by hand.
+//
+// Loaded only when the app is built with `--dart-define=ENV=prod`
+// (see lib/core/config/app_environment.dart).
+const amplifyconfigProd = '''{
+    "UserAgent": "aws-amplify-cli/2.0",
+    "Version": "1.0",
+    "analytics": {
+        "plugins": {
+            "awsPinpointAnalyticsPlugin": {
+                "pinpointAnalytics": {
+                    "appId": "<PROD_PINPOINT_APP_ID>",
+                    "region": "<PROD_REGION>"
+                },
+                "pinpointTargeting": {
+                    "region": "<PROD_REGION>"
+                }
+            }
+        }
+    },
+    "api": {
+        "plugins": {
+            "awsAPIPlugin": {
+                "vitalsynchApi": {
+                    "endpointType": "REST",
+                    "endpoint": "https://<PROD_API_ID>.execute-api.<PROD_REGION>.amazonaws.com/prod",
+                    "region": "<PROD_REGION>",
+                    "authorizationType": "AWS_IAM"
+                }
+            }
+        }
+    },
+    "auth": {
+        "plugins": {
+            "awsCognitoAuthPlugin": {
+                "UserAgent": "aws-amplify-cli/0.1.0",
+                "Version": "0.1.0",
+                "IdentityManager": {
+                    "Default": {}
+                },
+                "CredentialsProvider": {
+                    "CognitoIdentity": {
+                        "Default": {
+                            "PoolId": "<PROD_IDENTITY_POOL_ID>",
+                            "Region": "<PROD_REGION>"
+                        }
+                    }
+                },
+                "CognitoUserPool": {
+                    "Default": {
+                        "PoolId": "<PROD_USER_POOL_ID>",
+                        "AppClientId": "<PROD_APP_CLIENT_ID>",
+                        "Region": "<PROD_REGION>"
+                    }
+                },
+                "Auth": {
+                    "Default": {
+                        "authenticationFlowType": "USER_SRP_AUTH",
+                        "socialProviders": [
+                            "SIGN_IN_WITH_APPLE"
+                        ],
+                        "usernameAttributes": [
+                            "EMAIL"
+                        ],
+                        "signupAttributes": [
+                            "EMAIL"
+                        ],
+                        "passwordProtectionSettings": {
+                            "passwordPolicyMinLength": 8,
+                            "passwordPolicyCharacters": []
+                        },
+                        "mfaConfiguration": "OFF",
+                        "mfaTypes": [
+                            "SMS"
+                        ],
+                        "verificationMechanisms": [
+                            "EMAIL"
+                        ],
+                        "OAuth": {
+                            "WebDomain": "<PROD_OAUTH_DOMAIN>.auth.<PROD_REGION>.amazoncognito.com",
+                            "AppClientId": "<PROD_APP_CLIENT_ID>",
+                            "SignInRedirectURI": "site.tunckankilic.vitalsync://callback/",
+                            "SignOutRedirectURI": "site.tunckankilic.vitalsync://signout/",
+                            "Scopes": [
+                                "email",
+                                "openid",
+                                "profile",
+                                "aws.cognito.signin.user.admin"
+                            ]
+                        }
+                    }
+                },
+                "DynamoDBObjectMapper": {
+                    "Default": {
+                        "Region": "<PROD_REGION>"
+                    }
+                },
+                "PinpointAnalytics": {
+                    "Default": {
+                        "AppId": "<PROD_PINPOINT_APP_ID>",
+                        "Region": "<PROD_REGION>"
+                    }
+                },
+                "PinpointTargeting": {
+                    "Default": {
+                        "Region": "<PROD_REGION>"
+                    }
+                }
+            }
+        }
+    },
+    "storage": {
+        "plugins": {
+            "awsDynamoDbStoragePlugin": {
+                "partitionKeyName": "PK",
+                "sortKeyName": "SK",
+                "sortKeyType": "S",
+                "region": "<PROD_REGION>",
+                "arn": "arn:aws:dynamodb:<PROD_REGION>:<PROD_ACCOUNT_ID>:table/vitalsynchDBtable-prod",
+                "streamArn": "arn:aws:dynamodb:<PROD_REGION>:<PROD_ACCOUNT_ID>:table/vitalsynchDBtable-prod/stream/<PROD_STREAM_LABEL>",
+                "partitionKeyType": "S",
+                "name": "vitalsynchDBtable-prod"
+            }
+        }
+    }
+}''';

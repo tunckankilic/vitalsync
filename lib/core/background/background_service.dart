@@ -18,7 +18,6 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:workmanager/workmanager.dart';
 
-import '../../amplifyconfiguration.dart';
 import '../../data/local/database.dart';
 import '../../data/repositories/fitness/exercise_repository_impl.dart';
 import '../../data/repositories/fitness/personal_record_repository_impl.dart';
@@ -33,6 +32,7 @@ import '../../domain/repositories/shared/auth_repository.dart';
 import '../../features/fitness/domain/services/streak_service.dart';
 import '../../features/insights/domain/insight_engine.dart';
 import '../../features/insights/domain/weekly_report_service.dart';
+import '../config/app_environment.dart';
 import '../constants/app_constants.dart';
 import '../enums/insight_priority.dart';
 import '../enums/medication_log_status.dart';
@@ -275,7 +275,7 @@ class _BackgroundDeps {
     if (!Amplify.isConfigured) {
       try {
         await Amplify.addPlugins([AmplifyAuthCognito(), AmplifyAPI()]);
-        await Amplify.configure(amplifyconfig);
+        await Amplify.configure(AppEnvironment.amplifyConfig);
       } catch (e) {
         log('Amplify configuration in background isolate: $e');
       }

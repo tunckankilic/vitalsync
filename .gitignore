@@ -47,6 +47,9 @@ lib/data/local/database.g.dart
 .env
 .env.*
 *.env
+# Production Amplify config — real values must not enter the repo.
+# Only the committed `.example` template carries placeholders.
+lib/amplifyconfiguration_prod.dart
 google-services.json
 GoogleService-Info.plist
 firebase_app_id_file.json
