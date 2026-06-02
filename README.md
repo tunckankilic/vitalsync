@@ -1,84 +1,397 @@
-# VitalSync
+<div align="center">
 
-**VitalSync** is a comprehensive health and fitness management application built with Flutter, designed to provide users with a unified view of their well-being. It combines health tracking (medications, symptoms) with fitness monitoring (workouts, steps) to deliver intelligent, actionable insights.
+# 🩺 VitalSync
 
-# Key Features
+### Health & Fitness Companion — with a cross-domain insight engine
 
-- **Unified Dashboard**: A central hub displaying both health and fitness metrics with smart insights.
-- **Glassmorphic UI**: A modern, visually stunning interface with frosted glass effects and dynamic Material You theming.
-- **Context-Aware Navigation**: A smart Floating Action Button (FAB) that adapts to the current screen, offering quick actions like adding medication, logging symptoms, or starting a workout.
-- **Real-Time Sync Status**: An intelligent sync indicator that shows connection status (Online, Offline, Syncing) with smooth animations.
-- **Bottom Navigation**: A persistent, glassmorphic bottom navigation bar for easy switching between Dashboard, Health, and Fitness sections.
-- **Smooth Animations**: Built-in Flutter animations for transitions, FAB expansion, and sync status indicators.
+A production-grade Flutter application that unifies **medication management**, **symptom tracking**, and **workout logging** into a single experience — then analyzes them *together* to surface personalized, actionable insights.
 
-# Getting Started
+[![Flutter](https://img.shields.io/badge/Flutter-3.10+-02569B?logo=flutter&logoColor=white)](https://flutter.dev)
+[![Dart](https://img.shields.io/badge/Dart-3.10+-0175C2?logo=dart&logoColor=white)](https://dart.dev)
+[![AWS Amplify](https://img.shields.io/badge/AWS-Amplify-FF9900?logo=amazonaws&logoColor=white)](https://aws.amazon.com/amplify/)
+[![Platform](https://img.shields.io/badge/Platform-iOS-000000?logo=apple&logoColor=white)](https://www.apple.com/ios/)
+[![Architecture](https://img.shields.io/badge/Architecture-Clean-success)](#-architecture)
+[![Analyzer](https://img.shields.io/badge/flutter%20analyze-0%20issues-brightgreen)](#)
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-# Prerequisites
+</div>
 
-- **Flutter**: Ensure you have Flutter installed and configured.
-- **Android Studio / VS Code**: With Flutter and Dart plugins.
-- **Physical Device**: Recommended for testing Material You dynamic colors and sensors.
+---
 
-# Installation
+## 📋 Table of Contents
 
-1.  **Clone the repository**:
-    ```bash
-    git clone <repository-url>
-    cd vitalsync
-    ```
+- [Overview](#-overview)
+- [The Differentiator: InsightEngine](#-the-differentiator-insightengine)
+- [Key Features](#-key-features)
+- [Screenshots](#-screenshots)
+- [Architecture](#-architecture)
+- [Backend Architecture (AWS)](#-backend-architecture-aws)
+- [Offline-First Sync](#-offline-first-sync)
+- [Tech Stack & Rationale](#-tech-stack--rationale)
+- [Data Model](#-data-model)
+- [Security & Privacy](#-security--privacy)
+- [Project Structure](#-project-structure)
+- [Getting Started](#-getting-started)
+- [Testing](#-testing)
+- [Roadmap](#-roadmap)
+- [License](#-license)
 
-2.  **Install dependencies**:
-    ```bash
-    flutter pub get
-    ```
+---
 
-3.  **Run the app**:
-    ```bash
-    flutter run
-    ```
+## 🎯 Overview
 
-# Tech Stack
+Most health apps treat *medication*, *symptoms*, and *fitness* as isolated silos. **VitalSync's premise is that the value lives in the correlations between them** — e.g. *"Your symptom severity drops on weeks where you maintain a workout streak"* or *"Medication adherence is 23% lower on weekends."*
 
-- **Framework**: Flutter
-- **State Management**: Riverpod (ConsumerWidget, ConsumerStatefulWidget)
-- **Navigation**: GoRouter (Declarative routing)
-- **UI Components**:
-    - Glassmorphism: BackdropFilter, Opacity, BorderRadius
-    - Animations: AnimatedSlide, AnimatedBuilder, CurvedAnimation
-    - Material You: dynamic_color package
+VitalSync is built as a **real product**, not a tutorial demo:
 
-# Project Structure
+- **Offline-first** — full functionality without a network; changes sync when connectivity returns.
+- **Privacy by design** — local database is encrypted at rest (SQLCipher / AES-256); GDPR consent, data export, and a Privacy Manifest are first-class.
+- **Cloud-backed** — AWS Cognito auth (incl. Sign in with Apple) and a serverless sync backend.
+- **Localized** — English, Turkish, and German out of the box.
+
+> **Scale:** ~40K hand-written lines of Dart across 240+ files, 15 database tables, 34 screens, 3 feature modules, and a rule-based analytics engine — **with `flutter analyze` reporting 0 issues.**
+
+---
+
+## 💡 The Differentiator: InsightEngine
+
+The heart of VitalSync is a **rule-based, cross-module analytics engine** written in pure Dart — no external ML dependencies, fully testable, and fully explainable.
+
+It runs **10 correlation rules** across health and fitness data, each with minimum-sample-size guards and duplicate-prevention logic:
+
+| Rule | What it detects |
+|------|-----------------|
+| `med_workout_correlation` | Relationship between medication adherence and workout activity |
+| `symptom_exercise_pattern` | How exercise correlates with symptom occurrence |
+| `compliance_streak_correlation` | Whether workout streaks track with medication compliance |
+| `compliance_weekday_pattern` | Day-of-week dips in medication adherence |
+| `symptom_trend` | Rising/falling symptom severity over time |
+| `med_adherence_milestone` | Adherence achievement milestones |
+| `volume_plateau` | Training-volume plateaus in fitness |
+| `rest_day_suggestion` | Recovery recommendations based on load |
+| `workout_consistency` | Consistency scoring and nudges |
+| `pr_proximity` | Proximity to personal records |
+
+**Why rule-based instead of ML?** Health recommendations must be *explainable* and *deterministic* — a user (and a regulator) should be able to understand exactly why a suggestion appeared. The architecture is intentionally pluggable, so an ML/LLM layer can be added later (see [Roadmap](#-roadmap)) without rewriting the domain.
+
+> 📄 See [`lib/features/insights/domain/insight_engine.dart`](lib/features/insights/domain/insight_engine.dart) and its [test suite](test/features/insights/domain/insight_engine_test.dart).
+
+---
+
+## ✨ Key Features
+
+### 🏥 Health
+- **Medication management** — schedules, dosages, and reminders via local notifications.
+- **Adherence logging** — taken / skipped / missed status tracking with history.
+- **Symptom tracking** — severity logging and a unified health timeline.
+
+### 💪 Fitness
+- **Workout logging** — sessions, sets, reps, and weights with a live active-workout screen.
+- **Exercise library** & **reusable templates**.
+- **Progress analytics** — volume charts, personal records, streaks, and achievements.
+
+### 📊 Insights
+- **Cross-module insights** generated by the [InsightEngine](#-the-differentiator-insightengine).
+- **Weekly reports** summarizing health + fitness in one view.
+- Prioritized, categorized, and time-bounded insight cards.
+
+### 🧩 Platform
+- **Unified dashboard** with a context-aware Floating Action Button.
+- **Glassmorphic UI** with Material You dynamic theming.
+- **Real-time sync indicator** (Online / Offline / Syncing).
+- **Biometric lock** (Face ID / Touch ID).
+- **Onboarding** + **GDPR consent** flows.
+- **Localization** — EN / TR / DE.
+
+---
+
+## 📸 Screenshots
+
+> _Add screenshots/GIFs here. Recommended: Dashboard, an Insight card, Active Workout, Weekly Report, and the sync indicator in action._
+
+| Dashboard | Insights | Active Workout | Weekly Report |
+|:---:|:---:|:---:|:---:|
+| _coming soon_ | _coming soon_ | _coming soon_ | _coming soon_ |
+
+---
+
+## 🏗 Architecture
+
+VitalSync follows **Clean Architecture** with a **feature-first** organization. Each feature (`health`, `fitness`, `insights`) is split into `domain` and `presentation`, while cross-cutting concerns live in `core` and the data layer is shared.
+
+```mermaid
+flowchart TB
+    subgraph Presentation["🎨 Presentation Layer"]
+        UI["Screens & Widgets"]
+        VM["Riverpod Providers / Notifiers"]
+    end
+
+    subgraph Domain["🧠 Domain Layer"]
+        E["Entities"]
+        RI["Repository Interfaces"]
+        IE["InsightEngine (business rules)"]
+    end
+
+    subgraph Data["💾 Data Layer"]
+        RImpl["Repository Implementations"]
+        Local["Drift + SQLCipher (local)"]
+        Remote["Amplify REST Client (remote)"]
+        Queue["Sync Queue"]
+    end
+
+    UI --> VM
+    VM --> RI
+    IE --> RI
+    RI -.implemented by.-> RImpl
+    RImpl --> Local
+    RImpl --> Queue
+    Queue --> Remote
+
+    classDef pres fill:#e3f2fd,stroke:#1976d2,color:#0d47a1
+    classDef dom fill:#f3e5f5,stroke:#7b1fa2,color:#4a148c
+    classDef dat fill:#e8f5e9,stroke:#388e3c,color:#1b5e20
+    class UI,VM pres
+    class E,RI,IE dom
+    class RImpl,Local,Remote,Queue dat
+```
+
+**Principles applied**
+
+- **Dependency Rule** — domain depends on nothing; data and presentation depend inward.
+- **Dependency Injection** — `get_it` + `injectable` wire implementations to interfaces.
+- **Single source of truth** — the local Drift database; the cloud is a sync target, not the primary read path (offline-first).
+- **Testability** — repositories are mocked (`mocktail`) so domain logic is unit-tested in isolation.
+
+---
+
+## ☁️ Backend Architecture (AWS)
+
+The backend is **serverless**, provisioned via **AWS Amplify**, and hosted in **`eu-central-1` (Frankfurt)** for EU data residency.
+
+```mermaid
+flowchart LR
+    App["📱 VitalSync<br/>(Flutter / iOS)"]
+
+    subgraph AWS["AWS — eu-central-1"]
+        Cognito["🔐 Cognito<br/>User Pool + Identity Pool<br/>(Sign in with Apple)"]
+        APIGW["🚪 API Gateway<br/>REST · AWS_IAM auth"]
+        Lambda["⚡ Lambda<br/>Sync business logic"]
+        Dynamo["🗄 DynamoDB<br/>Single-table design"]
+        Pinpoint["📊 Pinpoint<br/>Analytics + Push"]
+    end
+
+    App -- "auth (SRP / OIDC)" --> Cognito
+    App -- "IAM-signed requests" --> APIGW
+    Cognito -. "temporary IAM creds" .-> App
+    APIGW --> Lambda --> Dynamo
+    App -- "events / push tokens" --> Pinpoint
+
+    classDef aws fill:#fff3e0,stroke:#f57c00,color:#e65100
+    class Cognito,APIGW,Lambda,Dynamo,Pinpoint aws
+```
+
+| Service | Role |
+|---------|------|
+| **Cognito** | Authentication (email/password via SRP, **Sign in with Apple** via OIDC federation) and temporary IAM credentials |
+| **API Gateway** | REST entry point secured with `AWS_IAM` (requests are SigV4-signed with the user's Cognito credentials) |
+| **Lambda** | Serverless sync/business logic |
+| **DynamoDB** | Single-table design (`PK` / `SK`) for user-scoped records |
+| **Pinpoint** | Product analytics and push-notification delivery |
+
+> **Why IAM auth on the API?** Each request is signed with the authenticated user's short-lived AWS credentials, so authorization is enforced at the AWS layer — no bearer tokens to leak, and per-user data isolation can be expressed directly in IAM policies.
+
+---
+
+## 🔄 Offline-First Sync
+
+VitalSync is designed to be **fully usable with no connection**. The local encrypted database is the source of truth; the cloud is reconciled opportunistically.
+
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant DB as Local DB (Drift)
+    participant Q as Sync Queue
+    participant N as Connectivity
+    participant API as AWS (API Gateway → Lambda → DynamoDB)
+
+    U->>DB: Create / update record
+    DB-->>U: Instant UI update (optimistic)
+    DB->>Q: Enqueue change
+    N-->>Q: Connectivity restored
+    Q->>API: Flush pending changes (IAM-signed)
+    API-->>Q: Ack
+    Q->>DB: Mark synced
+    Note over U,API: A live indicator reflects Online / Offline / Syncing
+```
+
+- Writes apply **locally first** for an instant, optimistic UI.
+- A dedicated **`sync_queue`** table durably tracks pending changes.
+- `connectivity_plus` triggers a flush when the network returns.
+- Background reconciliation runs via `workmanager`.
+
+---
+
+## 🛠 Tech Stack & Rationale
+
+Every dependency was a deliberate choice — here's the *why*, not just the *what*.
+
+| Concern | Choice | Why this one |
+|---------|--------|--------------|
+| **State management** | [Riverpod](https://riverpod.dev) | Compile-safe, testable, no `BuildContext` coupling; scales cleanly with code-gen. |
+| **Navigation** | [GoRouter](https://pub.dev/packages/go_router) | Declarative, deep-link friendly, auth-redirect guards. |
+| **Local DB** | [Drift](https://drift.simonbinder.eu) | Type-safe, compile-checked SQL with reactive streams — ideal for an offline-first source of truth. |
+| **Encryption at rest** | [SQLCipher](https://pub.dev/packages/sqlcipher_flutter_libs) | Transparent AES-256 on the SQLite file — health data is never stored in plaintext. |
+| **DI** | [get_it](https://pub.dev/packages/get_it) + [injectable](https://pub.dev/packages/injectable) | Decouples interfaces from implementations; keeps the domain layer pure. |
+| **Backend** | [AWS Amplify](https://aws.amazon.com/amplify/) | Managed Cognito + serverless stack with EU data residency. |
+| **Auth** | Cognito + [sign_in_with_apple](https://pub.dev/packages/sign_in_with_apple) | Required for iOS social login; OIDC-federated into Cognito. |
+| **Secure storage** | [flutter_secure_storage](https://pub.dev/packages/flutter_secure_storage) | Keychain-backed storage for the DB key and secrets. |
+| **Biometrics** | [local_auth](https://pub.dev/packages/local_auth) | Face ID / Touch ID app lock. |
+| **Charts** | [fl_chart](https://pub.dev/packages/fl_chart) | Customizable progress and trend visualizations. |
+| **Background work** | [workmanager](https://pub.dev/packages/workmanager) | Periodic sync + reminder scheduling. |
+| **Notifications** | [flutter_local_notifications](https://pub.dev/packages/flutter_local_notifications) | Timezone-aware medication reminders. |
+| **Theming** | [dynamic_color](https://pub.dev/packages/dynamic_color) | Material You dynamic palettes. |
+
+---
+
+## 🗃 Data Model
+
+A normalized local schema across 15 Drift tables, grouped by domain:
+
+**Health**
+`medications` · `medication_logs` · `symptoms`
+
+**Fitness**
+`exercises` · `workout_templates` · `template_exercises` · `workout_sessions` · `workout_sets` · `personal_records` · `achievements` · `user_stats`
+
+**Insights**
+`generated_insights`
+
+**Shared / Platform**
+`user_profiles` · `sync_queue` · `gdpr_consent_logs`
+
+Repositories sit behind interfaces in `domain/repositories/`, keeping persistence details out of business logic.
+
+---
+
+## 🔒 Security & Privacy
+
+Health data demands a higher bar — VitalSync treats privacy as a feature:
+
+- **🔐 Encryption at rest** — SQLCipher (AES-256) on the entire local database.
+- **🗝 Secret management** — DB key & tokens in the iOS Keychain via `flutter_secure_storage`.
+- **👆 Biometric app lock** — Face ID / Touch ID gate.
+- **🛡 IAM-authorized API** — SigV4-signed requests; no long-lived bearer tokens.
+- **🌍 EU data residency** — all cloud resources in `eu-central-1`.
+- **📜 GDPR** — explicit consent flow, consent audit log, and **data export** (Right to Data Portability, Art. 20).
+- **🍎 Privacy Manifest** — `PrivacyInfo.xcprivacy` declares all collected data types and accessed-API reasons; `NSPrivacyTracking = false`.
+- **🚫 No plaintext logging** — structured logging via `logger`; zero `print()` statements in the codebase.
+
+---
+
+## 📁 Project Structure
 
 ```
-vitalsync/
-├── lib/
-│   ├── core/
-│   │   ├── theme/              # Theme configuration
-│   │   └── utils/              # Utility functions
-│   ├── data/                   # Data layer (Models, Repositories, Providers)
-│   ├── presentation/
-│   │   ├── pages/              # Main screens (Dashboard, Health, Fitness)
-│   │   ├── widgets/            # Reusable UI components
-│   │   └── screens/            # App shell and navigation
-│   └── main.dart               # App entry point
-├── assets/
-│   └── icons/                  # App icons
-└── pubspec.yaml                # Dependencies and project configuration
+lib/
+├── core/                      # Cross-cutting concerns
+│   ├── auth/                  # Auth state & guards
+│   ├── di/                    # Dependency injection setup
+│   ├── errors/                # Custom exception types
+│   ├── gdpr/                  # Consent & data-export manager
+│   ├── network/               # Connectivity & REST client
+│   ├── notifications/         # Local notification service
+│   ├── router/                # GoRouter configuration
+│   ├── sync/                  # Sync orchestration
+│   ├── theme/                 # Material You theming
+│   └── l10n/                  # Localizations (EN/TR/DE)
+│
+├── domain/                    # Pure business layer
+│   ├── entities/              # Domain models
+│   └── repositories/          # Repository interfaces
+│
+├── data/                      # Implementation layer
+│   ├── local/                 # Drift database, tables, seed data
+│   ├── models/                # DTOs / mappers
+│   └── repositories/          # Repository implementations
+│
+├── features/                  # Feature-first modules
+│   ├── health/                # Medications & symptoms
+│   ├── fitness/               # Workouts & progress
+│   └── insights/              # InsightEngine + reports
+│
+└── presentation/              # App shell, auth, dashboard, profile, settings
 ```
 
-# Design System
+---
 
-VitalSync follows a modern design system with:
+## 🚀 Getting Started
 
-- **Primary Colors**: Health (Green), Fitness (Red), Wellness (Blue)
-- **Typography**: Roboto (Default Flutter font)
-- **Iconography**: Material Icons (Rounded)
-- **Visual Effects**: Frosted glass, subtle shadows, and smooth gradients.
+### Prerequisites
+- Flutter **3.10.7+** / Dart **3.10.7+**
+- Xcode (iOS) with a configured signing team
+- An [AWS Amplify](https://docs.amplify.aws/) environment (for backend features)
 
-# Contributing
+### Installation
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+```bash
+# 1. Clone
+git clone <repository-url>
+cd vitalsync
 
-# License
+# 2. Install dependencies
+flutter pub get
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+# 3. Generate code (Drift, Riverpod, injectable, JSON)
+dart run build_runner build --delete-conflicting-outputs
+
+# 4. Run (physical device recommended for biometrics & Material You)
+flutter run
+```
+
+> **Backend note:** Amplify configuration (`lib/amplifyconfiguration.dart`) is environment-specific. Provision your own Amplify environment (`amplify env add`) and push (`amplify push`) to generate a matching config.
+
+---
+
+## 🧪 Testing
+
+```bash
+flutter test
+```
+
+The suite focuses on the highest-value logic — the **InsightEngine**, repository implementations, and sync — using `mocktail` for dependency isolation.
+
+```
+test/
+├── features/insights/domain/insight_engine_test.dart
+├── features/health/domain/services/medication_reminder_service_test.dart
+├── features/fitness/presentation/providers/workout_notifier_test.dart
+├── data/repositories/health/medication_log_repository_impl_test.dart
+├── data/repositories/fitness/workout_session_repository_impl_test.dart
+├── data/repositories/fitness/streak_repository_impl_test.dart
+└── core/sync/sync_service_test.dart
+```
+
+Static analysis is clean: **`flutter analyze` → 0 issues.**
+
+---
+
+## 🗺 Roadmap
+
+- [ ] **AI-assisted insights** — pluggable LLM layer (AWS Bedrock / Claude) for natural-language data entry and visit summaries, layered on top of the existing rule engine.
+- [ ] Expanded widget & integration test coverage.
+- [ ] Crash & performance observability (e.g. Sentry).
+- [ ] Wearable / HealthKit data import.
+- [ ] Android release.
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
+
+---
+
+<div align="center">
+
+**Built with Flutter & AWS** — a demonstration of clean architecture, offline-first design, and privacy-conscious health data handling.
+
+</div>
