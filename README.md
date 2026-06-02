@@ -285,6 +285,23 @@ Health data demands a higher bar — VitalSync treats privacy as a feature:
 - **📜 GDPR** — explicit consent flow, consent audit log, and **data export** (Right to Data Portability, Art. 20).
 - **🍎 Privacy Manifest** — `PrivacyInfo.xcprivacy` declares all collected data types and accessed-API reasons; `NSPrivacyTracking = false`.
 - **🚫 No plaintext logging** — structured logging via `logger`; zero `print()` statements in the codebase.
+- **🧹 Config hygiene** — backend configs (`amplifyconfiguration.dart`, prod variant, `team-provider-info.json`) are git-ignored; only placeholder `.example` templates are committed.
+
+> **Note on `amplify/team-provider-info.json`.** This file was previously tracked
+> in git. It carries no credentials — only infrastructure *identifiers* (AWS
+> account id via ARNs, IAM role ARNs, the deployment S3 bucket, the
+> CloudFormation stack id, the Amplify App id). It has been removed from
+> tracking and added to `.gitignore`, and the file still lives on disk so local
+> Amplify keeps working.
+>
+> Git history was **intentionally not rewritten.** The repo is public, so those
+> identifiers were already exposed and likely mirrored/indexed — a rewrite
+> cannot un-expose them, and force-rewriting public history would invalidate
+> every clone, fork and open PR for little real gain. Since ARNs and account ids
+> are identifiers rather than secrets, the actual security boundary is IAM
+> least-privilege and resource (S3/bucket) policies, which are hardened on the
+> AWS side rather than by hiding identifiers. The AWS account id itself cannot
+> be rotated.
 
 ---
 

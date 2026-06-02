@@ -50,6 +50,11 @@ lib/data/local/database.g.dart
 # Production Amplify config — real values must not enter the repo.
 # Only the committed `.example` template carries placeholders.
 lib/amplifyconfiguration_prod.dart
+
+# Amplify team/provider state — contains AWS account id (via ARNs), IAM role
+# ARNs, deployment S3 bucket, CloudFormation stack id and Amplify App id.
+# Infra recon surface; must never be tracked.
+amplify/team-provider-info.json
 google-services.json
 GoogleService-Info.plist
 firebase_app_id_file.json
