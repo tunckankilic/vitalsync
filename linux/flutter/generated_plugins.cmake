@@ -6,8 +6,6 @@ list(APPEND FLUTTER_PLUGIN_LIST
   amplify_db_common
   dynamic_color
   flutter_secure_storage_linux
-  sqlcipher_flutter_libs
-  sqlite3_flutter_libs
   url_launcher_linux
 )
 
