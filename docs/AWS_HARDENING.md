@@ -50,6 +50,23 @@ aws dynamodb update-continuous-backups --region eu-central-1 \
 **Persistence:** the Amplify storage CloudFormation template does not declare a
 `PointInTimeRecoverySpecification`, so `amplify push` will not overwrite this.
 
+### 1b. Deletion protection ✅ ENABLED
+
+Prevents accidental deletion of the health-data table.
+
+```bash
+# Apply
+aws dynamodb update-table --region eu-central-1 \
+  --table-name vitalsynchDBtable-dev --deletion-protection-enabled
+# Verify → expect true
+aws dynamodb describe-table --region eu-central-1 \
+  --table-name vitalsynchDBtable-dev \
+  --query "Table.DeletionProtectionEnabled"
+# Rollback
+aws dynamodb update-table --region eu-central-1 \
+  --table-name vitalsynchDBtable-dev --no-deletion-protection-enabled
+```
+
 ---
 
 ## 2. API Gateway — stage throttling ✅ APPLIED (rate 50 / burst 100)
@@ -89,6 +106,55 @@ aws apigateway update-stage --region eu-central-1 \
 > that creates a new deployment may reset these stage method settings. If that
 > happens, re-run the command above, or make it permanent via an Amplify
 > `override.ts` (CDK) that sets the stage `MethodSettings`.
+
+### 2b. Stage observability ✅ ENABLED (metrics + ERROR logging, no payload tracing)
+
+CloudWatch metrics + error-level execution logging give server-side visibility
+(5xx / latency / counts) to complement client-side Sentry. **`dataTrace` is kept
+`false` on purpose** so request/response bodies — which may carry health data —
+are never written to logs.
+
+```bash
+# Apply
+aws apigateway update-stage --region eu-central-1 \
+  --rest-api-id <REST_API_ID> --stage-name dev \
+  --patch-operations \
+    'op=replace,path=/*/*/metrics/enabled,value=true' \
+    'op=replace,path=/*/*/logging/loglevel,value=ERROR' \
+    'op=replace,path=/*/*/logging/dataTrace,value=false'
+# Rollback
+aws apigateway update-stage --region eu-central-1 \
+  --rest-api-id <REST_API_ID> --stage-name dev \
+  --patch-operations \
+    'op=replace,path=/*/*/metrics/enabled,value=false' \
+    'op=replace,path=/*/*/logging/loglevel,value=OFF'
+```
+
+> Uses the account-level API Gateway CloudWatch role (already present).
+> **Not yet enabled:** structured *access logging* (`accessLogSettings`) — needs
+> a dedicated log group + format; left as a follow-up.
+
+---
+
+## 2c. Lambda — log retention ✅ SET (30 days)
+
+The sync handler's CloudWatch log group had no retention (default = never
+expire → unbounded cost). Set to 30 days.
+
+```bash
+# Apply (create group if missing, then set retention)
+aws logs create-log-group --region eu-central-1 \
+  --log-group-name /aws/lambda/vitalsyncSyncHandler-dev   # ignore if exists
+aws logs put-retention-policy --region eu-central-1 \
+  --log-group-name /aws/lambda/vitalsyncSyncHandler-dev --retention-in-days 30
+# Verify
+aws logs describe-log-groups --region eu-central-1 \
+  --log-group-name-prefix /aws/lambda/vitalsyncSyncHandler-dev \
+  --query "logGroups[].retentionInDays"
+```
+
+> Apply the same to the helper functions' log groups if desired
+> (`amplify-vitalsync-dev-*`).
 
 ---
 
