@@ -12,7 +12,7 @@ A production-grade Flutter application that unifies **medication management**, *
 [![Platform](https://img.shields.io/badge/Platform-iOS-000000?logo=apple&logoColor=white)](https://www.apple.com/ios/)
 [![Architecture](https://img.shields.io/badge/Architecture-Clean-success)](#-architecture)
 [![Analyzer](https://img.shields.io/badge/flutter%20analyze-0%20issues-brightgreen)](#)
-[![Tests](https://img.shields.io/badge/tests-84%20passing-brightgreen)](#-testing)
+[![Tests](https://img.shields.io/badge/tests-95%20passing-brightgreen)](#-testing)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 </div>
@@ -417,30 +417,32 @@ flutter run --dart-define=ENV=prod --dart-define=SENTRY_DSN=<your_sentry_dsn>
 flutter test
 ```
 
-**84 tests passing.** The suite spans the highest-value logic — the
-**InsightEngine**, repository implementations, sync, **authentication flows**,
-**sync failure paths**, and **critical-screen widget tests** — using `mocktail`
-for dependency isolation (no new test dependencies).
+**95 tests passing.** The suite spans the highest-value logic — the
+**InsightEngine**, repository implementations, **bidirectional sync**,
+**authentication flows**, **sync failure & conflict paths**, and
+**critical-screen widget tests** — using `mocktail` for dependency isolation
+(no new test dependencies).
 
 ```
 test/
 ├── core/auth/auth_notifier_test.dart                 # sign-in/up/Apple/out + failure paths
-├── core/sync/sync_service_test.dart                  # offline/consent guards, conflict resolution, retry
+├── core/sync/sync_service_test.dart                  # guards, push/pull conflict, retry, batch limit, re-entrancy
 ├── features/insights/domain/insight_engine_test.dart
 ├── features/health/domain/services/medication_reminder_service_test.dart
 ├── features/fitness/presentation/providers/workout_notifier_test.dart
 ├── data/repositories/health/medication_log_repository_impl_test.dart
 ├── data/repositories/fitness/workout_session_repository_impl_test.dart
 ├── data/repositories/fitness/streak_repository_impl_test.dart
-├── presentation/screens/auth/register_screen_test.dart   # widget: form + validation + failure
-├── presentation/screens/gdpr/consent_screen_test.dart    # widget: GDPR consent gate
-├── widget_test.dart                                       # widget: login screen
-└── support/pump_app.dart                                  # shared widget-test harness
+├── presentation/screens/auth/register_screen_test.dart          # widget: form + validation + failure
+├── presentation/screens/auth/forgot_password_screen_test.dart   # widget: reset form + validation + failure
+├── presentation/screens/gdpr/consent_screen_test.dart           # widget: GDPR consent gate
+├── widget_test.dart                                              # widget: login screen
+└── support/pump_app.dart                                         # shared widget-test harness
 ```
 
 - **Auth flow** — sign-in / sign-up / Sign in with Apple / sign-out / reset, each with happy *and* failure paths.
-- **Sync failure paths** — offline / no-consent / unauthenticated guards, timestamp **conflict resolution** (last-write-wins), and **retry** marking on push failure.
-- **Critical-screen widget tests** — Login, Register, and the GDPR consent gate (rendering, form validation, failure handling).
+- **Bidirectional sync** — offline / no-consent / unauthenticated guards; **conflict resolution** on both the push *and* pull sides (last-write-wins via `lastModifiedAt`); **retry** marking and partial-batch resilience on failure; batch rate-limiting; and a **re-entrancy guard** that skips overlapping syncs.
+- **Critical-screen widget tests** — Login, Register, Forgot Password, and the GDPR consent gate (rendering, form validation, failure handling).
 
 Static analysis is clean: **`flutter analyze` → 0 issues.**
 
@@ -449,7 +451,7 @@ Static analysis is clean: **`flutter analyze` → 0 issues.**
 ## 🗺 Roadmap
 
 - [x] **Crash & async-error observability** — Sentry crash reporting with global error handling (see [Observability](#-observability)).
-- [x] **Auth, sync-failure & widget test coverage** — auth flows, sync failure paths, and critical-screen widget tests.
+- [x] **Auth, sync & widget test coverage** — auth flows, bidirectional sync (push/pull conflict, retry, batch limit, re-entrancy), and critical-screen widget tests.
 - [ ] **Cognito Threat Protection** — compromised-credential / adaptive-auth detection; deferred pending the paid `PLUS` user-pool tier (see [`docs/AWS_HARDENING.md`](docs/AWS_HARDENING.md)).
 - [ ] **AI-assisted insights** — pluggable LLM layer (AWS Bedrock / Claude) for natural-language data entry and visit summaries, layered on top of the existing rule engine.
 - [ ] Performance tracing & release-health monitoring.
