@@ -9,6 +9,7 @@ import 'package:amplify_api/amplify_api.dart';
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:dynamic_color/dynamic_color.dart';
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -67,6 +68,26 @@ void main() async {
 Future<void> _bootstrap() async {
   // Ensure Flutter bindings are initialized
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Release-only diagnostic error screen.
+  //
+  // In a release/prod build an uncaught error thrown while building a widget
+  // (e.g. on the route navigated to after the splash) is otherwise painted by
+  // the default [ErrorWidget] as a blank/grey box — the "white screen" with no
+  // hint of what failed. Here we replace it with a visible screen that prints
+  // the exception type, message and the first stack frames so the real root
+  // cause is observable directly on the device.
+  //
+  // Debug builds are intentionally left untouched ([kDebugMode] guard) so
+  // Flutter's familiar red error overlay keeps working in dev exactly as before.
+  //
+  // This does NOT swallow the error or change reporting: the framework still
+  // routes the same error through [FlutterError.onError] (and thus to Sentry,
+  // when a DSN is configured) before this builder is asked to render — so the
+  // error both surfaces on screen AND lands in crash reporting.
+  if (!kDebugMode) {
+    ErrorWidget.builder = _buildReleaseErrorWidget;
+  }
 
   try {
     // Initialize AWS Amplify — critical, app cannot function without it
@@ -182,4 +203,82 @@ class VitalSyncApp extends ConsumerWidget {
       },
     );
   }
+}
+
+/// Diagnostic screen shown — in release/prod builds only — in place of a widget
+/// that threw while building.
+///
+/// Deliberately dependency-free: it does not read [Theme], [MediaQuery] or any
+/// inherited widget, because the failure can happen high in the tree where those
+/// ancestors may be absent. Every [Text] carries an explicit style (with
+/// `decoration: none`) so it renders correctly without a [DefaultTextStyle]
+/// ancestor — i.e. the diagnostic screen itself can never throw.
+///
+/// This is a developer-facing diagnostic, not a polished user error screen; it
+/// exists to make the previously-invisible "white screen" failure readable on
+/// device. Wired up via `ErrorWidget.builder` in [_bootstrap].
+Widget _buildReleaseErrorWidget(FlutterErrorDetails details) {
+  final exceptionType = details.exception.runtimeType.toString();
+  final message = details.exceptionAsString();
+  final frames =
+      details.stack
+          ?.toString()
+          .trimRight()
+          .split('\n')
+          .take(8)
+          .join('\n') ??
+      'No stack trace available.';
+
+  return Directionality(
+    textDirection: TextDirection.ltr,
+    child: Container(
+      color: const Color(0xFF1A0000),
+      padding: const EdgeInsets.fromLTRB(16, 64, 16, 16),
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Unexpected error',
+              style: TextStyle(
+                color: Color(0xFFFF8A80),
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                decoration: TextDecoration.none,
+              ),
+            ),
+            const SizedBox(height: 12),
+            Text(
+              exceptionType,
+              style: const TextStyle(
+                color: Color(0xFFFFD180),
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+                decoration: TextDecoration.none,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              message,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 13,
+                decoration: TextDecoration.none,
+              ),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              frames,
+              style: const TextStyle(
+                color: Color(0xFFB0BEC5),
+                fontSize: 11,
+                fontFamily: 'monospace',
+                decoration: TextDecoration.none,
+              ),
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
 }

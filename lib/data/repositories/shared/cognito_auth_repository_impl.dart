@@ -63,7 +63,9 @@ class CognitoAuthRepositoryImpl implements AuthRepository {
       final attributes = await Amplify.Auth.fetchUserAttributes();
 
       String? email;
-      String? displayName;
+      String? name;
+      String? givenName;
+      String? familyName;
       var emailVerified = false;
 
       for (final attr in attributes) {
@@ -73,9 +75,26 @@ class CognitoAuthRepositoryImpl implements AuthRepository {
           case 'email_verified':
             emailVerified = attr.value == 'true';
           case 'name':
-            displayName = attr.value;
+            name = attr.value;
+          case 'given_name':
+            givenName = attr.value;
+          case 'family_name':
+            familyName = attr.value;
         }
       }
+
+      // Sign in with Apple (via Cognito) supplies the user's name as
+      // firstName/lastName — which Cognito maps to `given_name`/`family_name`,
+      // not the single `name` attribute — and only on the first authorization.
+      // Prefer an explicit `name`, but fall back to composing one from
+      // given/family so federated users aren't shown as a blank "User".
+      final composedName = [givenName, familyName]
+          .where((part) => part != null && part.trim().isNotEmpty)
+          .join(' ')
+          .trim();
+      final displayName = (name != null && name.trim().isNotEmpty)
+          ? name
+          : (composedName.isNotEmpty ? composedName : null);
 
       return AppUser(
         id: authUser.userId,

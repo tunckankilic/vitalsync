@@ -666,7 +666,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get min => 'min';
 
   @override
-  String get noExercises => 'No exercises in this workout';
+  String get noExercises => 'Keine Übungen in diesem Workout';
 
   @override
   String get muscleGroup => 'Muskelgruppe';
@@ -678,66 +678,66 @@ class AppLocalizationsDe extends AppLocalizations {
   String get exerciseAdded => 'Übung erfolgreich hinzugefügt';
 
   @override
-  String get editProfile => 'Edit Profile';
+  String get editProfile => 'Profil bearbeiten';
 
   @override
-  String get userNotFound => 'User not found';
+  String get userNotFound => 'Benutzer nicht gefunden';
 
   @override
-  String get personalInformation => 'Personal Information';
+  String get personalInformation => 'Persönliche Informationen';
 
   @override
-  String get fullName => 'Full Name';
+  String get fullName => 'Vollständiger Name';
 
   @override
-  String get enterFullName => 'Please enter your name';
+  String get enterFullName => 'Bitte geben Sie Ihren Namen ein';
 
   @override
-  String get dateOfBirth => 'Date of Birth';
+  String get dateOfBirth => 'Geburtsdatum';
 
   @override
-  String get selectDate => 'Select Date';
+  String get selectDate => 'Datum auswählen';
 
   @override
-  String get gender => 'Gender';
+  String get gender => 'Geschlecht';
 
   @override
-  String get genderMale => 'Male';
+  String get genderMale => 'Männlich';
 
   @override
-  String get genderFemale => 'Female';
+  String get genderFemale => 'Weiblich';
 
   @override
-  String get genderOther => 'Other';
+  String get genderOther => 'Divers';
 
   @override
-  String get genderPreferNotToSay => 'Prefer not to say';
+  String get genderPreferNotToSay => 'Keine Angabe';
 
   @override
-  String get emergencyContact => 'Emergency Contact';
+  String get emergencyContact => 'Notfallkontakt';
 
   @override
-  String get contactName => 'Contact Name';
+  String get contactName => 'Name des Kontakts';
 
   @override
-  String get phoneNumber => 'Phone Number';
+  String get phoneNumber => 'Telefonnummer';
 
   @override
-  String get saveChanges => 'Save Changes';
+  String get saveChanges => 'Änderungen speichern';
 
   @override
-  String get profileUpdatedSuccess => 'Profile updated successfully';
+  String get profileUpdatedSuccess => 'Profil erfolgreich aktualisiert';
 
   @override
   String profileUpdateError(Object error) {
-    return 'Error updating profile: $error';
+    return 'Fehler beim Aktualisieren des Profils: $error';
   }
 
   @override
-  String get settingsTitle => 'Settings';
+  String get settingsTitle => 'Einstellungen';
 
   @override
-  String get appearance => 'Appearance';
+  String get appearance => 'Darstellung';
 
   @override
   String get theme => 'Thema';
@@ -755,7 +755,8 @@ class AppLocalizationsDe extends AppLocalizations {
   String get materialYou => 'Material You';
 
   @override
-  String get materialYouSubtitle => 'Use dynamic colors from wallpaper';
+  String get materialYouSubtitle =>
+      'Dynamische Farben vom Hintergrundbild verwenden';
 
   @override
   String get language => 'Sprache';
@@ -770,95 +771,97 @@ class AppLocalizationsDe extends AppLocalizations {
   String get languageDe => 'Deutsch';
 
   @override
-  String get notifications => 'Notifications';
+  String get notifications => 'Benachrichtigungen';
 
   @override
-  String get enableNotifications => 'Enable Notifications';
+  String get enableNotifications => 'Benachrichtigungen aktivieren';
 
   @override
-  String get units => 'Units';
+  String get units => 'Einheiten';
 
   @override
-  String get unitSystem => 'Unit System';
+  String get unitSystem => 'Einheitensystem';
 
   @override
-  String get unitMetric => 'Metric (kg, cm)';
+  String get unitMetric => 'Metrisch (kg, cm)';
 
   @override
   String get unitImperial => 'Imperial (lbs, in)';
 
   @override
-  String get privacyData => 'Privacy & Data';
+  String get privacyData => 'Datenschutz & Daten';
 
   @override
-  String get manageConsents => 'Manage Consents';
+  String get manageConsents => 'Einwilligungen verwalten';
 
   @override
-  String get manageConsentsSubtitle => 'Update your GDPR privacy choices';
+  String get manageConsentsSubtitle =>
+      'Ihre DSGVO-Datenschutzeinstellungen aktualisieren';
 
   @override
-  String get exportData => 'Export Data';
+  String get exportData => 'Daten exportieren';
 
   @override
-  String get exportDataSubtitle => 'Download a copy of your data';
+  String get exportDataSubtitle => 'Eine Kopie Ihrer Daten herunterladen';
 
   @override
-  String get deleteAccount => 'Delete Account';
+  String get deleteAccount => 'Konto löschen';
 
   @override
   String get deleteAccountSubtitle =>
-      'Permanently delete your account and data';
+      'Ihr Konto und Ihre Daten dauerhaft löschen';
 
   @override
-  String get sync => 'Sync';
+  String get sync => 'Synchronisierung';
 
   @override
-  String get syncStatus => 'Sync Status';
+  String get syncStatus => 'Synchronisierungsstatus';
 
   @override
-  String get syncIdle => 'Last synced recently';
+  String get syncIdle => 'Kürzlich synchronisiert';
 
   @override
-  String get syncError => 'Sync failed. Tap to retry.';
+  String get syncError =>
+      'Synchronisierung fehlgeschlagen. Zum Wiederholen tippen.';
 
   @override
-  String get syncNow => 'Sync Now';
+  String get syncNow => 'Jetzt synchronisieren';
 
   @override
-  String get about => 'About';
+  String get about => 'Über';
 
   @override
   String get version => 'Version';
 
   @override
-  String get licenses => 'Open Source Licenses';
+  String get licenses => 'Open-Source-Lizenzen';
 
   @override
-  String get exportStarted => 'Export started...';
+  String get exportStarted => 'Export gestartet...';
 
   @override
-  String get deleteAccountDialogTitle => 'Delete Account?';
+  String get deleteAccountDialogTitle => 'Konto löschen?';
 
   @override
   String get deleteAccountDialogMessage =>
-      'This action cannot be undone. All your data will be permanently deleted.';
+      'Diese Aktion kann nicht rückgängig gemacht werden. Alle Ihre Daten werden dauerhaft gelöscht.';
 
   @override
-  String get deleteAccountRequested => 'Account deletion requested.';
+  String get deleteAccountRequested => 'Kontolöschung angefordert.';
 
   @override
-  String get defaultUser => 'User';
+  String get defaultUser => 'Benutzer';
 
   @override
-  String get noEmail => 'No email';
+  String get noEmail => 'Keine E-Mail';
 
   @override
   String errorLoadingProfile(Object error) {
-    return 'Error loading profile: $error';
+    return 'Fehler beim Laden des Profils: $error';
   }
 
   @override
-  String get logOut => 'Log Out';
+  String get logOut => 'Abmelden';
 
   @override
   String get workouts => 'Workouts';
@@ -870,92 +873,93 @@ class AppLocalizationsDe extends AppLocalizations {
   String get next => 'Weiter';
 
   @override
-  String get welcomeTitle => 'Welcome to VitalSynch';
+  String get welcomeTitle => 'Willkommen bei VitalSynch';
 
   @override
-  String get welcomeSubtitle => 'Manage your health and fitness in one place.';
+  String get welcomeSubtitle =>
+      'Verwalten Sie Ihre Gesundheit und Fitness an einem Ort.';
 
   @override
-  String get personalizationTitle => 'What matters most to you?';
+  String get personalizationTitle => 'Was ist Ihnen am wichtigsten?';
 
   @override
-  String get interestMedication => 'Medication Tracking';
+  String get interestMedication => 'Medikamenten-Tracking';
 
   @override
   String get interestFitness => 'Fitness & Workouts';
 
   @override
-  String get interestInsights => 'Smart Insights';
+  String get interestInsights => 'Intelligente Einblicke';
 
   @override
-  String get interestAnalysis => 'Progress Analysis';
+  String get interestAnalysis => 'Fortschrittsanalyse';
 
   @override
-  String get quickSetupTitle => 'Quick Setup';
+  String get quickSetupTitle => 'Schnelleinrichtung';
 
   @override
   String get quickSetupSubtitle =>
-      'Get a head start by adding your first item.';
+      'Legen Sie los, indem Sie Ihren ersten Eintrag hinzufügen.';
 
   @override
-  String get quickAddMedication => 'Add Medication';
+  String get quickAddMedication => 'Medikament hinzufügen';
 
   @override
-  String get quickAddMedicationSubtitle => 'Set up name & time quickly';
+  String get quickAddMedicationSubtitle => 'Name & Uhrzeit schnell einrichten';
 
   @override
-  String get quickPickTemplate => 'Pick Workout Template';
+  String get quickPickTemplate => 'Workout-Vorlage wählen';
 
   @override
-  String get quickPickTemplateSubtitle => 'Choose from popular routines';
+  String get quickPickTemplateSubtitle => 'Aus beliebten Routinen wählen';
 
   @override
-  String get privacyTitle => 'Your Privacy Matters';
+  String get privacyTitle => 'Ihre Privatsphäre ist wichtig';
 
   @override
   String get privacySubtitle =>
-      'We believe in transparency. Please review and manage how your data is handled.';
+      'Wir setzen auf Transparenz. Bitte überprüfen und verwalten Sie, wie Ihre Daten verarbeitet werden.';
 
   @override
-  String get consentHealthTitle => 'Health Data Processing';
+  String get consentHealthTitle => 'Verarbeitung von Gesundheitsdaten';
 
   @override
   String get consentHealthDescription =>
-      'Required to track medications and symptoms locally.';
+      'Erforderlich, um Medikamente und Symptome lokal zu erfassen.';
 
   @override
-  String get consentFitnessTitle => 'Fitness Data Processing';
+  String get consentFitnessTitle => 'Verarbeitung von Fitnessdaten';
 
   @override
   String get consentFitnessDescription =>
-      'Required to log workouts and track progress locally.';
+      'Erforderlich, um Workouts zu protokollieren und Fortschritte lokal zu verfolgen.';
 
   @override
-  String get consentAnalyticsTitle => 'Analytics & Usage';
+  String get consentAnalyticsTitle => 'Analyse & Nutzung';
 
   @override
   String get consentAnalyticsDescription =>
-      'Help us improve VitalSynch by sharing anonymous usage data.';
+      'Helfen Sie uns, VitalSynch zu verbessern, indem Sie anonyme Nutzungsdaten teilen.';
 
   @override
-  String get consentBackupTitle => 'Cloud Backup';
+  String get consentBackupTitle => 'Cloud-Backup';
 
   @override
   String get consentBackupDescription =>
-      'Securely backup your data to the cloud so you don\'t lose it.';
+      'Sichern Sie Ihre Daten sicher in der Cloud, damit sie nicht verloren gehen.';
 
   @override
-  String get readPrivacyPolicy => 'Read Full Privacy Policy';
+  String get readPrivacyPolicy => 'Vollständige Datenschutzerklärung lesen';
 
   @override
-  String get acceptContinue => 'Accept & Continue';
+  String get acceptContinue => 'Akzeptieren & Fortfahren';
 
   @override
-  String get requiredTag => 'REQUIRED';
+  String get requiredTag => 'ERFORDERLICH';
 
   @override
   String consentRequiredMessage(String module) {
-    return 'This is required for the $module module to function.';
+    return 'Dies ist für die Funktion des Moduls $module erforderlich.';
   }
 
   @override

@@ -143,9 +143,9 @@
   "@arms": {
     "description": "Arms muscle group"
   },
-  "back": "Rücken",
+  "back": "Zurück",
   "@back": {
-    "description": "Back muscle group"
+    "description": "Back button"
   },
   "calendar": "Kalender",
   "@calendar": {
@@ -473,7 +473,7 @@
   "@totalVolume": {
     "description": "Total volume label"
   },
-  "totalWorkouts": "Gesamttrainings",
+  "totalWorkouts": "Gesamte Trainings",
   "@totalWorkouts": {
     "description": "Total workouts label"
   },
@@ -515,7 +515,7 @@
   },
   "workoutFrequency": "Trainingshäufigkeit",
   "@workoutFrequency": {
-    "description": "Workout frequency section title"
+    "description": "Workout frequency chart title"
   },
   "workoutHome": "Trainings",
   "@workoutHome": {
@@ -545,33 +545,56 @@
   "@exerciseAdded": {
     "description": "Exercise added success message"
   },
-
   "welcomeBack": "Willkommen zurück",
-  "@welcomeBack": { "description": "Welcome back title" },
+  "@welcomeBack": {
+    "description": "Welcome back title"
+  },
   "signInSubtitle": "Melden Sie sich an, um Ihre gesunde Reise fortzusetzen",
-  "@signInSubtitle": { "description": "Sign in subtitle" },
+  "@signInSubtitle": {
+    "description": "Sign in subtitle"
+  },
   "email": "E-Mail",
-  "@email": { "description": "Email label" },
+  "@email": {
+    "description": "Email label"
+  },
   "password": "Passwort",
-  "@password": { "description": "Password label" },
+  "@password": {
+    "description": "Password label"
+  },
   "forgotPassword": "Passwort vergessen?",
-  "@forgotPassword": { "description": "Forgot password button" },
+  "@forgotPassword": {
+    "description": "Forgot password button"
+  },
   "logIn": "Anmelden",
-  "@logIn": { "description": "Log in button" },
+  "@logIn": {
+    "description": "Log in button"
+  },
   "orSeparator": "ODER",
-  "@orSeparator": { "description": "OR separator" },
+  "@orSeparator": {
+    "description": "OR separator"
+  },
   "continueWithApple": "Mit Apple fortfahren",
-  "@continueWithApple": { "description": "Continue with Apple button" },
+  "@continueWithApple": {
+    "description": "Continue with Apple button"
+  },
   "dontHaveAccount": "Noch kein Konto?",
-  "@dontHaveAccount": { "description": "Don't have account text" },
+  "@dontHaveAccount": {
+    "description": "Don't have account text"
+  },
   "signUp": "Registrieren",
-  "@signUp": { "description": "Sign up button" },
+  "@signUp": {
+    "description": "Sign up button"
+  },
   "enterEmail": "Bitte geben Sie Ihre E-Mail ein",
-  "@enterEmail": { "description": "Enter email error" },
+  "@enterEmail": {
+    "description": "Enter email error"
+  },
   "enterPassword": "Bitte geben Sie Ihr Passwort ein",
-  "@enterPassword": { "description": "Enter password error" },
+  "@enterPassword": {
+    "description": "Enter password error"
+  },
   "loginFailed": "Anmeldung fehlgeschlagen: {error}",
-  "@loginFailed": { 
+  "@loginFailed": {
     "description": "Login failed error",
     "placeholders": {
       "error": {
@@ -588,23 +611,36 @@
       }
     }
   },
-
   "createAccount": "Konto erstellen",
-  "@createAccount": { "description": "Create account title" },
+  "@createAccount": {
+    "description": "Create account title"
+  },
   "joinVitalSynch": "Treten Sie VitalSynch heute bei",
-  "@joinVitalSynch": { "description": "Join VitalSynch subtitle" },
+  "@joinVitalSynch": {
+    "description": "Join VitalSynch subtitle"
+  },
   "confirmPassword": "Passwort bestätigen",
-  "@confirmPassword": { "description": "Confirm password label" },
+  "@confirmPassword": {
+    "description": "Confirm password label"
+  },
   "alreadyHaveAccount": "Haben Sie bereits ein Konto?",
-  "@alreadyHaveAccount": { "description": "Already have account text" },
+  "@alreadyHaveAccount": {
+    "description": "Already have account text"
+  },
   "passwordsDoNotMatch": "Passwörter stimmen nicht überein",
-  "@passwordsDoNotMatch": { "description": "Passwords do not match error" },
+  "@passwordsDoNotMatch": {
+    "description": "Passwords do not match error"
+  },
   "passwordLengthError": "Passwort muss mindestens 6 Zeichen lang sein",
-  "@passwordLengthError": { "description": "Password length error" },
+  "@passwordLengthError": {
+    "description": "Password length error"
+  },
   "confirmPasswordError": "Bitte bestätigen Sie Ihr Passwort",
-  "@confirmPasswordError": { "description": "Confirm password error" },
+  "@confirmPasswordError": {
+    "description": "Confirm password error"
+  },
   "registrationFailed": "Registrierung fehlgeschlagen: {error}",
-  "@registrationFailed": { 
+  "@registrationFailed": {
     "description": "Registration failed error",
     "placeholders": {
       "error": {
@@ -612,15 +648,22 @@
       }
     }
   },
-
   "resetPassword": "Passwort zurücksetzen",
-  "@resetPassword": { "description": "Reset password title" },
+  "@resetPassword": {
+    "description": "Reset password title"
+  },
   "resetPasswordSubtitle": "Geben Sie Ihre E-Mail ein, um einen Zurücksetzungslink zu erhalten",
-  "@resetPasswordSubtitle": { "description": "Reset password subtitle" },
+  "@resetPasswordSubtitle": {
+    "description": "Reset password subtitle"
+  },
   "sendResetLink": "Zurücksetzungslink senden",
-  "@sendResetLink": { "description": "Send reset link button" },
+  "@sendResetLink": {
+    "description": "Send reset link button"
+  },
   "resetEmailSent": "E-Mail zum Zurücksetzen des Passworts gesendet. Überprüfen Sie Ihren Posteingang.",
-  "@resetEmailSent": { "description": "Reset email sent message" },
+  "@resetEmailSent": {
+    "description": "Reset email sent message"
+  },
   "resetPasswordError": "Fehler: {error}",
   "@resetPasswordError": {
     "description": "Reset password error",
@@ -630,151 +673,244 @@
       }
     }
   },
-
   "onboardingWelcomeTitle": "Willkommen bei VitalSynch",
-  "@onboardingWelcomeTitle": { "description": "Onboarding welcome title" },
+  "@onboardingWelcomeTitle": {
+    "description": "Onboarding welcome title"
+  },
   "onboardingWelcomeSubtitle": "Ihr All-in-One-Begleiter für Gesundheit & Fitness",
-  "@onboardingWelcomeSubtitle": { "description": "Onboarding welcome subtitle" },
+  "@onboardingWelcomeSubtitle": {
+    "description": "Onboarding welcome subtitle"
+  },
   "onboardingPrivacyNote": "Ihre Daten bleiben auf Ihrem Gerät. Wir respektieren Ihre Privatsphäre.",
-  "@onboardingPrivacyNote": { "description": "Onboarding privacy note" },
-
+  "@onboardingPrivacyNote": {
+    "description": "Onboarding privacy note"
+  },
   "onboardingHealthTitle": "Verfolgen Sie Ihre Gesundheit",
-  "@onboardingHealthTitle": { "description": "Onboarding health feature title" },
+  "@onboardingHealthTitle": {
+    "description": "Onboarding health feature title"
+  },
   "onboardingHealthDescription": "Verwalten Sie Medikamente, Symptome und Gesundheitsverlauf",
-  "@onboardingHealthDescription": { "description": "Onboarding health feature description" },
+  "@onboardingHealthDescription": {
+    "description": "Onboarding health feature description"
+  },
   "onboardingHealthFeature1": "Verpassen Sie kein Medikament mit intelligenten Erinnerungen",
-  "@onboardingHealthFeature1": { "description": "Onboarding health feature 1" },
+  "@onboardingHealthFeature1": {
+    "description": "Onboarding health feature 1"
+  },
   "onboardingHealthFeature2": "Protokollieren Sie Symptome und verfolgen Sie Muster",
-  "@onboardingHealthFeature2": { "description": "Onboarding health feature 2" },
+  "@onboardingHealthFeature2": {
+    "description": "Onboarding health feature 2"
+  },
   "onboardingHealthFeature3": "Sehen Sie Ihren vollständigen Gesundheitsverlauf",
-  "@onboardingHealthFeature3": { "description": "Onboarding health feature 3" },
-
+  "@onboardingHealthFeature3": {
+    "description": "Onboarding health feature 3"
+  },
   "onboardingFitnessTitle": "Steigern Sie Ihre Fitness",
-  "@onboardingFitnessTitle": { "description": "Onboarding fitness feature title" },
+  "@onboardingFitnessTitle": {
+    "description": "Onboarding fitness feature title"
+  },
   "onboardingFitnessDescription": "Protokollieren Sie Workouts, verfolgen Sie Fortschritte, erreichen Sie Ihre Ziele",
-  "@onboardingFitnessDescription": { "description": "Onboarding fitness feature description" },
+  "@onboardingFitnessDescription": {
+    "description": "Onboarding fitness feature description"
+  },
   "onboardingFitnessFeature1": "Verfolgen Sie Workouts mit detaillierter Übungsprotokollierung",
-  "@onboardingFitnessFeature1": { "description": "Onboarding fitness feature 1" },
+  "@onboardingFitnessFeature1": {
+    "description": "Onboarding fitness feature 1"
+  },
   "onboardingFitnessFeature2": "Überwachen Sie Ihren Fortschritt mit visuellen Diagrammen",
-  "@onboardingFitnessFeature2": { "description": "Onboarding fitness feature 2" },
+  "@onboardingFitnessFeature2": {
+    "description": "Onboarding fitness feature 2"
+  },
   "onboardingFitnessFeature3": "Schalten Sie Erfolge frei und bauen Sie Serien auf",
-  "@onboardingFitnessFeature3": { "description": "Onboarding fitness feature 3" },
-
+  "@onboardingFitnessFeature3": {
+    "description": "Onboarding fitness feature 3"
+  },
   "onboardingPrivacyTitle": "Ihre Privatsphäre, Ihre Kontrolle",
-  "@onboardingPrivacyTitle": { "description": "Onboarding privacy screen title" },
+  "@onboardingPrivacyTitle": {
+    "description": "Onboarding privacy screen title"
+  },
   "onboardingPrivacyDescription": "Wählen Sie aus, welche Daten Sie teilen möchten",
-  "@onboardingPrivacyDescription": { "description": "Onboarding privacy screen description" },
-
+  "@onboardingPrivacyDescription": {
+    "description": "Onboarding privacy screen description"
+  },
   "onboardingPreferencesTitle": "Personalisieren Sie Ihre Erfahrung",
-  "@onboardingPreferencesTitle": { "description": "Onboarding preferences screen title" },
+  "@onboardingPreferencesTitle": {
+    "description": "Onboarding preferences screen title"
+  },
   "onboardingPreferencesDescription": "Legen Sie Ihre Sprach- und Themenpräferenzen fest",
-  "@onboardingPreferencesDescription": { "description": "Onboarding preferences screen description" },
+  "@onboardingPreferencesDescription": {
+    "description": "Onboarding preferences screen description"
+  },
   "onboardingPreferencesNote": "Sie können diese Einstellungen jederzeit ändern",
-  "@onboardingPreferencesNote": { "description": "Onboarding preferences note" },
-
+  "@onboardingPreferencesNote": {
+    "description": "Onboarding preferences note"
+  },
   "gdprAnalyticsTitle": "Analytik & Einblicke",
-  "@gdprAnalyticsTitle": { "description": "GDPR analytics consent title" },
+  "@gdprAnalyticsTitle": {
+    "description": "GDPR analytics consent title"
+  },
   "gdprAnalyticsDescription": "Helfen Sie uns, die App mit anonymen Nutzungsdaten zu verbessern",
-  "@gdprAnalyticsDescription": { "description": "GDPR analytics consent description" },
+  "@gdprAnalyticsDescription": {
+    "description": "GDPR analytics consent description"
+  },
   "gdprHealthDataTitle": "Gesundheitsdatenspeicherung",
-  "@gdprHealthDataTitle": { "description": "GDPR health data consent title" },
+  "@gdprHealthDataTitle": {
+    "description": "GDPR health data consent title"
+  },
   "gdprHealthDataDescription": "Speichern Sie Ihre Medikamenten- und Symptomdaten (erforderlich)",
-  "@gdprHealthDataDescription": { "description": "GDPR health data consent description" },
+  "@gdprHealthDataDescription": {
+    "description": "GDPR health data consent description"
+  },
   "gdprFitnessDataTitle": "Fitnessdatenspeicherung",
-  "@gdprFitnessDataTitle": { "description": "GDPR fitness data consent title" },
+  "@gdprFitnessDataTitle": {
+    "description": "GDPR fitness data consent title"
+  },
   "gdprFitnessDataDescription": "Speichern Sie Ihre Workout- und Fortschrittsdaten (erforderlich)",
-  "@gdprFitnessDataDescription": { "description": "GDPR fitness data consent description" },
+  "@gdprFitnessDataDescription": {
+    "description": "GDPR fitness data consent description"
+  },
   "gdprCloudBackupTitle": "Cloud-Backup",
-  "@gdprCloudBackupTitle": { "description": "GDPR cloud backup consent title" },
+  "@gdprCloudBackupTitle": {
+    "description": "GDPR cloud backup consent title"
+  },
   "gdprCloudBackupDescription": "Sichern Sie Ihre Daten in der Cloud für die Synchronisierung zwischen Geräten",
-  "@gdprCloudBackupDescription": { "description": "GDPR cloud backup consent description" },
+  "@gdprCloudBackupDescription": {
+    "description": "GDPR cloud backup consent description"
+  },
   "gdprNote": "Erforderliche Zustimmungen sind für die Kernfunktionalität der App notwendig. Sie können Zustimmungen jederzeit in den Einstellungen verwalten.",
-  "@gdprNote": { "description": "GDPR consent note" },
-
-  "back": "Zurück",
-  "@back": { "description": "Back button" },
+  "@gdprNote": {
+    "description": "GDPR consent note"
+  },
   "next": "Weiter",
-  "@next": { "description": "Next button" },
+  "@next": {
+    "description": "Next button"
+  },
   "getStarted": "Loslegen",
-  "@getStarted": { "description": "Get started button" },
+  "@getStarted": {
+    "description": "Get started button"
+  },
   "language": "Sprache",
-  "@language": { "description": "Language label" },
+  "@language": {
+    "description": "Language label"
+  },
   "theme": "Thema",
-  "@theme": { "description": "Theme label" },
+  "@theme": {
+    "description": "Theme label"
+  },
   "themeSystem": "System",
-  "@themeSystem": { "description": "System theme option" },
+  "@themeSystem": {
+    "description": "System theme option"
+  },
   "themeLight": "Hell",
-  "@themeLight": { "description": "Light theme option" },
+  "@themeLight": {
+    "description": "Light theme option"
+  },
   "themeDark": "Dunkel",
-  "@themeDark": { "description": "Dark theme option" },
-
+  "@themeDark": {
+    "description": "Dark theme option"
+  },
   "workoutComplete": "Training Abgeschlossen!",
-  "@workoutComplete": { "description": "Workout complete message" },
+  "@workoutComplete": {
+    "description": "Workout complete message"
+  },
   "greatJob": "Tolle Arbeit! Weiter so!",
-  "@greatJob": { "description": "Congratulations message" },
+  "@greatJob": {
+    "description": "Congratulations message"
+  },
   "workoutNotFound": "Training nicht gefunden",
-  "@workoutNotFound": { "description": "Workout not found error message" },
+  "@workoutNotFound": {
+    "description": "Workout not found error message"
+  },
   "done": "Fertig",
-  "@done": { "description": "Done button" },
+  "@done": {
+    "description": "Done button"
+  },
   "share": "Teilen",
-  "@share": { "description": "Share button" },
+  "@share": {
+    "description": "Share button"
+  },
   "comingSoon": "Demnächst!",
-  "@comingSoon": { "description": "Coming soon message" },
-  "progress": "Fortschritt",
-  "@progress": { "description": "Progress screen title" },
+  "@comingSoon": {
+    "description": "Coming soon message"
+  },
   "volumeChart": "Volumen Diagramm",
-  "@volumeChart": { "description": "Volume chart title" },
-  "workoutFrequency": "Trainingshäufigkeit",
-  "@workoutFrequency": { "description": "Workout frequency chart title" },
+  "@volumeChart": {
+    "description": "Volume chart title"
+  },
   "chartComingSoon": "Diagramm kommt bald",
-  "@chartComingSoon": { "description": "Chart placeholder message" },
+  "@chartComingSoon": {
+    "description": "Chart placeholder message"
+  },
   "summary": "Zusammenfassung",
-  "@summary": { "description": "Summary section title" },
-  "totalWorkouts": "Gesamte Trainings",
-  "@totalWorkouts": { "description": "Total workouts label" },
+  "@summary": {
+    "description": "Summary section title"
+  },
   "avgDuration": "Durchschn. Dauer",
-  "@avgDuration": { "description": "Average duration label" },
+  "@avgDuration": {
+    "description": "Average duration label"
+  },
   "prsAchieved": "PRs Erreicht",
-  "@prsAchieved": { "description": "Personal records achieved label" },
-  "personalRecords": "Persönliche Rekorde",
-  "@personalRecords": { "description": "Personal records section title" },
+  "@prsAchieved": {
+    "description": "Personal records achieved label"
+  },
   "noPRsYet": "Noch keine persönlichen Rekorde. Weiter so!",
-  "@noPRsYet": { "description": "No PRs empty state message" },
+  "@noPRsYet": {
+    "description": "No PRs empty state message"
+  },
   "dismissed": "Abgelehnt",
-  "@dismissed": { "description": "Dismissed tab label" },
+  "@dismissed": {
+    "description": "Dismissed tab label"
+  },
   "overallWellness": "Gesamtwellness",
-  "@overallWellness": { "description": "Overall wellness / cross-module filter label" },
+  "@overallWellness": {
+    "description": "Overall wellness / cross-module filter label"
+  },
   "insightDismissed": "Einsicht abgelehnt",
-  "@insightDismissed": { "description": "Snackbar message when insight is dismissed" },
+  "@insightDismissed": {
+    "description": "Snackbar message when insight is dismissed"
+  },
   "noDismissedInsights": "Keine abgelehnten Einsichten",
-  "@noDismissedInsights": { "description": "Empty state for dismissed insights tab" },
+  "@noDismissedInsights": {
+    "description": "Empty state for dismissed insights tab"
+  },
   "noInsightsYet": "Noch keine Einsichten",
-  "@noInsightsYet": { "description": "Empty state title when no insights exist" },
+  "@noInsightsYet": {
+    "description": "Empty state title when no insights exist"
+  },
   "insightsEmptyDescription": "Einsichten werden hier angezeigt, sobald Daten gesammelt werden",
-  "@insightsEmptyDescription": { "description": "Empty state description for insights" },
+  "@insightsEmptyDescription": {
+    "description": "Empty state description for insights"
+  },
   "dataCollectedProgress": "{collected}/{total} Tage Daten gesammelt",
   "@dataCollectedProgress": {
     "description": "Progress text showing days of data collected",
     "placeholders": {
-      "collected": { "type": "int" },
-      "total": { "type": "int" }
+      "collected": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
     }
   },
   "errorLoadingInsights": "Fehler beim Laden der Einsichten: {error}",
   "@errorLoadingInsights": {
     "description": "Error message when loading insights fails",
     "placeholders": {
-      "error": { "type": "Object" }
+      "error": {
+        "type": "Object"
+      }
     }
   },
   "errorLoadingDismissedInsights": "Fehler beim Laden der abgelehnten Einsichten: {error}",
   "@errorLoadingDismissedInsights": {
     "description": "Error message when loading dismissed insights fails",
     "placeholders": {
-      "error": { "type": "Object" }
+      "error": {
+        "type": "Object"
+      }
     }
   },
-
   "symptomHeadache": "Kopfschmerzen",
   "symptomNausea": "Übelkeit",
   "symptomFatigue": "Müdigkeit",
@@ -789,7 +925,11 @@
   "symptomLoggedSuccess": "Symptom erfolgreich erfasst",
   "errorLoggingSymptom": "Fehler beim Erfassen des Symptoms: {error}",
   "@errorLoggingSymptom": {
-    "placeholders": { "error": { "type": "Object" } }
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
   },
   "severityMild": "Leicht",
   "severityModerate": "Mäßig",
@@ -799,13 +939,21 @@
   "medicationNotFound": "Medikament nicht gefunden",
   "errorLoadingMedication": "Fehler beim Laden des Medikaments: {error}",
   "@errorLoadingMedication": {
-    "placeholders": { "error": { "type": "Object" } }
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
   },
   "medicationAddedSuccess": "Medikament erfolgreich hinzugefügt",
   "medicationUpdatedSuccess": "Medikament erfolgreich aktualisiert",
   "errorSavingMedication": "Fehler beim Speichern des Medikaments: {error}",
   "@errorSavingMedication": {
-    "placeholders": { "error": { "type": "Object" } }
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
   },
   "addFirstMedicationButton": "Erstes Medikament hinzufügen",
   "welcomeToHealth": "Willkommen bei Gesundheit!",
@@ -813,7 +961,11 @@
   "weeklyReport": "Wochenbericht",
   "errorLoadingReport": "Fehler beim Laden des Berichts: {error}",
   "@errorLoadingReport": {
-    "placeholders": { "error": { "type": "Object" } }
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
   },
   "taken": "Eingenommen",
   "missed": "Verpasst",
@@ -833,13 +985,21 @@
   "myWeeklyReport": "Mein Wochenbericht von VitalSynch",
   "errorSharing": "Fehler beim Teilen: {error}",
   "@errorSharing": {
-    "placeholders": { "error": { "type": "Object" } }
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
   },
   "weeklyReportData": "VitalSynch Wochenbericht-Daten",
   "reportExportedAsJSON": "Bericht als JSON exportiert",
   "errorExporting": "Fehler beim Exportieren: {error}",
   "@errorExporting": {
-    "placeholders": { "error": { "type": "Object" } }
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
   },
   "wasThisInsightHelpful": "War diese Einsicht hilfreich?",
   "helpful": "Hilfreich",
@@ -848,11 +1008,19 @@
   "thankYouForFeedback": "Vielen Dank für Ihr Feedback!",
   "errorSubmittingFeedback": "Fehler beim Senden des Feedbacks: {error}",
   "@errorSubmittingFeedback": {
-    "placeholders": { "error": { "type": "Object" } }
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
   },
   "errorDismissingInsight": "Fehler beim Ablehnen der Einsicht: {error}",
   "@errorDismissingInsight": {
-    "placeholders": { "error": { "type": "Object" } }
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
   },
   "privacyAndData": "Datenschutz & Daten",
   "restTimerSeconds": "Sekunden",
@@ -860,7 +1028,11 @@
   "achievementUnlocked": "Erfolg freigeschaltet!",
   "errorGeneric": "Fehler: {error}",
   "@errorGeneric": {
-    "placeholders": { "error": { "type": "Object" } }
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
   },
   "healthSummary": "Gesundheitsübersicht",
   "fitnessSummary": "Fitnessübersicht",
@@ -868,58 +1040,104 @@
   "keepUpGreatWork": "Weiter so, tolle Arbeit!",
   "vsLastWeekPercent": "{percent}% vs. letzte Woche",
   "@vsLastWeekPercent": {
-    "placeholders": { "percent": { "type": "String" } }
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      }
+    }
   },
   "mostMissed": "Am meisten verpasst: {timeSlot}",
   "@mostMissed": {
-    "placeholders": { "timeSlot": { "type": "String" } }
+    "placeholders": {
+      "timeSlot": {
+        "type": "String"
+      }
+    }
   },
   "bestWorkout": "Bestes Training: {name} — {volume}kg",
   "@bestWorkout": {
-    "placeholders": { "name": { "type": "String" }, "volume": { "type": "String" } }
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "volume": {
+        "type": "String"
+      }
+    }
   },
   "newPersonalRecords": "Neue persönliche Rekorde",
   "validUntilDays": "Gültig für {days} Tage",
   "@validUntilDays": {
-    "placeholders": { "days": { "type": "int" } }
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
   },
   "validUntilHours": "Gültig für {hours} Stunden",
   "@validUntilHours": {
-    "placeholders": { "hours": { "type": "int" } }
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
   },
   "validUntilSoon": "Bald ablaufend",
   "takeAction": "Handeln",
   "errorLoadingInsight": "Fehler beim Laden der Einsicht: {error}",
   "@errorLoadingInsight": {
-    "placeholders": { "error": { "type": "Object" } }
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
   },
   "today": "Heute",
   "yesterday": "Gestern",
   "daysAgo": "vor {days} Tagen",
   "@daysAgo": {
-    "placeholders": { "days": { "type": "int" } }
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
   },
   "weeksAgo": "vor {weeks}W",
   "@weeksAgo": {
-    "placeholders": { "weeks": { "type": "int" } }
+    "placeholders": {
+      "weeks": {
+        "type": "int"
+      }
+    }
   },
   "monthsAgo": "vor {months}M",
   "@monthsAgo": {
-    "placeholders": { "months": { "type": "int" } }
+    "placeholders": {
+      "months": {
+        "type": "int"
+      }
+    }
   },
   "loading": "Laden...",
   "errorAddingSet": "Fehler beim Hinzufügen des Satzes: {error}",
   "@errorAddingSet": {
-    "placeholders": { "error": { "type": "Object" } }
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
   },
   "chartError": "Diagrammfehler",
   "shareFunctionalityComingSoon": "Teilen-Funktion kommt bald!",
   "severityLabel": "Schweregrad: {severity}",
   "@severityLabel": {
-    "placeholders": { "severity": { "type": "int" } }
+    "placeholders": {
+      "severity": {
+        "type": "int"
+      }
+    }
   },
   "errorLoadingCalendar": "Fehler beim Laden des Kalenders",
-
   "createTemplate": "Vorlage erstellen",
   "createFirstTemplate": "Erstelle deine erste Vorlage, um schnell Trainings zu starten",
   "templateSaved": "Vorlage gespeichert",
@@ -928,7 +1146,6 @@
   "shareAsStory": "Story-Format",
   "shareAsCompact": "Kompakte Karte",
   "exportAsJson": "JSON exportieren",
-  "shareWorkout": "Training teilen",
   "trackedWithVitalSync": "Verfolgt mit VitalSync",
   "biometricLogin": "Biometrische Anmeldung",
   "biometricLoginDescription": "Fingerabdruck oder Gesichtserkennung für schnelle Anmeldung verwenden",
@@ -939,5 +1156,88 @@
   "invalidEmail": "Bitte geben Sie eine gültige E-Mail-Adresse ein",
   "enterValidWeightAndReps": "Bitte gültiges Gewicht und Wiederholungen eingeben",
   "weightOutOfRange": "Gewicht muss zwischen 0 und 999 kg liegen",
-  "repsOutOfRange": "Wiederholungen müssen zwischen 1 und 999 liegen"
+  "repsOutOfRange": "Wiederholungen müssen zwischen 1 und 999 liegen",
+  "noExercises": "Keine Übungen in diesem Workout",
+  "editProfile": "Profil bearbeiten",
+  "userNotFound": "Benutzer nicht gefunden",
+  "personalInformation": "Persönliche Informationen",
+  "fullName": "Vollständiger Name",
+  "enterFullName": "Bitte geben Sie Ihren Namen ein",
+  "dateOfBirth": "Geburtsdatum",
+  "selectDate": "Datum auswählen",
+  "gender": "Geschlecht",
+  "genderMale": "Männlich",
+  "genderFemale": "Weiblich",
+  "genderOther": "Divers",
+  "genderPreferNotToSay": "Keine Angabe",
+  "emergencyContact": "Notfallkontakt",
+  "contactName": "Name des Kontakts",
+  "phoneNumber": "Telefonnummer",
+  "saveChanges": "Änderungen speichern",
+  "profileUpdatedSuccess": "Profil erfolgreich aktualisiert",
+  "profileUpdateError": "Fehler beim Aktualisieren des Profils: {error}",
+  "settingsTitle": "Einstellungen",
+  "appearance": "Darstellung",
+  "materialYou": "Material You",
+  "materialYouSubtitle": "Dynamische Farben vom Hintergrundbild verwenden",
+  "languageEn": "English",
+  "languageTr": "Türkçe",
+  "languageDe": "Deutsch",
+  "notifications": "Benachrichtigungen",
+  "enableNotifications": "Benachrichtigungen aktivieren",
+  "units": "Einheiten",
+  "unitSystem": "Einheitensystem",
+  "unitMetric": "Metrisch (kg, cm)",
+  "unitImperial": "Imperial (lbs, in)",
+  "privacyData": "Datenschutz & Daten",
+  "manageConsents": "Einwilligungen verwalten",
+  "manageConsentsSubtitle": "Ihre DSGVO-Datenschutzeinstellungen aktualisieren",
+  "exportData": "Daten exportieren",
+  "exportDataSubtitle": "Eine Kopie Ihrer Daten herunterladen",
+  "deleteAccount": "Konto löschen",
+  "deleteAccountSubtitle": "Ihr Konto und Ihre Daten dauerhaft löschen",
+  "sync": "Synchronisierung",
+  "syncStatus": "Synchronisierungsstatus",
+  "syncIdle": "Kürzlich synchronisiert",
+  "syncError": "Synchronisierung fehlgeschlagen. Zum Wiederholen tippen.",
+  "syncNow": "Jetzt synchronisieren",
+  "about": "Über",
+  "version": "Version",
+  "licenses": "Open-Source-Lizenzen",
+  "exportStarted": "Export gestartet...",
+  "deleteAccountDialogTitle": "Konto löschen?",
+  "deleteAccountDialogMessage": "Diese Aktion kann nicht rückgängig gemacht werden. Alle Ihre Daten werden dauerhaft gelöscht.",
+  "deleteAccountRequested": "Kontolöschung angefordert.",
+  "defaultUser": "Benutzer",
+  "noEmail": "Keine E-Mail",
+  "errorLoadingProfile": "Fehler beim Laden des Profils: {error}",
+  "logOut": "Abmelden",
+  "workouts": "Workouts",
+  "welcomeTitle": "Willkommen bei VitalSynch",
+  "welcomeSubtitle": "Verwalten Sie Ihre Gesundheit und Fitness an einem Ort.",
+  "personalizationTitle": "Was ist Ihnen am wichtigsten?",
+  "interestMedication": "Medikamenten-Tracking",
+  "interestFitness": "Fitness & Workouts",
+  "interestInsights": "Intelligente Einblicke",
+  "interestAnalysis": "Fortschrittsanalyse",
+  "quickSetupTitle": "Schnelleinrichtung",
+  "quickSetupSubtitle": "Legen Sie los, indem Sie Ihren ersten Eintrag hinzufügen.",
+  "quickAddMedication": "Medikament hinzufügen",
+  "quickAddMedicationSubtitle": "Name & Uhrzeit schnell einrichten",
+  "quickPickTemplate": "Workout-Vorlage wählen",
+  "quickPickTemplateSubtitle": "Aus beliebten Routinen wählen",
+  "privacyTitle": "Ihre Privatsphäre ist wichtig",
+  "privacySubtitle": "Wir setzen auf Transparenz. Bitte überprüfen und verwalten Sie, wie Ihre Daten verarbeitet werden.",
+  "consentHealthTitle": "Verarbeitung von Gesundheitsdaten",
+  "consentHealthDescription": "Erforderlich, um Medikamente und Symptome lokal zu erfassen.",
+  "consentFitnessTitle": "Verarbeitung von Fitnessdaten",
+  "consentFitnessDescription": "Erforderlich, um Workouts zu protokollieren und Fortschritte lokal zu verfolgen.",
+  "consentAnalyticsTitle": "Analyse & Nutzung",
+  "consentAnalyticsDescription": "Helfen Sie uns, VitalSynch zu verbessern, indem Sie anonyme Nutzungsdaten teilen.",
+  "consentBackupTitle": "Cloud-Backup",
+  "consentBackupDescription": "Sichern Sie Ihre Daten sicher in der Cloud, damit sie nicht verloren gehen.",
+  "readPrivacyPolicy": "Vollständige Datenschutzerklärung lesen",
+  "acceptContinue": "Akzeptieren & Fortfahren",
+  "requiredTag": "ERFORDERLICH",
+  "consentRequiredMessage": "Dies ist für die Funktion des Moduls {module} erforderlich."
 }
