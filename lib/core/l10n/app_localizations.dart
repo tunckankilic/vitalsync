@@ -1774,6 +1774,18 @@ abstract class AppLocalizations {
   /// **'Account deletion requested.'**
   String get deleteAccountRequested;
 
+  /// Shown when the user tries to delete their account while offline
+  ///
+  /// In en, this message translates to:
+  /// **'You must be online to delete your account. Please connect to the internet and try again.'**
+  String get deleteAccountOnlineRequired;
+
+  /// Shown when account deletion fails
+  ///
+  /// In en, this message translates to:
+  /// **'Account deletion failed. Your data was not deleted. Please try again.'**
+  String get deleteAccountFailed;
+
   /// Default user name
   ///
   /// In en, this message translates to:
@@ -1959,6 +1971,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Read Full Privacy Policy'**
   String get readPrivacyPolicy;
+
+  /// Shown when an external link (e.g. privacy policy) fails to open
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t open the link. Please try again later.'**
+  String get linkOpenError;
+
+  /// Privacy policy settings tile title
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy Policy'**
+  String get privacyPolicy;
+
+  /// Privacy policy settings tile subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'How we collect and use your data'**
+  String get privacyPolicySubtitle;
+
+  /// Terms of service settings tile title
+  ///
+  /// In en, this message translates to:
+  /// **'Terms of Service'**
+  String get termsOfService;
+
+  /// Terms of service settings tile subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'The terms you agree to by using the app'**
+  String get termsOfServiceSubtitle;
+
+  /// Support settings tile title
+  ///
+  /// In en, this message translates to:
+  /// **'Support'**
+  String get support;
+
+  /// Support settings tile subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Get help and contact us'**
+  String get supportSubtitle;
 
   /// Accept and continue button
   ///

@@ -40,6 +40,10 @@ flutter build appbundle --dart-define=ENV=prod --dart-define=SENTRY_DSN=<PROD_SE
 > Tip: keep the repeated defines in a `--dart-define-from-file=env.json` file
 > (git-ignored) if you prefer not to type them each time.
 
+> Release builds are obfuscated. To get readable crash stacks in Sentry you must
+> also build with `--obfuscate --split-debug-info=build/symbols` and upload the
+> symbols — see [`SENTRY_SYMBOLICATION.md`](./SENTRY_SYMBOLICATION.md).
+
 ## Configuration files & secrets
 
 Real backend values **never** enter the repository. Only placeholder

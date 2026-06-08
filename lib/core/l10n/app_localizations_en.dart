@@ -881,6 +881,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get deleteAccountRequested => 'Account deletion requested.';
 
   @override
+  String get deleteAccountOnlineRequired =>
+      'You must be online to delete your account. Please connect to the internet and try again.';
+
+  @override
+  String get deleteAccountFailed =>
+      'Account deletion failed. Your data was not deleted. Please try again.';
+
+  @override
   String get defaultUser => 'User';
 
   @override
@@ -980,6 +988,29 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get readPrivacyPolicy => 'Read Full Privacy Policy';
+
+  @override
+  String get linkOpenError =>
+      'Couldn\'t open the link. Please try again later.';
+
+  @override
+  String get privacyPolicy => 'Privacy Policy';
+
+  @override
+  String get privacyPolicySubtitle => 'How we collect and use your data';
+
+  @override
+  String get termsOfService => 'Terms of Service';
+
+  @override
+  String get termsOfServiceSubtitle =>
+      'The terms you agree to by using the app';
+
+  @override
+  String get support => 'Support';
+
+  @override
+  String get supportSubtitle => 'Get help and contact us';
 
   @override
   String get acceptContinue => 'Accept & Continue';

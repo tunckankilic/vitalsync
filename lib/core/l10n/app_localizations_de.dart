@@ -889,6 +889,14 @@ class AppLocalizationsDe extends AppLocalizations {
   String get deleteAccountRequested => 'Kontolöschung angefordert.';
 
   @override
+  String get deleteAccountOnlineRequired =>
+      'Sie müssen online sein, um Ihr Konto zu löschen. Bitte stellen Sie eine Internetverbindung her und versuchen Sie es erneut.';
+
+  @override
+  String get deleteAccountFailed =>
+      'Kontolöschung fehlgeschlagen. Ihre Daten wurden nicht gelöscht. Bitte versuchen Sie es erneut.';
+
+  @override
   String get defaultUser => 'Benutzer';
 
   @override
@@ -989,6 +997,30 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get readPrivacyPolicy => 'Vollständige Datenschutzerklärung lesen';
+
+  @override
+  String get linkOpenError =>
+      'Link konnte nicht geöffnet werden. Bitte später erneut versuchen.';
+
+  @override
+  String get privacyPolicy => 'Datenschutzerklärung';
+
+  @override
+  String get privacyPolicySubtitle =>
+      'Wie wir Ihre Daten erheben und verwenden';
+
+  @override
+  String get termsOfService => 'Nutzungsbedingungen';
+
+  @override
+  String get termsOfServiceSubtitle =>
+      'Die Bedingungen, denen Sie mit der Nutzung zustimmen';
+
+  @override
+  String get support => 'Support';
+
+  @override
+  String get supportSubtitle => 'Hilfe erhalten und uns kontaktieren';
 
   @override
   String get acceptContinue => 'Akzeptieren & Fortfahren';

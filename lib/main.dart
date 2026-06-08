@@ -54,6 +54,13 @@ void main() async {
   await SentryFlutter.init(
     (options) {
       options.dsn = sentryDsn;
+      // Tag every event with the active backend environment (dev/prod) so
+      // crashes can be filtered per environment in Sentry.
+      options.environment = AppEnvironment.name;
+      // `release` and `dist` are left to sentry_flutter's native auto-detection
+      // (bundleId@CFBundleShortVersionString+CFBundleVersion / CFBundleVersion).
+      // They therefore always match the binary that produced the obfuscation
+      // symbols uploaded by sentry_dart_plugin — see docs/SENTRY_SYMBOLICATION.md.
     },
     appRunner: _bootstrap,
   );

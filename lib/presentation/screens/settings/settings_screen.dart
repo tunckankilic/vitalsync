@@ -1,10 +1,17 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:vitalsync/core/constants/app_constants.dart';
+import 'package:vitalsync/core/di/injection_container.dart';
+import 'package:vitalsync/core/gdpr/gdpr_manager.dart';
 import 'package:vitalsync/core/l10n/app_localizations.dart';
+import 'package:vitalsync/core/network/connectivity_service.dart';
 import 'package:vitalsync/core/settings/settings_provider.dart';
 import 'package:vitalsync/core/sync/sync_provider.dart';
+import 'package:vitalsync/core/utils/url_launcher_helper.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -219,6 +226,36 @@ class SettingsScreen extends ConsumerWidget {
                   _showDeleteConfirmation(context, ref, l10n);
                 },
               ),
+              // TODO: Aşağıdaki üç sayfa (privacy/terms/support) henüz web
+              // sitesinde yayında değil — AppConstants'taki URL'lere eklenince
+              // bu linkler çalışır hale gelir.
+              _SettingsTile(
+                title: l10n.privacyPolicy,
+                subtitle: l10n.privacyPolicySubtitle,
+                icon: Icons.privacy_tip_outlined,
+                onTap: () => UrlLauncherHelper.open(
+                  context,
+                  AppConstants.privacyPolicyUrl,
+                ),
+              ),
+              _SettingsTile(
+                title: l10n.termsOfService,
+                subtitle: l10n.termsOfServiceSubtitle,
+                icon: Icons.description_outlined,
+                onTap: () => UrlLauncherHelper.open(
+                  context,
+                  AppConstants.termsOfServiceUrl,
+                ),
+              ),
+              _SettingsTile(
+                title: l10n.support,
+                subtitle: l10n.supportSubtitle,
+                icon: Icons.help_outline,
+                onTap: () => UrlLauncherHelper.open(
+                  context,
+                  AppConstants.supportUrl,
+                ),
+              ),
             ],
           ),
 
@@ -323,20 +360,19 @@ class SettingsScreen extends ConsumerWidget {
   ) {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (dialogContext) => AlertDialog(
         title: Text(l10n.deleteAccountDialogTitle),
         content: Text(l10n.deleteAccountDialogMessage),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => Navigator.pop(dialogContext),
             child: Text(l10n.cancel), // Existing
           ),
           TextButton(
             onPressed: () {
-              Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(l10n.deleteAccountRequested)),
-              );
+              Navigator.pop(dialogContext); // close the confirm dialog
+              // Use the screen context (still mounted) for the deletion flow.
+              _performAccountDeletion(context, l10n);
             },
             style: TextButton.styleFrom(foregroundColor: Colors.red),
             child: Text(l10n.delete), // Existing
@@ -344,6 +380,62 @@ class SettingsScreen extends ConsumerWidget {
         ],
       ),
     );
+  }
+
+  /// Runs the GDPR right-to-erasure flow: wipes cloud + local data and deletes
+  /// the account, then lets the auth-state redirect return the user to login.
+  ///
+  /// Deletion must reach the server, so connectivity is required up front —
+  /// otherwise we could delete the account while server-side health data
+  /// remains. Failures are reported to crash reporting (Sentry) and surfaced
+  /// to the user; they are never silently swallowed.
+  Future<void> _performAccountDeletion(
+    BuildContext context,
+    AppLocalizations l10n,
+  ) async {
+    final messenger = ScaffoldMessenger.of(context);
+
+    final online = await getIt<ConnectivityService>().isConnected();
+    if (!online) {
+      messenger.showSnackBar(
+        SnackBar(content: Text(l10n.deleteAccountOnlineRequired)),
+      );
+      return;
+    }
+    if (!context.mounted) return;
+
+    // Blocking progress on the root navigator — it survives the post-delete
+    // redirect to login, and we dismiss it explicitly below.
+    final navigator = Navigator.of(context, rootNavigator: true);
+    // Not awaited: the dialog stays up until we pop it after the delete call.
+    unawaited(
+      showDialog<void>(
+        context: context,
+        barrierDismissible: false,
+        builder: (_) => const PopScope(
+          canPop: false,
+          child: Center(child: CircularProgressIndicator()),
+        ),
+      ),
+    );
+
+    try {
+      await getIt<GDPRManager>().deleteAllUserData();
+      // Success: the `userDeleted` auth event drives the router to /auth/login.
+      navigator.pop(); // dismiss the progress dialog
+    } catch (e, stack) {
+      navigator.pop(); // dismiss the progress dialog
+      FlutterError.reportError(
+        FlutterErrorDetails(
+          exception: e,
+          stack: stack,
+          library: 'settings.deleteAccount',
+        ),
+      );
+      messenger.showSnackBar(
+        SnackBar(content: Text(l10n.deleteAccountFailed)),
+      );
+    }
   }
 }
 

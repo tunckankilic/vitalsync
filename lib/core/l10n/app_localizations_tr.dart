@@ -886,6 +886,14 @@ class AppLocalizationsTr extends AppLocalizations {
   String get deleteAccountRequested => 'Hesap silme talebi alındı.';
 
   @override
+  String get deleteAccountOnlineRequired =>
+      'Hesabınızı silmek için çevrimiçi olmanız gerekir. Lütfen internete bağlanıp tekrar deneyin.';
+
+  @override
+  String get deleteAccountFailed =>
+      'Hesap silme başarısız oldu. Verileriniz silinmedi. Lütfen tekrar deneyin.';
+
+  @override
   String get defaultUser => 'Kullanıcı';
 
   @override
@@ -986,6 +994,30 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get readPrivacyPolicy => 'Gizlilik Politikasının Tamamını Oku';
+
+  @override
+  String get linkOpenError =>
+      'Bağlantı açılamadı. Lütfen daha sonra tekrar deneyin.';
+
+  @override
+  String get privacyPolicy => 'Gizlilik Politikası';
+
+  @override
+  String get privacyPolicySubtitle =>
+      'Verilerinizi nasıl topladığımız ve kullandığımız';
+
+  @override
+  String get termsOfService => 'Kullanım Koşulları';
+
+  @override
+  String get termsOfServiceSubtitle =>
+      'Uygulamayı kullanarak kabul ettiğiniz koşullar';
+
+  @override
+  String get support => 'Destek';
+
+  @override
+  String get supportSubtitle => 'Yardım alın ve bizimle iletişime geçin';
 
   @override
   String get acceptContinue => 'Kabul Et ve Devam Et';

@@ -56,3 +56,10 @@ class SyncConflictException extends VitalSyncException {
 class InsightGenerationException extends VitalSyncException {
   const InsightGenerationException(super.message, {super.cause});
 }
+
+/// Thrown when the account/data deletion flow (GDPR right to erasure) cannot
+/// complete — e.g. the server-side delete fails — so the caller can abort the
+/// rest of the deletion instead of orphaning data.
+class AccountDeletionException extends VitalSyncException {
+  const AccountDeletionException(super.message, {super.cause});
+}
