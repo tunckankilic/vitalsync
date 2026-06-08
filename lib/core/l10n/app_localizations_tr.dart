@@ -9,6 +9,45 @@ class AppLocalizationsTr extends AppLocalizations {
   AppLocalizationsTr([String locale = 'tr']) : super(locale);
 
   @override
+  String get healthScore => 'Sağlık skoru';
+
+  @override
+  String get dayStreak => 'Gün serisi';
+
+  @override
+  String get todayMedications => 'Bugünün ilaçları';
+
+  @override
+  String dosesTakenRatio(int taken, int total) {
+    return '$taken/$total alındı';
+  }
+
+  @override
+  String healthScoreCaption(int percent) {
+    return '%$percent — 7 günlük ilaç uyumu';
+  }
+
+  @override
+  String get noMedicationsToday => 'Bugün için planlanmış ilaç yok.';
+
+  @override
+  String get dashboardLoadError => 'Panel yüklenemedi';
+
+  @override
+  String get pullToRetry => 'Yenilemek için aşağı çekin.';
+
+  @override
+  String get initializationError => 'Başlatma Hatası';
+
+  @override
+  String initializationErrorBody(Object error) {
+    return 'Uygulama düzgün başlatılamadı. Lütfen internet bağlantınızı kontrol edip tekrar deneyin.\n\nAyrıntılar: $error';
+  }
+
+  @override
+  String get continueAnyway => 'Yine de Devam Et';
+
+  @override
   String get appTitle => 'VitalSynch';
 
   @override

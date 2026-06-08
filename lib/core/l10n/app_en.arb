@@ -1,5 +1,36 @@
 {
   "@@locale": "en",
+  "healthScore": "Health score",
+  "@healthScore": { "description": "Dashboard health score card title" },
+  "dayStreak": "Day streak",
+  "@dayStreak": { "description": "Dashboard streak stat label" },
+  "todayMedications": "Today's medications",
+  "@todayMedications": { "description": "Dashboard today's medications card title" },
+  "dosesTakenRatio": "{taken}/{total} taken",
+  "@dosesTakenRatio": {
+    "description": "Ratio of medication doses taken today",
+    "placeholders": { "taken": { "type": "int" }, "total": { "type": "int" } }
+  },
+  "healthScoreCaption": "{percent}% — 7-day medication compliance",
+  "@healthScoreCaption": {
+    "description": "Caption under the dashboard health score",
+    "placeholders": { "percent": { "type": "int" } }
+  },
+  "noMedicationsToday": "No medications scheduled for today.",
+  "@noMedicationsToday": { "description": "Empty state for today's medications" },
+  "dashboardLoadError": "Could not load dashboard",
+  "@dashboardLoadError": { "description": "Dashboard load error title" },
+  "pullToRetry": "Pull down to retry.",
+  "@pullToRetry": { "description": "Hint to pull-to-refresh after an error" },
+  "initializationError": "Initialization Error",
+  "@initializationError": { "description": "Splash init error dialog title" },
+  "initializationErrorBody": "The app could not start properly. Please check your internet connection and try again.\n\nDetails: {error}",
+  "@initializationErrorBody": {
+    "description": "Splash init error dialog body",
+    "placeholders": { "error": { "type": "Object" } }
+  },
+  "continueAnyway": "Continue Anyway",
+  "@continueAnyway": { "description": "Splash init error continue button" },
   "appTitle": "VitalSynch",
   "@appTitle": { "description": "Application title" },
   

@@ -55,6 +55,24 @@ class _HealthTimelineScreenState extends ConsumerState<HealthTimelineScreen> {
       ),
     );
 
+    // Monthly summary stats, computed from the loaded logs/symptoms.
+    // The providers fetch a buffered range, so restrict to the focused month.
+    bool inFocusedMonth(DateTime d) =>
+        d.year == _focusedDay.year && d.month == _focusedDay.month;
+
+    final monthLogs = (logsAsync.asData?.value ?? const <MedicationLog>[])
+        .where((l) => inFocusedMonth(l.scheduledTime))
+        .toList();
+    final takenCount = monthLogs
+        .where((l) => l.status == MedicationLogStatus.taken)
+        .length;
+    final compliancePercent = monthLogs.isEmpty
+        ? null
+        : ((takenCount / monthLogs.length) * 100).round();
+    final monthSymptomCount = (symptomsAsync.asData?.value ?? const <Symptom>[])
+        .where((s) => inFocusedMonth(s.date))
+        .length;
+
     return Scaffold(
       extendBodyBehindAppBar: true,
 
@@ -213,7 +231,9 @@ class _HealthTimelineScreenState extends ConsumerState<HealthTimelineScreen> {
                             ),
                             const SizedBox(height: 4),
                             Text(
-                              '92%', // Placeholder/Computed
+                              compliancePercent == null
+                                  ? '—'
+                                  : '$compliancePercent%',
                               style: theme.textTheme.titleLarge?.copyWith(
                                 color: Colors.green,
                                 fontWeight: FontWeight.bold,
@@ -234,7 +254,7 @@ class _HealthTimelineScreenState extends ConsumerState<HealthTimelineScreen> {
                             ),
                             const SizedBox(height: 4),
                             Text(
-                              '3', // Placeholder/Computed
+                              '$monthSymptomCount',
                               style: theme.textTheme.titleLarge?.copyWith(
                                 color: Colors.orange,
                                 fontWeight: FontWeight.bold,

@@ -7,7 +7,6 @@ import '../../../../core/theme/app_theme.dart';
 import '../../../../core/utils/extensions.dart';
 import '../../../../domain/entities/health/medication.dart';
 import '../../../../presentation/widgets/glassmorphic_card.dart';
-import '../../../../presentation/widgets/sparkline_chart.dart';
 import '../providers/medication_log_provider.dart';
 
 class MedicationCard extends ConsumerWidget {
@@ -17,20 +16,10 @@ class MedicationCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
 
     // Watch compliance rate for this medication
     final complianceAsync = ref.watch(complianceRateProvider(medication.id));
-
-    // Watch last 7 days logs for sparkline
-    // We can get this from a provider or just use a placeholder for now if exact data isn't ready
-    // For now, let's assume we want to show compliance trend.
-    // We can use a specialized provider for this or derive it.
-    // Let's use a dummy list for sparkline until we implement a dedicated history provider for it
-    // or we can implement a `complianceHistoryProvider` later.
-    final sparklineData = [0.8, 0.9, 0.7, 1.0, 1.0, 0.9, 0.95]; // Placeholder
 
     return SlidableMedicationCard(
       medication: medication,
@@ -101,40 +90,10 @@ class MedicationCard extends ConsumerWidget {
 
             const SizedBox(height: 16),
 
-            // Sparkline & Quick Actions
-            Row(
-              children: [
-                // Sparkline
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        l10n.complianceTrend,
-                        style: theme.textTheme.labelSmall?.copyWith(
-                          color: theme.colorScheme.onSurface.withValues(
-                            alpha: 0.5,
-                          ),
-                          fontSize: 10,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      SparklineChart(
-                        data: sparklineData,
-                        height: 30,
-                        lineColor: isDark
-                            ? Colors.white.withValues(alpha: 0.6)
-                            : theme.primaryColor.withValues(alpha: 0.6),
-                      ),
-                    ],
-                  ),
-                ),
-
-                const SizedBox(width: 16),
-
-                // Quick Actions
-                _QuickActions(medication: medication),
-              ],
+            // Quick Actions
+            Align(
+              alignment: Alignment.centerRight,
+              child: _QuickActions(medication: medication),
             ),
           ],
         ),

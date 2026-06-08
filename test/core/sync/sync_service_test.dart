@@ -49,6 +49,7 @@ void main() {
     int id = 1,
     int recordId = 1,
     String table = 'medications',
+    int retryCount = 0,
     required DateTime localModifiedAt,
   }) {
     return SyncQueueData(
@@ -61,7 +62,7 @@ void main() {
         'lastModifiedAt': localModifiedAt.toIso8601String(),
       }),
       status: SyncQueueStatus.pending,
-      retryCount: 0,
+      retryCount: retryCount,
       createdAt: localModifiedAt,
     );
   }
@@ -421,6 +422,119 @@ void main() {
         ).called(10);
       },
     );
+
+    test(
+      'conflict resolution: pushes when the remote exists but is older '
+      '(local wins)',
+      () async {
+        final item = pendingInsert(localModifiedAt: DateTime(2026, 3, 10));
+        when(
+          () => mockSyncDao.getPendingItems(),
+        ).thenAnswer((_) async => [item]);
+        // Remote record EXISTS but predates the local change → local wins.
+        when(
+          () => mockCloudClient.getRemoteModifiedAt(
+            userId: user.id,
+            collection: 'medications',
+            recordId: '1',
+          ),
+        ).thenAnswer((_) async => DateTime(2026, 3, 1));
+        when(
+          () => mockCloudClient.pushRecord(
+            userId: any(named: 'userId'),
+            collection: any(named: 'collection'),
+            recordId: any(named: 'recordId'),
+            data: any(named: 'data'),
+          ),
+        ).thenAnswer((_) async => DateTime(2026, 3, 10));
+
+        await syncService.sync();
+
+        verify(
+          () => mockCloudClient.pushRecord(
+            userId: user.id,
+            collection: 'medications',
+            recordId: '1',
+            data: any(named: 'data'),
+          ),
+        ).called(1);
+        verify(() => mockSyncDao.markCompleted(item.id)).called(1);
+      },
+    );
+
+    test(
+      'conditional write rejection: a precondition failure keeps the item '
+      'for retry (not completed)',
+      () async {
+        final item = pendingInsert(localModifiedAt: DateTime(2026, 3, 1));
+        when(
+          () => mockSyncDao.getPendingItems(),
+        ).thenAnswer((_) async => [item]);
+        when(
+          () => mockCloudClient.getRemoteModifiedAt(
+            userId: user.id,
+            collection: 'medications',
+            recordId: '1',
+          ),
+        ).thenAnswer((_) async => null);
+        // The server rejects the conditional write — RestSyncClient surfaces a
+        // non-200 (e.g. precondition failed) as a thrown Exception.
+        when(
+          () => mockCloudClient.pushRecord(
+            userId: any(named: 'userId'),
+            collection: any(named: 'collection'),
+            recordId: any(named: 'recordId'),
+            data: any(named: 'data'),
+          ),
+        ).thenThrow(Exception('Push failed: precondition failed'));
+
+        // Per-item failures must not abort the whole sync.
+        await syncService.sync();
+
+        verify(
+          () => mockSyncDao.markFailed(item.id, item.retryCount),
+        ).called(1);
+        verifyNever(() => mockSyncDao.markCompleted(item.id));
+      },
+    );
+
+    test(
+      'retry exhaustion: an item already at the max retry count is still '
+      'marked failed, never completed',
+      () async {
+        final item = pendingInsert(
+          localModifiedAt: DateTime(2026, 3, 1),
+          retryCount: AppConstants.syncMaxRetries,
+        );
+        when(
+          () => mockSyncDao.getPendingItems(),
+        ).thenAnswer((_) async => [item]);
+        when(
+          () => mockCloudClient.getRemoteModifiedAt(
+            userId: user.id,
+            collection: 'medications',
+            recordId: '1',
+          ),
+        ).thenAnswer((_) async => null);
+        when(
+          () => mockCloudClient.pushRecord(
+            userId: any(named: 'userId'),
+            collection: any(named: 'collection'),
+            recordId: any(named: 'recordId'),
+            data: any(named: 'data'),
+          ),
+        ).thenThrow(Exception('still failing'));
+
+        await syncService.sync();
+
+        // Marked failed with the (already maxed) retry count; the exhaustion
+        // branch only logs — it does not complete or drop the item.
+        verify(
+          () => mockSyncDao.markFailed(item.id, AppConstants.syncMaxRetries),
+        ).called(1);
+        verifyNever(() => mockSyncDao.markCompleted(item.id));
+      },
+    );
   });
 
   // ── Pull path (incremental remote → local) ────────────────────────────────
@@ -570,6 +684,81 @@ void main() {
       // Release the first sync and let it finish cleanly.
       gate.complete(<SyncQueueData>[]);
       await first;
+      expect(syncService.isSyncing, isFalse);
+    });
+  });
+
+  // ── Auto-sync (offline → online transition) ───────────────────────────────
+
+  group('SyncService auto-sync (offline → online)', () {
+    late StreamController<bool> connectivityController;
+
+    setUp(() {
+      grantConsent();
+      when(() => mockAuth.currentUser).thenReturn(user);
+      when(() => mockConnectivity.isConnected()).thenAnswer((_) async => true);
+      stubDaoTransitions();
+      stubEmptyPull();
+
+      connectivityController = StreamController<bool>.broadcast();
+      when(
+        () => mockConnectivity.connectivityStream,
+      ).thenAnswer((_) => connectivityController.stream);
+    });
+
+    tearDown(() async {
+      await syncService.stopAutoSync();
+      await connectivityController.close();
+    });
+
+    // The auto-sync listener fires sync() as fire-and-forget; spin the event
+    // loop enough times to let that async chain run to completion.
+    Future<void> flushEventQueue() async {
+      for (var i = 0; i < 50; i++) {
+        await Future<void>.delayed(Duration.zero);
+      }
+    }
+
+    test('drains the pending queue when connectivity returns', () async {
+      final item = pendingInsert(localModifiedAt: DateTime(2026, 3, 1));
+      when(() => mockSyncDao.getPendingItems()).thenAnswer((_) async => [item]);
+      when(
+        () => mockCloudClient.getRemoteModifiedAt(
+          userId: user.id,
+          collection: 'medications',
+          recordId: '1',
+        ),
+      ).thenAnswer((_) async => null);
+      when(
+        () => mockCloudClient.pushRecord(
+          userId: any(named: 'userId'),
+          collection: any(named: 'collection'),
+          recordId: any(named: 'recordId'),
+          data: any(named: 'data'),
+        ),
+      ).thenAnswer((_) async => DateTime(2026, 3, 1));
+
+      syncService.startAutoSync();
+
+      // Still offline: a `false` event must NOT trigger a sync.
+      connectivityController.add(false);
+      await flushEventQueue();
+      verifyNever(() => mockSyncDao.getPendingItems());
+
+      // Transition to online: the queued change is pushed and completed.
+      connectivityController.add(true);
+      await flushEventQueue();
+
+      verify(() => mockSyncDao.getPendingItems()).called(1);
+      verify(
+        () => mockCloudClient.pushRecord(
+          userId: user.id,
+          collection: 'medications',
+          recordId: '1',
+          data: any(named: 'data'),
+        ),
+      ).called(1);
+      verify(() => mockSyncDao.markCompleted(item.id)).called(1);
       expect(syncService.isSyncing, isFalse);
     });
   });

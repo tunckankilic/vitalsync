@@ -80,3 +80,73 @@ Bu Apple Sign-In ile ilgili değil ama TestFlight/App Store için gerekli:
 - "redirect_mismatch" → callback URL'in tam olarak Cognito + Apple Services ID + Info.plist URL scheme'inde aynı olduğunu doğrula
 - "invalid_client" → Services ID yanlış yazılmış olabilir
 - Apple loginden sonra "user not confirmed" → Cognito'da Apple IdP kullanıcılarının email_verified=true olması gerekir, IdP attribute mapping doğru mu kontrol et
+
+## 6. Profil "User" / "No email" gösteriyor — isim/e-posta doldurma
+
+**Belirti:** Apple ile giriş çalışıyor ama profilde isim "User", e-posta "No email" görünüyor.
+
+**Kök sebep:** §2.2'deki `name` → `name` eşlemesi yetersiz. Apple, Sign in with
+Apple'da tek bir `name` claim'i göndermez; ismi **`firstName` / `lastName`**
+olarak ve **yalnızca ilk yetkilendirmede** gönderir. Cognito bunları `name`'e
+değil `given_name` / `family_name`'e map etmelidir.
+
+> Client tarafı zaten doğru: `cognito_auth_repository_impl.dart` →
+> `_fetchCurrentUser`, `name` boşsa `given_name + family_name`'den display
+> name'i kurar. Yani bu bölüm tamamen Cognito/Apple + cihaz konfigürasyonudur;
+> kod değişikliği gerekmez. `amplify push` gerekmez — hepsi mevcut kaynak
+> üzerinde additive console ayarı.
+
+### 6.1 Apple IdP attribute mapping'i düzelt
+- Cognito → User Pools → `<USER_POOL_ID>` → Authentication → Social and external
+  providers → **Sign in with Apple** → Map attributes:
+
+  | Apple attribute | → User pool attribute |
+  | --------------- | --------------------- |
+  | `email`         | `email`               |
+  | `firstName`     | `given_name`          |
+  | `lastName`      | `family_name`         |
+
+  (§2.2'deki `name` → `name` eşlemesini bununla değiştir/genişlet.)
+
+### 6.2 Scope'ları doğrula
+- Aynı ekranda **Authorized scopes** = `name email` olmalı. Yalnızca `email`
+  varsa Apple ismi hiç göndermez.
+
+### 6.3 App client okuma izinleri (sessiz sebep — mutlaka kontrol et)
+- `fetchUserAttributes()` sadece app client'ın **read** izni olan attribute'ları
+  döndürür. Mapping doğru olsa bile bu izin yoksa profil yine boş kalır.
+- App integration → App clients → `<APP_CLIENT_ID>` → Attribute read and write
+  permissions → **Read** sütununda şunlar işaretli olmalı: `email`,
+  `email_verified`, `given_name`, `family_name`, `name`.
+
+### 6.4 Mevcut federe test kullanıcısını sil
+- Cognito mapping'i **yalnızca ilk federasyonda** uygular; zaten oluşmuş federe
+  kullanıcıyı geri-güncellemez.
+- User management → Users → Apple kullanıcısını (`SignInWithApple_…` ya da
+  private relay e-postası) seç → **Delete user**.
+
+### 6.5 Cihazda Apple yetkisini kaldır
+- Apple ismi **yalnızca ilk yetkilendirmede** gelir; cihaz uygulamayı zaten
+  yetkilendirdiyse bir daha isim gelmez.
+- iPhone → Ayarlar → Apple ID → Sign in with Apple (veya Şifreler ve Güvenlik →
+  Apple Kimliğinizi Kullanan Uygulamalar) → **VitalSync** → **Apple Kimliğini
+  Kullanmayı Bırak**. Ardından uygulamada signOut yap.
+
+> **Sıra:** önce 6.1 → 6.2 → 6.3 (config), sonra 6.4 (kullanıcıyı sil), sonra
+> 6.5 (cihaz yetkisi), en son temiz giriş.
+
+### 6.6 Temiz re-auth sonrası ne dolmalı
+- **İsim:** `given_name` + `family_name` dolar → profil "Ad Soyad" gösterir.
+- **E-posta — ikisi de normal:**
+  - "E-postamı Paylaş" → gerçek e-posta `email`'e gelir.
+  - "E-postamı Gizle" → `…@privaterelay.appleid.com` (private relay) gelir; bu
+    beklenen davranıştır, `email` yine dolu olur.
+- **emailVerified:** Apple e-postaları doğrulanmış kabul edilir (`email_verified=true`).
+
+**Doğrulama:** Temiz girişten sonra Cognito → Users → (yeni kullanıcı) detayında
+`given_name`, `family_name`, `email` dolu olmalı. Doluysa profil ekranı isim +
+mail gösterir.
+
+> **Test notu:** Apple ismi gerçekten yalnızca ilk authorization'da gelir. Her
+> testte sıfırdan başlamak için **her seferinde 6.4 + 6.5'i** (kullanıcıyı sil +
+> cihaz yetkisini kaldır) tekrarla; aksi halde Apple ismi tekrar göndermez.

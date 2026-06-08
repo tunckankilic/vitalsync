@@ -10,6 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../core/constants/app_constants.dart';
 import '../../core/di/injection_container.dart';
+import '../../core/l10n/app_localizations.dart';
 import '../../domain/repositories/shared/auth_repository.dart';
 import '../../main.dart' show appInitError;
 
@@ -97,22 +98,20 @@ class _SplashPageState extends ConsumerState<SplashPage> {
   }
 
   void _showInitErrorDialog(Object error) {
+    final l10n = AppLocalizations.of(context);
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (ctx) => AlertDialog(
-        title: const Text('Initialization Error'),
-        content: Text(
-          'The app could not start properly. Please check your internet '
-          'connection and try again.\n\nDetails: $error',
-        ),
+        title: Text(l10n.initializationError),
+        content: Text(l10n.initializationErrorBody(error)),
         actions: [
           TextButton(
             onPressed: () {
               Navigator.pop(ctx);
               context.go('/auth/login');
             },
-            child: const Text('Continue Anyway'),
+            child: Text(l10n.continueAnyway),
           ),
         ],
       ),

@@ -72,9 +72,9 @@ class _AddExerciseDialogState extends ConsumerState<AddExerciseDialog> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Error adding exercise: $e')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(AppLocalizations.of(context).errorGeneric(e))),
+        );
       }
     }
   }

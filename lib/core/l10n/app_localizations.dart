@@ -100,6 +100,72 @@ abstract class AppLocalizations {
     Locale('tr'),
   ];
 
+  /// Dashboard health score card title
+  ///
+  /// In en, this message translates to:
+  /// **'Health score'**
+  String get healthScore;
+
+  /// Dashboard streak stat label
+  ///
+  /// In en, this message translates to:
+  /// **'Day streak'**
+  String get dayStreak;
+
+  /// Dashboard today's medications card title
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s medications'**
+  String get todayMedications;
+
+  /// Ratio of medication doses taken today
+  ///
+  /// In en, this message translates to:
+  /// **'{taken}/{total} taken'**
+  String dosesTakenRatio(int taken, int total);
+
+  /// Caption under the dashboard health score
+  ///
+  /// In en, this message translates to:
+  /// **'{percent}% — 7-day medication compliance'**
+  String healthScoreCaption(int percent);
+
+  /// Empty state for today's medications
+  ///
+  /// In en, this message translates to:
+  /// **'No medications scheduled for today.'**
+  String get noMedicationsToday;
+
+  /// Dashboard load error title
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load dashboard'**
+  String get dashboardLoadError;
+
+  /// Hint to pull-to-refresh after an error
+  ///
+  /// In en, this message translates to:
+  /// **'Pull down to retry.'**
+  String get pullToRetry;
+
+  /// Splash init error dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Initialization Error'**
+  String get initializationError;
+
+  /// Splash init error dialog body
+  ///
+  /// In en, this message translates to:
+  /// **'The app could not start properly. Please check your internet connection and try again.\n\nDetails: {error}'**
+  String initializationErrorBody(Object error);
+
+  /// Splash init error continue button
+  ///
+  /// In en, this message translates to:
+  /// **'Continue Anyway'**
+  String get continueAnyway;
+
   /// Application title
   ///
   /// In en, this message translates to:

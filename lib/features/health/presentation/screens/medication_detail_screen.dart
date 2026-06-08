@@ -234,22 +234,6 @@ class _MedicationDetailContent extends ConsumerWidget {
           loading: () => const Center(child: CircularProgressIndicator()),
           error: (_, _) => const SizedBox(),
         ),
-
-        const SizedBox(height: 24),
-
-        // Share Button
-        SizedBox(
-          width: double.infinity,
-          height: 50,
-          child: OutlinedButton.icon(
-            onPressed: () {
-              // Placeholder for share functionality
-              context.showSnackbar(AppLocalizations.of(context).shareFunctionalityComingSoon);
-            },
-            icon: const Icon(Icons.share_rounded),
-            label: Text(l10n.shareReport),
-          ),
-        ),
       ],
     );
   }

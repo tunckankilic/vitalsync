@@ -9,6 +9,45 @@ class AppLocalizationsDe extends AppLocalizations {
   AppLocalizationsDe([String locale = 'de']) : super(locale);
 
   @override
+  String get healthScore => 'Gesundheitswert';
+
+  @override
+  String get dayStreak => 'Tagesserie';
+
+  @override
+  String get todayMedications => 'Heutige Medikamente';
+
+  @override
+  String dosesTakenRatio(int taken, int total) {
+    return '$taken/$total eingenommen';
+  }
+
+  @override
+  String healthScoreCaption(int percent) {
+    return '$percent% — Medikamententreue (7 Tage)';
+  }
+
+  @override
+  String get noMedicationsToday => 'Keine Medikamente für heute geplant.';
+
+  @override
+  String get dashboardLoadError => 'Dashboard konnte nicht geladen werden';
+
+  @override
+  String get pullToRetry => 'Zum Aktualisieren nach unten ziehen.';
+
+  @override
+  String get initializationError => 'Initialisierungsfehler';
+
+  @override
+  String initializationErrorBody(Object error) {
+    return 'Die App konnte nicht ordnungsgemäß gestartet werden. Bitte überprüfen Sie Ihre Internetverbindung und versuchen Sie es erneut.\n\nDetails: $error';
+  }
+
+  @override
+  String get continueAnyway => 'Trotzdem fortfahren';
+
+  @override
   String get appTitle => 'VitalSynch';
 
   @override
