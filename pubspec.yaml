@@ -10,7 +10,6 @@ environment:
   sdk: ^3.10.7
 
 dependencies:
-  amplify_analytics_pinpoint: ^2.0.0
   amplify_api: ^2.0.0
   amplify_auth_cognito: ^2.0.0
   amplify_flutter: ^2.0.0

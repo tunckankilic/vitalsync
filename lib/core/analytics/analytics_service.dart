@@ -1,19 +1,26 @@
-/// VitalSync — Analytics Service (AWS Pinpoint, GDPR-aware).
+/// VitalSync — Analytics Service (no-op).
 ///
-/// GDPR consent check before firing any event.
-/// Predefined event methods for onboarding, health, fitness,
-/// insights, and engagement tracking.
-/// User property setters and screen view tracking.
+/// AWS Pinpoint has been removed from the client. The engagement features it
+/// backed are being shut down by AWS (2026-10-30), and the plugin threw
+/// `ForbiddenException: Forbidden from accessing the Pinpoint resource` on
+/// launch (before login), surfacing as an unhandled async error in the crash
+/// reporting zone.
+///
+/// This service keeps its full public surface so every caller (settings, auth,
+/// fitness/health/insights providers, screens, tests) compiles and behaves
+/// exactly as before — but each method is now a guarded no-op: nothing is sent
+/// anywhere and no Pinpoint/Amplify call can leak an exception.
+///
+/// The GDPR consent gate is preserved in [_track] so the privacy semantics and
+/// the call shape stay intact. Re-introducing analytics later means swapping the
+/// no-op sink in [_track] for a new backend; the call sites do not change.
 library;
 
-import 'package:amplify_flutter/amplify_flutter.dart';
-
-import '../constants/app_constants.dart';
 import '../gdpr/gdpr_manager.dart';
 
 /// Analytics Service for VitalSync.
-/// Wrapper around AWS Pinpoint (via Amplify Analytics) that ensures
-/// GDPR compliance by checking consent before logging any events.
+///
+/// No-op wrapper retained for API stability after the AWS Pinpoint removal.
 class AnalyticsService {
   AnalyticsService({required GDPRManager gdprManager})
     : _gdprManager = gdprManager;
@@ -22,71 +29,43 @@ class AnalyticsService {
   // ONBOARDING EVENTS
 
   /// Logs when user starts the onboarding flow.
-  Future<void> logOnboardingStarted() async {
-    await _logEvent(AppConstants.analyticsOnboardingStarted);
-  }
+  Future<void> logOnboardingStarted() async => _track();
 
   /// Logs when user completes the onboarding flow.
-  Future<void> logOnboardingCompleted() async {
-    await _logEvent(AppConstants.analyticsOnboardingCompleted);
-  }
+  Future<void> logOnboardingCompleted() async => _track();
 
   /// Logs when user skips the onboarding flow.
-  Future<void> logOnboardingSkipped() async {
-    await _logEvent(AppConstants.analyticsOnboardingSkipped);
-  }
+  Future<void> logOnboardingSkipped() async => _track();
 
   // HEALTH MODULE EVENTS
 
   /// Logs when a new medication is added.
   /// [frequency] - Medication frequency (daily, twice daily, etc.)
-  Future<void> logMedicationAdded({String? frequency}) async {
-    await _logEvent(
-      AppConstants.analyticsMedicationAdded,
-      parameters: frequency != null ? {'frequency': frequency} : null,
-    );
-  }
+  Future<void> logMedicationAdded({String? frequency}) async => _track();
 
   /// Logs when a medication is marked as taken.
   /// [onTime] - Whether medication was taken on schedule
-  Future<void> logMedicationTaken({bool? onTime}) async {
-    await _logEvent(
-      AppConstants.analyticsMedicationTaken,
-      parameters: onTime != null ? {'on_time': onTime} : null,
-    );
-  }
+  Future<void> logMedicationTaken({bool? onTime}) async => _track();
 
   /// Logs when a medication is marked as skipped.
-  Future<void> logMedicationSkipped() async {
-    await _logEvent(AppConstants.analyticsMedicationSkipped);
-  }
+  Future<void> logMedicationSkipped() async => _track();
 
   /// Logs when a symptom is logged.
   /// [severity] - Symptom severity (1-5)
   /// [hasNotes] - Whether user added notes
-  Future<void> logSymptomLogged({int? severity, bool? hasNotes}) async {
-    await _logEvent(
-      AppConstants.analyticsSymptomLogged,
-      parameters: {'severity': ?severity, 'has_notes': ?hasNotes},
-    );
-  }
+  Future<void> logSymptomLogged({int? severity, bool? hasNotes}) async =>
+      _track();
 
   /// Logs when health timeline is viewed.
-  Future<void> logHealthTimelineViewed() async {
-    await _logEvent(AppConstants.analyticsHealthTimelineViewed);
-  }
+  Future<void> logHealthTimelineViewed() async => _track();
 
   // FITNESS MODULE EVENTS
 
   /// Logs when a workout session is started
   /// [templateName] - Name of workout template (if using one)
   /// [isCustom] - Whether this is a custom workout
-  Future<void> logWorkoutStarted({String? templateName, bool? isCustom}) async {
-    await _logEvent(
-      AppConstants.analyticsWorkoutStarted,
-      parameters: {'template_name': ?templateName, 'is_custom': ?isCustom},
-    );
-  }
+  Future<void> logWorkoutStarted({String? templateName, bool? isCustom}) async =>
+      _track();
 
   /// Logs when a workout session is completed.
   /// [durationMinutes] - Workout duration in minutes
@@ -96,37 +75,17 @@ class AnalyticsService {
     int? durationMinutes,
     double? totalVolume,
     int? exerciseCount,
-  }) async {
-    await _logEvent(
-      AppConstants.analyticsWorkoutCompleted,
-      parameters: {
-        'duration_minutes': ?durationMinutes,
-        'total_volume': ?totalVolume,
-        'exercise_count': ?exerciseCount,
-      },
-    );
-  }
+  }) async => _track();
 
   /// Logs when a workout session is cancelled.
   /// [durationMinutes] - How long before cancellation
-  Future<void> logWorkoutCancelled({int? durationMinutes}) async {
-    await _logEvent(
-      AppConstants.analyticsWorkoutCancelled,
-      parameters: durationMinutes != null
-          ? {'duration_before_cancel': durationMinutes}
-          : null,
-    );
-  }
+  Future<void> logWorkoutCancelled({int? durationMinutes}) async => _track();
 
   /// Logs when a set is logged during workout.
   /// [exerciseName] - Name of the exercise
   /// [isPR] - Whether this set was a personal record
-  Future<void> logSetLogged({String? exerciseName, bool? isPR}) async {
-    await _logEvent(
-      AppConstants.analyticsSetLogged,
-      parameters: {'exercise_name': ?exerciseName, 'is_pr': ?isPR},
-    );
-  }
+  Future<void> logSetLogged({String? exerciseName, bool? isPR}) async =>
+      _track();
 
   /// Logs when a personal record is achieved.
   /// [exerciseName] - Name of the exercise
@@ -136,39 +95,18 @@ class AnalyticsService {
     required String exerciseName,
     double? weight,
     int? reps,
-  }) async {
-    await _logEvent(
-      AppConstants.analyticsPRAchieved,
-      parameters: {
-        'exercise_name': exerciseName,
-        'weight': ?weight,
-        'reps': ?reps,
-      },
-    );
-  }
+  }) async => _track();
 
   /// Logs when a custom exercise is created.
   /// [category] - Exercise category
-  Future<void> logExerciseCreated({String? category}) async {
-    await _logEvent(
-      AppConstants.analyticsExerciseCreated,
-      parameters: category != null ? {'category': category} : null,
-    );
-  }
+  Future<void> logExerciseCreated({String? category}) async => _track();
 
   /// Logs when progress charts are viewed.
   /// [timeRange] - Time range selected (1W, 1M, 3M, etc.)
-  Future<void> logProgressViewed({String? timeRange}) async {
-    await _logEvent(
-      AppConstants.analyticsProgressViewed,
-      parameters: timeRange != null ? {'time_range': timeRange} : null,
-    );
-  }
+  Future<void> logProgressViewed({String? timeRange}) async => _track();
 
   /// Logs when achievements page is viewed.
-  Future<void> logAchievementsViewed() async {
-    await _logEvent(AppConstants.analyticsAchievementsViewed);
-  }
+  Future<void> logAchievementsViewed() async => _track();
 
   /// Logs when an achievement is unlocked.
   /// [achievementType] - Type of achievement (streak, volume, etc.)
@@ -176,15 +114,7 @@ class AnalyticsService {
   Future<void> logAchievementUnlocked({
     required String achievementType,
     required String achievementId,
-  }) async {
-    await _logEvent(
-      AppConstants.analyticsAchievementUnlocked,
-      parameters: {
-        'achievement_type': achievementType,
-        'achievement_id': achievementId,
-      },
-    );
-  }
+  }) async => _track();
 
   // INSIGHT MODULE EVENTS
 
@@ -196,25 +126,12 @@ class AnalyticsService {
     required String insightType,
     String? category,
     int? priority,
-  }) async {
-    await _logEvent(
-      AppConstants.analyticsInsightViewed,
-      parameters: {
-        'insight_type': insightType,
-        'category': ?category,
-        'priority': ?priority,
-      },
-    );
-  }
+  }) async => _track();
 
   /// Logs when an insight is dismissed.
   /// [insightType] - Type of insight dismissed
-  Future<void> logInsightDismissed({required String insightType}) async {
-    await _logEvent(
-      AppConstants.analyticsInsightDismissed,
-      parameters: {'insight_type': insightType},
-    );
-  }
+  Future<void> logInsightDismissed({required String insightType}) async =>
+      _track();
 
   /// Logs when weekly report is viewed.
   /// [complianceRate] - Weekly medication compliance rate
@@ -222,15 +139,7 @@ class AnalyticsService {
   Future<void> logWeeklyReportViewed({
     double? complianceRate,
     int? workoutCount,
-  }) async {
-    await _logEvent(
-      AppConstants.analyticsWeeklyReportViewed,
-      parameters: {
-        'compliance_rate': ?complianceRate,
-        'workout_count': ?workoutCount,
-      },
-    );
-  }
+  }) async => _track();
 
   /// Logs when user provides feedback on an insight.
   /// [insightType] - Type of insight
@@ -238,117 +147,55 @@ class AnalyticsService {
   Future<void> logInsightFeedback({
     required String insightType,
     required bool helpful,
-  }) async {
-    await _logEvent(
-      'insight_feedback',
-      parameters: {'insight_type': insightType, 'helpful': helpful},
-    );
-  }
+  }) async => _track();
 
   // ENGAGEMENT EVENTS
 
   /// Logs when app is opened.
   /// [streakCount] - Current workout streak days
-  Future<void> logAppOpened({int? streakCount}) async {
-    await _logEvent(
-      AppConstants.analyticsAppOpened,
-      parameters: streakCount != null ? {'streak_count': streakCount} : null,
-    );
-  }
+  Future<void> logAppOpened({int? streakCount}) async => _track();
 
   /// Logs when a notification is tapped.
   /// [notificationType] - Type of notification (medication, workout, etc.)
-  Future<void> logNotificationTapped({String? notificationType}) async {
-    await _logEvent(
-      AppConstants.analyticsNotificationTapped,
-      parameters: notificationType != null
-          ? {'notification_type': notificationType}
-          : null,
-    );
-  }
+  Future<void> logNotificationTapped({String? notificationType}) async =>
+      _track();
 
   /// Logs when user exports their data.
-  Future<void> logDataExported() async {
-    await _logEvent(AppConstants.analyticsDataExported);
-  }
+  Future<void> logDataExported() async => _track();
 
   /// Logs when user deletes their data.
-  Future<void> logDataDeleted() async {
-    await _logEvent(AppConstants.analyticsDataDeleted);
-  }
+  Future<void> logDataDeleted() async => _track();
 
   /// Logs when user changes theme.
   /// [theme] - New theme (light, dark, highContrast)
-  Future<void> logThemeChanged({required String theme}) async {
-    await _logEvent(
-      AppConstants.analyticsThemeChanged,
-      parameters: {'theme': theme},
-    );
-  }
+  Future<void> logThemeChanged({required String theme}) async => _track();
 
   /// Logs when user changes locale/language.
   /// [locale] - New locale code (en, tr, de)
-  Future<void> logLocaleChanged({required String locale}) async {
-    await _logEvent(
-      AppConstants.analyticsLocaleChanged,
-      parameters: {'locale': locale},
-    );
-  }
+  Future<void> logLocaleChanged({required String locale}) async => _track();
 
   // GDPR EVENTS
 
   /// Logs when consent is granted.
   /// [consentType] - Type of consent granted
-  Future<void> logConsentGranted({required String consentType}) async {
-    await _logEvent(
-      AppConstants.analyticsConsentGranted,
-      parameters: {'consent_type': consentType},
-    );
-  }
+  Future<void> logConsentGranted({required String consentType}) async =>
+      _track();
 
   /// Logs when consent is revoked.
   /// [consentType] - Type of consent revoked
-  Future<void> logConsentRevoked({required String consentType}) async {
-    await _logEvent(
-      AppConstants.analyticsConsentRevoked,
-      parameters: {'consent_type': consentType},
-    );
-  }
+  Future<void> logConsentRevoked({required String consentType}) async =>
+      _track();
 
   // USER PROPERTIES
 
   /// Sets user locale property.
-  Future<void> setUserLocale(String locale) async {
-    if (!_gdprManager.canTrackAnalytics()) return;
-    final properties = CustomProperties();
-    properties.addStringProperty('locale', locale);
-    await Amplify.Analytics.identifyUser(
-      userId: _currentUserId ?? 'anonymous',
-      userProfile: UserProfile(customProperties: properties),
-    );
-  }
+  Future<void> setUserLocale(String locale) async => _track();
 
   /// Sets user theme property.
-  Future<void> setUserTheme(String theme) async {
-    if (!_gdprManager.canTrackAnalytics()) return;
-    final properties = CustomProperties();
-    properties.addStringProperty('theme', theme);
-    await Amplify.Analytics.identifyUser(
-      userId: _currentUserId ?? 'anonymous',
-      userProfile: UserProfile(customProperties: properties),
-    );
-  }
+  Future<void> setUserTheme(String theme) async => _track();
 
   /// Sets unit system property (metric/imperial).
-  Future<void> setUnitSystem(String unitSystem) async {
-    if (!_gdprManager.canTrackAnalytics()) return;
-    final properties = CustomProperties();
-    properties.addStringProperty('unit_system', unitSystem);
-    await Amplify.Analytics.identifyUser(
-      userId: _currentUserId ?? 'anonymous',
-      userProfile: UserProfile(customProperties: properties),
-    );
-  }
+  Future<void> setUnitSystem(String unitSystem) async => _track();
 
   // SCREEN VIEW TRACKING
 
@@ -358,61 +205,19 @@ class AnalyticsService {
   Future<void> logScreenView({
     required String screenName,
     String? screenClass,
-  }) async {
+  }) async => _track();
+
+  // INTERNAL
+
+  /// No-op analytics sink.
+  ///
+  /// Retains the GDPR consent gate so the privacy contract is unchanged: when
+  /// consent is absent we return early, exactly as before. With Pinpoint removed
+  /// there is nothing left to send, so this never touches the network and can
+  /// never throw. Wire a replacement backend in here to re-enable analytics
+  /// without changing any call site.
+  void _track() {
     if (!_gdprManager.canTrackAnalytics()) return;
-
-    final event = AnalyticsEvent('screen_view');
-    event.customProperties.addStringProperty('screen_name', screenName);
-    if (screenClass != null) {
-      event.customProperties.addStringProperty('screen_class', screenClass);
-    }
-    await Amplify.Analytics.recordEvent(event: event);
-  }
-
-  // INTERNAL HELPERS
-
-  /// Try to get current user ID for analytics identification.
-  String? get _currentUserId {
-    try {
-      // This is synchronous and may not be available
-      return null; // Will be set by identifyUser calls
-    } catch (_) {
-      return null;
-    }
-  }
-
-  /// Internal method to log an event with GDPR consent check.
-  /// All public log methods should use this internally.
-  Future<void> _logEvent(
-    String eventName, {
-    Map<String, Object>? parameters,
-  }) async {
-    // GDPR check: only log if consent granted
-    if (!_gdprManager.canTrackAnalytics()) {
-      return; // Silent return, no error thrown
-    }
-
-    final event = AnalyticsEvent(eventName);
-    if (parameters != null) {
-      for (final entry in parameters.entries) {
-        final value = entry.value;
-        switch (value) {
-          case final String s:
-            event.customProperties.addStringProperty(entry.key, s);
-          case final int i:
-            event.customProperties.addIntProperty(entry.key, i);
-          case final double d:
-            event.customProperties.addDoubleProperty(entry.key, d);
-          case final bool b:
-            event.customProperties.addBoolProperty(entry.key, b);
-          default:
-            event.customProperties.addStringProperty(
-              entry.key,
-              value.toString(),
-            );
-        }
-      }
-    }
-    await Amplify.Analytics.recordEvent(event: event);
+    // Pinpoint sink removed — intentionally does nothing.
   }
 }

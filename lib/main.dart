@@ -4,7 +4,6 @@
 /// GDPR-compliant, multi-language, accessibility-first.
 library;
 
-import 'package:amplify_analytics_pinpoint/amplify_analytics_pinpoint.dart';
 import 'package:amplify_api/amplify_api.dart';
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
@@ -95,7 +94,6 @@ Future<void> _bootstrap() async {
       await Amplify.addPlugins([
         AmplifyAuthCognito(),
         AmplifyAPI(),
-        AmplifyAnalyticsPinpoint(),
       ]);
       await Amplify.configure(AppEnvironment.amplifyConfig);
     }
