@@ -87,6 +87,25 @@ IAM (auth role scoped to `/sync` only), private deployment bucket, and a **WAF i
 Block mode** (CommonRuleSet, KnownBadInputs, IpReputation). Each was confirmed via
 the AWS CLI, with apply/verify/rollback documented.
 
+### 5. Release-candidate (RC) verification — a build that ships ≠ a build that compiles
+The launch bug that started this work (a **white screen after splash**) only appeared
+in a **release build on a physical device**: debug paints a red error overlay, release
+paints a blank `ErrorWidget` and hides the exception. That shaped an RC discipline —
+*freeze the shippable artifact, then try to break it.*
+- **Automated gate (no device needed):** `flutter analyze` clean, 100+ tests green, and
+  the **actual shippable artifact compiles** — `flutter build ios --release
+  --obfuscate --split-debug-info --dart-define=ENV=prod` produces `Runner.app` **and**
+  emits the Dart symbol file for Sentry. Export-compliance flag
+  (`ITSAppUsesNonExemptEncryption`) present.
+- **Manual gate (inherently physical):** real-device smoke of the critical journeys
+  (onboarding → Sign in with Apple → dashboard → account deletion), an
+  **offline→reconnect→conflict matrix** for data integrity, a TestFlight install to
+  exercise the *signed distribution* path, and confirming Sentry receives a
+  **deobfuscated** crash. A bug here means a narrow fix and a **fresh RC**, not a patch
+  on top of an already-verified build.
+
+The point: green CI proves the code is correct; RC proves *the thing you upload* runs.
+
 ---
 
 ## Results / status (honest framing)
