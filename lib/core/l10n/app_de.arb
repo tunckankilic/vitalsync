@@ -848,7 +848,7 @@
   "@volumeChart": {
     "description": "Volume chart title"
   },
-  "chartComingSoon": "Diagramm kommt bald",
+  "chartComingSoon": "Noch keine Trainingsdaten — protokollieren Sie ein Workout, um Ihren Fortschritt zu sehen",
   "@chartComingSoon": {
     "description": "Chart placeholder message"
   },

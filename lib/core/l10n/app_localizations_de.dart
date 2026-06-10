@@ -1247,7 +1247,8 @@ class AppLocalizationsDe extends AppLocalizations {
   String get volumeChart => 'Volumen Diagramm';
 
   @override
-  String get chartComingSoon => 'Diagramm kommt bald';
+  String get chartComingSoon =>
+      'Noch keine Trainingsdaten — protokollieren Sie ein Workout, um Ihren Fortschritt zu sehen';
 
   @override
   String get summary => 'Zusammenfassung';

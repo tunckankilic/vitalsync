@@ -1243,7 +1243,8 @@ class AppLocalizationsTr extends AppLocalizations {
   String get volumeChart => 'Hacim Grafiği';
 
   @override
-  String get chartComingSoon => 'Grafik yakında gelecek';
+  String get chartComingSoon =>
+      'Henüz antrenman verisi yok — ilerlemenizi görmek için bir antrenman kaydedin';
 
   @override
   String get summary => 'Özet';

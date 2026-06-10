@@ -848,7 +848,7 @@
   "@volumeChart": {
     "description": "Volume chart title"
   },
-  "chartComingSoon": "Grafik yakında gelecek",
+  "chartComingSoon": "Henüz antrenman verisi yok — ilerlemenizi görmek için bir antrenman kaydedin",
   "@chartComingSoon": {
     "description": "Chart placeholder message"
   },

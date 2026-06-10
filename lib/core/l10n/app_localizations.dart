@@ -2398,10 +2398,10 @@ abstract class AppLocalizations {
   /// **'Volume Chart'**
   String get volumeChart;
 
-  /// Chart placeholder message
+  /// Empty state shown when a chart has no data yet
   ///
   /// In en, this message translates to:
-  /// **'Chart coming soon'**
+  /// **'No workout data yet — log a workout to see your progress'**
   String get chartComingSoon;
 
   /// Summary section title
