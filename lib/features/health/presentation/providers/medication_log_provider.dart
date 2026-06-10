@@ -8,7 +8,6 @@ import '../../../../core/di/injection_container.dart';
 import '../../../../core/enums/medication_log_status.dart';
 import '../../../../domain/entities/health/medication_log.dart';
 import '../../../../domain/repositories/health/medication_log_repository.dart';
-import '../../domain/services/medication_reminder_service.dart';
 import 'medication_provider.dart';
 
 part 'medication_log_provider.g.dart';
@@ -17,12 +16,6 @@ part 'medication_log_provider.g.dart';
 @Riverpod(keepAlive: true)
 MedicationLogRepository medicationLogRepository(Ref ref) {
   return getIt<MedicationLogRepository>();
-}
-
-/// Provider for the MedicationReminderService instance
-@Riverpod(keepAlive: true)
-MedicationReminderService medicationReminderService(Ref ref) {
-  return getIt<MedicationReminderService>();
 }
 
 /// Stream provider for today's medication logs

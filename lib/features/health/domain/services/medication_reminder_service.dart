@@ -64,6 +64,31 @@ class MedicationReminderService {
     }
   }
 
+  /// Brings scheduled notifications in line with the database after a CRUD
+  /// change (add/update/delete/toggle): cancels reminders when the
+  /// medication no longer exists or is inactive, (re)schedules them
+  /// otherwise.
+  ///
+  /// Never throws: a notification bookkeeping failure must not fail the
+  /// CRUD operation that triggered it.
+  Future<void> syncRemindersAfterChange(int medicationId) async {
+    try {
+      final medication = await _medicationRepository.getById(medicationId);
+      if (medication == null || !medication.isActive) {
+        await _notificationService.cancelMedicationReminders(medicationId);
+        return;
+      }
+      await scheduleMedicationReminders(medicationId);
+    } catch (e, stackTrace) {
+      _logger.e(
+        'Failed to sync reminders after medication change '
+        '(medicationId=$medicationId)',
+        error: e,
+        stackTrace: stackTrace,
+      );
+    }
+  }
+
   /// Called when the user logs a dose (taken or skipped).
   ///
   /// Cancels the pending follow-up notification for the dose slot closest

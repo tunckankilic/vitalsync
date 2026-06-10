@@ -9,6 +9,7 @@ import '../../../../core/di/injection_container.dart';
 import '../../../../core/enums/medication_frequency.dart';
 import '../../../../domain/entities/health/medication.dart';
 import '../../../../domain/repositories/health/medication_repository.dart';
+import '../../domain/services/medication_reminder_service.dart';
 
 part 'medication_provider.g.dart';
 
@@ -22,6 +23,12 @@ MedicationRepository medicationRepository(Ref ref) {
 @Riverpod(keepAlive: true)
 AnalyticsService analyticsService(Ref ref) {
   return getIt<AnalyticsService>();
+}
+
+/// Provider for the MedicationReminderService instance
+@Riverpod(keepAlive: true)
+MedicationReminderService medicationReminderService(Ref ref) {
+  return getIt<MedicationReminderService>();
 }
 
 /// Stream provider for all medications
@@ -108,6 +115,11 @@ class MedicationNotifier extends _$MedicationNotifier {
         frequency: medication.frequency.toString(),
       );
 
+      // Schedule reminders for the new medication (never throws)
+      await ref
+          .read(medicationReminderServiceProvider)
+          .syncRemindersAfterChange(id);
+
       return id;
     });
 
@@ -132,6 +144,11 @@ class MedicationNotifier extends _$MedicationNotifier {
 
     state = await AsyncValue.guard(() async {
       await repository.update(medication);
+
+      // Reschedule reminders with the updated times (never throws)
+      await ref
+          .read(medicationReminderServiceProvider)
+          .syncRemindersAfterChange(medication.id);
     });
 
     if (state.hasError) {
@@ -147,6 +164,11 @@ class MedicationNotifier extends _$MedicationNotifier {
 
     state = await AsyncValue.guard(() async {
       await repository.delete(id);
+
+      // Cancel reminders for the removed medication (never throws)
+      await ref
+          .read(medicationReminderServiceProvider)
+          .syncRemindersAfterChange(id);
     });
 
     if (state.hasError) {
@@ -162,6 +184,11 @@ class MedicationNotifier extends _$MedicationNotifier {
 
     state = await AsyncValue.guard(() async {
       await repository.toggleActive(id);
+
+      // Schedule or cancel reminders to match the new state (never throws)
+      await ref
+          .read(medicationReminderServiceProvider)
+          .syncRemindersAfterChange(id);
     });
 
     if (state.hasError) {

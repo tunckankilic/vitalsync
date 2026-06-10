@@ -372,6 +372,83 @@ void main() {
     });
   });
 
+  group('syncRemindersAfterChange', () {
+    setUp(() {
+      when(
+        () => mockNotificationService.cancelMedicationReminders(any()),
+      ).thenAnswer((_) async {});
+      when(
+        () => mockNotificationService.scheduleDailyMedicationReminders(
+          any(),
+          withFollowUps: any(named: 'withFollowUps'),
+        ),
+      ).thenAnswer((_) async {});
+    });
+
+    test('schedules reminders when the medication is active', () async {
+      when(
+        () => mockMedicationRepository.getById(1),
+      ).thenAnswer((_) async => testMedication);
+
+      await service.syncRemindersAfterChange(1);
+
+      verify(
+        () => mockNotificationService.scheduleDailyMedicationReminders(
+          testMedication,
+          withFollowUps: true,
+        ),
+      ).called(1);
+    });
+
+    test('cancels reminders when the medication was deleted', () async {
+      when(
+        () => mockMedicationRepository.getById(1),
+      ).thenAnswer((_) async => null);
+
+      await service.syncRemindersAfterChange(1);
+
+      verify(
+        () => mockNotificationService.cancelMedicationReminders(1),
+      ).called(1);
+      verifyNever(
+        () => mockNotificationService.scheduleDailyMedicationReminders(
+          any(),
+          withFollowUps: any(named: 'withFollowUps'),
+        ),
+      );
+    });
+
+    test('cancels reminders when the medication is inactive', () async {
+      final inactiveMed = testMedication.copyWith(isActive: false);
+      when(
+        () => mockMedicationRepository.getById(1),
+      ).thenAnswer((_) async => inactiveMed);
+
+      await service.syncRemindersAfterChange(1);
+
+      verify(
+        () => mockNotificationService.cancelMedicationReminders(1),
+      ).called(1);
+      verifyNever(
+        () => mockNotificationService.scheduleDailyMedicationReminders(
+          any(),
+          withFollowUps: any(named: 'withFollowUps'),
+        ),
+      );
+    });
+
+    test('never throws when the notification service fails', () async {
+      when(
+        () => mockMedicationRepository.getById(1),
+      ).thenAnswer((_) async => testMedication);
+      when(
+        () => mockNotificationService.cancelMedicationReminders(any()),
+      ).thenThrow(Exception('plugin failure'));
+
+      await expectLater(service.syncRemindersAfterChange(1), completes);
+    });
+  });
+
   group('grace period constant', () {
     test('defaults to 30 minutes', () {
       expect(AppConstants.medicationFollowUpGraceMinutes, 30);
