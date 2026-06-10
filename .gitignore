@@ -111,3 +111,5 @@ amplifytools.xcconfig
 waf-rules.json
 userpool-backup-20260608.json
 userpool-update.json
+# Local-only notes
+docs/private/

@@ -106,6 +106,34 @@ paints a blank `ErrorWidget` and hides the exception. That shaped an RC discipli
 
 The point: green CI proves the code is correct; RC proves *the thing you upload* runs.
 
+### 6. Reliability without background execution (iOS)
+The missed-dose check originally ran as an hourly WorkManager task — which iOS
+quietly never runs: **BGAppRefreshTask is opportunistic**, with no frequency or
+execution guarantee. Anything correctness-critical can't depend on it.
+- **Options considered:** (a) lean on BGTaskScheduler anyway — unreliable by design
+  and adds App Review 2.5.4 surface for declared background modes; (b) silent push
+  (`content-available`) — workable, but requires server infrastructure that knows
+  every dose schedule: overkill for an offline-first app; (c) **design the need for
+  background execution out of the critical path.**
+- **Chose (c), in two parts.** *Missed doses:* a "dual notification + cancel"
+  pattern — when a dose reminder is scheduled, a follow-up ("did you log it?") is
+  pre-scheduled **+30 min** with a deterministic ID derived from the reminder's;
+  logging the dose cancels it by ID (and re-arms the recurrence skipping today,
+  since cancelling a repeating notification kills the whole series). 100%
+  deterministic with the app killed — everything is pre-scheduled local
+  notifications. *Sync window:* a final sync-queue flush on
+  `AppLifecycleState.paused` shrinks the un-synced window from "until the next
+  launch" to "until the last backgrounding"; iOS's short on-backgrounding execution
+  window is enough for the small HTTP push.
+- **Then deleted `UIBackgroundModes` from Info.plist entirely** — zero
+  background-mode review surface, and the design can't silently regress into
+  depending on it.
+- **Trade-off accepted:** the paused-flush is best-effort (no guarantee the push
+  completes), which is fine because data is already encrypted and durable on device
+  (Drift + SQLCipher) and auto-sync retries on next launch — the residual risk is
+  only the lost-device scenario. And a user who takes a dose but never logs it
+  still gets the follow-up nag; that's the feature, not a bug.
+
 ---
 
 ## Results / status (honest framing)
