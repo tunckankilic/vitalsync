@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:vitalsync/core/constants/app_constants.dart';
 import 'package:vitalsync/core/l10n/app_localizations.dart';
+import 'package:vitalsync/core/utils/url_launcher_helper.dart';
 
 // Providers for consent state
 class AnalyticsConsentNotifier extends Notifier<bool> {
@@ -172,9 +174,13 @@ class ConsentContent extends ConsumerWidget {
                 const SizedBox(height: 16),
                 Center(
                   child: TextButton(
-                    onPressed: () {
-                      // Open Privacy Policy
-                    },
+                    // TODO: privacy.html henüz yayında değil — sayfa web
+                    // sitesine (AppConstants.privacyPolicyUrl) eklenince link
+                    // çalışır hale gelir.
+                    onPressed: () => UrlLauncherHelper.open(
+                      context,
+                      AppConstants.privacyPolicyUrl,
+                    ),
                     child: Text(l10n.readPrivacyPolicy),
                   ),
                 ),
@@ -253,11 +259,14 @@ class _ConsentCard extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      Text(
-                        title,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
+                      Flexible(
+                        child: Text(
+                          title,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
                         ),
                       ),
                       if (isRequired)

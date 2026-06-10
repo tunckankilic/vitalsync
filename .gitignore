@@ -108,3 +108,8 @@ amplifytools.xcconfig
 .secret-*
 **.sample
 #amplify-do-not-edit-end
+waf-rules.json
+userpool-backup-20260608.json
+userpool-update.json
+# Local-only notes
+docs/private/

@@ -1,5 +1,16 @@
 {
   "@@locale": "tr",
+  "healthScore": "Sağlık skoru",
+  "dayStreak": "Gün serisi",
+  "todayMedications": "Bugünün ilaçları",
+  "dosesTakenRatio": "{taken}/{total} alındı",
+  "healthScoreCaption": "%{percent} — 7 günlük ilaç uyumu",
+  "noMedicationsToday": "Bugün için planlanmış ilaç yok.",
+  "dashboardLoadError": "Panel yüklenemedi",
+  "pullToRetry": "Yenilemek için aşağı çekin.",
+  "initializationError": "Başlatma Hatası",
+  "initializationErrorBody": "Uygulama düzgün başlatılamadı. Lütfen internet bağlantınızı kontrol edip tekrar deneyin.\n\nAyrıntılar: {error}",
+  "continueAnyway": "Yine de Devam Et",
   "appTitle": "VitalSynch",
   "dashboard": "Gösterge Paneli",
   "health": "Sağlık",
@@ -143,9 +154,9 @@
   "@arms": {
     "description": "Arms muscle group"
   },
-  "back": "Sırt",
+  "back": "Geri",
   "@back": {
-    "description": "Back muscle group"
+    "description": "Back button"
   },
   "calendar": "Takvim",
   "@calendar": {
@@ -515,7 +526,7 @@
   },
   "workoutFrequency": "Antrenman Sıklığı",
   "@workoutFrequency": {
-    "description": "Workout frequency section title"
+    "description": "Workout frequency chart title"
   },
   "workoutHome": "Antrenmanlar",
   "@workoutHome": {
@@ -545,33 +556,56 @@
   "@exerciseAdded": {
     "description": "Exercise added success message"
   },
-
   "welcomeBack": "Tekrar Hoş Geldiniz",
-  "@welcomeBack": { "description": "Welcome back title" },
+  "@welcomeBack": {
+    "description": "Welcome back title"
+  },
   "signInSubtitle": "Sağlıklı yolculuğunuza devam etmek için giriş yapın",
-  "@signInSubtitle": { "description": "Sign in subtitle" },
+  "@signInSubtitle": {
+    "description": "Sign in subtitle"
+  },
   "email": "E-posta",
-  "@email": { "description": "Email label" },
+  "@email": {
+    "description": "Email label"
+  },
   "password": "Şifre",
-  "@password": { "description": "Password label" },
+  "@password": {
+    "description": "Password label"
+  },
   "forgotPassword": "Şifremi Unuttum?",
-  "@forgotPassword": { "description": "Forgot password button" },
+  "@forgotPassword": {
+    "description": "Forgot password button"
+  },
   "logIn": "Giriş Yap",
-  "@logIn": { "description": "Log in button" },
+  "@logIn": {
+    "description": "Log in button"
+  },
   "orSeparator": "VEYA",
-  "@orSeparator": { "description": "OR separator" },
+  "@orSeparator": {
+    "description": "OR separator"
+  },
   "continueWithApple": "Apple ile Devam Et",
-  "@continueWithApple": { "description": "Continue with Apple button" },
+  "@continueWithApple": {
+    "description": "Continue with Apple button"
+  },
   "dontHaveAccount": "Hesabınız yok mu?",
-  "@dontHaveAccount": { "description": "Don't have account text" },
+  "@dontHaveAccount": {
+    "description": "Don't have account text"
+  },
   "signUp": "Kayıt Ol",
-  "@signUp": { "description": "Sign up button" },
+  "@signUp": {
+    "description": "Sign up button"
+  },
   "enterEmail": "Lütfen e-postanızı girin",
-  "@enterEmail": { "description": "Enter email error" },
+  "@enterEmail": {
+    "description": "Enter email error"
+  },
   "enterPassword": "Lütfen şifrenizi girin",
-  "@enterPassword": { "description": "Enter password error" },
+  "@enterPassword": {
+    "description": "Enter password error"
+  },
   "loginFailed": "Giriş başarısız: {error}",
-  "@loginFailed": { 
+  "@loginFailed": {
     "description": "Login failed error",
     "placeholders": {
       "error": {
@@ -588,23 +622,36 @@
       }
     }
   },
-
   "createAccount": "Hesap Oluştur",
-  "@createAccount": { "description": "Create account title" },
+  "@createAccount": {
+    "description": "Create account title"
+  },
   "joinVitalSynch": "Bugün VitalSynch'e katılın",
-  "@joinVitalSynch": { "description": "Join VitalSynch subtitle" },
+  "@joinVitalSynch": {
+    "description": "Join VitalSynch subtitle"
+  },
   "confirmPassword": "Şifreyi Onayla",
-  "@confirmPassword": { "description": "Confirm password label" },
+  "@confirmPassword": {
+    "description": "Confirm password label"
+  },
   "alreadyHaveAccount": "Zaten hesabınız var mı?",
-  "@alreadyHaveAccount": { "description": "Already have account text" },
+  "@alreadyHaveAccount": {
+    "description": "Already have account text"
+  },
   "passwordsDoNotMatch": "Şifreler eşleşmiyor",
-  "@passwordsDoNotMatch": { "description": "Passwords do not match error" },
+  "@passwordsDoNotMatch": {
+    "description": "Passwords do not match error"
+  },
   "passwordLengthError": "Şifre en az 6 karakter olmalıdır",
-  "@passwordLengthError": { "description": "Password length error" },
+  "@passwordLengthError": {
+    "description": "Password length error"
+  },
   "confirmPasswordError": "Lütfen şifrenizi onaylayın",
-  "@confirmPasswordError": { "description": "Confirm password error" },
+  "@confirmPasswordError": {
+    "description": "Confirm password error"
+  },
   "registrationFailed": "Kayıt başarısız: {error}",
-  "@registrationFailed": { 
+  "@registrationFailed": {
     "description": "Registration failed error",
     "placeholders": {
       "error": {
@@ -612,15 +659,22 @@
       }
     }
   },
-
   "resetPassword": "Şifreyi Sıfırla",
-  "@resetPassword": { "description": "Reset password title" },
+  "@resetPassword": {
+    "description": "Reset password title"
+  },
   "resetPasswordSubtitle": "Sıfırlama bağlantısı almak için e-postanızı girin",
-  "@resetPasswordSubtitle": { "description": "Reset password subtitle" },
+  "@resetPasswordSubtitle": {
+    "description": "Reset password subtitle"
+  },
   "sendResetLink": "Sıfırlama Bağlantısı Gönder",
-  "@sendResetLink": { "description": "Send reset link button" },
+  "@sendResetLink": {
+    "description": "Send reset link button"
+  },
   "resetEmailSent": "Şifre sıfırlama e-postası gönderildi. Gelen kutunuzu kontrol edin.",
-  "@resetEmailSent": { "description": "Reset email sent message" },
+  "@resetEmailSent": {
+    "description": "Reset email sent message"
+  },
   "resetPasswordError": "Hata: {error}",
   "@resetPasswordError": {
     "description": "Reset password error",
@@ -630,151 +684,244 @@
       }
     }
   },
-
   "onboardingWelcomeTitle": "VitalSynch'e Hoş Geldiniz",
-  "@onboardingWelcomeTitle": { "description": "Onboarding welcome title" },
+  "@onboardingWelcomeTitle": {
+    "description": "Onboarding welcome title"
+  },
   "onboardingWelcomeSubtitle": "Hepsi bir arada sağlık ve fitness yardımcınız",
-  "@onboardingWelcomeSubtitle": { "description": "Onboarding welcome subtitle" },
+  "@onboardingWelcomeSubtitle": {
+    "description": "Onboarding welcome subtitle"
+  },
   "onboardingPrivacyNote": "Verileriniz cihazınızda kalır. Gizliliğinize saygı duyuyoruz.",
-  "@onboardingPrivacyNote": { "description": "Onboarding privacy note" },
-
+  "@onboardingPrivacyNote": {
+    "description": "Onboarding privacy note"
+  },
   "onboardingHealthTitle": "Sağlığınızı Takip Edin",
-  "@onboardingHealthTitle": { "description": "Onboarding health feature title" },
+  "@onboardingHealthTitle": {
+    "description": "Onboarding health feature title"
+  },
   "onboardingHealthDescription": "İlaçları, semptomları ve sağlık zaman çizelgesini yönetin",
-  "@onboardingHealthDescription": { "description": "Onboarding health feature description" },
+  "@onboardingHealthDescription": {
+    "description": "Onboarding health feature description"
+  },
   "onboardingHealthFeature1": "Akıllı hatırlatıcılarla hiçbir ilacı kaçırmayın",
-  "@onboardingHealthFeature1": { "description": "Onboarding health feature 1" },
+  "@onboardingHealthFeature1": {
+    "description": "Onboarding health feature 1"
+  },
   "onboardingHealthFeature2": "Semptomları kaydedin ve kalıpları takip edin",
-  "@onboardingHealthFeature2": { "description": "Onboarding health feature 2" },
+  "@onboardingHealthFeature2": {
+    "description": "Onboarding health feature 2"
+  },
   "onboardingHealthFeature3": "Eksiksiz sağlık zaman çizelgenizi görüntüleyin",
-  "@onboardingHealthFeature3": { "description": "Onboarding health feature 3" },
-
+  "@onboardingHealthFeature3": {
+    "description": "Onboarding health feature 3"
+  },
   "onboardingFitnessTitle": "Fitness Seviyenizi Yükseltin",
-  "@onboardingFitnessTitle": { "description": "Onboarding fitness feature title" },
+  "@onboardingFitnessTitle": {
+    "description": "Onboarding fitness feature title"
+  },
   "onboardingFitnessDescription": "Antrenmanları kaydedin, ilerlemeyi takip edin, hedeflerinizi ezin",
-  "@onboardingFitnessDescription": { "description": "Onboarding fitness feature description" },
+  "@onboardingFitnessDescription": {
+    "description": "Onboarding fitness feature description"
+  },
   "onboardingFitnessFeature1": "Detaylı egzersiz kaydı ile antrenmanları takip edin",
-  "@onboardingFitnessFeature1": { "description": "Onboarding fitness feature 1" },
+  "@onboardingFitnessFeature1": {
+    "description": "Onboarding fitness feature 1"
+  },
   "onboardingFitnessFeature2": "Görsel grafiklerle ilerlemenizi izleyin",
-  "@onboardingFitnessFeature2": { "description": "Onboarding fitness feature 2" },
+  "@onboardingFitnessFeature2": {
+    "description": "Onboarding fitness feature 2"
+  },
   "onboardingFitnessFeature3": "Başarıların kilidini açın ve seriler oluşturun",
-  "@onboardingFitnessFeature3": { "description": "Onboarding fitness feature 3" },
-
+  "@onboardingFitnessFeature3": {
+    "description": "Onboarding fitness feature 3"
+  },
   "onboardingPrivacyTitle": "Gizliliğiniz, Kontrolünüz",
-  "@onboardingPrivacyTitle": { "description": "Onboarding privacy screen title" },
+  "@onboardingPrivacyTitle": {
+    "description": "Onboarding privacy screen title"
+  },
   "onboardingPrivacyDescription": "Hangi verileri paylaşmak istediğinizi seçin",
-  "@onboardingPrivacyDescription": { "description": "Onboarding privacy screen description" },
-
+  "@onboardingPrivacyDescription": {
+    "description": "Onboarding privacy screen description"
+  },
   "onboardingPreferencesTitle": "Deneyiminizi Kişiselleştirin",
-  "@onboardingPreferencesTitle": { "description": "Onboarding preferences screen title" },
+  "@onboardingPreferencesTitle": {
+    "description": "Onboarding preferences screen title"
+  },
   "onboardingPreferencesDescription": "Dil ve tema tercihlerinizi ayarlayın",
-  "@onboardingPreferencesDescription": { "description": "Onboarding preferences screen description" },
+  "@onboardingPreferencesDescription": {
+    "description": "Onboarding preferences screen description"
+  },
   "onboardingPreferencesNote": "Bu ayarları istediğiniz zaman değiştirebilirsiniz",
-  "@onboardingPreferencesNote": { "description": "Onboarding preferences note" },
-
+  "@onboardingPreferencesNote": {
+    "description": "Onboarding preferences note"
+  },
   "gdprAnalyticsTitle": "Analitik ve İçgörüler",
-  "@gdprAnalyticsTitle": { "description": "GDPR analytics consent title" },
+  "@gdprAnalyticsTitle": {
+    "description": "GDPR analytics consent title"
+  },
   "gdprAnalyticsDescription": "Anonim kullanım verileriyle uygulamayı geliştirmemize yardımcı olun",
-  "@gdprAnalyticsDescription": { "description": "GDPR analytics consent description" },
+  "@gdprAnalyticsDescription": {
+    "description": "GDPR analytics consent description"
+  },
   "gdprHealthDataTitle": "Sağlık Verisi Depolama",
-  "@gdprHealthDataTitle": { "description": "GDPR health data consent title" },
+  "@gdprHealthDataTitle": {
+    "description": "GDPR health data consent title"
+  },
   "gdprHealthDataDescription": "İlaç ve semptom verilerinizi saklayın (gerekli)",
-  "@gdprHealthDataDescription": { "description": "GDPR health data consent description" },
+  "@gdprHealthDataDescription": {
+    "description": "GDPR health data consent description"
+  },
   "gdprFitnessDataTitle": "Fitness Verisi Depolama",
-  "@gdprFitnessDataTitle": { "description": "GDPR fitness data consent title" },
+  "@gdprFitnessDataTitle": {
+    "description": "GDPR fitness data consent title"
+  },
   "gdprFitnessDataDescription": "Antrenman ve ilerleme verilerinizi saklayın (gerekli)",
-  "@gdprFitnessDataDescription": { "description": "GDPR fitness data consent description" },
+  "@gdprFitnessDataDescription": {
+    "description": "GDPR fitness data consent description"
+  },
   "gdprCloudBackupTitle": "Bulut Yedekleme",
-  "@gdprCloudBackupTitle": { "description": "GDPR cloud backup consent title" },
+  "@gdprCloudBackupTitle": {
+    "description": "GDPR cloud backup consent title"
+  },
   "gdprCloudBackupDescription": "Cihazlar arası senkronizasyon için verilerinizi buluta yedekleyin",
-  "@gdprCloudBackupDescription": { "description": "GDPR cloud backup consent description" },
+  "@gdprCloudBackupDescription": {
+    "description": "GDPR cloud backup consent description"
+  },
   "gdprNote": "Gerekli onaylar, temel uygulama işlevselliği için gereklidir. Onayları istediğiniz zaman Ayarlar'dan yönetebilirsiniz.",
-  "@gdprNote": { "description": "GDPR consent note" },
-
-  "back": "Geri",
-  "@back": { "description": "Back button" },
+  "@gdprNote": {
+    "description": "GDPR consent note"
+  },
   "next": "İleri",
-  "@next": { "description": "Next button" },
+  "@next": {
+    "description": "Next button"
+  },
   "getStarted": "Başla",
-  "@getStarted": { "description": "Get started button" },
+  "@getStarted": {
+    "description": "Get started button"
+  },
   "language": "Dil",
-  "@language": { "description": "Language label" },
+  "@language": {
+    "description": "Language label"
+  },
   "theme": "Tema",
-  "@theme": { "description": "Theme label" },
+  "@theme": {
+    "description": "Theme label"
+  },
   "themeSystem": "Sistem",
-  "@themeSystem": { "description": "System theme option" },
+  "@themeSystem": {
+    "description": "System theme option"
+  },
   "themeLight": "Açık",
-  "@themeLight": { "description": "Light theme option" },
+  "@themeLight": {
+    "description": "Light theme option"
+  },
   "themeDark": "Koyu",
-  "@themeDark": { "description": "Dark theme option" },
-
+  "@themeDark": {
+    "description": "Dark theme option"
+  },
   "workoutComplete": "Antrenman Tamamlandı!",
-  "@workoutComplete": { "description": "Workout complete message" },
+  "@workoutComplete": {
+    "description": "Workout complete message"
+  },
   "greatJob": "Harika iş! Böyle devam!",
-  "@greatJob": { "description": "Congratulations message" },
+  "@greatJob": {
+    "description": "Congratulations message"
+  },
   "workoutNotFound": "Antrenman bulunamadı",
-  "@workoutNotFound": { "description": "Workout not found error message" },
+  "@workoutNotFound": {
+    "description": "Workout not found error message"
+  },
   "done": "Tamam",
-  "@done": { "description": "Done button" },
+  "@done": {
+    "description": "Done button"
+  },
   "share": "Paylaş",
-  "@share": { "description": "Share button" },
+  "@share": {
+    "description": "Share button"
+  },
   "comingSoon": "Yakında gelecek!",
-  "@comingSoon": { "description": "Coming soon message" },
-  "progress": "İlerleme",
-  "@progress": { "description": "Progress screen title" },
+  "@comingSoon": {
+    "description": "Coming soon message"
+  },
   "volumeChart": "Hacim Grafiği",
-  "@volumeChart": { "description": "Volume chart title" },
-  "workoutFrequency": "Antrenman Sıklığı",
-  "@workoutFrequency": { "description": "Workout frequency chart title" },
-  "chartComingSoon": "Grafik yakında gelecek",
-  "@chartComingSoon": { "description": "Chart placeholder message" },
+  "@volumeChart": {
+    "description": "Volume chart title"
+  },
+  "chartComingSoon": "Henüz antrenman verisi yok — ilerlemenizi görmek için bir antrenman kaydedin",
+  "@chartComingSoon": {
+    "description": "Chart placeholder message"
+  },
   "summary": "Özet",
-  "@summary": { "description": "Summary section title" },
-  "totalWorkouts": "Toplam Antrenman",
-  "@totalWorkouts": { "description": "Total workouts label" },
+  "@summary": {
+    "description": "Summary section title"
+  },
   "avgDuration": "Ort. Süre",
-  "@avgDuration": { "description": "Average duration label" },
+  "@avgDuration": {
+    "description": "Average duration label"
+  },
   "prsAchieved": "Kırılan Rekorlar",
-  "@prsAchieved": { "description": "Personal records achieved label" },
-  "personalRecords": "Kişisel Rekorlar",
-  "@personalRecords": { "description": "Personal records section title" },
+  "@prsAchieved": {
+    "description": "Personal records achieved label"
+  },
   "noPRsYet": "Henüz kişisel rekor yok. Devam et!",
-  "@noPRsYet": { "description": "No PRs empty state message" },
+  "@noPRsYet": {
+    "description": "No PRs empty state message"
+  },
   "dismissed": "Reddedilenler",
-  "@dismissed": { "description": "Dismissed tab label" },
+  "@dismissed": {
+    "description": "Dismissed tab label"
+  },
   "overallWellness": "Genel Sağlık",
-  "@overallWellness": { "description": "Overall wellness / cross-module filter label" },
+  "@overallWellness": {
+    "description": "Overall wellness / cross-module filter label"
+  },
   "insightDismissed": "İçgörü reddedildi",
-  "@insightDismissed": { "description": "Snackbar message when insight is dismissed" },
+  "@insightDismissed": {
+    "description": "Snackbar message when insight is dismissed"
+  },
   "noDismissedInsights": "Reddedilen içgörü yok",
-  "@noDismissedInsights": { "description": "Empty state for dismissed insights tab" },
+  "@noDismissedInsights": {
+    "description": "Empty state for dismissed insights tab"
+  },
   "noInsightsYet": "Henüz içgörü yok",
-  "@noInsightsYet": { "description": "Empty state title when no insights exist" },
+  "@noInsightsYet": {
+    "description": "Empty state title when no insights exist"
+  },
   "insightsEmptyDescription": "Veriler toplandıkça içgörüler burada görünecek",
-  "@insightsEmptyDescription": { "description": "Empty state description for insights" },
+  "@insightsEmptyDescription": {
+    "description": "Empty state description for insights"
+  },
   "dataCollectedProgress": "{collected}/{total} gün veri toplandı",
   "@dataCollectedProgress": {
     "description": "Progress text showing days of data collected",
     "placeholders": {
-      "collected": { "type": "int" },
-      "total": { "type": "int" }
+      "collected": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
     }
   },
   "errorLoadingInsights": "İçgörüler yüklenirken hata: {error}",
   "@errorLoadingInsights": {
     "description": "Error message when loading insights fails",
     "placeholders": {
-      "error": { "type": "Object" }
+      "error": {
+        "type": "Object"
+      }
     }
   },
   "errorLoadingDismissedInsights": "Reddedilen içgörüler yüklenirken hata: {error}",
   "@errorLoadingDismissedInsights": {
     "description": "Error message when loading dismissed insights fails",
     "placeholders": {
-      "error": { "type": "Object" }
+      "error": {
+        "type": "Object"
+      }
     }
   },
-
   "symptomHeadache": "Baş Ağrısı",
   "symptomNausea": "Mide Bulantısı",
   "symptomFatigue": "Yorgunluk",
@@ -789,7 +936,11 @@
   "symptomLoggedSuccess": "Semptom başarıyla kaydedildi",
   "errorLoggingSymptom": "Semptom kaydedilirken hata: {error}",
   "@errorLoggingSymptom": {
-    "placeholders": { "error": { "type": "Object" } }
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
   },
   "severityMild": "Hafif",
   "severityModerate": "Orta",
@@ -799,13 +950,21 @@
   "medicationNotFound": "İlaç bulunamadı",
   "errorLoadingMedication": "İlaç yüklenirken hata: {error}",
   "@errorLoadingMedication": {
-    "placeholders": { "error": { "type": "Object" } }
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
   },
   "medicationAddedSuccess": "İlaç başarıyla eklendi",
   "medicationUpdatedSuccess": "İlaç başarıyla güncellendi",
   "errorSavingMedication": "İlaç kaydedilirken hata: {error}",
   "@errorSavingMedication": {
-    "placeholders": { "error": { "type": "Object" } }
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
   },
   "addFirstMedicationButton": "İlk İlacı Ekle",
   "welcomeToHealth": "Sağlık'a Hoş Geldiniz!",
@@ -813,7 +972,11 @@
   "weeklyReport": "Haftalık Rapor",
   "errorLoadingReport": "Rapor yüklenirken hata: {error}",
   "@errorLoadingReport": {
-    "placeholders": { "error": { "type": "Object" } }
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
   },
   "taken": "Alındı",
   "missed": "Kaçırıldı",
@@ -833,13 +996,21 @@
   "myWeeklyReport": "VitalSynch haftalık raporum",
   "errorSharing": "Paylaşım hatası: {error}",
   "@errorSharing": {
-    "placeholders": { "error": { "type": "Object" } }
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
   },
   "weeklyReportData": "VitalSynch Haftalık Rapor Verileri",
   "reportExportedAsJSON": "Rapor JSON olarak dışa aktarıldı",
   "errorExporting": "Dışa aktarma hatası: {error}",
   "@errorExporting": {
-    "placeholders": { "error": { "type": "Object" } }
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
   },
   "wasThisInsightHelpful": "Bu içgörü faydalı mıydı?",
   "helpful": "Faydalı",
@@ -848,11 +1019,19 @@
   "thankYouForFeedback": "Geri bildiriminiz için teşekkürler!",
   "errorSubmittingFeedback": "Geri bildirim gönderilirken hata: {error}",
   "@errorSubmittingFeedback": {
-    "placeholders": { "error": { "type": "Object" } }
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
   },
   "errorDismissingInsight": "İçgörü kaldırılırken hata: {error}",
   "@errorDismissingInsight": {
-    "placeholders": { "error": { "type": "Object" } }
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
   },
   "privacyAndData": "Gizlilik ve Veriler",
   "restTimerSeconds": "saniye",
@@ -860,7 +1039,11 @@
   "achievementUnlocked": "Başarım Açıldı!",
   "errorGeneric": "Hata: {error}",
   "@errorGeneric": {
-    "placeholders": { "error": { "type": "Object" } }
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
   },
   "healthSummary": "Sağlık Özeti",
   "fitnessSummary": "Fitness Özeti",
@@ -868,58 +1051,104 @@
   "keepUpGreatWork": "Harika gidiyorsun, devam et!",
   "vsLastWeekPercent": "%{percent} geçen haftaya göre",
   "@vsLastWeekPercent": {
-    "placeholders": { "percent": { "type": "String" } }
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      }
+    }
   },
   "mostMissed": "En çok kaçırılan: {timeSlot}",
   "@mostMissed": {
-    "placeholders": { "timeSlot": { "type": "String" } }
+    "placeholders": {
+      "timeSlot": {
+        "type": "String"
+      }
+    }
   },
   "bestWorkout": "En iyi antrenman: {name} — {volume}kg",
   "@bestWorkout": {
-    "placeholders": { "name": { "type": "String" }, "volume": { "type": "String" } }
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "volume": {
+        "type": "String"
+      }
+    }
   },
   "newPersonalRecords": "Yeni Kişisel Rekorlar",
   "validUntilDays": "{days} gün geçerli",
   "@validUntilDays": {
-    "placeholders": { "days": { "type": "int" } }
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
   },
   "validUntilHours": "{hours} saat geçerli",
   "@validUntilHours": {
-    "placeholders": { "hours": { "type": "int" } }
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
   },
   "validUntilSoon": "Yakında sona erecek",
   "takeAction": "Harekete Geç",
   "errorLoadingInsight": "İçgörü yüklenirken hata: {error}",
   "@errorLoadingInsight": {
-    "placeholders": { "error": { "type": "Object" } }
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
   },
   "today": "Bugün",
   "yesterday": "Dün",
   "daysAgo": "{days} gün önce",
   "@daysAgo": {
-    "placeholders": { "days": { "type": "int" } }
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
   },
   "weeksAgo": "{weeks}h önce",
   "@weeksAgo": {
-    "placeholders": { "weeks": { "type": "int" } }
+    "placeholders": {
+      "weeks": {
+        "type": "int"
+      }
+    }
   },
   "monthsAgo": "{months}ay önce",
   "@monthsAgo": {
-    "placeholders": { "months": { "type": "int" } }
+    "placeholders": {
+      "months": {
+        "type": "int"
+      }
+    }
   },
   "loading": "Yükleniyor...",
   "errorAddingSet": "Set eklenirken hata: {error}",
   "@errorAddingSet": {
-    "placeholders": { "error": { "type": "Object" } }
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
   },
   "chartError": "Grafik Hatası",
   "shareFunctionalityComingSoon": "Paylaşım özelliği yakında!",
   "severityLabel": "Şiddet: {severity}",
   "@severityLabel": {
-    "placeholders": { "severity": { "type": "int" } }
+    "placeholders": {
+      "severity": {
+        "type": "int"
+      }
+    }
   },
   "errorLoadingCalendar": "Takvim yüklenirken hata",
-
   "createTemplate": "Şablon Oluştur",
   "createFirstTemplate": "Hızlıca antrenman başlatmak için ilk şablonunu oluştur",
   "templateSaved": "Şablon kaydedildi",
@@ -928,7 +1157,6 @@
   "shareAsStory": "Story Formatı",
   "shareAsCompact": "Kompakt Kart",
   "exportAsJson": "JSON Dışa Aktar",
-  "shareWorkout": "Antrenmanı Paylaş",
   "trackedWithVitalSync": "VitalSync ile takip edildi",
   "biometricLogin": "Biyometrik Giriş",
   "biometricLoginDescription": "Hızlı giriş için parmak izi veya yüz tanıma kullan",
@@ -939,5 +1167,99 @@
   "invalidEmail": "Lütfen geçerli bir e-posta adresi girin",
   "enterValidWeightAndReps": "Lütfen geçerli ağırlık ve tekrar sayısı girin",
   "weightOutOfRange": "Ağırlık 0–999 kg arasında olmalıdır",
-  "repsOutOfRange": "Tekrar sayısı 1–999 arasında olmalıdır"
+  "repsOutOfRange": "Tekrar sayısı 1–999 arasında olmalıdır",
+  "noExercises": "Bu antrenmanda egzersiz yok",
+  "editProfile": "Profili Düzenle",
+  "userNotFound": "Kullanıcı bulunamadı",
+  "personalInformation": "Kişisel Bilgiler",
+  "fullName": "Ad Soyad",
+  "enterFullName": "Lütfen adınızı girin",
+  "dateOfBirth": "Doğum Tarihi",
+  "selectDate": "Tarih Seç",
+  "gender": "Cinsiyet",
+  "genderMale": "Erkek",
+  "genderFemale": "Kadın",
+  "genderOther": "Diğer",
+  "genderPreferNotToSay": "Belirtmek istemiyorum",
+  "emergencyContact": "Acil Durum Kişisi",
+  "contactName": "Kişi Adı",
+  "phoneNumber": "Telefon Numarası",
+  "saveChanges": "Değişiklikleri Kaydet",
+  "profileUpdatedSuccess": "Profil başarıyla güncellendi",
+  "profileUpdateError": "Profil güncellenirken hata: {error}",
+  "settingsTitle": "Ayarlar",
+  "appearance": "Görünüm",
+  "materialYou": "Material You",
+  "materialYouSubtitle": "Duvar kâğıdından dinamik renkleri kullan",
+  "languageEn": "English",
+  "languageTr": "Türkçe",
+  "languageDe": "Deutsch",
+  "notifications": "Bildirimler",
+  "enableNotifications": "Bildirimleri Etkinleştir",
+  "units": "Birimler",
+  "unitSystem": "Birim Sistemi",
+  "unitMetric": "Metrik (kg, cm)",
+  "unitImperial": "Emperyal (lbs, in)",
+  "privacyData": "Gizlilik ve Veri",
+  "manageConsents": "İzinleri Yönet",
+  "manageConsentsSubtitle": "GDPR gizlilik tercihlerinizi güncelleyin",
+  "exportData": "Verileri Dışa Aktar",
+  "exportDataSubtitle": "Verilerinizin bir kopyasını indirin",
+  "deleteAccount": "Hesabı Sil",
+  "deleteAccountSubtitle": "Hesabınızı ve verilerinizi kalıcı olarak silin",
+  "sync": "Senkronizasyon",
+  "syncStatus": "Senkronizasyon Durumu",
+  "syncIdle": "Yakın zamanda senkronize edildi",
+  "syncError": "Senkronizasyon başarısız. Yeniden denemek için dokunun.",
+  "syncNow": "Şimdi Senkronize Et",
+  "about": "Hakkında",
+  "version": "Sürüm",
+  "licenses": "Açık Kaynak Lisansları",
+  "exportStarted": "Dışa aktarma başladı...",
+  "deleteAccountDialogTitle": "Hesap silinsin mi?",
+  "deleteAccountDialogMessage": "Bu işlem geri alınamaz. Tüm verileriniz kalıcı olarak silinecek.",
+  "deleteAccountRequested": "Hesap silme talebi alındı.",
+  "deleteAccountOnlineRequired": "Hesabınızı silmek için çevrimiçi olmanız gerekir. Lütfen internete bağlanıp tekrar deneyin.",
+  "deleteAccountFailed": "Hesap silme başarısız oldu. Verileriniz silinmedi. Lütfen tekrar deneyin.",
+  "defaultUser": "Kullanıcı",
+  "noEmail": "E-posta yok",
+  "errorLoadingProfile": "Profil yüklenirken hata: {error}",
+  "logOut": "Çıkış Yap",
+  "workouts": "Antrenmanlar",
+  "welcomeTitle": "VitalSynch'e Hoş Geldiniz",
+  "welcomeSubtitle": "Sağlığınızı ve fitness'ınızı tek bir yerden yönetin.",
+  "personalizationTitle": "Sizin için en önemli olan ne?",
+  "interestMedication": "İlaç Takibi",
+  "interestFitness": "Fitness ve Antrenman",
+  "interestInsights": "Akıllı İçgörüler",
+  "interestAnalysis": "İlerleme Analizi",
+  "quickSetupTitle": "Hızlı Kurulum",
+  "quickSetupSubtitle": "İlk öğenizi ekleyerek hızlı bir başlangıç yapın.",
+  "quickAddMedication": "İlaç Ekle",
+  "quickAddMedicationSubtitle": "Ad ve saati hızlıca ayarlayın",
+  "quickPickTemplate": "Antrenman Şablonu Seç",
+  "quickPickTemplateSubtitle": "Popüler rutinlerden seçin",
+  "privacyTitle": "Gizliliğiniz Önemli",
+  "privacySubtitle": "Şeffaflığa inanıyoruz. Lütfen verilerinizin nasıl işlendiğini inceleyin ve yönetin.",
+  "consentHealthTitle": "Sağlık Verisi İşleme",
+  "consentHealthDescription": "İlaçları ve semptomları yerel olarak takip etmek için gereklidir.",
+  "consentFitnessTitle": "Fitness Verisi İşleme",
+  "consentFitnessDescription": "Antrenmanları kaydetmek ve ilerlemeyi yerel olarak izlemek için gereklidir.",
+  "consentAnalyticsTitle": "Analitik ve Kullanım",
+  "consentAnalyticsDescription": "Anonim kullanım verilerini paylaşarak VitalSynch'i geliştirmemize yardımcı olun.",
+  "consentBackupTitle": "Bulut Yedekleme",
+  "consentBackupDescription": "Verilerinizi kaybetmemek için bulutta güvenle yedekleyin.",
+  "readPrivacyPolicy": "Gizlilik Politikasının Tamamını Oku",
+  "linkOpenError": "Bağlantı açılamadı. Lütfen daha sonra tekrar deneyin.",
+  "privacyPolicy": "Gizlilik Politikası",
+  "privacyPolicySubtitle": "Verilerinizi nasıl topladığımız ve kullandığımız",
+  "termsOfService": "Kullanım Koşulları",
+  "termsOfServiceSubtitle": "Uygulamayı kullanarak kabul ettiğiniz koşullar",
+  "support": "Destek",
+  "supportSubtitle": "Yardım alın ve bizimle iletişime geçin",
+  "acceptContinue": "Kabul Et ve Devam Et",
+  "requiredTag": "GEREKLİ",
+  "consentRequiredMessage": "Bu, {module} modülünün çalışması için gereklidir.",
+  "medicationFollowUpTitle": "İlacını aldın mı?",
+  "medicationFollowUpBody": "{name} ilacını aldın mı? Kaydetmeyi unutma."
 }

@@ -7,6 +7,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../../../core/l10n/app_localizations.dart';
+
 /// A circular countdown timer for rest periods between sets.
 ///
 /// Features:
@@ -109,6 +111,7 @@ class _RestTimerWidgetState extends State<RestTimerWidget> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
     final progress = _remainingSeconds / widget.durationSeconds;
     final timerColor = _getTimerColor();
 
@@ -145,7 +148,7 @@ class _RestTimerWidgetState extends State<RestTimerWidget> {
                       fontFeatures: [const FontFeature.tabularFigures()],
                     ),
                   ),
-                  Text('seconds', style: theme.textTheme.bodySmall),
+                  Text(l10n.restTimerSeconds, style: theme.textTheme.bodySmall),
                 ],
               ),
             ],
@@ -153,7 +156,7 @@ class _RestTimerWidgetState extends State<RestTimerWidget> {
         ),
         const SizedBox(height: 16),
         // Skip button
-        TextButton(onPressed: _handleSkip, child: const Text('Skip Rest')),
+        TextButton(onPressed: _handleSkip, child: Text(l10n.skipRest)),
       ],
     );
   }

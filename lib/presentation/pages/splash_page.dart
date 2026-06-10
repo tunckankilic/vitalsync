@@ -10,7 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../core/constants/app_constants.dart';
 import '../../core/di/injection_container.dart';
-import '../../core/gdpr/gdpr_manager.dart';
+import '../../core/l10n/app_localizations.dart';
 import '../../domain/repositories/shared/auth_repository.dart';
 import '../../main.dart' show appInitError;
 
@@ -60,30 +60,36 @@ class _SplashPageState extends ConsumerState<SplashPage> {
         return;
       }
 
-      // 2. Check GDPR consent
-      final gdprManager = getIt<GDPRManager>();
-      final hasGdprConsent = gdprManager.hasConsent(
-        AppConstants.gdprConsentTypeAnalytics,
-      );
+      // 2. Check authentication first.
+      //
+      // An already-signed-in user always goes straight to the dashboard.
+      // Gating onboarding ahead of this check would trap an authenticated user
+      // on the onboarding flow whenever the onboarding-completed flag is unset
+      // (e.g. they signed in before the flag was ever written).
+      final authRepo = getIt<AuthRepository>();
+      final isAuthenticated = authRepo.currentUser != null;
 
-      if (!hasGdprConsent) {
-        // Navigate to GDPR consent screen
-        if (mounted) context.go('/gdpr-consent');
+      if (isAuthenticated) {
+        if (mounted) context.go('/dashboard');
         return;
       }
 
-      // 3. Check authentication status
-      final authRepo = getIt<AuthRepository>();
-      final currentUser = authRepo.currentUser;
+      // 3. Not signed in — make sure onboarding has been completed before
+      // showing login. Onboarding is where GDPR consent is collected AND
+      // persisted (via GDPRManager). We gate on the onboarding-completed flag
+      // rather than on a single optional consent (e.g. analytics): the
+      // standalone /gdpr-consent route has no exit affordance, and gating on an
+      // optional consent would loop the user back here forever if they declined
+      // it. Funnel anyone who hasn't finished onboarding through that flow.
+      final onboardingCompleted =
+          prefs.getBool(AppConstants.prefKeyOnboardingCompleted) ?? false;
 
       if (!mounted) return;
 
-      if (currentUser != null) {
-        // User is authenticated, go to dashboard
-        context.go('/dashboard');
-      } else {
-        // User is not authenticated, go to login
+      if (onboardingCompleted) {
         context.go('/auth/login');
+      } else {
+        context.go('/onboarding');
       }
     } catch (e) {
       // On error, default to login screen
@@ -92,22 +98,20 @@ class _SplashPageState extends ConsumerState<SplashPage> {
   }
 
   void _showInitErrorDialog(Object error) {
+    final l10n = AppLocalizations.of(context);
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (ctx) => AlertDialog(
-        title: const Text('Initialization Error'),
-        content: Text(
-          'The app could not start properly. Please check your internet '
-          'connection and try again.\n\nDetails: $error',
-        ),
+        title: Text(l10n.initializationError),
+        content: Text(l10n.initializationErrorBody(error)),
         actions: [
           TextButton(
             onPressed: () {
               Navigator.pop(ctx);
               context.go('/auth/login');
             },
-            child: const Text('Continue Anyway'),
+            child: Text(l10n.continueAnyway),
           ),
         ],
       ),

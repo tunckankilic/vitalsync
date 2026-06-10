@@ -10,7 +10,6 @@ environment:
   sdk: ^3.10.7
 
 dependencies:
-  amplify_analytics_pinpoint: ^2.0.0
   amplify_api: ^2.0.0
   amplify_auth_cognito: ^2.0.0
   amplify_flutter: ^2.0.0
@@ -24,7 +23,7 @@ dependencies:
   fl_chart: ^1.1.1
   flutter:
     sdk: flutter
-  flutter_local_notifications: ^21.0.0
+  flutter_local_notifications: ^22.0.0
   flutter_localizations:
     sdk: flutter
   flutter_riverpod: ^3.2.1
@@ -55,7 +54,8 @@ dependencies:
   flutter_secure_storage: ^10.3.1
   sign_in_with_apple: ^8.1.0
   local_auth: ^3.0.1
-  sentry_flutter: ^8.14.2
+  sentry_flutter: ^9.21.0
+  url_launcher: ^6.3.2
 
 dev_dependencies:
   bloc_test: ^10.0.0
@@ -75,6 +75,28 @@ dev_dependencies:
   mocktail: ^1.0.4
   riverpod_generator: ^4.0.3
 
+  # --- Crash reporting (release symbol upload) ---
+  # Uploads the Dart obfuscation symbols (--split-debug-info) and the iOS
+  # dSYMs to Sentry so release crash stacks deobfuscate. Configured by the
+  # `sentry:` block below. Run with `dart run sentry_dart_plugin` after a build.
+  sentry_dart_plugin: ^3.4.0
+
 flutter:
   uses-material-design: true
   generate: true
+
+# Sentry symbol-upload configuration (sentry_dart_plugin).
+#
+# Secrets are NEVER stored here. The plugin reads them from the environment:
+#   SENTRY_AUTH_TOKEN  — auth token (required; from env/CI secret)
+#   SENTRY_ORG         — Sentry organization slug
+#   SENTRY_PROJECT     — Sentry project slug
+# release/dist are auto-detected by sentry_flutter from the native build
+# (CFBundleShortVersionString + CFBundleVersion), so they match what runs on
+# device — nothing to set here.
+sentry:
+  upload_debug_symbols: true   # Dart obfuscation symbols + native dSYMs
+  upload_sources: false        # health app: never ship source context
+  upload_source_maps: false    # native iOS/Android build, no web maps
+  symbols_path: build/symbols  # must match --split-debug-info=build/symbols
+  # org/project/auth_token intentionally omitted — supplied via env vars above.

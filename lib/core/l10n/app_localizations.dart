@@ -100,6 +100,72 @@ abstract class AppLocalizations {
     Locale('tr'),
   ];
 
+  /// Dashboard health score card title
+  ///
+  /// In en, this message translates to:
+  /// **'Health score'**
+  String get healthScore;
+
+  /// Dashboard streak stat label
+  ///
+  /// In en, this message translates to:
+  /// **'Day streak'**
+  String get dayStreak;
+
+  /// Dashboard today's medications card title
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s medications'**
+  String get todayMedications;
+
+  /// Ratio of medication doses taken today
+  ///
+  /// In en, this message translates to:
+  /// **'{taken}/{total} taken'**
+  String dosesTakenRatio(int taken, int total);
+
+  /// Caption under the dashboard health score
+  ///
+  /// In en, this message translates to:
+  /// **'{percent}% — 7-day medication compliance'**
+  String healthScoreCaption(int percent);
+
+  /// Empty state for today's medications
+  ///
+  /// In en, this message translates to:
+  /// **'No medications scheduled for today.'**
+  String get noMedicationsToday;
+
+  /// Dashboard load error title
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load dashboard'**
+  String get dashboardLoadError;
+
+  /// Hint to pull-to-refresh after an error
+  ///
+  /// In en, this message translates to:
+  /// **'Pull down to retry.'**
+  String get pullToRetry;
+
+  /// Splash init error dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Initialization Error'**
+  String get initializationError;
+
+  /// Splash init error dialog body
+  ///
+  /// In en, this message translates to:
+  /// **'The app could not start properly. Please check your internet connection and try again.\n\nDetails: {error}'**
+  String initializationErrorBody(Object error);
+
+  /// Splash init error continue button
+  ///
+  /// In en, this message translates to:
+  /// **'Continue Anyway'**
+  String get continueAnyway;
+
   /// Application title
   ///
   /// In en, this message translates to:
@@ -1708,6 +1774,18 @@ abstract class AppLocalizations {
   /// **'Account deletion requested.'**
   String get deleteAccountRequested;
 
+  /// Shown when the user tries to delete their account while offline
+  ///
+  /// In en, this message translates to:
+  /// **'You must be online to delete your account. Please connect to the internet and try again.'**
+  String get deleteAccountOnlineRequired;
+
+  /// Shown when account deletion fails
+  ///
+  /// In en, this message translates to:
+  /// **'Account deletion failed. Your data was not deleted. Please try again.'**
+  String get deleteAccountFailed;
+
   /// Default user name
   ///
   /// In en, this message translates to:
@@ -1893,6 +1971,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Read Full Privacy Policy'**
   String get readPrivacyPolicy;
+
+  /// Shown when an external link (e.g. privacy policy) fails to open
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t open the link. Please try again later.'**
+  String get linkOpenError;
+
+  /// Privacy policy settings tile title
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy Policy'**
+  String get privacyPolicy;
+
+  /// Privacy policy settings tile subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'How we collect and use your data'**
+  String get privacyPolicySubtitle;
+
+  /// Terms of service settings tile title
+  ///
+  /// In en, this message translates to:
+  /// **'Terms of Service'**
+  String get termsOfService;
+
+  /// Terms of service settings tile subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'The terms you agree to by using the app'**
+  String get termsOfServiceSubtitle;
+
+  /// Support settings tile title
+  ///
+  /// In en, this message translates to:
+  /// **'Support'**
+  String get support;
+
+  /// Support settings tile subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Get help and contact us'**
+  String get supportSubtitle;
 
   /// Accept and continue button
   ///
@@ -2278,10 +2398,10 @@ abstract class AppLocalizations {
   /// **'Volume Chart'**
   String get volumeChart;
 
-  /// Chart placeholder message
+  /// Empty state shown when a chart has no data yet
   ///
   /// In en, this message translates to:
-  /// **'Chart coming soon'**
+  /// **'No workout data yet — log a workout to see your progress'**
   String get chartComingSoon;
 
   /// Summary section title
@@ -2979,6 +3099,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Reps must be between 1 and 999'**
   String get repsOutOfRange;
+
+  /// Title of the follow-up notification asking the user to log a dose
+  ///
+  /// In en, this message translates to:
+  /// **'Did you take your medication?'**
+  String get medicationFollowUpTitle;
+
+  /// Body of the follow-up notification asking the user to log a dose
+  ///
+  /// In en, this message translates to:
+  /// **'Did you take {name}? Don\'t forget to log it.'**
+  String medicationFollowUpBody(String name);
 }
 
 class _AppLocalizationsDelegate

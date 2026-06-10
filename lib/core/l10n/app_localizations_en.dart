@@ -9,6 +9,45 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
+  String get healthScore => 'Health score';
+
+  @override
+  String get dayStreak => 'Day streak';
+
+  @override
+  String get todayMedications => 'Today\'s medications';
+
+  @override
+  String dosesTakenRatio(int taken, int total) {
+    return '$taken/$total taken';
+  }
+
+  @override
+  String healthScoreCaption(int percent) {
+    return '$percent% — 7-day medication compliance';
+  }
+
+  @override
+  String get noMedicationsToday => 'No medications scheduled for today.';
+
+  @override
+  String get dashboardLoadError => 'Could not load dashboard';
+
+  @override
+  String get pullToRetry => 'Pull down to retry.';
+
+  @override
+  String get initializationError => 'Initialization Error';
+
+  @override
+  String initializationErrorBody(Object error) {
+    return 'The app could not start properly. Please check your internet connection and try again.\n\nDetails: $error';
+  }
+
+  @override
+  String get continueAnyway => 'Continue Anyway';
+
+  @override
   String get appTitle => 'VitalSynch';
 
   @override
@@ -842,6 +881,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get deleteAccountRequested => 'Account deletion requested.';
 
   @override
+  String get deleteAccountOnlineRequired =>
+      'You must be online to delete your account. Please connect to the internet and try again.';
+
+  @override
+  String get deleteAccountFailed =>
+      'Account deletion failed. Your data was not deleted. Please try again.';
+
+  @override
   String get defaultUser => 'User';
 
   @override
@@ -941,6 +988,29 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get readPrivacyPolicy => 'Read Full Privacy Policy';
+
+  @override
+  String get linkOpenError =>
+      'Couldn\'t open the link. Please try again later.';
+
+  @override
+  String get privacyPolicy => 'Privacy Policy';
+
+  @override
+  String get privacyPolicySubtitle => 'How we collect and use your data';
+
+  @override
+  String get termsOfService => 'Terms of Service';
+
+  @override
+  String get termsOfServiceSubtitle =>
+      'The terms you agree to by using the app';
+
+  @override
+  String get support => 'Support';
+
+  @override
+  String get supportSubtitle => 'Get help and contact us';
 
   @override
   String get acceptContinue => 'Accept & Continue';
@@ -1162,7 +1232,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get volumeChart => 'Volume Chart';
 
   @override
-  String get chartComingSoon => 'Chart coming soon';
+  String get chartComingSoon =>
+      'No workout data yet — log a workout to see your progress';
 
   @override
   String get summary => 'Summary';
@@ -1561,4 +1632,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get repsOutOfRange => 'Reps must be between 1 and 999';
+
+  @override
+  String get medicationFollowUpTitle => 'Did you take your medication?';
+
+  @override
+  String medicationFollowUpBody(String name) {
+    return 'Did you take $name? Don\'t forget to log it.';
+  }
 }

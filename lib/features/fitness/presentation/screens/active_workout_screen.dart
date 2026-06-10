@@ -211,10 +211,6 @@ class _ActiveWorkoutScreenState extends ConsumerState<ActiveWorkoutScreen> {
                 .where((s) => s.exerciseId == currentExercise.id)
                 .toList();
 
-            // Calculate previous sets string (Mock for now or fetch from history)
-            // Ideally we need a provider for "previous session sets for exercise"
-            final previousSetsStr = l10n.loading; // Placeholder
-
             return Column(
               children: [
                 // Current Exercise Card
@@ -231,7 +227,6 @@ class _ActiveWorkoutScreenState extends ConsumerState<ActiveWorkoutScreen> {
                               .toString()
                               .split('.')
                               .last, // Simple enum string
-                          previousSets: previousSetsStr,
                         ),
                         const SizedBox(height: 24),
 
@@ -406,18 +401,15 @@ class _CurrentExerciseCard extends StatelessWidget {
     required this.exerciseName,
     required this.muscleGroup,
     required this.equipment,
-    required this.previousSets,
   });
 
   final String exerciseName;
   final String muscleGroup;
   final String equipment;
-  final String previousSets;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context);
 
     return GlassmorphicCard(
       child: Column(
@@ -442,13 +434,6 @@ class _CurrentExerciseCard extends StatelessWidget {
                 visualDensity: VisualDensity.compact,
               ),
             ],
-          ),
-          const SizedBox(height: 12),
-          Text(
-            '${l10n.previousSession}: $previousSets',
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: theme.colorScheme.outline,
-            ),
           ),
         ],
       ),

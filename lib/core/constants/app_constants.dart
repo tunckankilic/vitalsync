@@ -382,6 +382,10 @@ abstract class AppConstants {
   /// Snooze duration for medication reminders (minutes)
   static const int snoozeDurationMinutes = 15;
 
+  /// Grace period after a scheduled dose before the follow-up
+  /// "did you log it?" notification fires (minutes)
+  static const int medicationFollowUpGraceMinutes = 30;
+
   /// Daily summary notification hour (24h)
   static const int dailySummaryHour = 21;
 

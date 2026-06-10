@@ -10,7 +10,6 @@
 library;
 
 import 'dart:convert';
-import 'dart:developer' show log;
 
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -18,6 +17,7 @@ import '../../data/local/database.dart';
 import '../../domain/models/app_user.dart';
 import '../../domain/repositories/shared/auth_repository.dart';
 import '../constants/app_constants.dart';
+import '../errors/exceptions.dart';
 import '../sync/cloud_sync_client.dart';
 
 /// GDPR Compliance Manager for VitalSync.
@@ -200,51 +200,59 @@ class GDPRManager {
 
   // DATA DELETION (Right to be Forgotten)
 
-  /// Deletes all user data (local and cloud).
+  /// Deletes all user data, locally and in the cloud, then deletes the account.
   ///
-  /// This fulfills the GDPR right to erasure (Article 17).
+  /// This fulfills the GDPR right to erasure (Article 17) and Apple's in-app
+  /// account-deletion requirement (App Store Guideline 5.1.1(v)).
   ///
-  /// Steps:
-  /// 1. Delete all local data from Drift database
-  /// 2. Delete all cloud user data via CloudSyncClient
-  /// 3. Delete auth account via AuthRepository
-  /// 4. Clear all SharedPreferences
-  ///
-  /// Note: This method requires access to the repository layer.
-  /// The actual implementation should be completed in the UserRepository.
+  /// Order matters and is deliberate:
+  /// 1. Delete the cloud (DynamoDB) data **first**, while the auth session is
+  ///    still valid. If this fails (typically: offline / server error) the
+  ///    whole operation aborts with an [AccountDeletionException] and nothing
+  ///    local is touched — we must never delete the account while server-side
+  ///    health data remains, because that orphans the data with no way to
+  ///    retry. Callers are expected to require connectivity up front and to
+  ///    surface this failure to the user.
+  /// 2. Clear the local Drift database.
+  /// 3. Clear all SharedPreferences (consents, settings, onboarding flag).
+  /// 4. Delete the auth account **last** — this invalidates the session and
+  ///    fires the `userDeleted` event that drives the app back to login.
   Future<void> deleteAllUserData() async {
     final user = _auth.currentUser;
     if (user == null) {
-      throw Exception('No authenticated user for data deletion');
+      throw const AccountDeletionException(
+        'No authenticated user for data deletion',
+      );
     }
 
-    // Step 1 & 2: These should be handled by UserRepository
-    // which has access to the database and all collections
-
-    // Step 3: Delete cloud user data
+    // Step 1: Delete cloud user data (must succeed before anything destructive).
+    const collections = [
+      'medications',
+      'medication_logs',
+      'symptoms',
+      'workout_sessions',
+      'achievements',
+      'insights',
+    ];
     try {
-      final collections = [
-        'medications',
-        'medication_logs',
-        'symptoms',
-        'workout_sessions',
-        'achievements',
-        'insights',
-      ];
-
       await _cloudClient.deleteAllUserData(
         userId: user.id,
         collections: collections,
       );
     } catch (e) {
-      // Log error but continue with deletion process
-      log('Error deleting cloud data: $e');
+      throw AccountDeletionException(
+        'Cloud data deletion failed; account deletion aborted.',
+        cause: e,
+      );
     }
 
-    // Step 4: Clear SharedPreferences
+    // Step 2: Clear the local database.
+    await _database.deleteAllData();
+
+    // Step 3: Clear SharedPreferences.
     await _prefs.clear();
 
-    // Step 5: Delete auth account (must be last)
+    // Step 4: Delete the auth account (must be last).
     await _auth.deleteAccount();
   }
 

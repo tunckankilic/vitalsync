@@ -9,6 +9,45 @@ class AppLocalizationsTr extends AppLocalizations {
   AppLocalizationsTr([String locale = 'tr']) : super(locale);
 
   @override
+  String get healthScore => 'Sağlık skoru';
+
+  @override
+  String get dayStreak => 'Gün serisi';
+
+  @override
+  String get todayMedications => 'Bugünün ilaçları';
+
+  @override
+  String dosesTakenRatio(int taken, int total) {
+    return '$taken/$total alındı';
+  }
+
+  @override
+  String healthScoreCaption(int percent) {
+    return '%$percent — 7 günlük ilaç uyumu';
+  }
+
+  @override
+  String get noMedicationsToday => 'Bugün için planlanmış ilaç yok.';
+
+  @override
+  String get dashboardLoadError => 'Panel yüklenemedi';
+
+  @override
+  String get pullToRetry => 'Yenilemek için aşağı çekin.';
+
+  @override
+  String get initializationError => 'Başlatma Hatası';
+
+  @override
+  String initializationErrorBody(Object error) {
+    return 'Uygulama düzgün başlatılamadı. Lütfen internet bağlantınızı kontrol edip tekrar deneyin.\n\nAyrıntılar: $error';
+  }
+
+  @override
+  String get continueAnyway => 'Yine de Devam Et';
+
+  @override
   String get appTitle => 'VitalSynch';
 
   @override
@@ -664,7 +703,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get min => 'dk';
 
   @override
-  String get noExercises => 'No exercises in this workout';
+  String get noExercises => 'Bu antrenmanda egzersiz yok';
 
   @override
   String get muscleGroup => 'Kas Grubu';
@@ -676,66 +715,66 @@ class AppLocalizationsTr extends AppLocalizations {
   String get exerciseAdded => 'Egzersiz başarıyla eklendi';
 
   @override
-  String get editProfile => 'Edit Profile';
+  String get editProfile => 'Profili Düzenle';
 
   @override
-  String get userNotFound => 'User not found';
+  String get userNotFound => 'Kullanıcı bulunamadı';
 
   @override
-  String get personalInformation => 'Personal Information';
+  String get personalInformation => 'Kişisel Bilgiler';
 
   @override
-  String get fullName => 'Full Name';
+  String get fullName => 'Ad Soyad';
 
   @override
-  String get enterFullName => 'Please enter your name';
+  String get enterFullName => 'Lütfen adınızı girin';
 
   @override
-  String get dateOfBirth => 'Date of Birth';
+  String get dateOfBirth => 'Doğum Tarihi';
 
   @override
-  String get selectDate => 'Select Date';
+  String get selectDate => 'Tarih Seç';
 
   @override
-  String get gender => 'Gender';
+  String get gender => 'Cinsiyet';
 
   @override
-  String get genderMale => 'Male';
+  String get genderMale => 'Erkek';
 
   @override
-  String get genderFemale => 'Female';
+  String get genderFemale => 'Kadın';
 
   @override
-  String get genderOther => 'Other';
+  String get genderOther => 'Diğer';
 
   @override
-  String get genderPreferNotToSay => 'Prefer not to say';
+  String get genderPreferNotToSay => 'Belirtmek istemiyorum';
 
   @override
-  String get emergencyContact => 'Emergency Contact';
+  String get emergencyContact => 'Acil Durum Kişisi';
 
   @override
-  String get contactName => 'Contact Name';
+  String get contactName => 'Kişi Adı';
 
   @override
-  String get phoneNumber => 'Phone Number';
+  String get phoneNumber => 'Telefon Numarası';
 
   @override
-  String get saveChanges => 'Save Changes';
+  String get saveChanges => 'Değişiklikleri Kaydet';
 
   @override
-  String get profileUpdatedSuccess => 'Profile updated successfully';
+  String get profileUpdatedSuccess => 'Profil başarıyla güncellendi';
 
   @override
   String profileUpdateError(Object error) {
-    return 'Error updating profile: $error';
+    return 'Profil güncellenirken hata: $error';
   }
 
   @override
-  String get settingsTitle => 'Settings';
+  String get settingsTitle => 'Ayarlar';
 
   @override
-  String get appearance => 'Appearance';
+  String get appearance => 'Görünüm';
 
   @override
   String get theme => 'Tema';
@@ -753,7 +792,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get materialYou => 'Material You';
 
   @override
-  String get materialYouSubtitle => 'Use dynamic colors from wallpaper';
+  String get materialYouSubtitle => 'Duvar kâğıdından dinamik renkleri kullan';
 
   @override
   String get language => 'Dil';
@@ -768,98 +807,108 @@ class AppLocalizationsTr extends AppLocalizations {
   String get languageDe => 'Deutsch';
 
   @override
-  String get notifications => 'Notifications';
+  String get notifications => 'Bildirimler';
 
   @override
-  String get enableNotifications => 'Enable Notifications';
+  String get enableNotifications => 'Bildirimleri Etkinleştir';
 
   @override
-  String get units => 'Units';
+  String get units => 'Birimler';
 
   @override
-  String get unitSystem => 'Unit System';
+  String get unitSystem => 'Birim Sistemi';
 
   @override
-  String get unitMetric => 'Metric (kg, cm)';
+  String get unitMetric => 'Metrik (kg, cm)';
 
   @override
-  String get unitImperial => 'Imperial (lbs, in)';
+  String get unitImperial => 'Emperyal (lbs, in)';
 
   @override
-  String get privacyData => 'Privacy & Data';
+  String get privacyData => 'Gizlilik ve Veri';
 
   @override
-  String get manageConsents => 'Manage Consents';
+  String get manageConsents => 'İzinleri Yönet';
 
   @override
-  String get manageConsentsSubtitle => 'Update your GDPR privacy choices';
+  String get manageConsentsSubtitle =>
+      'GDPR gizlilik tercihlerinizi güncelleyin';
 
   @override
-  String get exportData => 'Export Data';
+  String get exportData => 'Verileri Dışa Aktar';
 
   @override
-  String get exportDataSubtitle => 'Download a copy of your data';
+  String get exportDataSubtitle => 'Verilerinizin bir kopyasını indirin';
 
   @override
-  String get deleteAccount => 'Delete Account';
+  String get deleteAccount => 'Hesabı Sil';
 
   @override
   String get deleteAccountSubtitle =>
-      'Permanently delete your account and data';
+      'Hesabınızı ve verilerinizi kalıcı olarak silin';
 
   @override
-  String get sync => 'Sync';
+  String get sync => 'Senkronizasyon';
 
   @override
-  String get syncStatus => 'Sync Status';
+  String get syncStatus => 'Senkronizasyon Durumu';
 
   @override
-  String get syncIdle => 'Last synced recently';
+  String get syncIdle => 'Yakın zamanda senkronize edildi';
 
   @override
-  String get syncError => 'Sync failed. Tap to retry.';
+  String get syncError =>
+      'Senkronizasyon başarısız. Yeniden denemek için dokunun.';
 
   @override
-  String get syncNow => 'Sync Now';
+  String get syncNow => 'Şimdi Senkronize Et';
 
   @override
-  String get about => 'About';
+  String get about => 'Hakkında';
 
   @override
-  String get version => 'Version';
+  String get version => 'Sürüm';
 
   @override
-  String get licenses => 'Open Source Licenses';
+  String get licenses => 'Açık Kaynak Lisansları';
 
   @override
-  String get exportStarted => 'Export started...';
+  String get exportStarted => 'Dışa aktarma başladı...';
 
   @override
-  String get deleteAccountDialogTitle => 'Delete Account?';
+  String get deleteAccountDialogTitle => 'Hesap silinsin mi?';
 
   @override
   String get deleteAccountDialogMessage =>
-      'This action cannot be undone. All your data will be permanently deleted.';
+      'Bu işlem geri alınamaz. Tüm verileriniz kalıcı olarak silinecek.';
 
   @override
-  String get deleteAccountRequested => 'Account deletion requested.';
+  String get deleteAccountRequested => 'Hesap silme talebi alındı.';
 
   @override
-  String get defaultUser => 'User';
+  String get deleteAccountOnlineRequired =>
+      'Hesabınızı silmek için çevrimiçi olmanız gerekir. Lütfen internete bağlanıp tekrar deneyin.';
 
   @override
-  String get noEmail => 'No email';
+  String get deleteAccountFailed =>
+      'Hesap silme başarısız oldu. Verileriniz silinmedi. Lütfen tekrar deneyin.';
+
+  @override
+  String get defaultUser => 'Kullanıcı';
+
+  @override
+  String get noEmail => 'E-posta yok';
 
   @override
   String errorLoadingProfile(Object error) {
-    return 'Error loading profile: $error';
+    return 'Profil yüklenirken hata: $error';
   }
 
   @override
-  String get logOut => 'Log Out';
+  String get logOut => 'Çıkış Yap';
 
   @override
-  String get workouts => 'Workouts';
+  String get workouts => 'Antrenmanlar';
 
   @override
   String get getStarted => 'Başla';
@@ -868,92 +917,117 @@ class AppLocalizationsTr extends AppLocalizations {
   String get next => 'İleri';
 
   @override
-  String get welcomeTitle => 'Welcome to VitalSynch';
+  String get welcomeTitle => 'VitalSynch\'e Hoş Geldiniz';
 
   @override
-  String get welcomeSubtitle => 'Manage your health and fitness in one place.';
+  String get welcomeSubtitle =>
+      'Sağlığınızı ve fitness\'ınızı tek bir yerden yönetin.';
 
   @override
-  String get personalizationTitle => 'What matters most to you?';
+  String get personalizationTitle => 'Sizin için en önemli olan ne?';
 
   @override
-  String get interestMedication => 'Medication Tracking';
+  String get interestMedication => 'İlaç Takibi';
 
   @override
-  String get interestFitness => 'Fitness & Workouts';
+  String get interestFitness => 'Fitness ve Antrenman';
 
   @override
-  String get interestInsights => 'Smart Insights';
+  String get interestInsights => 'Akıllı İçgörüler';
 
   @override
-  String get interestAnalysis => 'Progress Analysis';
+  String get interestAnalysis => 'İlerleme Analizi';
 
   @override
-  String get quickSetupTitle => 'Quick Setup';
+  String get quickSetupTitle => 'Hızlı Kurulum';
 
   @override
   String get quickSetupSubtitle =>
-      'Get a head start by adding your first item.';
+      'İlk öğenizi ekleyerek hızlı bir başlangıç yapın.';
 
   @override
-  String get quickAddMedication => 'Add Medication';
+  String get quickAddMedication => 'İlaç Ekle';
 
   @override
-  String get quickAddMedicationSubtitle => 'Set up name & time quickly';
+  String get quickAddMedicationSubtitle => 'Ad ve saati hızlıca ayarlayın';
 
   @override
-  String get quickPickTemplate => 'Pick Workout Template';
+  String get quickPickTemplate => 'Antrenman Şablonu Seç';
 
   @override
-  String get quickPickTemplateSubtitle => 'Choose from popular routines';
+  String get quickPickTemplateSubtitle => 'Popüler rutinlerden seçin';
 
   @override
-  String get privacyTitle => 'Your Privacy Matters';
+  String get privacyTitle => 'Gizliliğiniz Önemli';
 
   @override
   String get privacySubtitle =>
-      'We believe in transparency. Please review and manage how your data is handled.';
+      'Şeffaflığa inanıyoruz. Lütfen verilerinizin nasıl işlendiğini inceleyin ve yönetin.';
 
   @override
-  String get consentHealthTitle => 'Health Data Processing';
+  String get consentHealthTitle => 'Sağlık Verisi İşleme';
 
   @override
   String get consentHealthDescription =>
-      'Required to track medications and symptoms locally.';
+      'İlaçları ve semptomları yerel olarak takip etmek için gereklidir.';
 
   @override
-  String get consentFitnessTitle => 'Fitness Data Processing';
+  String get consentFitnessTitle => 'Fitness Verisi İşleme';
 
   @override
   String get consentFitnessDescription =>
-      'Required to log workouts and track progress locally.';
+      'Antrenmanları kaydetmek ve ilerlemeyi yerel olarak izlemek için gereklidir.';
 
   @override
-  String get consentAnalyticsTitle => 'Analytics & Usage';
+  String get consentAnalyticsTitle => 'Analitik ve Kullanım';
 
   @override
   String get consentAnalyticsDescription =>
-      'Help us improve VitalSynch by sharing anonymous usage data.';
+      'Anonim kullanım verilerini paylaşarak VitalSynch\'i geliştirmemize yardımcı olun.';
 
   @override
-  String get consentBackupTitle => 'Cloud Backup';
+  String get consentBackupTitle => 'Bulut Yedekleme';
 
   @override
   String get consentBackupDescription =>
-      'Securely backup your data to the cloud so you don\'t lose it.';
+      'Verilerinizi kaybetmemek için bulutta güvenle yedekleyin.';
 
   @override
-  String get readPrivacyPolicy => 'Read Full Privacy Policy';
+  String get readPrivacyPolicy => 'Gizlilik Politikasının Tamamını Oku';
 
   @override
-  String get acceptContinue => 'Accept & Continue';
+  String get linkOpenError =>
+      'Bağlantı açılamadı. Lütfen daha sonra tekrar deneyin.';
 
   @override
-  String get requiredTag => 'REQUIRED';
+  String get privacyPolicy => 'Gizlilik Politikası';
+
+  @override
+  String get privacyPolicySubtitle =>
+      'Verilerinizi nasıl topladığımız ve kullandığımız';
+
+  @override
+  String get termsOfService => 'Kullanım Koşulları';
+
+  @override
+  String get termsOfServiceSubtitle =>
+      'Uygulamayı kullanarak kabul ettiğiniz koşullar';
+
+  @override
+  String get support => 'Destek';
+
+  @override
+  String get supportSubtitle => 'Yardım alın ve bizimle iletişime geçin';
+
+  @override
+  String get acceptContinue => 'Kabul Et ve Devam Et';
+
+  @override
+  String get requiredTag => 'GEREKLİ';
 
   @override
   String consentRequiredMessage(String module) {
-    return 'This is required for the $module module to function.';
+    return 'Bu, $module modülünün çalışması için gereklidir.';
   }
 
   @override
@@ -1169,7 +1243,8 @@ class AppLocalizationsTr extends AppLocalizations {
   String get volumeChart => 'Hacim Grafiği';
 
   @override
-  String get chartComingSoon => 'Grafik yakında gelecek';
+  String get chartComingSoon =>
+      'Henüz antrenman verisi yok — ilerlemenizi görmek için bir antrenman kaydedin';
 
   @override
   String get summary => 'Özet';
@@ -1570,4 +1645,12 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get repsOutOfRange => 'Tekrar sayısı 1–999 arasında olmalıdır';
+
+  @override
+  String get medicationFollowUpTitle => 'İlacını aldın mı?';
+
+  @override
+  String medicationFollowUpBody(String name) {
+    return '$name ilacını aldın mı? Kaydetmeyi unutma.';
+  }
 }

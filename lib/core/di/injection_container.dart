@@ -9,6 +9,7 @@
 library;
 
 import 'dart:developer' show log;
+import 'dart:ui' show Locale;
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -53,7 +54,9 @@ import '../../features/insights/domain/insight_engine.dart';
 import '../../features/insights/domain/weekly_report_service.dart';
 import '../analytics/analytics_service.dart';
 import '../background/background_service.dart';
+import '../constants/app_constants.dart';
 import '../gdpr/gdpr_manager.dart';
+import '../l10n/app_localizations.dart';
 import '../network/connectivity_service.dart';
 import '../notifications/notification_service.dart';
 import '../services/biometric_service.dart';
@@ -106,6 +109,12 @@ Future<void> initializeDependencies() async {
     () => NotificationService(
       notifications: getIt<FlutterLocalNotificationsPlugin>(),
       analyticsService: getIt<AnalyticsService>(),
+      resolveLocalizations: () => lookupAppLocalizations(
+        Locale(
+          getIt<SharedPreferences>().getString(AppConstants.prefKeyLocale) ??
+              'en',
+        ),
+      ),
     ),
   );
 
@@ -200,6 +209,11 @@ Future<void> initializeDependencies() async {
     () => MedicationReminderService(
       notificationService: getIt<NotificationService>(),
       medicationRepository: getIt<MedicationRepository>(),
+      areNotificationsEnabled: () =>
+          getIt<SharedPreferences>().getBool(
+            AppConstants.prefKeyNotificationsEnabled,
+          ) ??
+          true,
     ),
   );
 

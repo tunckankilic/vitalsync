@@ -89,6 +89,11 @@ class LogMedicationNotifier extends _$LogMedicationNotifier {
 
       // Fire analytics event
       await analytics.logMedicationTaken();
+
+      // Cancel the pending follow-up for this dose (never throws)
+      await ref
+          .read(medicationReminderServiceProvider)
+          .handleDoseLogged(medicationId);
     });
 
     if (state.hasError) {
@@ -112,6 +117,11 @@ class LogMedicationNotifier extends _$LogMedicationNotifier {
 
       // Fire analytics event
       await analytics.logMedicationSkipped();
+
+      // Cancel the pending follow-up for this dose (never throws)
+      await ref
+          .read(medicationReminderServiceProvider)
+          .handleDoseLogged(medicationId);
     });
 
     if (state.hasError) {
