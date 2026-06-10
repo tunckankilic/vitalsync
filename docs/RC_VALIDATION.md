@@ -81,6 +81,24 @@ All three are LTR (no RTL). Expectation: text ellipsizes, no pixel overflow stri
 - [ ] Cold start (kill + relaunch) while authenticated → **dashboard**.
 - [ ] Logout, then cold start → **/auth/login** (onboarding not repeated).
 
+### 1D. Medication follow-up notifications (dual-notification + cancel-on-log)
+
+> All of this must work with the **app killed** — it's pre-scheduled local
+> notifications, no background execution. Tip: instead of waiting 30 real
+> minutes for the follow-up, advance the device clock past the follow-up time
+> (Settings → General → Date & Time, Set Automatically OFF).
+
+| # | Action | Expected |
+|---|--------|----------|
+| 1 | Add a medication with a dose time ~2 min from now; **kill the app** | Reminder notification fires at dose time (app killed) |
+| 2 | Do **not** log the dose; wait/advance +30 min | Follow-up fires: "Did you take X? Don't forget to log it." |
+| 3 | Next day's slot (or re-add): after the reminder fires, open app and **log the dose (taken)** before +30 min | Follow-up does **NOT** fire; the next day's reminder is still scheduled |
+| 4 | Repeat with **skipped** instead of taken | Same: follow-up cancelled |
+| 5 | **Delete** the medication while reminders are pending | No further reminders **or follow-ups** fire for it |
+| 6 | **Edit** the medication's dose time | Old-time notifications stop; new-time reminder + follow-up fire |
+| 7 | Settings → notifications **OFF**, then re-save a medication; turn clock past dose+30 | No follow-up is scheduled/fires |
+| 8 | Switch app language to tr/de, re-save medication, let a follow-up fire | Follow-up title/body localized (tr: "Kaydetmeyi unutma…") |
+
 ---
 
 ## 2. Offline-first validation matrix (most critical)
@@ -118,6 +136,19 @@ All three are LTR (no RTL). Expectation: text ellipsizes, no pixel overflow stri
 | 2 | Force a sync error (weak signal / server 5xx / precondition fail) | Item marked failed, retry count++, **local data NOT deleted** |
 | 3 | Exhaust max retries | Item stays failed; data still present locally; no crash |
 | 4 | Attempt Delete Account while **offline** | "You must be online…" message; **nothing deleted** (no orphaned server data) |
+
+### 2D. Background flush on app close (lifecycle sync)
+
+> Validates the `AppLifecycleState.paused` final flush: data entered right
+> before closing the app should reach the cloud **without reopening it**.
+
+| # | Action | Expected |
+|---|--------|----------|
+| 1 | Login online (cloud-backup consent ON); add a medication/symptom | Saved locally, queued |
+| 2 | Immediately **swipe the app to background** (home gesture — do not kill); wait ~10 s | Flush sync runs in iOS's backgrounding window |
+| 3 | **Without reopening the app**, verify the server copy (second device / data export) | Record is on the server |
+| 4 | Repeat steps 1–2 while **offline** | No crash; nothing sent; data syncs normally on next launch/reconnect |
+| 5 | Rapidly background→foreground→background a few times | No crash, no duplicate records server-side (sync is re-entrancy-guarded) |
 
 ---
 
