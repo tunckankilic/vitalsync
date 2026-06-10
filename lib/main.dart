@@ -22,6 +22,7 @@ import 'core/network/connectivity_service.dart';
 import 'core/notifications/notification_service.dart';
 import 'core/router/app_router.dart';
 import 'core/settings/settings_provider.dart';
+import 'core/sync/sync_lifecycle_observer.dart';
 import 'core/sync/sync_service.dart';
 import 'core/theme/app_theme.dart';
 
@@ -130,6 +131,11 @@ Future<void> _bootstrap() async {
 
       final syncService = getIt<SyncService>();
       syncService.startAutoSync();
+
+      // Flush the pending sync queue once when the app is backgrounded
+      WidgetsBinding.instance.addObserver(
+        SyncLifecycleObserver(syncService: syncService),
+      );
     } catch (e, stack) {
       // Non-critical — log but don't block app launch
       debugPrint('Non-critical initialization error: $e');
