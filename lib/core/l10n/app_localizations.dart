@@ -3099,6 +3099,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Reps must be between 1 and 999'**
   String get repsOutOfRange;
+
+  /// Title of the follow-up notification asking the user to log a dose
+  ///
+  /// In en, this message translates to:
+  /// **'Did you take your medication?'**
+  String get medicationFollowUpTitle;
+
+  /// Body of the follow-up notification asking the user to log a dose
+  ///
+  /// In en, this message translates to:
+  /// **'Did you take {name}? Don\'t forget to log it.'**
+  String medicationFollowUpBody(String name);
 }
 
 class _AppLocalizationsDelegate

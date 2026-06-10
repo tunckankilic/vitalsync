@@ -14,6 +14,7 @@
 library;
 
 import 'dart:io' show Platform;
+import 'dart:ui' show Locale;
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:logger/logger.dart';
@@ -24,6 +25,8 @@ import '../../domain/entities/insights/insight.dart';
 import '../analytics/analytics_service.dart';
 import '../constants/app_constants.dart';
 import '../enums/insight_priority.dart';
+import '../enums/medication_frequency.dart';
+import '../l10n/app_localizations.dart';
 
 // Notification Action Identifiers
 
@@ -35,6 +38,10 @@ const String kActionMedicationSnooze = 'medication_snooze';
 
 /// Android notification action category for medication reminders.
 const String kCategoryMedication = 'medication_category';
+
+/// Offset added to a medication reminder notification ID to derive the ID
+/// of its paired follow-up ("did you log it?") notification.
+const int kMedicationFollowUpIdOffset = 100000;
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Callback typedefs
@@ -66,13 +73,19 @@ class NotificationService {
   NotificationService({
     required FlutterLocalNotificationsPlugin notifications,
     required AnalyticsService analyticsService,
+    AppLocalizations Function()? resolveLocalizations,
     Logger? logger,
   }) : _notifications = notifications,
        _analyticsService = analyticsService,
+       _resolveLocalizations = resolveLocalizations,
        _logger = logger ?? Logger();
 
   final FlutterLocalNotificationsPlugin _notifications;
   final AnalyticsService _analyticsService;
+
+  /// Resolves the localizations for notification content scheduled outside
+  /// of a widget context (e.g. follow-up reminders). Falls back to English.
+  final AppLocalizations Function()? _resolveLocalizations;
   final Logger _logger;
 
   /// Set this callback to handle navigation when a notification is tapped.
@@ -201,10 +214,13 @@ class NotificationService {
   /// [med] — the medication entity.
   /// [time] — the exact time to fire the notification.
   /// [timeIndex] — index of the time slot in `med.times` (for unique ID).
+  /// [withFollowUp] — also schedule a one-shot follow-up notification
+  /// [AppConstants.medicationFollowUpGraceMinutes] after [time].
   Future<void> scheduleMedicationReminder({
     required Medication med,
     required DateTime time,
     int timeIndex = 0,
+    bool withFollowUp = false,
   }) async {
     final notifId = _medicationNotifId(med.id, timeIndex);
 
@@ -218,6 +234,16 @@ class NotificationService {
       payload: 'medication:${med.id}',
     );
 
+    if (withFollowUp) {
+      await scheduleMedicationFollowUp(
+        med: med,
+        followUpTime: time.add(
+          const Duration(minutes: AppConstants.medicationFollowUpGraceMinutes),
+        ),
+        timeIndex: timeIndex,
+      );
+    }
+
     _logger.d(
       'Scheduled medication reminder: ${med.name} at $time (id=$notifId)',
     );
@@ -227,7 +253,12 @@ class NotificationService {
   ///
   /// Creates one notification per time slot in [med.times].
   /// Each time string is expected to be in "HH:mm" format.
-  Future<void> scheduleDailyMedicationReminders(Medication med) async {
+  /// When [withFollowUps] is true, each slot also gets a recurring follow-up
+  /// notification [AppConstants.medicationFollowUpGraceMinutes] later.
+  Future<void> scheduleDailyMedicationReminders(
+    Medication med, {
+    bool withFollowUps = false,
+  }) async {
     for (var i = 0; i < med.times.length; i++) {
       final timeParts = med.times[i].split(':');
       if (timeParts.length != 2) continue;
@@ -263,6 +294,18 @@ class NotificationService {
         payload: 'medication:${med.id}',
         matchDateTimeComponents: DateTimeComponents.time,
       );
+
+      if (withFollowUps) {
+        await scheduleMedicationFollowUp(
+          med: med,
+          followUpTime: scheduledDate.add(
+            const Duration(
+              minutes: AppConstants.medicationFollowUpGraceMinutes,
+            ),
+          ),
+          timeIndex: i,
+        );
+      }
     }
 
     _logger.d('Scheduled ${med.times.length} daily reminders for ${med.name}');
@@ -271,7 +314,12 @@ class NotificationService {
   /// Schedules weekly recurring reminders for a medication.
   ///
   /// Creates one notification per time slot, repeating on the same day each week.
-  Future<void> scheduleWeeklyMedicationReminders(Medication med) async {
+  /// When [withFollowUps] is true, each slot also gets a recurring follow-up
+  /// notification [AppConstants.medicationFollowUpGraceMinutes] later.
+  Future<void> scheduleWeeklyMedicationReminders(
+    Medication med, {
+    bool withFollowUps = false,
+  }) async {
     for (var i = 0; i < med.times.length; i++) {
       final timeParts = med.times[i].split(':');
       if (timeParts.length != 2) continue;
@@ -307,9 +355,57 @@ class NotificationService {
         payload: 'medication:${med.id}',
         matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime,
       );
+
+      if (withFollowUps) {
+        await scheduleMedicationFollowUp(
+          med: med,
+          followUpTime: scheduledDate.add(
+            const Duration(
+              minutes: AppConstants.medicationFollowUpGraceMinutes,
+            ),
+          ),
+          timeIndex: i,
+        );
+      }
     }
 
     _logger.d('Scheduled ${med.times.length} weekly reminders for ${med.name}');
+  }
+
+  /// Schedules the follow-up ("did you log it?") notification paired with
+  /// a medication reminder time slot.
+  ///
+  /// [followUpTime] is the absolute fire time (dose time + grace period).
+  /// The recurrence mirrors the reminder's recurrence, derived from
+  /// [Medication.frequency]: daily-style frequencies repeat every day,
+  /// weekly repeats on the same weekday, monthly/as-needed are one-shot.
+  ///
+  /// The notification ID is derived deterministically from the reminder ID
+  /// (see [kMedicationFollowUpIdOffset]) so it can be cancelled when the
+  /// user logs the dose.
+  Future<void> scheduleMedicationFollowUp({
+    required Medication med,
+    required DateTime followUpTime,
+    int timeIndex = 0,
+  }) async {
+    final notifId = _medicationFollowUpNotifId(med.id, timeIndex);
+    final l10n = _followUpLocalizations();
+
+    await _notifications.zonedSchedule(
+      id: notifId,
+      title: l10n.medicationFollowUpTitle,
+      body: l10n.medicationFollowUpBody(med.name),
+      scheduledDate: tz.TZDateTime.from(followUpTime, tz.local),
+      notificationDetails: _medicationNotificationDetails(),
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      payload: 'medication:${med.id}',
+      matchDateTimeComponents: _followUpRecurrence(med.frequency),
+    );
+
+    _logger.d(
+      'Scheduled medication follow-up: ${med.name} at $followUpTime '
+      '(id=$notifId)',
+    );
   }
 
   /// Shows a notification for a missed medication.
@@ -367,15 +463,41 @@ class NotificationService {
   /// Cancels all medication reminders for a specific medication.
   ///
   /// Cancels up to 10 time slot notifications per medication
-  /// (covers the maximum realistic number of daily doses).
+  /// (covers the maximum realistic number of daily doses),
+  /// along with their paired follow-up notifications.
   Future<void> cancelMedicationReminders(int medicationId) async {
     for (var i = 0; i < 10; i++) {
       await _notifications.cancel(id: _medicationNotifId(medicationId, i));
     }
+    await cancelMedicationFollowUps(medicationId);
     // Also cancel any missed notification
     await _notifications.cancel(id: 50000 + medicationId);
 
     _logger.d('Cancelled all reminders for medication $medicationId');
+  }
+
+  /// Cancels the pending follow-up notification for a single dose slot.
+  Future<void> cancelMedicationFollowUp(int medicationId, int timeIndex) async {
+    await _notifications.cancel(
+      id: _medicationFollowUpNotifId(medicationId, timeIndex),
+    );
+
+    _logger.d(
+      'Cancelled follow-up for medication $medicationId slot $timeIndex',
+    );
+  }
+
+  /// Cancels all follow-up notifications for a specific medication.
+  ///
+  /// Mirrors [cancelMedicationReminders]'s 10-slot coverage.
+  Future<void> cancelMedicationFollowUps(int medicationId) async {
+    for (var i = 0; i < 10; i++) {
+      await _notifications.cancel(
+        id: _medicationFollowUpNotifId(medicationId, i),
+      );
+    }
+
+    _logger.d('Cancelled all follow-ups for medication $medicationId');
   }
 
   // FITNESS MODULE NOTIFICATIONS
@@ -527,9 +649,45 @@ class NotificationService {
   /// - `60000–69999`: Workout reminders
   /// - `70000–79999`: Streak/fitness notifications
   /// - `80000–89999`: Insight/report notifications
-  /// - `90000+`: Summary/system notifications
+  /// - `90000–99999`: Summary/system notifications
+  /// - `100000–149999`: Medication dose follow-ups
+  ///   ([kMedicationFollowUpIdOffset] + reminder ID)
   int _medicationNotifId(int medId, int timeIndex) {
     return (medId.abs() % 500) * 100 + (timeIndex.clamp(0, 99));
+  }
+
+  /// Derives the follow-up notification ID from the reminder ID scheme.
+  int _medicationFollowUpNotifId(int medId, int timeIndex) {
+    return kMedicationFollowUpIdOffset + _medicationNotifId(medId, timeIndex);
+  }
+
+  /// Returns the recurrence rule for a follow-up so it mirrors the
+  /// recurrence of the reminder it is paired with.
+  DateTimeComponents? _followUpRecurrence(MedicationFrequency frequency) {
+    switch (frequency) {
+      case MedicationFrequency.daily:
+      case MedicationFrequency.twiceDaily:
+      case MedicationFrequency.threeTimesDaily:
+        return DateTimeComponents.time;
+      case MedicationFrequency.weekly:
+        return DateTimeComponents.dayOfWeekAndTime;
+      case MedicationFrequency.monthly:
+      case MedicationFrequency.asNeeded:
+        // Monthly reminders are scheduled as one-shots; mirror that.
+        return null;
+    }
+  }
+
+  /// Resolves localized strings for notifications scheduled without a
+  /// widget context. Falls back to English if no resolver is configured
+  /// or resolution fails (e.g. unsupported stored locale).
+  AppLocalizations _followUpLocalizations() {
+    try {
+      return _resolveLocalizations?.call() ??
+          lookupAppLocalizations(const Locale('en'));
+    } catch (_) {
+      return lookupAppLocalizations(const Locale('en'));
+    }
   }
 
   // NOTIFICATION CHANNELS (Android)

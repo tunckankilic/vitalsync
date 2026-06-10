@@ -1645,4 +1645,12 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get repsOutOfRange => 'Tekrar sayısı 1–999 arasında olmalıdır';
+
+  @override
+  String get medicationFollowUpTitle => 'İlacını aldın mı?';
+
+  @override
+  String medicationFollowUpBody(String name) {
+    return '$name ilacını aldın mı? Kaydetmeyi unutma.';
+  }
 }

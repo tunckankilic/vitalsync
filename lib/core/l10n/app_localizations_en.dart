@@ -1632,4 +1632,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get repsOutOfRange => 'Reps must be between 1 and 999';
+
+  @override
+  String get medicationFollowUpTitle => 'Did you take your medication?';
+
+  @override
+  String medicationFollowUpBody(String name) {
+    return 'Did you take $name? Don\'t forget to log it.';
+  }
 }

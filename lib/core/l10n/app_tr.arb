@@ -1259,5 +1259,7 @@
   "supportSubtitle": "Yardım alın ve bizimle iletişime geçin",
   "acceptContinue": "Kabul Et ve Devam Et",
   "requiredTag": "GEREKLİ",
-  "consentRequiredMessage": "Bu, {module} modülünün çalışması için gereklidir."
+  "consentRequiredMessage": "Bu, {module} modülünün çalışması için gereklidir.",
+  "medicationFollowUpTitle": "İlacını aldın mı?",
+  "medicationFollowUpBody": "{name} ilacını aldın mı? Kaydetmeyi unutma."
 }

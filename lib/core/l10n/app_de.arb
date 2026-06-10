@@ -1259,5 +1259,7 @@
   "supportSubtitle": "Hilfe erhalten und uns kontaktieren",
   "acceptContinue": "Akzeptieren & Fortfahren",
   "requiredTag": "ERFORDERLICH",
-  "consentRequiredMessage": "Dies ist für die Funktion des Moduls {module} erforderlich."
+  "consentRequiredMessage": "Dies ist für die Funktion des Moduls {module} erforderlich.",
+  "medicationFollowUpTitle": "Hast du dein Medikament genommen?",
+  "medicationFollowUpBody": "Hast du {name} eingenommen? Vergiss nicht, es einzutragen."
 }

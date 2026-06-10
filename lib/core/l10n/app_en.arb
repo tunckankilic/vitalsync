@@ -1166,5 +1166,12 @@
   "weightOutOfRange": "Weight must be between 0 and 999 kg",
   "@weightOutOfRange": { "description": "Weight bounds validation" },
   "repsOutOfRange": "Reps must be between 1 and 999",
-  "@repsOutOfRange": { "description": "Reps bounds validation" }
+  "@repsOutOfRange": { "description": "Reps bounds validation" },
+  "medicationFollowUpTitle": "Did you take your medication?",
+  "@medicationFollowUpTitle": { "description": "Title of the follow-up notification asking the user to log a dose" },
+  "medicationFollowUpBody": "Did you take {name}? Don't forget to log it.",
+  "@medicationFollowUpBody": {
+    "description": "Body of the follow-up notification asking the user to log a dose",
+    "placeholders": { "name": { "type": "String" } }
+  }
 }

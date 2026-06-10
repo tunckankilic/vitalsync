@@ -1650,4 +1650,12 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get repsOutOfRange =>
       'Wiederholungen müssen zwischen 1 und 999 liegen';
+
+  @override
+  String get medicationFollowUpTitle => 'Hast du dein Medikament genommen?';
+
+  @override
+  String medicationFollowUpBody(String name) {
+    return 'Hast du $name eingenommen? Vergiss nicht, es einzutragen.';
+  }
 }
