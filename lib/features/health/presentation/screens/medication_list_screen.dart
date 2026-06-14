@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:vitalsync/core/l10n/app_localizations.dart';
 import 'package:vitalsync/core/theme/app_theme.dart';
 import 'package:vitalsync/features/health/presentation/providers/medication_provider.dart';
@@ -149,12 +148,11 @@ class _MedicationListScreenState extends ConsumerState<MedicationListScreen>
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => context.push('/health/add-medication'),
-        icon: const Icon(Icons.add_rounded),
-        label: Text(l10n.addMedication),
-        backgroundColor: AppTheme.healthPrimary,
-      ),
+      // No floatingActionButton here: this screen is the /health shell tab root,
+      // and AppShell's ContextAwareFab already renders the "Add Medication" FAB
+      // for the health tab (same /health/add-medication action). Declaring a
+      // second one here produced a duplicate FAB and a Hero tag collision
+      // (both used the default FloatingActionButton hero tag in one route).
     );
   }
 

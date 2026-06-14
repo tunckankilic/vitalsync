@@ -70,7 +70,17 @@ class GlassmorphicCard extends StatelessWidget {
             border: border ? Border.all(color: borderColor, width: 1) : null,
           ),
           padding: padding,
-          child: child,
+          // ListTile (and Switch/CheckboxListTile) paint their background and
+          // ink splashes on the nearest Material ancestor. Without this, that
+          // ancestor sits behind the coloured BoxDecoration above, so the
+          // framework reports "ListTile background color or ink splashes may be
+          // invisible" and the effects never show. A transparent Material gives
+          // any tile inside the card a proper ink surface in front of the glass
+          // background, with no change to the glassmorphic appearance.
+          child: Material(
+            type: MaterialType.transparency,
+            child: child,
+          ),
         ),
       ),
     );
