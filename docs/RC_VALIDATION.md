@@ -179,9 +179,38 @@ dart run sentry_dart_plugin
 Push to `main` → `ios-release` workflow runs: obfuscated build, build-number
 bump, symbol upload, and `submit_to_testflight`. Watch the Codemagic build log.
 
-### 3.4 Manual upload alternative
-`build/ios/ipa/*.ipa` → upload via **Transporter** or Xcode Organizer →
-App Store Connect → TestFlight → wait for processing.
+### 3.4 Manual upload via Transporter (first release)
+
+Use this when uploading the **first build by hand** instead of via CI. The CI
+path (§3.3) auto-increments the build number; **manual uploads do not — you must
+bump `+N` in `pubspec.yaml` yourself before every upload** (ASC rejects a reused
+build number).
+
+**Pre-flight (manual-specific):**
+- [ ] App record **exists in App Store Connect** for bundle id
+      `site.tunckankilic.vitalsync` — *Transporter delivery fails without it.*
+- [ ] Distribution certificate + App Store provisioning profile available
+      (or Xcode "Automatically manage signing" on, with a Team selected).
+- [ ] **Transporter** app installed (Mac App Store).
+- [ ] Sentry vars exported in the shell: `SENTRY_DSN`, `SENTRY_ORG`,
+      `SENTRY_PROJECT`, `SENTRY_AUTH_TOKEN`.
+
+**Steps:**
+1. Build the signed, obfuscated prod IPA + upload symbols (§3.2). If
+   `flutter build ipa` needs an export method, check
+   `flutter build ipa --help | grep export-method` (value is `app-store` or
+   `app-store-connect` depending on Flutter version).
+2. **CLI signing fails? → Xcode fallback:** `open ios/Runner.xcworkspace` →
+   Signing & Capabilities: set Team → device target **Any iOS Device (arm64)** →
+   Product → **Archive** → Organizer → **Distribute App → App Store Connect →
+   Export** → save the `.ipa`. *(Organizer can also Upload directly, skipping
+   Transporter.)*
+3. Run the **Sentry symbol upload immediately after the build**, against the same
+   binary (`dart run sentry_dart_plugin`) — so first-release crashes deobfuscate.
+4. Open **Transporter** → sign in → drag the `.ipa` → it validates → **Deliver**.
+5. App Store Connect → TestFlight shows **"Processing"** (~5–30 min).
+6. When processed → **Internal Testing** first (no review, instant) → run the
+   §1–§2 matrices on it → then attach to the App Store version and submit.
 
 ### 3.5 Beta plan
 - **Internal testing first:** add App Store Connect users (≤100), no review,
