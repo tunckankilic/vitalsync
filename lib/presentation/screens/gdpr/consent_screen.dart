@@ -174,9 +174,6 @@ class ConsentContent extends ConsumerWidget {
                 const SizedBox(height: 16),
                 Center(
                   child: TextButton(
-                    // TODO: privacy.html henüz yayında değil — sayfa web
-                    // sitesine (AppConstants.privacyPolicyUrl) eklenince link
-                    // çalışır hale gelir.
                     onPressed: () => UrlLauncherHelper.open(
                       context,
                       AppConstants.privacyPolicyUrl,
