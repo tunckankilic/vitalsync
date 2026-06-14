@@ -44,11 +44,9 @@ workflows:
       - name: Run analyze
         script: |
           flutter analyze --no-fatal-infos
-        ignore_failure: true
       - name: Run tests
         script: |
-          flutter test test/data/repositories/
-        ignore_failure: true
+          flutter test
       - name: Increment build number
         script: |
           LATEST_BUILD=$(app-store-connect get-latest-testflight-build-number "$BUNDLE_ID" 2>/dev/null || true)
@@ -118,8 +116,6 @@ workflows:
       - name: Run analyze
         script: |
           flutter analyze --no-fatal-infos
-        ignore_failure: true
       - name: Run tests
         script: |
           flutter test
-        ignore_failure: true
