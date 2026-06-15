@@ -226,7 +226,7 @@ class WorkoutNotifier extends _$WorkoutNotifier {
     final repository = ref.read(workoutSessionRepositoryProvider);
     final analytics = ref.read(analyticsServiceProvider);
 
-    state = await AsyncValue.guard(() async {
+    final result = await AsyncValue.guard(() async {
       // Get active session
       final activeSession = await repository.watchActiveSession().first;
       if (activeSession == null) {
@@ -262,9 +262,10 @@ class WorkoutNotifier extends _$WorkoutNotifier {
         isPR: set.isPR,
       );
     });
+    if (ref.mounted) state = result;
 
-    if (state.hasError) {
-      throw state.error!;
+    if (result.hasError) {
+      throw result.error!;
     }
   }
 
@@ -281,7 +282,7 @@ class WorkoutNotifier extends _$WorkoutNotifier {
 
     final repository = ref.read(workoutSessionRepositoryProvider);
 
-    state = await AsyncValue.guard(() async {
+    final result = await AsyncValue.guard(() async {
       // Get active session
       final activeSession = await repository.watchActiveSession().first;
       if (activeSession == null) {
@@ -301,9 +302,10 @@ class WorkoutNotifier extends _$WorkoutNotifier {
 
       await repository.updateSet(updatedSet);
     });
+    if (ref.mounted) state = result;
 
-    if (state.hasError) {
-      throw state.error!;
+    if (result.hasError) {
+      throw result.error!;
     }
   }
 
@@ -314,12 +316,13 @@ class WorkoutNotifier extends _$WorkoutNotifier {
 
     final repository = ref.read(workoutSessionRepositoryProvider);
 
-    state = await AsyncValue.guard(() async {
+    final result = await AsyncValue.guard(() async {
       await repository.deleteSet(setId);
     });
+    if (ref.mounted) state = result;
 
-    if (state.hasError) {
-      throw state.error!;
+    if (result.hasError) {
+      throw result.error!;
     }
   }
 
@@ -332,7 +335,7 @@ class WorkoutNotifier extends _$WorkoutNotifier {
     final repository = ref.read(workoutSessionRepositoryProvider);
     final analytics = ref.read(analyticsServiceProvider);
 
-    state = await AsyncValue.guard(() async {
+    final result = await AsyncValue.guard(() async {
       // Get active session
       final activeSession = await repository.watchActiveSession().first;
       if (activeSession == null) {
@@ -360,9 +363,10 @@ class WorkoutNotifier extends _$WorkoutNotifier {
         exerciseCount: exerciseCount,
       );
     });
+    if (ref.mounted) state = result;
 
-    if (state.hasError) {
-      throw state.error!;
+    if (result.hasError) {
+      throw result.error!;
     }
   }
 
@@ -373,7 +377,7 @@ class WorkoutNotifier extends _$WorkoutNotifier {
     final repository = ref.read(workoutSessionRepositoryProvider);
     final analytics = ref.read(analyticsServiceProvider);
 
-    state = await AsyncValue.guard(() async {
+    final result = await AsyncValue.guard(() async {
       // Get active session
       final activeSession = await repository.watchActiveSession().first;
       if (activeSession == null) {
@@ -393,9 +397,10 @@ class WorkoutNotifier extends _$WorkoutNotifier {
       // Clear state - no active session
       return;
     });
+    if (ref.mounted) state = result;
 
-    if (state.hasError) {
-      throw state.error!;
+    if (result.hasError) {
+      throw result.error!;
     }
   }
 }

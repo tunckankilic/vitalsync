@@ -99,7 +99,7 @@ class WorkoutSessionModel extends WorkoutSession {
 
   WorkoutSessionsCompanion toCompanion() {
     return WorkoutSessionsCompanion(
-      id: Value(id),
+      id: id == 0 ? const Value.absent() : Value(id),
       templateId: Value(templateId),
       name: Value(name),
       startTime: Value(startTime),

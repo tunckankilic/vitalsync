@@ -81,7 +81,7 @@ class SymptomModel extends Symptom {
 
   SymptomsCompanion toCompanion() {
     return SymptomsCompanion(
-      id: Value(id),
+      id: id == 0 ? const Value.absent() : Value(id),
       name: Value(name),
       severity: Value(severity),
       date: Value(date),

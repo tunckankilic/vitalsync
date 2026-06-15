@@ -382,6 +382,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get healthTimeline => 'Health Timeline';
 
   @override
+  String get quickWorkout => 'Quick Workout';
+
+  @override
   String get compliance => 'Compliance';
 
   @override

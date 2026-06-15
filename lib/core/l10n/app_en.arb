@@ -278,6 +278,8 @@
   "notes": "Notes",
   "@notes": { "description": "Notes label" },
   "healthTimeline": "Health Timeline",
+  "quickWorkout": "Quick Workout",
+  "@quickWorkout": { "description": "Default name for a workout session started without a template" },
   "@healthTimeline": { "description": "Health timeline title" },
   "compliance": "Compliance",
   "@compliance": { "description": "Compliance label" },

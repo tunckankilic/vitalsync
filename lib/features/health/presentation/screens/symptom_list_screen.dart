@@ -42,8 +42,14 @@ class _SymptomListScreenState extends ConsumerState<SymptomListScreen> {
 
     return Scaffold(
       extendBodyBehindAppBar: true,
-      // AppBar handled by AppShell or we can add specific actions.
-      // We'll add a header in the body.
+      // Transparent app bar purely for the automatic back button — this screen
+      // is pushed on the root navigator (bottom nav hidden), so without an app
+      // bar there was no way back. The in-body header keeps the title.
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        foregroundColor: theme.colorScheme.onSurface,
+      ),
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -238,7 +244,9 @@ class _SymptomListScreenState extends ConsumerState<SymptomListScreen> {
                   },
                   loading: () =>
                       const Center(child: CircularProgressIndicator()),
-                  error: (err, stack) => Center(child: Text(AppLocalizations.of(context).errorGeneric(err))),
+                  error: (err, stack) => Center(
+                    child: Text(AppLocalizations.of(context).errorGeneric(err)),
+                  ),
                 ),
               ),
             ],

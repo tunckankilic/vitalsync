@@ -385,6 +385,9 @@ class AppLocalizationsTr extends AppLocalizations {
   String get healthTimeline => 'Sağlık Zaman Çizelgesi';
 
   @override
+  String get quickWorkout => 'Hızlı Antrenman';
+
+  @override
   String get compliance => 'Uyum';
 
   @override

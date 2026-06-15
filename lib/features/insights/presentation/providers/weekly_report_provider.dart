@@ -57,11 +57,13 @@ class WeeklyReportActions extends _$WeeklyReportActions {
       return report;
     });
 
-    state = result.when(
-      data: (_) => const AsyncValue.data(null),
-      error: AsyncValue.error,
-      loading: () => const AsyncValue.loading(),
-    );
+    if (ref.mounted) {
+      state = result.when(
+        data: (_) => const AsyncValue.data(null),
+        error: AsyncValue.error,
+        loading: () => const AsyncValue.loading(),
+      );
+    }
 
     if (result.hasError) {
       throw result.error!;
@@ -83,11 +85,13 @@ class WeeklyReportActions extends _$WeeklyReportActions {
       return service.generateCurrentWeekReport();
     });
 
-    state = result.when(
-      data: (_) => const AsyncValue.data(null),
-      error: AsyncValue.error,
-      loading: () => const AsyncValue.loading(),
-    );
+    if (ref.mounted) {
+      state = result.when(
+        data: (_) => const AsyncValue.data(null),
+        error: AsyncValue.error,
+        loading: () => const AsyncValue.loading(),
+      );
+    }
 
     if (result.hasError) {
       throw result.error!;

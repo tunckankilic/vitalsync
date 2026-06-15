@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:vitalsync/core/l10n/app_localizations.dart';
 import 'package:vitalsync/core/theme/app_theme.dart';
 import 'package:vitalsync/features/health/presentation/providers/medication_provider.dart';
@@ -158,17 +159,36 @@ class _MedicationListScreenState extends ConsumerState<MedicationListScreen>
 
   Widget _buildSearchBar(AppLocalizations l10n) {
     if (!_isSearchVisible) {
-      return Align(
-        alignment: Alignment.centerRight,
-        child: IconButton.filledTonal(
-          onPressed: () => setState(() => _isSearchVisible = true),
-          icon: const Icon(Icons.search_rounded),
-          style: IconButton.styleFrom(
-            backgroundColor: Theme.of(
-              context,
-            ).colorScheme.surfaceContainerHigh.withValues(alpha: 0.5),
+      final tonalStyle = IconButton.styleFrom(
+        backgroundColor: Theme.of(
+          context,
+        ).colorScheme.surfaceContainerHigh.withValues(alpha: 0.5),
+      );
+      return Row(
+        children: [
+          // Entry points to the other health views. Symptoms and the timeline
+          // previously had no navigation from this screen, so logged symptoms
+          // were effectively invisible to the user.
+          IconButton.filledTonal(
+            onPressed: () => context.push('/health/symptoms'),
+            icon: const Icon(Icons.healing_rounded),
+            tooltip: l10n.symptoms,
+            style: tonalStyle,
           ),
-        ),
+          const SizedBox(width: 8),
+          IconButton.filledTonal(
+            onPressed: () => context.push('/health/timeline'),
+            icon: const Icon(Icons.timeline_rounded),
+            tooltip: l10n.healthTimeline,
+            style: tonalStyle,
+          ),
+          const Spacer(),
+          IconButton.filledTonal(
+            onPressed: () => setState(() => _isSearchVisible = true),
+            icon: const Icon(Icons.search_rounded),
+            style: tonalStyle,
+          ),
+        ],
       );
     }
 

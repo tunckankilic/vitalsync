@@ -802,6 +802,12 @@ abstract class AppLocalizations {
   /// **'Health Timeline'**
   String get healthTimeline;
 
+  /// Default name for a workout session started without a template
+  ///
+  /// In en, this message translates to:
+  /// **'Quick Workout'**
+  String get quickWorkout;
+
   /// Compliance label
   ///
   /// In en, this message translates to:

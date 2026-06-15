@@ -64,7 +64,7 @@ class UserStatsModel extends UserStats {
 
   UserStatsCompanion toCompanion() {
     return UserStatsCompanion(
-      id: Value(id),
+      id: id == 0 ? const Value.absent() : Value(id),
       date: Value(date),
       totalWorkouts: Value(totalWorkouts),
       totalVolume: Value(totalVolume),

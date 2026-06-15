@@ -75,12 +75,14 @@ class _HealthTimelineScreenState extends ConsumerState<HealthTimelineScreen> {
 
     return Scaffold(
       extendBodyBehindAppBar: true,
-
-      // AppBar handled by shell or parent? If this is a main tab screen (Health),
-      // AppShell provides the AppBar. But prompt 2.3 said: health/timeline is a route.
-      // If it's a sub-screen, we need AppBar. If it's the main view of Health tab...
-      // Health tab has nested routes.
-      // Let's assume there is a back button if navigated to.
+      // Transparent app bar purely for the automatic back button — this screen
+      // is pushed on the root navigator, so without an app bar there was no way
+      // back. The in-body header keeps the title.
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        foregroundColor: theme.colorScheme.onSurface,
+      ),
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(

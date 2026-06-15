@@ -100,7 +100,7 @@ class UserProfileModel extends UserProfile {
   /// Converts this model to a Drift Companion for insertion/updating.
   UserProfilesCompanion toCompanion() {
     return UserProfilesCompanion(
-      id: Value(id),
+      id: id == 0 ? const Value.absent() : Value(id),
       authUid: Value(authUid),
       name: Value(name),
       birthDate: Value(birthDate),

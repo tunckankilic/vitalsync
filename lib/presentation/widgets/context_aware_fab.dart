@@ -97,61 +97,71 @@ class _ContextAwareFabState extends ConsumerState<ContextAwareFab>
 
     // Dashboard tab: Expandable menu
     if (widget.currentTabIndex == 0) {
-      return Stack(
-        alignment: Alignment.bottomRight,
-        clipBehavior: Clip.none,
-        children: [
-          // Mini FAB 1: Add Medication (Health)
-          _buildMiniFab(
-            context,
-            offset: const Offset(0, -140),
-            icon: Icons.medication_rounded,
-            label: l10n.addMedication,
-            color: AppTheme.healthPrimary,
-            onPressed: _onAddMedication,
-          ),
+      // The mini FABs are translated upward (up to -140) out of the main FAB's
+      // footprint. Without a sized box around the Stack, those translated
+      // positions fall outside the Scaffold's FAB render box and stop receiving
+      // hit-tests — visible but un-tappable. Sizing the Stack so the fanned-out
+      // FABs stay within bounds restores tapping. Empty regions still pass
+      // touches through to the body (the Stack has no opaque hit-test self).
+      return SizedBox(
+        width: 240,
+        height: 220,
+        child: Stack(
+          alignment: Alignment.bottomRight,
+          clipBehavior: Clip.none,
+          children: [
+            // Mini FAB 1: Add Medication (Health)
+            _buildMiniFab(
+              context,
+              offset: const Offset(0, -140),
+              icon: Icons.medication_rounded,
+              label: l10n.addMedication,
+              color: AppTheme.healthPrimary,
+              onPressed: _onAddMedication,
+            ),
 
-          // Mini FAB 2: Log Symptom (Health)
-          _buildMiniFab(
-            context,
-            offset: const Offset(0, -90),
-            icon: Icons.healing_rounded,
-            label: l10n.logSymptom,
-            color: AppTheme.healthSecondary,
-            onPressed: _onLogSymptom,
-          ),
+            // Mini FAB 2: Log Symptom (Health)
+            _buildMiniFab(
+              context,
+              offset: const Offset(0, -90),
+              icon: Icons.healing_rounded,
+              label: l10n.logSymptom,
+              color: AppTheme.healthSecondary,
+              onPressed: _onLogSymptom,
+            ),
 
-          // Mini FAB 3: Start Workout (Fitness)
-          _buildMiniFab(
-            context,
-            offset: const Offset(0, -40),
-            icon: Icons.fitness_center_rounded,
-            label: l10n.startWorkout,
-            color: AppTheme.fitnessPrimary,
-            onPressed: _onStartWorkout,
-          ),
+            // Mini FAB 3: Start Workout (Fitness)
+            _buildMiniFab(
+              context,
+              offset: const Offset(0, -40),
+              icon: Icons.fitness_center_rounded,
+              label: l10n.startWorkout,
+              color: AppTheme.fitnessPrimary,
+              onPressed: _onStartWorkout,
+            ),
 
-          // Main FAB
-          FloatingActionButton(
-            onPressed: _toggleExpanded,
-            backgroundColor: theme.colorScheme.primary,
-            foregroundColor: theme.colorScheme.onPrimary,
-            child: Semantics(
-              label: _isExpanded
-                  ? l10n.quickAddMenuClose
-                  : l10n.quickAddMenuOpen,
-              button: true,
-              child: AnimatedRotation(
-                turns: _isExpanded ? 0.125 : 0, // 45 degrees when expanded
-                duration: AccessibilityHelper.getDuration(
-                  context,
-                  const Duration(milliseconds: 200),
+            // Main FAB
+            FloatingActionButton(
+              onPressed: _toggleExpanded,
+              backgroundColor: theme.colorScheme.primary,
+              foregroundColor: theme.colorScheme.onPrimary,
+              child: Semantics(
+                label: _isExpanded
+                    ? l10n.quickAddMenuClose
+                    : l10n.quickAddMenuOpen,
+                button: true,
+                child: AnimatedRotation(
+                  turns: _isExpanded ? 0.125 : 0, // 45 degrees when expanded
+                  duration: AccessibilityHelper.getDuration(
+                    context,
+                    const Duration(milliseconds: 200),
+                  ),
+                  child: const Icon(Icons.add_rounded),
                 ),
-                child: const Icon(Icons.add_rounded),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       );
     }
 

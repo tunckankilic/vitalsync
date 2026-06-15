@@ -311,7 +311,11 @@ class AppDatabase extends _$AppDatabase {
     'end_time': data.endTime?.toIso8601String(),
     'total_volume': data.totalVolume,
     'notes': data.notes,
-    'rating': data.rating,
+    // rating is an intEnum column, so its Dart value is the WorkoutRating enum.
+    // Serialize the int index (matching how it is stored) — emitting the enum
+    // itself produced a "WorkoutRating is not a subtype of int" cast error when
+    // the session was synced.
+    'rating': data.rating?.index,
     'created_at': data.createdAt.toIso8601String(),
   };
 

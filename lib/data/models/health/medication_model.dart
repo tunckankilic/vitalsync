@@ -110,7 +110,7 @@ class MedicationModel extends Medication {
 
   MedicationsCompanion toCompanion() {
     return MedicationsCompanion(
-      id: Value(id),
+      id: id == 0 ? const Value.absent() : Value(id),
       name: Value(name),
       dosage: Value(dosage),
       frequency: Value(frequency),

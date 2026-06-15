@@ -387,6 +387,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get healthTimeline => 'Gesundheits-Zeitlinie';
 
   @override
+  String get quickWorkout => 'Schnelles Training';
+
+  @override
   String get compliance => 'Einhaltung';
 
   @override

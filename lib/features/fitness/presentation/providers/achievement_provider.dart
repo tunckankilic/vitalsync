@@ -81,7 +81,7 @@ class AchievementNotifier extends _$AchievementNotifier {
     final analytics = ref.read(achievementAnalyticsServiceProvider);
     final newlyUnlockedNotifier = ref.read(newlyUnlockedProvider.notifier);
 
-    state = await AsyncValue.guard(() async {
+    final result = await AsyncValue.guard(() async {
       // Get achievements before check
       final beforeUnlocked = await repository.getUnlocked();
       final beforeUnlockedIds = beforeUnlocked.map((a) => a.id).toSet();
@@ -109,9 +109,10 @@ class AchievementNotifier extends _$AchievementNotifier {
         );
       }
     });
+    if (ref.mounted) state = result;
 
-    if (state.hasError) {
-      throw state.error!;
+    if (result.hasError) {
+      throw result.error!;
     }
   }
 }

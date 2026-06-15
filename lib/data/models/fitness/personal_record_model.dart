@@ -60,7 +60,7 @@ class PersonalRecordModel extends PersonalRecord {
 
   PersonalRecordsCompanion toCompanion() {
     return PersonalRecordsCompanion(
-      id: Value(id),
+      id: id == 0 ? const Value.absent() : Value(id),
       exerciseId: Value(exerciseId),
       weight: Value(weight),
       reps: Value(reps),

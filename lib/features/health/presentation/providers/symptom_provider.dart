@@ -88,15 +88,19 @@ class SymptomNotifier extends _$SymptomNotifier {
     final repository = ref.read(symptomRepositoryProvider);
     final analytics = ref.read(analyticsServiceProvider);
 
-    state = await AsyncValue.guard(() async {
+    final result = await AsyncValue.guard(() async {
       await repository.insert(symptom);
 
       //Fire analytics event
       await analytics.logSymptomLogged(severity: symptom.severity);
     });
+    // Guard the state write: this notifier is autoDispose and the add screen
+    // pops once the action completes, so an unguarded write threw "Cannot use
+    // the Ref ... after it has been disposed".
+    if (ref.mounted) state = result;
 
-    if (state.hasError) {
-      throw state.error!;
+    if (result.hasError) {
+      throw result.error!;
     }
   }
 
@@ -106,12 +110,13 @@ class SymptomNotifier extends _$SymptomNotifier {
 
     final repository = ref.read(symptomRepositoryProvider);
 
-    state = await AsyncValue.guard(() async {
+    final result = await AsyncValue.guard(() async {
       await repository.update(symptom);
     });
+    if (ref.mounted) state = result;
 
-    if (state.hasError) {
-      throw state.error!;
+    if (result.hasError) {
+      throw result.error!;
     }
   }
 
@@ -121,12 +126,13 @@ class SymptomNotifier extends _$SymptomNotifier {
 
     final repository = ref.read(symptomRepositoryProvider);
 
-    state = await AsyncValue.guard(() async {
+    final result = await AsyncValue.guard(() async {
       await repository.delete(id);
     });
+    if (ref.mounted) state = result;
 
-    if (state.hasError) {
-      throw state.error!;
+    if (result.hasError) {
+      throw result.error!;
     }
   }
 

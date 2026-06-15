@@ -94,7 +94,7 @@ class InsightModel extends Insight {
 
   GeneratedInsightsCompanion toCompanion() {
     return GeneratedInsightsCompanion(
-      id: Value(id),
+      id: id == 0 ? const Value.absent() : Value(id),
       insightType: Value(type),
       category: Value(category),
       title: Value(title),

@@ -20,6 +20,9 @@ import '../../../../domain/repositories/fitness/workout_session_repository.dart'
 import '../../../../domain/repositories/health/medication_log_repository.dart';
 import '../../../../domain/repositories/health/medication_repository.dart';
 import '../../../../domain/repositories/insights/insight_repository.dart';
+import '../../../fitness/presentation/providers/workout_provider.dart';
+import '../../../health/presentation/providers/medication_log_provider.dart';
+import '../../../health/presentation/providers/medication_provider.dart';
 
 part 'dashboard_provider.g.dart';
 
@@ -61,6 +64,14 @@ class DashboardSummary {
 /// Aggregates the dashboard data from the registered repositories.
 @riverpod
 Future<DashboardSummary> dashboardSummary(Ref ref) async {
+  // Reactivity triggers: recompute whenever medications, today's dose logs, or
+  // the active workout session change, so the dashboard reflects new data
+  // without a manual pull-to-refresh. These streams are watched only as change
+  // signals — the values below are still read fresh from the repositories.
+  ref.watch(medicationsProvider);
+  ref.watch(todayLogsProvider);
+  ref.watch(activeSessionProvider);
+
   final medicationRepository = getIt<MedicationRepository>();
   final medicationLogRepository = getIt<MedicationLogRepository>();
   final workoutRepository = getIt<WorkoutSessionRepository>();
