@@ -101,6 +101,21 @@ class AppLocalizationsDe extends AppLocalizations {
       'Synchronisierungsfehler - zum Wiederholen tippen';
 
   @override
+  String get syncNeedsCloudConsent =>
+      'Aktiviere Cloud-Backup in Datenschutz & Daten zum Synchronisieren';
+
+  @override
+  String get syncNeedsSignIn =>
+      'Melde dich an, um deine Daten zu synchronisieren';
+
+  @override
+  String get syncCompleted => 'Synchronisiert';
+
+  @override
+  String get syncFailed =>
+      'Synchronisierung fehlgeschlagen. Bitte erneut versuchen.';
+
+  @override
   String get insights => 'Einblicke';
 
   @override

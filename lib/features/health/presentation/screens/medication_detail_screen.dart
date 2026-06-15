@@ -115,14 +115,20 @@ class _MedicationDetailContent extends ConsumerWidget {
     final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
 
-    // We actually need the logs list for the chart, not just rate.
-    // Assuming we have a provider for logs.
-    // Let's us logsInDateRangeProvider family.
-    final now = DateTime.now();
-    final thirtyDaysAgo = now.subtract(const Duration(days: 30));
+    // Logs for the compliance chart and the history list.
+    //
+    // The range is pinned to day boundaries on purpose. Passing DateTime.now()
+    // straight into the family re-keyed the provider on every rebuild (each
+    // call has a new microsecond value), so it re-entered the loading state
+    // endlessly — the history and compliance sections were stuck on the
+    // spinner. dateOnly keeps the key constant for the whole day; endDate is
+    // tomorrow's midnight so today's logs are still included.
+    final today = DateUtils.dateOnly(DateTime.now());
+    final startDate = today.subtract(const Duration(days: 30));
+    final endDate = today.add(const Duration(days: 1));
 
     final logsListAsync = ref.watch(
-      logsInDateRangeProvider(startDate: thirtyDaysAgo, endDate: now),
+      logsInDateRangeProvider(startDate: startDate, endDate: endDate),
     );
 
     return ListView(

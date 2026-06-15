@@ -28,7 +28,15 @@ class CognitoAuthRepositoryImpl implements AuthRepository {
     _hubSubscription = Amplify.Hub.listen(HubChannel.Auth, (event) async {
       switch (event.type) {
         case AuthHubEventType.signedIn:
-          _cachedUser = await _fetchCurrentUser();
+          // Guarded so a fetch failure right after sign-in can't throw out of
+          // the Hub callback (which would leave _cachedUser stale and the
+          // stream un-notified).
+          try {
+            _cachedUser = await _fetchCurrentUser();
+          } catch (e) {
+            log('Failed to load user after sign-in: $e');
+            _cachedUser = null;
+          }
           _authStateController.add(_cachedUser);
         case AuthHubEventType.signedOut:
         case AuthHubEventType.sessionExpired:
@@ -58,16 +66,30 @@ class CognitoAuthRepositoryImpl implements AuthRepository {
 
   /// Fetches the current authenticated user from Cognito.
   Future<AppUser?> _fetchCurrentUser() async {
+    // Identity first. The userId from getCurrentUser() is what scopes cloud
+    // sync, so it is fetched on its own and must survive independently of the
+    // display attributes below.
+    final String userId;
     try {
       final authUser = await Amplify.Auth.getCurrentUser();
+      userId = authUser.userId;
+    } on SignedOutException {
+      return null;
+    }
+
+    // Attributes (name/email) are display-only. Fetch them in their own guard
+    // so a failure here never nulls the whole identity. Previously a thrown
+    // fetchUserAttributes() — e.g. a federated Apple user whose attribute
+    // mapping isn't fully provisioned — left currentUser null, and sync was
+    // then silently skipped ("User not authenticated"). Identity no longer
+    // depends on attributes succeeding.
+    String? email;
+    String? name;
+    String? givenName;
+    String? familyName;
+    var emailVerified = false;
+    try {
       final attributes = await Amplify.Auth.fetchUserAttributes();
-
-      String? email;
-      String? name;
-      String? givenName;
-      String? familyName;
-      var emailVerified = false;
-
       for (final attr in attributes) {
         switch (attr.userAttributeKey.key) {
           case 'email':
@@ -82,29 +104,29 @@ class CognitoAuthRepositoryImpl implements AuthRepository {
             familyName = attr.value;
         }
       }
-
-      // Sign in with Apple (via Cognito) supplies the user's name as
-      // firstName/lastName — which Cognito maps to `given_name`/`family_name`,
-      // not the single `name` attribute — and only on the first authorization.
-      // Prefer an explicit `name`, but fall back to composing one from
-      // given/family so federated users aren't shown as a blank "User".
-      final composedName = [givenName, familyName]
-          .where((part) => part != null && part.trim().isNotEmpty)
-          .join(' ')
-          .trim();
-      final displayName = (name != null && name.trim().isNotEmpty)
-          ? name
-          : (composedName.isNotEmpty ? composedName : null);
-
-      return AppUser(
-        id: authUser.userId,
-        email: email,
-        displayName: displayName,
-        emailVerified: emailVerified,
-      );
-    } on SignedOutException {
-      return null;
+    } catch (e) {
+      log('Failed to fetch user attributes (identity preserved): $e');
     }
+
+    // Sign in with Apple (via Cognito) supplies the user's name as
+    // firstName/lastName — which Cognito maps to `given_name`/`family_name`,
+    // not the single `name` attribute — and only on the first authorization.
+    // Prefer an explicit `name`, but fall back to composing one from
+    // given/family so federated users aren't shown as a blank "User".
+    final composedName = [givenName, familyName]
+        .where((part) => part != null && part.trim().isNotEmpty)
+        .join(' ')
+        .trim();
+    final displayName = (name != null && name.trim().isNotEmpty)
+        ? name
+        : (composedName.isNotEmpty ? composedName : null);
+
+    return AppUser(
+      id: userId,
+      email: email,
+      displayName: displayName,
+      emailVerified: emailVerified,
+    );
   }
 
   @override

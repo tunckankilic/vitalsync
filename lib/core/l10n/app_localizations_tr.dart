@@ -101,6 +101,20 @@ class AppLocalizationsTr extends AppLocalizations {
       'Senkronizasyon hatası - tekrar denemek için dokunun';
 
   @override
+  String get syncNeedsCloudConsent =>
+      'Senkronizasyon için Gizlilik ve Veri\'den Bulut Yedeklemeyi açın';
+
+  @override
+  String get syncNeedsSignIn =>
+      'Verilerinizi senkronize etmek için giriş yapın';
+
+  @override
+  String get syncCompleted => 'Senkronize edildi';
+
+  @override
+  String get syncFailed => 'Senkronizasyon başarısız. Lütfen tekrar deneyin.';
+
+  @override
   String get insights => 'İçgörüler';
 
   @override

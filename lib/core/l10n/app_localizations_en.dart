@@ -99,6 +99,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get syncErrorTooltip => 'Sync error - tap to retry';
 
   @override
+  String get syncNeedsCloudConsent =>
+      'Turn on Cloud Backup in Privacy & Data to sync';
+
+  @override
+  String get syncNeedsSignIn => 'Sign in to sync your data';
+
+  @override
+  String get syncCompleted => 'Synced';
+
+  @override
+  String get syncFailed => 'Sync failed. Please try again.';
+
+  @override
   String get insights => 'Insights';
 
   @override

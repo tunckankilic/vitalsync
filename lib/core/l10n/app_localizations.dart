@@ -268,6 +268,30 @@ abstract class AppLocalizations {
   /// **'Sync error - tap to retry'**
   String get syncErrorTooltip;
 
+  /// Shown when a manual sync is blocked by missing cloud backup consent
+  ///
+  /// In en, this message translates to:
+  /// **'Turn on Cloud Backup in Privacy & Data to sync'**
+  String get syncNeedsCloudConsent;
+
+  /// Shown when a manual sync is blocked because no user is signed in
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in to sync your data'**
+  String get syncNeedsSignIn;
+
+  /// Shown when a manual sync finishes successfully
+  ///
+  /// In en, this message translates to:
+  /// **'Synced'**
+  String get syncCompleted;
+
+  /// Shown when a manual sync throws an error
+  ///
+  /// In en, this message translates to:
+  /// **'Sync failed. Please try again.'**
+  String get syncFailed;
+
   /// Insights label
   ///
   /// In en, this message translates to:

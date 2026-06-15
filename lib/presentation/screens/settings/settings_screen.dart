@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:vitalsync/core/auth/auth_provider.dart';
 import 'package:vitalsync/core/constants/app_constants.dart';
 import 'package:vitalsync/core/di/injection_container.dart';
 import 'package:vitalsync/core/gdpr/gdpr_manager.dart';
@@ -284,8 +285,56 @@ class SettingsScreen extends ConsumerWidget {
                 trailing: TextButton(
                   onPressed: syncStatus == SyncStatus.syncing
                       ? null
-                      : () {
-                          ref.read(syncStatusProvider.notifier).triggerSync();
+                      : () async {
+                          // Mirror SyncService.sync()'s silent guards so the
+                          // button tells the user why a manual sync did nothing
+                          // (it used to be a silent no-op). Capture the messenger
+                          // before any await to stay off context across gaps.
+                          final messenger = ScaffoldMessenger.of(context);
+
+                          final consents = ref.read(
+                            gdprConsentSettingProvider,
+                          );
+                          if (!(consents[AppConstants
+                                  .gdprConsentTypeCloudBackup] ??
+                              false)) {
+                            messenger.showSnackBar(
+                              SnackBar(
+                                content: Text(l10n.syncNeedsCloudConsent),
+                              ),
+                            );
+                            return;
+                          }
+
+                          if (ref.read(authRepositoryProvider).currentUser ==
+                              null) {
+                            messenger.showSnackBar(
+                              SnackBar(content: Text(l10n.syncNeedsSignIn)),
+                            );
+                            return;
+                          }
+
+                          if (!await ref
+                              .read(connectivityServiceProvider)
+                              .isConnected()) {
+                            messenger.showSnackBar(
+                              SnackBar(content: Text(l10n.syncOfflineTooltip)),
+                            );
+                            return;
+                          }
+
+                          try {
+                            await ref
+                                .read(syncStatusProvider.notifier)
+                                .triggerSync();
+                            messenger.showSnackBar(
+                              SnackBar(content: Text(l10n.syncCompleted)),
+                            );
+                          } catch (_) {
+                            messenger.showSnackBar(
+                              SnackBar(content: Text(l10n.syncFailed)),
+                            );
+                          }
                         },
                   child: Text(l10n.syncNow),
                 ),
@@ -472,7 +521,14 @@ class _SettingsSection extends StatelessWidget {
               ),
             ],
           ),
-          child: Column(children: children),
+          // Transparent Material so the ListTiles inside have a proper Material
+          // ancestor for their background/ink. Without it the coloured
+          // BoxDecoration above is the nearest painted surface and Flutter warns
+          // "ListTile background color or ink splashes may be invisible".
+          child: Material(
+            type: MaterialType.transparency,
+            child: Column(children: children),
+          ),
         ),
       ],
     );

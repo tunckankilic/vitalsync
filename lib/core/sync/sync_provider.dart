@@ -36,11 +36,18 @@ SyncRepository syncRepository(Ref ref) {
   return getIt<SyncRepository>();
 }
 
-/// Stream provider for connectivity status
+/// Stream provider for connectivity status.
+///
+/// The underlying [ConnectivityService] stream is broadcast and only emits on
+/// connectivity *changes*, so a fresh listener would sit in the loading state
+/// (rendered as offline by the sync indicator) until the network next changed —
+/// the cloud icon showed "off" even while online. Seed the current state first,
+/// then forward live updates.
 @riverpod
-Stream<bool> connectivity(Ref ref) {
+Stream<bool> connectivity(Ref ref) async* {
   final service = ref.watch(connectivityServiceProvider);
-  return service.connectivityStream;
+  yield await service.isConnected();
+  yield* service.connectivityStream;
 }
 
 /// Provider for sync status
