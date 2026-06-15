@@ -28,6 +28,10 @@ Stream<List<MedicationLog>> todayLogs(Ref ref) {
 /// Family provider for compliance rate of a specific medication
 @riverpod
 Future<double> complianceRate(Ref ref, int medicationId, {int days = 7}) async {
+  // Refresh when today's logs change so the compliance ring updates reactively
+  // right after a dose is taken or skipped, without a manual refresh.
+  ref.watch(todayLogsProvider);
+
   final repository = ref.watch(medicationLogRepositoryProvider);
   return await repository.getComplianceRate(medicationId, days: days);
 }

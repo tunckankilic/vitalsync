@@ -90,11 +90,14 @@ class MedicationDetailScreen extends ConsumerWidget {
         child: SafeArea(
           child: medicationsAsync.when(
             data: (medications) {
-              final medication = medications.firstWhere(
-                (m) => m.id == medicationId,
-                orElse: () => throw Exception('Medication not found'),
-              );
-              return _MedicationDetailContent(medication: medication);
+              final matches = medications.where((m) => m.id == medicationId);
+              if (matches.isEmpty) {
+                // The medication was just deleted (the list updates reactively
+                // before this screen finishes popping). Render nothing instead
+                // of throwing "Medication not found".
+                return const SizedBox.shrink();
+              }
+              return _MedicationDetailContent(medication: matches.first);
             },
             loading: () => const Center(child: CircularProgressIndicator()),
             error: (err, stack) => Center(child: Text(AppLocalizations.of(context).errorGeneric(err))),
@@ -177,7 +180,12 @@ class _MedicationDetailContent extends ConsumerWidget {
           child: GlassmorphicCard(
             padding: const EdgeInsets.all(16),
             child: logsListAsync.when(
-              data: (logs) => _ComplianceChart(logs: logs, periodDays: 30),
+              data: (logs) => _ComplianceChart(
+                logs: logs
+                    .where((l) => l.medicationId == medication.id)
+                    .toList(),
+                periodDays: 30,
+              ),
               loading: () => const Center(child: CircularProgressIndicator()),
               error: (_, _) => Center(child: Text(l10n.chartError)),
             ),
@@ -191,14 +199,19 @@ class _MedicationDetailContent extends ConsumerWidget {
         const SizedBox(height: 12),
         logsListAsync.when(
           data: (logs) {
-            if (logs.isEmpty) {
+            // Only this medication's logs — the range provider returns every
+            // medication's logs, so the history must be filtered by id.
+            final medLogs = logs
+                .where((l) => l.medicationId == medication.id)
+                .toList();
+            if (medLogs.isEmpty) {
               return Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Text(l10n.noLogsYet, textAlign: TextAlign.center),
               );
             }
             // Sort by date desc
-            final sortedLogs = List<MedicationLog>.from(logs)
+            final sortedLogs = medLogs
               ..sort((a, b) => b.scheduledTime.compareTo(a.scheduledTime));
 
             return Column(

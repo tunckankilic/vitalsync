@@ -26,7 +26,7 @@ class _MedicationListScreenState extends ConsumerState<MedicationListScreen>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 2, vsync: this);
     _searchController.addListener(() {
       setState(() {
         _searchQuery = _searchController.text.toLowerCase();
@@ -117,7 +117,6 @@ class _MedicationListScreenState extends ConsumerState<MedicationListScreen>
                         tabs: [
                           Tab(text: l10n.active), // "Active"
                           Tab(text: l10n.all), // "All"
-                          Tab(text: l10n.completed), // "Completed"
                         ],
                       ),
                     ),
@@ -129,6 +128,10 @@ class _MedicationListScreenState extends ConsumerState<MedicationListScreen>
               Expanded(
                 child: TabBarView(
                   controller: _tabController,
+                  // Disable horizontal page swiping so it doesn't steal the
+                  // gesture from the cards' swipe-to-take/skip Dismissible.
+                  // Tabs are still switched by tapping the TabBar above.
+                  physics: const NeverScrollableScrollPhysics(),
                   children: [
                     _MedicationList(
                       filter: _MedicationFilter.active,
@@ -136,10 +139,6 @@ class _MedicationListScreenState extends ConsumerState<MedicationListScreen>
                     ),
                     _MedicationList(
                       filter: _MedicationFilter.all,
-                      searchQuery: _searchQuery,
-                    ),
-                    _MedicationList(
-                      filter: _MedicationFilter.completed,
                       searchQuery: _searchQuery,
                     ),
                   ],
@@ -229,7 +228,7 @@ class _MedicationListScreenState extends ConsumerState<MedicationListScreen>
   }
 }
 
-enum _MedicationFilter { active, all, completed }
+enum _MedicationFilter { active, all }
 
 class _MedicationList extends ConsumerWidget {
   const _MedicationList({required this.filter, required this.searchQuery});
@@ -252,7 +251,8 @@ class _MedicationList extends ConsumerWidget {
             return false;
           }
 
-          // Tab filter
+          // Tab filter. A medication whose end date has passed is no longer
+          // active, so it's hidden from Active but still visible under All.
           final now = DateTime.now();
           final isCompleted = med.endDate != null && med.endDate!.isBefore(now);
 
@@ -261,8 +261,6 @@ class _MedicationList extends ConsumerWidget {
               return med.isActive && !isCompleted;
             case _MedicationFilter.all:
               return true;
-            case _MedicationFilter.completed:
-              return isCompleted;
           }
         }).toList();
 

@@ -68,7 +68,10 @@ class InsightModel extends Insight {
       title: data.title,
       message: data.message,
       data: jsonDecode(data.data) as Map<String, dynamic>,
-      priority: InsightPriority.fromValue(data.priority as int),
+      // Drift maps this column via intEnum<InsightPriority>(), so data.priority
+      // is already an InsightPriority — casting it to int crashed with
+      // "InsightPriority is not a subtype of int".
+      priority: data.priority,
       isRead: data.isRead,
       isDismissed: data.isDismissed,
       validUntil: data.validUntil,

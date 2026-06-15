@@ -8,6 +8,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../../core/di/injection_container.dart';
 import '../../../../domain/entities/fitness/progress_data.dart';
 import '../../../../domain/repositories/fitness/workout_session_repository.dart';
+import 'workout_provider.dart';
 
 part 'progress_provider.g.dart';
 
@@ -69,6 +70,10 @@ WorkoutSessionRepository progressWorkoutRepository(Ref ref) {
 /// Provider for weekly statistics with comparison to previous week
 @riverpod
 Future<WeeklyStats> weeklyStats(Ref ref) async {
+  // Re-run when the active session changes (a workout is started or finished)
+  // so weekly stats refresh reactively, without a manual pull-to-refresh.
+  ref.watch(activeSessionProvider);
+
   final repository = ref.watch(progressWorkoutRepositoryProvider);
 
   // Get current week data (last 7 days)

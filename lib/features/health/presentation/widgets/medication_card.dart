@@ -2,12 +2,28 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/enums/medication_log_status.dart';
 import '../../../../core/l10n/app_localizations.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/utils/extensions.dart';
 import '../../../../domain/entities/health/medication.dart';
+import '../../../../domain/entities/health/medication_log.dart';
 import '../../../../presentation/widgets/glassmorphic_card.dart';
 import '../providers/medication_log_provider.dart';
+
+/// Resolves a medication's effective status for *today* from the day's logs.
+///
+/// A taken log wins over a skipped one; with neither the dose is still pending.
+MedicationLogStatus _todayStatusFor(List<MedicationLog> logs, int medicationId) {
+  final medLogs = logs.where((l) => l.medicationId == medicationId);
+  if (medLogs.any((l) => l.status == MedicationLogStatus.taken)) {
+    return MedicationLogStatus.taken;
+  }
+  if (medLogs.any((l) => l.status == MedicationLogStatus.skipped)) {
+    return MedicationLogStatus.skipped;
+  }
+  return MedicationLogStatus.pending;
+}
 
 class MedicationCard extends ConsumerWidget {
   const MedicationCard({required this.medication, super.key});
@@ -21,8 +37,14 @@ class MedicationCard extends ConsumerWidget {
     // Watch compliance rate for this medication
     final complianceAsync = ref.watch(complianceRateProvider(medication.id));
 
+    // Today's logged status drives the reactive UI: once a dose is taken or
+    // skipped the card shows a status badge and swiping is disabled.
+    final todayLogs = ref.watch(todayLogsProvider).asData?.value ?? const [];
+    final todayStatus = _todayStatusFor(todayLogs, medication.id);
+
     return SlidableMedicationCard(
       medication: medication,
+      status: todayStatus,
       child: GlassmorphicCard(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -90,10 +112,10 @@ class MedicationCard extends ConsumerWidget {
 
             const SizedBox(height: 16),
 
-            // Quick Actions
+            // Quick Actions (or status badge once logged for today)
             Align(
               alignment: Alignment.centerRight,
-              child: _QuickActions(medication: medication),
+              child: _QuickActions(medication: medication, status: todayStatus),
             ),
           ],
         ),
@@ -151,23 +173,26 @@ class _ComplianceRing extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 24,
-      height: 24,
+      width: 40,
+      height: 40,
       child: Stack(
+        alignment: Alignment.center,
         children: [
-          CircularProgressIndicator(
-            value: compliance,
-            strokeWidth: 3,
-            backgroundColor: Theme.of(
-              context,
-            ).colorScheme.surfaceContainerHighest,
-            color: _getColorForCompliance(compliance),
-          ),
-          Center(
-            child: Text(
-              '${(compliance * 100).toInt()}%',
-              style: const TextStyle(fontSize: 8, fontWeight: FontWeight.bold),
+          SizedBox(
+            width: 40,
+            height: 40,
+            child: CircularProgressIndicator(
+              value: compliance,
+              strokeWidth: 4,
+              backgroundColor: Theme.of(
+                context,
+              ).colorScheme.surfaceContainerHighest,
+              color: _getColorForCompliance(compliance),
             ),
+          ),
+          Text(
+            '${(compliance * 100).toInt()}%',
+            style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
           ),
         ],
       ),
@@ -182,13 +207,31 @@ class _ComplianceRing extends StatelessWidget {
 }
 
 class _QuickActions extends ConsumerWidget {
-  const _QuickActions({required this.medication});
+  const _QuickActions({required this.medication, required this.status});
 
   final Medication medication;
+  final MedicationLogStatus status;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
+
+    // Once the dose is logged for today, replace the buttons with a status
+    // badge so the action reads as completed and can't be double-logged.
+    if (status == MedicationLogStatus.taken) {
+      return _StatusBadge(
+        label: l10n.taken,
+        icon: Icons.check_circle_rounded,
+        color: AppTheme.healthPrimary,
+      );
+    }
+    if (status == MedicationLogStatus.skipped) {
+      return _StatusBadge(
+        label: l10n.skipped,
+        icon: Icons.cancel_rounded,
+        color: Colors.grey,
+      );
+    }
 
     return Row(
       mainAxisSize: MainAxisSize.min,
@@ -215,6 +258,46 @@ class _QuickActions extends ConsumerWidget {
           },
         ),
       ],
+    );
+  }
+}
+
+/// Read-only badge shown after a dose has been taken or skipped for the day.
+class _StatusBadge extends StatelessWidget {
+  const _StatusBadge({
+    required this.label,
+    required this.icon,
+    required this.color,
+  });
+
+  final String label;
+  final IconData icon;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: color.withValues(alpha: 0.3)),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 16, color: color),
+          const SizedBox(width: 4),
+          Text(
+            label,
+            style: TextStyle(
+              color: color,
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -267,41 +350,105 @@ class SlidableMedicationCard extends ConsumerWidget {
   const SlidableMedicationCard({
     required this.child,
     required this.medication,
+    required this.status,
     super.key,
   });
 
   final Widget child;
   final Medication medication;
+  final MedicationLogStatus status;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // For now, return child directly.
-    // Implementing proper Slidable requires 'flutter_slidable' package which might not be in pubspec.
-    // Checking pubspec... no 'flutter_slidable'.
-    // So we will implement custom slide or just use child for now
-    // and maybe add context menu or long press for edit/delete.
-    // The prompt asked for "Slidable: edit (blue), delete (red)".
-    // Since package is missing, we'll use Dismissible as a native alternative or wrap in InkWell for long press.
+    final l10n = AppLocalizations.of(context);
 
+    final tappable = InkWell(
+      onTap: () => context.push('/health/medications/${medication.id}'),
+      child: child,
+    );
+
+    // Already logged for today: no swipe action left to take, so just show the
+    // card (its badge already conveys the taken/skipped state).
+    if (status != MedicationLogStatus.pending) {
+      return tappable;
+    }
+
+    // Swipe right → take (complete), swipe left → skip. Both fire the action and
+    // return false so the card stays in the tree; the reactive status badge
+    // (driven by todayLogsProvider) handles the visual transition.
     return Dismissible(
-      key: ValueKey(medication.id),
-      direction: DismissDirection.endToStart,
-      background: Container(
+      key: ValueKey('med-swipe-${medication.id}'),
+      direction: DismissDirection.horizontal,
+      background: _SwipeBackground(
+        alignment: Alignment.centerLeft,
+        color: AppTheme.healthPrimary,
+        icon: Icons.check_circle_rounded,
+        label: l10n.take,
+      ),
+      secondaryBackground: _SwipeBackground(
         alignment: Alignment.centerRight,
-        padding: const EdgeInsets.only(right: 20),
-        color: Colors.red.withValues(alpha: 0.8),
-        child: const Icon(Icons.delete_outline, color: Colors.white),
+        color: Colors.orange,
+        icon: Icons.cancel_rounded,
+        label: l10n.skip,
       ),
       confirmDismiss: (direction) async {
-        // Show confirmation dialog logic here if needed
-        return false; // Don't actually dismiss from tree, just trigger action
+        final notifier = ref.read(logMedicationProvider.notifier);
+        if (direction == DismissDirection.startToEnd) {
+          await notifier.logAsTaken(medication.id, DateTime.now());
+        } else {
+          await notifier.logAsSkipped(medication.id, DateTime.now());
+        }
+        // Keep the card; todayLogsProvider rebuilds it into the logged state.
+        return false;
       },
-      child: InkWell(
-        onTap: () {
-          // Navigate to detail
-          context.push('/health/medications/${medication.id}');
-        },
-        child: child,
+      child: tappable,
+    );
+  }
+}
+
+/// Coloured background revealed while swiping a medication card.
+class _SwipeBackground extends StatelessWidget {
+  const _SwipeBackground({
+    required this.alignment,
+    required this.color,
+    required this.icon,
+    required this.label,
+  });
+
+  final Alignment alignment;
+  final Color color;
+  final IconData icon;
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    final isLeft = alignment == Alignment.centerLeft;
+    return Container(
+      alignment: alignment,
+      padding: const EdgeInsets.symmetric(horizontal: 24),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.85),
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (isLeft) ...[
+            Icon(icon, color: Colors.white),
+            const SizedBox(width: 8),
+          ],
+          Text(
+            label,
+            style: const TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          if (!isLeft) ...[
+            const SizedBox(width: 8),
+            Icon(icon, color: Colors.white),
+          ],
+        ],
       ),
     );
   }

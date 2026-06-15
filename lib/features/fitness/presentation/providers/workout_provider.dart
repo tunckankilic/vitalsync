@@ -68,6 +68,10 @@ Stream<List<WorkoutSet>> sessionSets(Ref ref, int sessionId) {
 /// Provider for recent workout sessions (last 5)
 @riverpod
 Future<List<WorkoutSession>> recentWorkouts(Ref ref) async {
+  // Re-run when the active session changes (a workout is started or finished)
+  // so the list refreshes reactively, without a manual pull-to-refresh.
+  ref.watch(activeSessionProvider);
+
   final repository = ref.watch(workoutSessionRepositoryProvider);
   final allWorkouts = await repository.getAll();
 
@@ -349,17 +353,30 @@ class WorkoutNotifier extends _$WorkoutNotifier {
           .difference(activeSession.startTime)
           .inMinutes;
 
-      // End the session
+      // Total volume = sum of reps × weight across working (non-warmup) sets.
+      // This was never computed before, so the session stored 0 and the
+      // summary screen showed a default volume.
+      final totalVolume = sets
+          .where((s) => !s.isWarmup)
+          .fold<double>(0.0, (sum, s) => sum + s.reps * s.weight);
+
+      // End the session (persists endTime + totalVolume)
       await repository.endSession(
         activeSession.id,
         notes: notes,
         rating: rating?.index,
+        totalVolume: totalVolume,
       );
+
+      // Close any remaining stale/duplicate open sessions so the active-workout
+      // banner doesn't keep ticking on a leftover session. The one we just
+      // ended already has an end time, so it is unaffected.
+      await repository.closeOpenSessions();
 
       // Fire analytics event
       await analytics.logWorkoutCompleted(
         durationMinutes: durationMinutes,
-        totalVolume: activeSession.totalVolume,
+        totalVolume: totalVolume,
         exerciseCount: exerciseCount,
       );
     });

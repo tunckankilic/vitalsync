@@ -428,7 +428,7 @@ class _RecentWorkoutCard extends StatelessWidget {
             ),
             const Spacer(),
             Text(
-              _formatDate(workout.startedAt, l10n),
+              _formatDate(workout.startTime, l10n),
               style: theme.textTheme.bodySmall,
             ),
           ],

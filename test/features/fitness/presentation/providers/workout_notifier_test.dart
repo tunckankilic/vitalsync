@@ -181,7 +181,11 @@ void main() {
           any(),
           notes: any(named: 'notes'),
           rating: any(named: 'rating'),
+          totalVolume: any(named: 'totalVolume'),
         ),
+      ).thenAnswer((_) async {});
+      when(
+        () => mockWorkoutRepo.closeOpenSessions(),
       ).thenAnswer((_) async {});
       when(
         () => mockAnalytics.logWorkoutCompleted(
@@ -196,17 +200,20 @@ void main() {
       await notifier.endSession(notes: 'Great workout');
 
       // Assert
+      // Volume is computed from the working sets (8 reps × 60 kg), not the
+      // stale value stored on the session.
       verify(
         () => mockWorkoutRepo.endSession(
           1,
           notes: 'Great workout',
           rating: null,
+          totalVolume: 480.0,
         ),
       ).called(1);
       verify(
         () => mockAnalytics.logWorkoutCompleted(
           durationMinutes: any(named: 'durationMinutes'),
-          totalVolume: 3600.0,
+          totalVolume: 480.0,
           exerciseCount: 1,
         ),
       ).called(1);

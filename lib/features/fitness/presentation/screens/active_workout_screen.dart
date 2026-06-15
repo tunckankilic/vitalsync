@@ -356,14 +356,21 @@ class _ActiveWorkoutScreenState extends ConsumerState<ActiveWorkoutScreen> {
     return shouldDiscard ?? false;
   }
 
-  void _handleFinishWorkout(BuildContext context) {
+  Future<void> _handleFinishWorkout(BuildContext context) async {
     final session = ref.read(activeSessionProvider).value;
-    if (session != null) {
-      context.goNamed(
-        'workout_summary',
-        pathParameters: {'sessionId': session.id.toString()},
-      );
-    }
+    if (session == null) return;
+    final sessionId = session.id;
+
+    // Persist endTime + totalVolume before navigating. Previously this only
+    // navigated without ending the session, so the summary read an unfinished
+    // session (zero duration, zero volume) and the row stayed active.
+    await ref.read(workoutProvider.notifier).endSession();
+
+    if (!context.mounted) return;
+    context.goNamed(
+      'workout_summary',
+      pathParameters: {'sessionId': sessionId.toString()},
+    );
   }
 
   Future<void> _handleAddExercise() async {

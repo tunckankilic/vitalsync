@@ -198,10 +198,16 @@ class WorkoutSessionDao extends DatabaseAccessor<AppDatabase>
   }
 
   /// Get the active session (no end time).
+  ///
+  /// Orders by most recent and limits to one row so that stale/duplicate open
+  /// sessions (more than one row with a null end time) don't blow up with a
+  /// "Bad state: too many elements" — we return the latest active one.
   Future<WorkoutSessionData?> getActiveSession() {
-    return (select(
-      workoutSessions,
-    )..where((tbl) => tbl.endTime.isNull())).getSingleOrNull();
+    return (select(workoutSessions)
+          ..where((tbl) => tbl.endTime.isNull())
+          ..orderBy([(tbl) => OrderingTerm.desc(tbl.startTime)])
+          ..limit(1))
+        .getSingleOrNull();
   }
 
   /// Start a new session.
@@ -209,18 +215,41 @@ class WorkoutSessionDao extends DatabaseAccessor<AppDatabase>
     return into(workoutSessions).insert(session);
   }
 
-  /// End a session with optional notes and rating.
+  /// End a session with optional notes, rating and total volume.
+  ///
+  /// rating/totalVolume are only written when provided; passing a null rating
+  /// no longer crashes (previously `WorkoutRating.fromValue(rating!)` threw).
   Future<int> endSession(
     int id,
     DateTime endTime, {
     String? notes,
     int? rating,
+    double? totalVolume,
   }) {
     return (update(workoutSessions)..where((tbl) => tbl.id.equals(id))).write(
       WorkoutSessionsCompanion(
         endTime: Value(endTime),
         notes: Value(notes),
-        rating: Value(WorkoutRating.fromValue(rating!)),
+        rating: rating != null
+            ? Value(WorkoutRating.fromValue(rating))
+            : const Value.absent(),
+        totalVolume: totalVolume != null
+            ? Value(totalVolume)
+            : const Value.absent(),
+        lastModifiedAt: Value(DateTime.now()),
+      ),
+    );
+  }
+
+  /// Close every still-open session (end_time IS NULL) by stamping an end time.
+  ///
+  /// Used to clear stale/duplicate active sessions that could otherwise keep
+  /// the active-workout banner ticking forever. Returns the number of rows
+  /// updated.
+  Future<int> closeOpenSessions(DateTime endTime) {
+    return (update(workoutSessions)..where((tbl) => tbl.endTime.isNull())).write(
+      WorkoutSessionsCompanion(
+        endTime: Value(endTime),
         lastModifiedAt: Value(DateTime.now()),
       ),
     );
@@ -263,10 +292,16 @@ class WorkoutSessionDao extends DatabaseAccessor<AppDatabase>
   }
 
   /// Watch active session.
+  ///
+  /// Orders by most recent and limits to one row so that stale/duplicate open
+  /// sessions (more than one row with a null end time) don't blow up with a
+  /// "Bad state: too many elements" — we emit the latest active one.
   Stream<WorkoutSessionData?> watchActiveSession() {
-    return (select(
-      workoutSessions,
-    )..where((tbl) => tbl.endTime.isNull())).watchSingleOrNull();
+    return (select(workoutSessions)
+          ..where((tbl) => tbl.endTime.isNull())
+          ..orderBy([(tbl) => OrderingTerm.desc(tbl.startTime)])
+          ..limit(1))
+        .watchSingleOrNull();
   }
 
   /// Watch sets for a session.
