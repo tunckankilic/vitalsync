@@ -276,6 +276,19 @@ class AppLocalizationsTr extends AppLocalizations {
   String get dismiss => 'Kapat';
 
   @override
+  String get understood => 'Anladım';
+
+  @override
+  String get healthDisclaimerTitle => 'Sağlık Sorumluluk Reddi';
+
+  @override
+  String get healthDisclaimerSubtitle => 'Önemli tıbbi bilgilendirme';
+
+  @override
+  String get healthDisclaimerBody =>
+      'VitalSynch; ilaçlarını, semptomlarını ve antrenmanlarını takip etmene yardımcı olmak için tasarlanmıştır. Bir tıbbi cihaz değildir; tıbbi tavsiye, teşhis veya tedavi sağlamaz. Sağlığın, ilaçların veya egzersizinle ilgili kararlar almadan önce her zaman nitelikli bir sağlık uzmanına danış. Bu uygulamada okuduğun bir şey nedeniyle profesyonel tıbbi tavsiyeyi asla göz ardı etme. Tıbbi acil durumlarda derhal yerel acil servisini ara.';
+
+  @override
   String get errorLoadingDashboard => 'Gösterge paneli yüklenirken hata';
 
   @override

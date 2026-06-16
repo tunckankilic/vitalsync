@@ -586,6 +586,30 @@ abstract class AppLocalizations {
   /// **'Dismiss'**
   String get dismiss;
 
+  /// Acknowledge button for the health disclaimer
+  ///
+  /// In en, this message translates to:
+  /// **'I understand'**
+  String get understood;
+
+  /// Title for the medical/health disclaimer
+  ///
+  /// In en, this message translates to:
+  /// **'Health Disclaimer'**
+  String get healthDisclaimerTitle;
+
+  /// Settings subtitle for the health disclaimer
+  ///
+  /// In en, this message translates to:
+  /// **'Important medical information'**
+  String get healthDisclaimerSubtitle;
+
+  /// Full medical/health disclaimer text
+  ///
+  /// In en, this message translates to:
+  /// **'VitalSynch is designed to help you track your medications, symptoms, and workouts. It is not a medical device and does not provide medical advice, diagnosis, or treatment. Always consult a qualified healthcare professional before making decisions about your health, medications, or exercise. Never disregard professional medical advice because of something you have read in this app. In case of a medical emergency, contact your local emergency services immediately.'**
+  String get healthDisclaimerBody;
+
   /// Error loading dashboard message
   ///
   /// In en, this message translates to:

@@ -200,6 +200,12 @@ class SettingsScreen extends ConsumerWidget {
             title: l10n.privacyData,
             children: [
               _SettingsTile(
+                title: l10n.healthDisclaimerTitle,
+                subtitle: l10n.healthDisclaimerSubtitle,
+                icon: Icons.health_and_safety_outlined,
+                onTap: () => _showHealthDisclaimer(context, l10n),
+              ),
+              _SettingsTile(
                 title: l10n.manageConsents,
                 subtitle: l10n.manageConsentsSubtitle,
                 icon: Icons.shield_outlined,
@@ -227,9 +233,6 @@ class SettingsScreen extends ConsumerWidget {
                   _showDeleteConfirmation(context, ref, l10n);
                 },
               ),
-              // TODO: Aşağıdaki üç sayfa (privacy/terms/support) henüz web
-              // sitesinde yayında değil — AppConstants'taki URL'lere eklenince
-              // bu linkler çalışır hale gelir.
               _SettingsTile(
                 title: l10n.privacyPolicy,
                 subtitle: l10n.privacyPolicySubtitle,
@@ -400,6 +403,24 @@ class SettingsScreen extends ConsumerWidget {
       case SyncStatus.error:
         return l10n.syncError;
     }
+  }
+
+  void _showHealthDisclaimer(BuildContext context, AppLocalizations l10n) {
+    showDialog<void>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text(l10n.healthDisclaimerTitle),
+        content: SingleChildScrollView(
+          child: Text(l10n.healthDisclaimerBody),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(),
+            child: Text(l10n.understood),
+          ),
+        ],
+      ),
+    );
   }
 
   void _showDeleteConfirmation(

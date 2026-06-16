@@ -273,6 +273,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get dismiss => 'Dismiss';
 
   @override
+  String get understood => 'I understand';
+
+  @override
+  String get healthDisclaimerTitle => 'Health Disclaimer';
+
+  @override
+  String get healthDisclaimerSubtitle => 'Important medical information';
+
+  @override
+  String get healthDisclaimerBody =>
+      'VitalSynch is designed to help you track your medications, symptoms, and workouts. It is not a medical device and does not provide medical advice, diagnosis, or treatment. Always consult a qualified healthcare professional before making decisions about your health, medications, or exercise. Never disregard professional medical advice because of something you have read in this app. In case of a medical emergency, contact your local emergency services immediately.';
+
+  @override
   String get errorLoadingDashboard => 'Error loading dashboard';
 
   @override

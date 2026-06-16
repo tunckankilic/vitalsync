@@ -43,7 +43,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
   }
 
   void _nextPage() {
-    if (_currentPage < 4) {
+    if (_currentPage < 5) {
       _pageController.animateToPage(
         _currentPage + 1,
         duration: const Duration(milliseconds: 300),
@@ -102,7 +102,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: LinearProgressIndicator(
-                value: (_currentPage + 1) / 5,
+                value: (_currentPage + 1) / 6,
                 backgroundColor: theme.colorScheme.surfaceContainerHighest,
                 valueColor: AlwaysStoppedAnimation(theme.colorScheme.primary),
               ),
@@ -116,6 +116,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                 physics: const NeverScrollableScrollPhysics(), // Disable swipe
                 children: [
                   _WelcomeScreen(l10n: l10n),
+                  _DisclaimerScreen(l10n: l10n),
                   _FeatureScreen(
                     l10n: l10n,
                     icon: Icons.medical_services_rounded,
@@ -178,7 +179,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                   // Page indicators
                   Row(
                     children: List.generate(
-                      5,
+                      6,
                       (index) => Container(
                         margin: const EdgeInsets.symmetric(horizontal: 4),
                         width: 8,
@@ -194,7 +195,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                   ),
 
                   // Next/Finish button
-                  if (_currentPage < 4)
+                  if (_currentPage < 5)
                     FilledButton(
                       onPressed: _nextPage,
                       child: Text(l10n.next),
@@ -209,6 +210,57 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+/// Health disclaimer screen (Page 1).
+///
+/// Surfaces the medical disclaimer early in onboarding so users see it before
+/// using the medication/symptom tracking features (App Store Guideline 1.4.1).
+class _DisclaimerScreen extends StatelessWidget {
+  const _DisclaimerScreen({required this.l10n});
+
+  final AppLocalizations l10n;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(24.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.health_and_safety_outlined,
+            size: 80,
+            color: theme.colorScheme.primary,
+          ),
+          const SizedBox(height: 32),
+          Text(
+            l10n.healthDisclaimerTitle,
+            style: theme.textTheme.headlineMedium?.copyWith(
+              fontWeight: FontWeight.bold,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 24),
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: theme.colorScheme.surfaceContainerHighest,
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Text(
+              l10n.healthDisclaimerBody,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

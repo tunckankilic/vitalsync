@@ -205,7 +205,15 @@
   "@cancel": { "description": "Cancel button" },
   "dismiss": "Dismiss",
   "@dismiss": { "description": "Dismiss button" },
-  
+  "understood": "I understand",
+  "@understood": { "description": "Acknowledge button for the health disclaimer" },
+  "healthDisclaimerTitle": "Health Disclaimer",
+  "@healthDisclaimerTitle": { "description": "Title for the medical/health disclaimer" },
+  "healthDisclaimerSubtitle": "Important medical information",
+  "@healthDisclaimerSubtitle": { "description": "Settings subtitle for the health disclaimer" },
+  "healthDisclaimerBody": "VitalSynch is designed to help you track your medications, symptoms, and workouts. It is not a medical device and does not provide medical advice, diagnosis, or treatment. Always consult a qualified healthcare professional before making decisions about your health, medications, or exercise. Never disregard professional medical advice because of something you have read in this app. In case of a medical emergency, contact your local emergency services immediately.",
+  "@healthDisclaimerBody": { "description": "Full medical/health disclaimer text" },
+
   "errorLoadingDashboard": "Error loading dashboard",
   "@errorLoadingDashboard": { "description": "Error loading dashboard message" },
   "retry": "Retry",
