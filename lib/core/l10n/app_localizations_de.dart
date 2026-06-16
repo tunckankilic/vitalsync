@@ -750,6 +750,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get enterFullName => 'Bitte geben Sie Ihren Namen ein';
 
   @override
+  String get nameTooShort => 'Bitte geben Sie mindestens 2 Zeichen ein';
+
+  @override
   String get dateOfBirth => 'Geburtsdatum';
 
   @override
@@ -1084,6 +1087,9 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get enterEmail => 'Bitte geben Sie Ihre E-Mail ein';
+
+  @override
+  String get invalidEmail => 'Bitte geben Sie eine gültige E-Mail-Adresse ein';
 
   @override
   String get enterPassword => 'Bitte geben Sie Ihr Passwort ein';
@@ -1654,9 +1660,6 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get security => 'Sicherheit';
-
-  @override
-  String get invalidEmail => 'Bitte geben Sie eine gültige E-Mail-Adresse ein';
 
   @override
   String get enterValidWeightAndReps =>

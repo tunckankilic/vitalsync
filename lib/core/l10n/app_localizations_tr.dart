@@ -747,6 +747,9 @@ class AppLocalizationsTr extends AppLocalizations {
   String get enterFullName => 'Lütfen adınızı girin';
 
   @override
+  String get nameTooShort => 'Lütfen en az 2 karakter girin';
+
+  @override
   String get dateOfBirth => 'Doğum Tarihi';
 
   @override
@@ -1080,6 +1083,9 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get enterEmail => 'Lütfen e-postanızı girin';
+
+  @override
+  String get invalidEmail => 'Lütfen geçerli bir e-posta adresi girin';
 
   @override
   String get enterPassword => 'Lütfen şifrenizi girin';
@@ -1649,9 +1655,6 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get security => 'Güvenlik';
-
-  @override
-  String get invalidEmail => 'Lütfen geçerli bir e-posta adresi girin';
 
   @override
   String get enterValidWeightAndReps =>

@@ -484,7 +484,7 @@ class _TemplateCard extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              '${template.exerciseCount ?? 0} ${l10n.exercises}',
+              '${template.exercises.length} ${l10n.exercises}',
               style: theme.textTheme.bodySmall,
             ),
             const SizedBox(height: 4),

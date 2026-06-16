@@ -557,11 +557,21 @@ class _CompactInput extends StatelessWidget {
 
     return Expanded(
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text(
-            label,
-            style: theme.textTheme.labelSmall?.copyWith(
-              color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+          // Fixed-height, centered label so a longer caption (e.g. the rest
+          // field) wrapping to two lines can't shift this column's input box
+          // out of alignment with its siblings.
+          SizedBox(
+            height: 30,
+            child: Text(
+              label,
+              style: theme.textTheme.labelSmall?.copyWith(
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+              ),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
             ),
           ),
           const SizedBox(height: 4),
@@ -608,11 +618,21 @@ class _CompactDoubleInput extends StatelessWidget {
 
     return Expanded(
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text(
-            label,
-            style: theme.textTheme.labelSmall?.copyWith(
-              color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+          // Fixed-height, centered label so a longer caption (e.g. the rest
+          // field) wrapping to two lines can't shift this column's input box
+          // out of alignment with its siblings.
+          SizedBox(
+            height: 30,
+            child: Text(
+              label,
+              style: theme.textTheme.labelSmall?.copyWith(
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+              ),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
             ),
           ),
           const SizedBox(height: 4),

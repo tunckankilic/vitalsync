@@ -190,9 +190,18 @@ class _ComplianceRing extends StatelessWidget {
               color: _getColorForCompliance(compliance),
             ),
           ),
-          Text(
-            '${(compliance * 100).toInt()}%',
-            style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
+          Padding(
+            padding: const EdgeInsets.all(6),
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                '${(compliance * 100).toInt()}%',
+                style: const TextStyle(
+                  fontSize: 10,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
           ),
         ],
       ),

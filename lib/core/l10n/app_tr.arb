@@ -602,6 +602,7 @@
     "description": "Sign up button"
   },
   "enterEmail": "Lütfen e-postanızı girin",
+  "invalidEmail": "Lütfen geçerli bir e-posta adresi girin",
   "@enterEmail": {
     "description": "Enter email error"
   },
@@ -1179,6 +1180,7 @@
   "personalInformation": "Kişisel Bilgiler",
   "fullName": "Ad Soyad",
   "enterFullName": "Lütfen adınızı girin",
+  "nameTooShort": "Lütfen en az 2 karakter girin",
   "dateOfBirth": "Doğum Tarihi",
   "selectDate": "Tarih Seç",
   "gender": "Cinsiyet",

@@ -743,6 +743,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get enterFullName => 'Please enter your name';
 
   @override
+  String get nameTooShort => 'Please enter at least 2 characters';
+
+  @override
   String get dateOfBirth => 'Date of Birth';
 
   @override
@@ -1071,6 +1074,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get enterEmail => 'Please enter your email';
+
+  @override
+  String get invalidEmail => 'Please enter a valid email address';
 
   @override
   String get enterPassword => 'Please enter your password';
@@ -1636,9 +1642,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get security => 'Security';
-
-  @override
-  String get invalidEmail => 'Please enter a valid email address';
 
   @override
   String get enterValidWeightAndReps => 'Please enter valid weight and reps';

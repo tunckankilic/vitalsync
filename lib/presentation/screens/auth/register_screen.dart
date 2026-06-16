@@ -13,6 +13,9 @@ class RegisterScreen extends ConsumerStatefulWidget {
 }
 
 class _RegisterScreenState extends ConsumerState<RegisterScreen> {
+  // Basic RFC-ish email shape: non-space local part, single @, dotted domain.
+  static final _emailRegExp = RegExp(r'^[^\s@]+@[^\s@]+\.[^\s@]+$');
+
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -115,8 +118,12 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                         label: l10n.fullName,
                         icon: Icons.person_outline,
                         validator: (value) {
-                          if (value == null || value.isEmpty) {
+                          final name = value?.trim() ?? '';
+                          if (name.isEmpty) {
                             return l10n.enterFullName;
+                          }
+                          if (name.length < 2) {
+                            return l10n.nameTooShort;
                           }
                           return null;
                         },
@@ -130,8 +137,12 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                         icon: Icons.email_outlined,
                         keyboardType: TextInputType.emailAddress,
                         validator: (value) {
-                          if (value == null || value.isEmpty) {
+                          final email = value?.trim() ?? '';
+                          if (email.isEmpty) {
                             return l10n.enterEmail;
+                          }
+                          if (!_emailRegExp.hasMatch(email)) {
+                            return l10n.invalidEmail;
                           }
                           return null;
                         },

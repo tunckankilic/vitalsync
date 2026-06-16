@@ -602,6 +602,7 @@
     "description": "Sign up button"
   },
   "enterEmail": "Bitte geben Sie Ihre E-Mail ein",
+  "invalidEmail": "Bitte geben Sie eine gültige E-Mail-Adresse ein",
   "@enterEmail": {
     "description": "Enter email error"
   },
@@ -1179,6 +1180,7 @@
   "personalInformation": "Persönliche Informationen",
   "fullName": "Vollständiger Name",
   "enterFullName": "Bitte geben Sie Ihren Namen ein",
+  "nameTooShort": "Bitte geben Sie mindestens 2 Zeichen ein",
   "dateOfBirth": "Geburtsdatum",
   "selectDate": "Datum auswählen",
   "gender": "Geschlecht",

@@ -1504,6 +1504,12 @@ abstract class AppLocalizations {
   /// **'Please enter your name'**
   String get enterFullName;
 
+  /// Name too short validation error
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter at least 2 characters'**
+  String get nameTooShort;
+
   /// Date of birth label
   ///
   /// In en, this message translates to:
@@ -2127,6 +2133,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Please enter your email'**
   String get enterEmail;
+
+  /// Invalid email format error
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid email address'**
+  String get invalidEmail;
 
   /// Enter password error
   ///
@@ -3105,12 +3117,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Security'**
   String get security;
-
-  /// Invalid email format error
-  ///
-  /// In en, this message translates to:
-  /// **'Please enter a valid email address'**
-  String get invalidEmail;
 
   /// Weight/reps parse error
   ///

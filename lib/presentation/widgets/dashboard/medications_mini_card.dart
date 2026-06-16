@@ -62,11 +62,17 @@ class MedicationsMiniCard extends ConsumerWidget {
                           AppTheme.healthPrimary,
                         ),
                       ),
-                      Text(
-                        '${(summary.todayComplianceRate * 100).toInt()}%',
-                        style: theme.textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: AppTheme.healthPrimary,
+                      Padding(
+                        padding: const EdgeInsets.all(12),
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            '${(summary.todayComplianceRate * 100).toInt()}%',
+                            style: theme.textTheme.titleLarge?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: AppTheme.healthPrimary,
+                            ),
+                          ),
                         ),
                       ),
                     ],
