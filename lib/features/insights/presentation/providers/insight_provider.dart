@@ -70,7 +70,7 @@ class InsightNotifier extends _$InsightNotifier {
     final repository = ref.read(insightRepositoryProvider);
     final analytics = ref.read(analyticsServiceProvider);
 
-    state = await AsyncValue.guard(() async {
+    final result = await AsyncValue.guard(() async {
       // Get the insight to fire analytics with proper metadata
       final activeInsights = await repository.getActive();
       final insight = activeInsights.firstWhere(
@@ -88,9 +88,10 @@ class InsightNotifier extends _$InsightNotifier {
         priority: insight.priority.index,
       );
     });
+    if (ref.mounted) state = result;
 
-    if (state.hasError) {
-      throw state.error!;
+    if (result.hasError) {
+      throw result.error!;
     }
   }
 
@@ -101,7 +102,7 @@ class InsightNotifier extends _$InsightNotifier {
     final repository = ref.read(insightRepositoryProvider);
     final analytics = ref.read(analyticsServiceProvider);
 
-    state = await AsyncValue.guard(() async {
+    final result = await AsyncValue.guard(() async {
       // Get the insight to fire analytics with proper metadata
       final activeInsights = await repository.getActive();
       final insight = activeInsights.firstWhere(
@@ -115,9 +116,10 @@ class InsightNotifier extends _$InsightNotifier {
       // Fire analytics event
       await analytics.logInsightDismissed(insightType: insight.type.toString());
     });
+    if (ref.mounted) state = result;
 
-    if (state.hasError) {
-      throw state.error!;
+    if (result.hasError) {
+      throw result.error!;
     }
   }
 }

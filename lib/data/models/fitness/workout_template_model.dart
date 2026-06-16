@@ -83,7 +83,7 @@ class WorkoutTemplateModel extends WorkoutTemplate {
 
   WorkoutTemplatesCompanion toCompanion() {
     return WorkoutTemplatesCompanion(
-      id: Value(id),
+      id: id == 0 ? const Value.absent() : Value(id),
       name: Value(name),
       description: Value(description),
       color: Value(color),

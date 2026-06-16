@@ -75,7 +75,7 @@ class ExerciseModel extends Exercise {
 
   ExercisesCompanion toCompanion() {
     return ExercisesCompanion(
-      id: Value(id),
+      id: id == 0 ? const Value.absent() : Value(id),
       name: Value(name),
       category: Value(category),
       muscleGroup: Value(muscleGroup),

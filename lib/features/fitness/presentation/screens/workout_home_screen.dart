@@ -4,6 +4,8 @@
 /// templates grid, and quick stats.
 library;
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -166,19 +168,34 @@ class WorkoutHomeScreen extends ConsumerWidget {
     );
   }
 
-  void _handleStartWorkout(BuildContext context, WidgetRef ref) {
-    context.pushNamed('active_workout');
+  Future<void> _handleStartWorkout(BuildContext context, WidgetRef ref) async {
+    final l10n = AppLocalizations.of(context);
+    // Actually start a session before navigating. Previously this only pushed
+    // the active-workout route without ever calling startSession, so that
+    // screen had no active session and showed an empty timer. Guard against an
+    // already-active session (startSession always inserts a new row).
+    if (ref.read(activeSessionProvider).value == null) {
+      await ref
+          .read(workoutProvider.notifier)
+          .startSession(name: l10n.quickWorkout);
+    }
+    if (context.mounted) unawaited(context.pushNamed('active_workout'));
   }
 
-  void _handleTemplateSelected(
+  Future<void> _handleTemplateSelected(
     BuildContext context,
     WidgetRef ref,
     dynamic template,
-  ) {
-    context.pushNamed(
-      'active_workout',
-      extra: {'templateId': template.id},
-    );
+  ) async {
+    if (ref.read(activeSessionProvider).value == null) {
+      await ref
+          .read(workoutProvider.notifier)
+          .startSession(
+            name: template.name as String,
+            templateId: template.id as int,
+          );
+    }
+    if (context.mounted) unawaited(context.pushNamed('active_workout'));
   }
 
   void _navigateToTemplates(BuildContext context) {
@@ -411,7 +428,7 @@ class _RecentWorkoutCard extends StatelessWidget {
             ),
             const Spacer(),
             Text(
-              _formatDate(workout.startedAt, l10n),
+              _formatDate(workout.startTime, l10n),
               style: theme.textTheme.bodySmall,
             ),
           ],
@@ -467,7 +484,7 @@ class _TemplateCard extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              '${template.exerciseCount ?? 0} ${l10n.exercises}',
+              '${template.exercises.length} ${l10n.exercises}',
               style: theme.textTheme.bodySmall,
             ),
             const SizedBox(height: 4),

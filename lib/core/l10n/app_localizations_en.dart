@@ -99,6 +99,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get syncErrorTooltip => 'Sync error - tap to retry';
 
   @override
+  String get syncNeedsCloudConsent =>
+      'Turn on Cloud Backup in Privacy & Data to sync';
+
+  @override
+  String get syncNeedsSignIn => 'Sign in to sync your data';
+
+  @override
+  String get syncCompleted => 'Synced';
+
+  @override
+  String get syncFailed => 'Sync failed. Please try again.';
+
+  @override
   String get insights => 'Insights';
 
   @override
@@ -260,6 +273,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get dismiss => 'Dismiss';
 
   @override
+  String get understood => 'I understand';
+
+  @override
+  String get healthDisclaimerTitle => 'Health Disclaimer';
+
+  @override
+  String get healthDisclaimerSubtitle => 'Important medical information';
+
+  @override
+  String get healthDisclaimerBody =>
+      'VitalSynch is designed to help you track your medications, symptoms, and workouts. It is not a medical device and does not provide medical advice, diagnosis, or treatment. Always consult a qualified healthcare professional before making decisions about your health, medications, or exercise. Never disregard professional medical advice because of something you have read in this app. In case of a medical emergency, contact your local emergency services immediately.';
+
+  @override
   String get errorLoadingDashboard => 'Error loading dashboard';
 
   @override
@@ -367,6 +393,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get healthTimeline => 'Health Timeline';
+
+  @override
+  String get quickWorkout => 'Quick Workout';
 
   @override
   String get compliance => 'Compliance';
@@ -727,6 +756,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get enterFullName => 'Please enter your name';
 
   @override
+  String get nameTooShort => 'Please enter at least 2 characters';
+
+  @override
   String get dateOfBirth => 'Date of Birth';
 
   @override
@@ -1055,6 +1087,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get enterEmail => 'Please enter your email';
+
+  @override
+  String get invalidEmail => 'Please enter a valid email address';
 
   @override
   String get enterPassword => 'Please enter your password';
@@ -1620,9 +1655,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get security => 'Security';
-
-  @override
-  String get invalidEmail => 'Please enter a valid email address';
 
   @override
   String get enterValidWeightAndReps => 'Please enter valid weight and reps';

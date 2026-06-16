@@ -137,21 +137,32 @@ class _RestTimerWidgetState extends State<RestTimerWidget> {
                 strokeWidth: 8,
                 color: timerColor,
               ),
-              // Time text
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
+              // Only the number sits inside the ring; the "seconds" caption is
+              // rendered below the ring to avoid overlapping its arc. FittedBox
+              // keeps multi-digit counts and large font scales inside the ring.
+              Padding(
+                padding: const EdgeInsets.all(20),
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
                     _remainingSeconds.toString(),
-                    style: theme.textTheme.displayLarge?.copyWith(
+                    style: theme.textTheme.displaySmall?.copyWith(
                       fontWeight: FontWeight.bold,
                       fontFeatures: [const FontFeature.tabularFigures()],
                     ),
                   ),
-                  Text(l10n.restTimerSeconds, style: theme.textTheme.bodySmall),
-                ],
+                ),
               ),
             ],
+          ),
+        ),
+        const SizedBox(height: 8),
+        // Seconds caption, placed under the ring (not inside) so it never
+        // overlaps the progress arc.
+        Text(
+          l10n.restTimerSeconds,
+          style: theme.textTheme.bodySmall?.copyWith(
+            color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
           ),
         ),
         const SizedBox(height: 16),

@@ -101,6 +101,21 @@ class AppLocalizationsDe extends AppLocalizations {
       'Synchronisierungsfehler - zum Wiederholen tippen';
 
   @override
+  String get syncNeedsCloudConsent =>
+      'Aktiviere Cloud-Backup in Datenschutz & Daten zum Synchronisieren';
+
+  @override
+  String get syncNeedsSignIn =>
+      'Melde dich an, um deine Daten zu synchronisieren';
+
+  @override
+  String get syncCompleted => 'Synchronisiert';
+
+  @override
+  String get syncFailed =>
+      'Synchronisierung fehlgeschlagen. Bitte erneut versuchen.';
+
+  @override
   String get insights => 'Einblicke';
 
   @override
@@ -263,6 +278,19 @@ class AppLocalizationsDe extends AppLocalizations {
   String get dismiss => 'Verwerfen';
 
   @override
+  String get understood => 'Ich verstehe';
+
+  @override
+  String get healthDisclaimerTitle => 'Gesundheitlicher Haftungsausschluss';
+
+  @override
+  String get healthDisclaimerSubtitle => 'Wichtige medizinische Hinweise';
+
+  @override
+  String get healthDisclaimerBody =>
+      'VitalSynch wurde entwickelt, um dir beim Verfolgen deiner Medikamente, Symptome und Trainings zu helfen. Es ist kein Medizinprodukt und bietet keine medizinische Beratung, Diagnose oder Behandlung. Konsultiere immer eine qualifizierte medizinische Fachkraft, bevor du Entscheidungen über deine Gesundheit, Medikamente oder Bewegung triffst. Ignoriere niemals professionellen medizinischen Rat aufgrund von Informationen in dieser App. Wende dich bei einem medizinischen Notfall sofort an deinen örtlichen Rettungsdienst.';
+
+  @override
   String get errorLoadingDashboard => 'Fehler beim Laden des Dashboards';
 
   @override
@@ -370,6 +398,9 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get healthTimeline => 'Gesundheits-Zeitlinie';
+
+  @override
+  String get quickWorkout => 'Schnelles Training';
 
   @override
   String get compliance => 'Einhaltung';
@@ -732,6 +763,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get enterFullName => 'Bitte geben Sie Ihren Namen ein';
 
   @override
+  String get nameTooShort => 'Bitte geben Sie mindestens 2 Zeichen ein';
+
+  @override
   String get dateOfBirth => 'Geburtsdatum';
 
   @override
@@ -1066,6 +1100,9 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get enterEmail => 'Bitte geben Sie Ihre E-Mail ein';
+
+  @override
+  String get invalidEmail => 'Bitte geben Sie eine gültige E-Mail-Adresse ein';
 
   @override
   String get enterPassword => 'Bitte geben Sie Ihr Passwort ein';
@@ -1636,9 +1673,6 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get security => 'Sicherheit';
-
-  @override
-  String get invalidEmail => 'Bitte geben Sie eine gültige E-Mail-Adresse ein';
 
   @override
   String get enterValidWeightAndReps =>

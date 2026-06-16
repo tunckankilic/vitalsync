@@ -4,7 +4,7 @@ description: "VitalSync — Health & Fitness Companion. Medication reminders,
   insights."
 publish_to: 'none'
 
-version: 1.0.0+1
+version: 1.0.0+3
 
 environment:
   sdk: ^3.10.7
@@ -56,6 +56,7 @@ dependencies:
   local_auth: ^3.0.1
   sentry_flutter: ^9.21.0
   url_launcher: ^6.3.2
+  flutter_timezone: ^5.1.0
 
 dev_dependencies:
   bloc_test: ^10.0.0
@@ -81,6 +82,12 @@ dev_dependencies:
   # `sentry:` block below. Run with `dart run sentry_dart_plugin` after a build.
   sentry_dart_plugin: ^3.4.0
 
+  # --- App icon generation ---
+  # Generates the iOS app icon set from a single opaque 1024x1024 master PNG.
+  # Settings live in the top-level `flutter_launcher_icons:` block below.
+  # Run with `dart run flutter_launcher_icons` after placing the master PNG.
+  flutter_launcher_icons: ^0.14.0
+
 flutter:
   uses-material-design: true
   generate: true
@@ -100,3 +107,11 @@ sentry:
   upload_source_maps: false    # native iOS/Android build, no web maps
   symbols_path: build/symbols  # must match --split-debug-info=build/symbols
   # org/project/auth_token intentionally omitted — supplied via env vars above.
+
+# App icon configuration (flutter_launcher_icons).
+# Generates the iOS icon set from one opaque 1024x1024 master PNG.
+# iOS rejects alpha channels; remove_alpha_ios flattens any transparency.
+flutter_launcher_icons:
+  image_path: "assets/icon/vitalsynch_1024.png"
+  ios: true
+  remove_alpha_ios: true

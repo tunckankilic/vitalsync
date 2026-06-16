@@ -45,8 +45,19 @@ class WorkoutSessionRepositoryImpl implements WorkoutSessionRepository {
   }
 
   @override
-  Future<void> endSession(int id, {String? notes, int? rating}) async {
-    await _dao.endSession(id, DateTime.now(), notes: notes, rating: rating);
+  Future<void> endSession(
+    int id, {
+    String? notes,
+    int? rating,
+    double? totalVolume,
+  }) async {
+    await _dao.endSession(
+      id,
+      DateTime.now(),
+      notes: notes,
+      rating: rating,
+      totalVolume: totalVolume,
+    );
   }
 
   @override
@@ -79,6 +90,11 @@ class WorkoutSessionRepositoryImpl implements WorkoutSessionRepository {
   @override
   Future<void> deleteSession(int sessionId) {
     return _dao.deleteSession(sessionId);
+  }
+
+  @override
+  Future<void> closeOpenSessions() async {
+    await _dao.closeOpenSessions(DateTime.now());
   }
 
   @override

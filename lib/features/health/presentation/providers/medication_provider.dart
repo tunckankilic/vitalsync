@@ -104,8 +104,13 @@ class MedicationNotifier extends _$MedicationNotifier {
   Future<int> addMedication(Medication medication) async {
     state = const AsyncValue.loading();
 
+    // Read ref-based dependencies up front. This notifier is autoDispose and
+    // the add screen stops listening (pops) right after triggering the op, so
+    // touching ref after the awaits below threw "Cannot use the Ref ... after
+    // it has been disposed". The captured services stay valid regardless.
     final repository = ref.read(medicationRepositoryProvider);
     final analytics = ref.read(analyticsServiceProvider);
+    final reminderService = ref.read(medicationReminderServiceProvider);
 
     final result = await AsyncValue.guard(() async {
       final id = await repository.insert(medication);
@@ -116,18 +121,18 @@ class MedicationNotifier extends _$MedicationNotifier {
       );
 
       // Schedule reminders for the new medication (never throws)
-      await ref
-          .read(medicationReminderServiceProvider)
-          .syncRemindersAfterChange(id);
+      await reminderService.syncRemindersAfterChange(id);
 
       return id;
     });
 
-    state = result.when(
-      data: (_) => const AsyncValue.data(null),
-      error: AsyncValue.error,
-      loading: () => const AsyncValue.loading(),
-    );
+    if (ref.mounted) {
+      state = result.when(
+        data: (_) => const AsyncValue.data(null),
+        error: AsyncValue.error,
+        loading: () => const AsyncValue.loading(),
+      );
+    }
 
     if (result.hasError) {
       throw result.error!;
@@ -141,18 +146,18 @@ class MedicationNotifier extends _$MedicationNotifier {
     state = const AsyncValue.loading();
 
     final repository = ref.read(medicationRepositoryProvider);
+    final reminderService = ref.read(medicationReminderServiceProvider);
 
-    state = await AsyncValue.guard(() async {
+    final result = await AsyncValue.guard(() async {
       await repository.update(medication);
 
       // Reschedule reminders with the updated times (never throws)
-      await ref
-          .read(medicationReminderServiceProvider)
-          .syncRemindersAfterChange(medication.id);
+      await reminderService.syncRemindersAfterChange(medication.id);
     });
+    if (ref.mounted) state = result;
 
-    if (state.hasError) {
-      throw state.error!;
+    if (result.hasError) {
+      throw result.error!;
     }
   }
 
@@ -161,18 +166,18 @@ class MedicationNotifier extends _$MedicationNotifier {
     state = const AsyncValue.loading();
 
     final repository = ref.read(medicationRepositoryProvider);
+    final reminderService = ref.read(medicationReminderServiceProvider);
 
-    state = await AsyncValue.guard(() async {
+    final result = await AsyncValue.guard(() async {
       await repository.delete(id);
 
       // Cancel reminders for the removed medication (never throws)
-      await ref
-          .read(medicationReminderServiceProvider)
-          .syncRemindersAfterChange(id);
+      await reminderService.syncRemindersAfterChange(id);
     });
+    if (ref.mounted) state = result;
 
-    if (state.hasError) {
-      throw state.error!;
+    if (result.hasError) {
+      throw result.error!;
     }
   }
 
@@ -181,18 +186,18 @@ class MedicationNotifier extends _$MedicationNotifier {
     state = const AsyncValue.loading();
 
     final repository = ref.read(medicationRepositoryProvider);
+    final reminderService = ref.read(medicationReminderServiceProvider);
 
-    state = await AsyncValue.guard(() async {
+    final result = await AsyncValue.guard(() async {
       await repository.toggleActive(id);
 
       // Schedule or cancel reminders to match the new state (never throws)
-      await ref
-          .read(medicationReminderServiceProvider)
-          .syncRemindersAfterChange(id);
+      await reminderService.syncRemindersAfterChange(id);
     });
+    if (ref.mounted) state = result;
 
-    if (state.hasError) {
-      throw state.error!;
+    if (result.hasError) {
+      throw result.error!;
     }
   }
 }

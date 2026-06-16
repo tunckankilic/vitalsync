@@ -82,7 +82,7 @@ class TemplateExerciseModel extends TemplateExercise {
 
   TemplateExercisesCompanion toCompanion() {
     return TemplateExercisesCompanion(
-      id: Value(id),
+      id: id == 0 ? const Value.absent() : Value(id),
       templateId: Value(templateId),
       exerciseId: Value(exerciseId),
       orderIndex: Value(orderIndex),

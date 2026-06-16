@@ -75,7 +75,7 @@ class WorkoutSetModel extends WorkoutSet {
 
   WorkoutSetsCompanion toCompanion() {
     return WorkoutSetsCompanion(
-      id: Value(id),
+      id: id == 0 ? const Value.absent() : Value(id),
       sessionId: Value(sessionId),
       exerciseId: Value(exerciseId),
       setNumber: Value(setNumber),

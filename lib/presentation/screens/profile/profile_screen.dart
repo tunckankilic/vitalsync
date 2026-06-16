@@ -17,20 +17,32 @@ class ProfileScreen extends ConsumerWidget {
     final userAsync = ref.watch(currentUserProvider);
     final unitSystem = ref.watch(unitSystemSettingProvider);
     final l10n = AppLocalizations.of(context);
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final isDark = theme.brightness == Brightness.dark;
 
     return Scaffold(
+      extendBodyBehindAppBar: true,
+      // Transparent app bar purely for the automatic back button — this screen
+      // is pushed on the root navigator, so without an app bar there was no way
+      // back. extendBodyBehindAppBar keeps the gradient flush to the top.
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        foregroundColor: colorScheme.onSurface,
+      ),
       body: Stack(
         children: [
-          // Background - slightly different from others
+          // Background — adapts to the active theme so the profile no longer
+          // renders light in dark mode.
           Container(
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
-                colors: [
-                  Color(0xFFE0F2F1),
-                  Color(0xFFFAFAFA),
-                ], // Light Teal to White
+                colors: isDark
+                    ? [const Color(0xFF06302A), colorScheme.surface]
+                    : const [Color(0xFFE0F2F1), Color(0xFFFAFAFA)],
               ),
             ),
           ),
@@ -58,7 +70,7 @@ class ProfileScreen extends ConsumerWidget {
                               height: 120,
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                color: Colors.white,
+                                color: colorScheme.surfaceContainerHighest,
                                 boxShadow: [
                                   BoxShadow(
                                     color: Colors.black.withValues(alpha: 0.1),
@@ -67,14 +79,14 @@ class ProfileScreen extends ConsumerWidget {
                                   ),
                                 ],
                                 border: Border.all(
-                                  color: Colors.white,
+                                  color: colorScheme.surface,
                                   width: 4,
                                 ),
                               ),
-                              child: const Icon(
+                              child: Icon(
                                 Icons.person,
                                 size: 64,
-                                color: Colors.grey,
+                                color: colorScheme.onSurfaceVariant,
                               ), // Replace with NetworkImage if available
                             ),
                           ).animate().scale(
@@ -87,7 +99,12 @@ class ProfileScreen extends ConsumerWidget {
                             style: Theme.of(context).textTheme.headlineSmall
                                 ?.copyWith(fontWeight: FontWeight.bold),
                           ).animate().fadeIn().moveY(begin: 10, end: 0),
-                          Text(email, style: TextStyle(color: Colors.grey[600]))
+                          Text(
+                            email,
+                            style: TextStyle(
+                              color: colorScheme.onSurfaceVariant,
+                            ),
+                          )
                               .animate()
                               .fadeIn(delay: 100.ms)
                               .moveY(begin: 10, end: 0),
@@ -113,10 +130,12 @@ class ProfileScreen extends ConsumerWidget {
                       vertical: 12,
                     ),
                     decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.6),
+                      color: colorScheme.surface.withValues(
+                        alpha: isDark ? 0.4 : 0.6,
+                      ),
                       borderRadius: BorderRadius.circular(16),
                       border: Border.all(
-                        color: Colors.white.withValues(alpha: 0.8),
+                        color: colorScheme.outlineVariant.withValues(alpha: 0.5),
                       ),
                     ),
                     child: Row(
@@ -174,6 +193,10 @@ class ProfileScreen extends ConsumerWidget {
                                       style: const TextStyle(
                                         fontSize: 12,
                                         fontWeight: FontWeight.bold,
+                                        // Track is always a light grey, so the
+                                        // hint labels use a fixed dark tone
+                                        // rather than the theme's onSurface.
+                                        color: Colors.black45,
                                       ),
                                     ),
                                     Text(
@@ -181,6 +204,7 @@ class ProfileScreen extends ConsumerWidget {
                                       style: const TextStyle(
                                         fontSize: 12,
                                         fontWeight: FontWeight.bold,
+                                        color: Colors.black45,
                                       ),
                                     ),
                                   ],
@@ -214,6 +238,8 @@ class ProfileScreen extends ConsumerWidget {
                                         style: const TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 12,
+                                          // Thumb is always white.
+                                          color: Colors.black87,
                                         ),
                                       ),
                                     ),
@@ -231,7 +257,11 @@ class ProfileScreen extends ConsumerWidget {
 
                   ElevatedButton.icon(
                     onPressed: () {
-                      context.go('/profile/edit');
+                      // push (not go): go rewrites the history stack, which left
+                      // /profile as the stack root on return, so its AppBar back
+                      // button (canPop == false) vanished. push keeps the stack
+                      // intact — edit pops cleanly back to a still-poppable profile.
+                      context.push('/profile/edit');
                     },
                     icon: const Icon(Icons.edit),
                     label: Text(l10n.editProfile),
@@ -273,6 +303,8 @@ class _ProfileStats extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
+    final colorScheme = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     // Watch providers
     final workoutCountAsync = ref.watch(totalWorkoutCountProvider);
     final streakAsync = ref.watch(currentStreakProvider);
@@ -300,7 +332,7 @@ class _ProfileStats extends ConsumerWidget {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.7),
+        color: colorScheme.surface.withValues(alpha: isDark ? 0.4 : 0.7),
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
@@ -353,15 +385,23 @@ class _StatItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Column(
       children: [
         Icon(icon, color: color, size: 28),
         const SizedBox(height: 8),
         Text(
           value,
-          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+            color: colorScheme.onSurface,
+          ),
         ),
-        Text(label, style: TextStyle(color: Colors.grey[600], fontSize: 12)),
+        Text(
+          label,
+          style: TextStyle(color: colorScheme.onSurfaceVariant, fontSize: 12),
+        ),
       ],
     );
   }
@@ -370,6 +410,10 @@ class _StatItem extends StatelessWidget {
 class _VerticalDivider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Container(height: 40, width: 1, color: Colors.grey[300]);
+    return Container(
+      height: 40,
+      width: 1,
+      color: Theme.of(context).colorScheme.outlineVariant,
+    );
   }
 }

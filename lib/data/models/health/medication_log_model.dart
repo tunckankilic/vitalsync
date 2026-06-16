@@ -84,7 +84,7 @@ class MedicationLogModel extends MedicationLog {
 
   MedicationLogsCompanion toCompanion() {
     return MedicationLogsCompanion(
-      id: Value(id),
+      id: id == 0 ? const Value.absent() : Value(id),
       medicationId: Value(medicationId),
       scheduledTime: Value(scheduledTime),
       takenTime: Value(takenTime),

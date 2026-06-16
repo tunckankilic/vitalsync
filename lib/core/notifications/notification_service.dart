@@ -17,7 +17,9 @@ import 'dart:io' show Platform;
 import 'dart:ui' show Locale;
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:logger/logger.dart';
+import 'package:timezone/data/latest_all.dart' as tz_data;
 import 'package:timezone/timezone.dart' as tz;
 
 import '../../domain/entities/health/medication.dart';
@@ -104,6 +106,20 @@ class NotificationService {
   /// and registers notification tap/action handlers.
   /// Must be called before using any notification features.
   Future<void> initialize() async {
+    // Timezone setup — must run before any tz.local use (reminder scheduling).
+    // initializeTimeZones() loads the IANA database (tz.local would otherwise
+    // throw LateInitializationError); then we point tz.local at the device's
+    // zone so reminders fire at the correct LOCAL wall-clock time. If device
+    // detection fails we fall back to UTC so init never breaks.
+    tz_data.initializeTimeZones();
+    try {
+      final localZone = await FlutterTimezone.getLocalTimezone();
+      tz.setLocalLocation(tz.getLocation(localZone.identifier));
+    } catch (e) {
+      tz.setLocalLocation(tz.getLocation('UTC'));
+      _logger.w('Local timezone detection failed; falling back to UTC: $e');
+    }
+
     // Android initialization settings
     const androidSettings = AndroidInitializationSettings(
       '@mipmap/ic_launcher',

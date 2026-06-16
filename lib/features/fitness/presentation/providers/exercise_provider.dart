@@ -106,7 +106,7 @@ class ExerciseNotifier extends _$ExerciseNotifier {
 
     final repository = ref.read(exerciseRepositoryProvider);
 
-    state = await AsyncValue.guard(() async {
+    final result = await AsyncValue.guard(() async {
       // Verify exercise is custom before deleting
       final exercise = await repository.getById(id);
 
@@ -120,9 +120,11 @@ class ExerciseNotifier extends _$ExerciseNotifier {
 
       await repository.delete(id);
     });
+    // autoDispose-safe: the screen may pop before this completes.
+    if (ref.mounted) state = result;
 
-    if (state.hasError) {
-      throw state.error!;
+    if (result.hasError) {
+      throw result.error!;
     }
   }
 }

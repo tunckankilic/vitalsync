@@ -268,6 +268,30 @@ abstract class AppLocalizations {
   /// **'Sync error - tap to retry'**
   String get syncErrorTooltip;
 
+  /// Shown when a manual sync is blocked by missing cloud backup consent
+  ///
+  /// In en, this message translates to:
+  /// **'Turn on Cloud Backup in Privacy & Data to sync'**
+  String get syncNeedsCloudConsent;
+
+  /// Shown when a manual sync is blocked because no user is signed in
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in to sync your data'**
+  String get syncNeedsSignIn;
+
+  /// Shown when a manual sync finishes successfully
+  ///
+  /// In en, this message translates to:
+  /// **'Synced'**
+  String get syncCompleted;
+
+  /// Shown when a manual sync throws an error
+  ///
+  /// In en, this message translates to:
+  /// **'Sync failed. Please try again.'**
+  String get syncFailed;
+
   /// Insights label
   ///
   /// In en, this message translates to:
@@ -562,6 +586,30 @@ abstract class AppLocalizations {
   /// **'Dismiss'**
   String get dismiss;
 
+  /// Acknowledge button for the health disclaimer
+  ///
+  /// In en, this message translates to:
+  /// **'I understand'**
+  String get understood;
+
+  /// Title for the medical/health disclaimer
+  ///
+  /// In en, this message translates to:
+  /// **'Health Disclaimer'**
+  String get healthDisclaimerTitle;
+
+  /// Settings subtitle for the health disclaimer
+  ///
+  /// In en, this message translates to:
+  /// **'Important medical information'**
+  String get healthDisclaimerSubtitle;
+
+  /// Full medical/health disclaimer text
+  ///
+  /// In en, this message translates to:
+  /// **'VitalSynch is designed to help you track your medications, symptoms, and workouts. It is not a medical device and does not provide medical advice, diagnosis, or treatment. Always consult a qualified healthcare professional before making decisions about your health, medications, or exercise. Never disregard professional medical advice because of something you have read in this app. In case of a medical emergency, contact your local emergency services immediately.'**
+  String get healthDisclaimerBody;
+
   /// Error loading dashboard message
   ///
   /// In en, this message translates to:
@@ -777,6 +825,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Health Timeline'**
   String get healthTimeline;
+
+  /// Default name for a workout session started without a template
+  ///
+  /// In en, this message translates to:
+  /// **'Quick Workout'**
+  String get quickWorkout;
 
   /// Compliance label
   ///
@@ -1474,6 +1528,12 @@ abstract class AppLocalizations {
   /// **'Please enter your name'**
   String get enterFullName;
 
+  /// Name too short validation error
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter at least 2 characters'**
+  String get nameTooShort;
+
   /// Date of birth label
   ///
   /// In en, this message translates to:
@@ -2097,6 +2157,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Please enter your email'**
   String get enterEmail;
+
+  /// Invalid email format error
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid email address'**
+  String get invalidEmail;
 
   /// Enter password error
   ///
@@ -3075,12 +3141,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Security'**
   String get security;
-
-  /// Invalid email format error
-  ///
-  /// In en, this message translates to:
-  /// **'Please enter a valid email address'**
-  String get invalidEmail;
 
   /// Weight/reps parse error
   ///

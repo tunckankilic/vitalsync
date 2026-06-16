@@ -3,53 +3,18 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:vitalsync/core/constants/app_constants.dart';
+import 'package:vitalsync/core/di/injection_container.dart';
+import 'package:vitalsync/core/gdpr/gdpr_manager.dart';
 import 'package:vitalsync/core/l10n/app_localizations.dart';
+import 'package:vitalsync/core/settings/settings_provider.dart';
 import 'package:vitalsync/core/utils/url_launcher_helper.dart';
 
-// Providers for consent state
-class AnalyticsConsentNotifier extends Notifier<bool> {
-  @override
-  bool build() => false;
-  void update(bool value) => state = value;
-}
-
-final analyticsConsentProvider =
-    NotifierProvider<AnalyticsConsentNotifier, bool>(
-      AnalyticsConsentNotifier.new,
-    );
-
-class HealthDataConsentNotifier extends Notifier<bool> {
-  @override
-  bool build() => true;
-  void update(bool value) => state = value;
-}
-
-final healthDataConsentProvider =
-    NotifierProvider<HealthDataConsentNotifier, bool>(
-      HealthDataConsentNotifier.new,
-    );
-
-class FitnessDataConsentNotifier extends Notifier<bool> {
-  @override
-  bool build() => true;
-  void update(bool value) => state = value;
-}
-
-final fitnessDataConsentProvider =
-    NotifierProvider<FitnessDataConsentNotifier, bool>(
-      FitnessDataConsentNotifier.new,
-    );
-
-class CloudBackupConsentNotifier extends Notifier<bool> {
-  @override
-  bool build() => false;
-  void update(bool value) => state = value;
-}
-
-final cloudBackupConsentProvider =
-    NotifierProvider<CloudBackupConsentNotifier, bool>(
-      CloudBackupConsentNotifier.new,
-    );
+/// Exposes the singleton [GDPRManager] through Riverpod so the consent screen's
+/// writes can be overridden in widget tests (the rest of the app may keep using
+/// `getIt<GDPRManager>()` directly).
+final gdprManagerProvider = Provider<GDPRManager>(
+  (ref) => getIt<GDPRManager>(),
+);
 
 class ConsentScreen extends StatelessWidget {
   const ConsentScreen({super.key, this.isOnboarding = false});
@@ -72,13 +37,33 @@ class ConsentContent extends ConsumerWidget {
   const ConsentContent({super.key, required this.isOnboarding});
   final bool isOnboarding;
 
+  /// Persists a consent change through [GDPRManager] — this writes the same
+  /// SharedPreferences key the rest of the app (including sync) reads AND
+  /// appends the timestamped audit entry. The reactive provider is refreshed
+  /// once the write completes. The previous in-memory notifiers never persisted,
+  /// so e.g. Cloud Backup could never actually be enabled and sync stayed
+  /// blocked.
+  void _persistConsent(WidgetRef ref, String type, {required bool granted}) {
+    final manager = ref.read(gdprManagerProvider);
+    final write = granted
+        ? manager.grantConsent(type)
+        : manager.revokeConsent(type);
+    write.then((_) => ref.invalidate(gdprConsentSettingProvider));
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // Read state
-    final analyticsConsent = ref.watch(analyticsConsentProvider);
-    final healthConsent = ref.watch(healthDataConsentProvider);
-    final fitnessConsent = ref.watch(fitnessDataConsentProvider);
-    final cloudConsent = ref.watch(cloudBackupConsentProvider);
+    // Read the persisted consent map so the toggles reflect — and write to —
+    // the store sync and the rest of the app actually use.
+    final consents = ref.watch(gdprConsentSettingProvider);
+    final analyticsConsent =
+        consents[AppConstants.gdprConsentTypeAnalytics] ?? false;
+    final healthConsent =
+        consents[AppConstants.gdprConsentTypeHealthData] ?? false;
+    final fitnessConsent =
+        consents[AppConstants.gdprConsentTypeFitnessData] ?? false;
+    final cloudConsent =
+        consents[AppConstants.gdprConsentTypeCloudBackup] ?? false;
     final l10n = AppLocalizations.of(context);
 
     // Form logic: Check if required consents are given
@@ -128,7 +113,11 @@ class ConsentContent extends ConsumerWidget {
                       );
                       return;
                     }
-                    ref.read(healthDataConsentProvider.notifier).update(val);
+                    _persistConsent(
+                      ref,
+                      AppConstants.gdprConsentTypeHealthData,
+                      granted: val,
+                    );
                   },
                   icon: Icons.medical_services_outlined,
                 ),
@@ -148,7 +137,11 @@ class ConsentContent extends ConsumerWidget {
                       );
                       return;
                     }
-                    ref.read(fitnessDataConsentProvider.notifier).update(val);
+                    _persistConsent(
+                      ref,
+                      AppConstants.gdprConsentTypeFitnessData,
+                      granted: val,
+                    );
                   },
                   icon: Icons.fitness_center_outlined,
                 ),
@@ -157,8 +150,11 @@ class ConsentContent extends ConsumerWidget {
                   description: l10n.consentAnalyticsDescription,
                   isRequired: false,
                   value: analyticsConsent,
-                  onChanged: (val) =>
-                      ref.read(analyticsConsentProvider.notifier).update(val),
+                  onChanged: (val) => _persistConsent(
+                    ref,
+                    AppConstants.gdprConsentTypeAnalytics,
+                    granted: val,
+                  ),
                   icon: Icons.analytics_outlined,
                 ),
                 _ConsentCard(
@@ -166,17 +162,17 @@ class ConsentContent extends ConsumerWidget {
                   description: l10n.consentBackupDescription,
                   isRequired: false,
                   value: cloudConsent,
-                  onChanged: (val) =>
-                      ref.read(cloudBackupConsentProvider.notifier).update(val),
+                  onChanged: (val) => _persistConsent(
+                    ref,
+                    AppConstants.gdprConsentTypeCloudBackup,
+                    granted: val,
+                  ),
                   icon: Icons.cloud_upload_outlined,
                 ),
 
                 const SizedBox(height: 16),
                 Center(
                   child: TextButton(
-                    // TODO: privacy.html henüz yayında değil — sayfa web
-                    // sitesine (AppConstants.privacyPolicyUrl) eklenince link
-                    // çalışır hale gelir.
                     onPressed: () => UrlLauncherHelper.open(
                       context,
                       AppConstants.privacyPolicyUrl,

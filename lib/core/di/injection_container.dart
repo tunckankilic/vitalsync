@@ -18,6 +18,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:workmanager/workmanager.dart';
 
 import '../../data/local/database.dart';
+import '../../data/local/seed_data.dart';
 import '../../data/repositories/fitness/achievement_repository_impl.dart';
 import '../../data/repositories/fitness/exercise_repository_impl.dart';
 import '../../data/repositories/fitness/personal_record_repository_impl.dart';
@@ -83,6 +84,12 @@ Future<void> initializeDependencies() async {
   // DATABASE
 
   getIt.registerSingleton<AppDatabase>(AppDatabase.connect());
+
+  // Seed default data (exercises, default templates, achievements) on first
+  // launch. Idempotent and non-critical: only runs when the exercises table is
+  // empty, so existing users' data is never touched, and a seed failure is
+  // logged rather than aborting app startup (graceful degrade).
+  await _seedDefaultDataIfEmpty(getIt<AppDatabase>());
 
   // CLOUD SYNC CLIENT (AWS REST API via Amplify)
   getIt.registerLazySingleton<CloudSyncClient>(RestSyncClient.new);
@@ -258,6 +265,24 @@ Future<void> initializeDependencies() async {
   );
 
   log(' All dependencies initialized successfully');
+}
+
+/// Seeds default data on first launch only.
+///
+/// Idempotent: seeding runs solely when the exercises table is empty, so an
+/// existing user's database is never re-seeded or overwritten. Non-critical:
+/// a failure here is logged and swallowed so it can't abort app startup — the
+/// app still runs, just without the default catalogue until the next launch.
+Future<void> _seedDefaultDataIfEmpty(AppDatabase db) async {
+  try {
+    final existing = await db.exerciseDao.getAll();
+    if (existing.isEmpty) {
+      await seedDatabase(db);
+      log('Seeded default data (exercises, templates, achievements)');
+    }
+  } catch (e) {
+    log('Default data seeding failed (non-critical): $e');
+  }
 }
 
 Future<void> disposeDependencies() async {

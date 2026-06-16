@@ -28,6 +28,10 @@ Stream<List<MedicationLog>> todayLogs(Ref ref) {
 /// Family provider for compliance rate of a specific medication
 @riverpod
 Future<double> complianceRate(Ref ref, int medicationId, {int days = 7}) async {
+  // Refresh when today's logs change so the compliance ring updates reactively
+  // right after a dose is taken or skipped, without a manual refresh.
+  ref.watch(todayLogsProvider);
+
   final repository = ref.watch(medicationLogRepositoryProvider);
   return await repository.getComplianceRate(medicationId, days: days);
 }
@@ -81,23 +85,27 @@ class LogMedicationNotifier extends _$LogMedicationNotifier {
   }) async {
     state = const AsyncValue.loading();
 
+    // Capture ref-based deps before the awaits: this notifier is autoDispose and
+    // the medication card stops listening once the action completes, so reading
+    // ref (or setting state) after the gap threw "Cannot use the Ref ... after
+    // it has been disposed". The captured services stay valid regardless.
     final repository = ref.read(medicationLogRepositoryProvider);
     final analytics = ref.read(analyticsServiceProvider);
+    final reminderService = ref.read(medicationReminderServiceProvider);
 
-    state = await AsyncValue.guard(() async {
+    final result = await AsyncValue.guard(() async {
       await repository.logMedication(medicationId, MedicationLogStatus.taken);
 
       // Fire analytics event
       await analytics.logMedicationTaken();
 
       // Cancel the pending follow-up for this dose (never throws)
-      await ref
-          .read(medicationReminderServiceProvider)
-          .handleDoseLogged(medicationId);
+      await reminderService.handleDoseLogged(medicationId);
     });
+    if (ref.mounted) state = result;
 
-    if (state.hasError) {
-      throw state.error!;
+    if (result.hasError) {
+      throw result.error!;
     }
   }
 
@@ -111,21 +119,21 @@ class LogMedicationNotifier extends _$LogMedicationNotifier {
 
     final repository = ref.read(medicationLogRepositoryProvider);
     final analytics = ref.read(analyticsServiceProvider);
+    final reminderService = ref.read(medicationReminderServiceProvider);
 
-    state = await AsyncValue.guard(() async {
+    final result = await AsyncValue.guard(() async {
       await repository.logMedication(medicationId, MedicationLogStatus.skipped);
 
       // Fire analytics event
       await analytics.logMedicationSkipped();
 
       // Cancel the pending follow-up for this dose (never throws)
-      await ref
-          .read(medicationReminderServiceProvider)
-          .handleDoseLogged(medicationId);
+      await reminderService.handleDoseLogged(medicationId);
     });
+    if (ref.mounted) state = result;
 
-    if (state.hasError) {
-      throw state.error!;
+    if (result.hasError) {
+      throw result.error!;
     }
   }
 
@@ -135,14 +143,15 @@ class LogMedicationNotifier extends _$LogMedicationNotifier {
 
     final repository = ref.read(medicationLogRepositoryProvider);
 
-    state = await AsyncValue.guard(() async {
+    final result = await AsyncValue.guard(() async {
       // Note: Update method needs to be added to repository interface
       // For now, we'll log a new entry
       await repository.logMedication(log.medicationId, log.status);
     });
+    if (ref.mounted) state = result;
 
-    if (state.hasError) {
-      throw state.error!;
+    if (result.hasError) {
+      throw result.error!;
     }
   }
 

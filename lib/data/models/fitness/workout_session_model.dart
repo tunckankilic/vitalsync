@@ -72,9 +72,10 @@ class WorkoutSessionModel extends WorkoutSession {
       endTime: data.endTime,
       totalVolume: data.totalVolume,
       notes: data.notes,
-      rating: data.rating != null
-          ? WorkoutRating.fromValue(data.rating as int)
-          : null,
+      // Drift already maps this column via intEnum<WorkoutRating>(), so
+      // data.rating is a WorkoutRating? — casting it to int crashed with
+      // "WorkoutRating is not a subtype of int".
+      rating: data.rating,
       syncStatus: data.syncStatus,
       lastModifiedAt: data.lastModifiedAt,
       createdAt: data.createdAt,
@@ -99,7 +100,7 @@ class WorkoutSessionModel extends WorkoutSession {
 
   WorkoutSessionsCompanion toCompanion() {
     return WorkoutSessionsCompanion(
-      id: Value(id),
+      id: id == 0 ? const Value.absent() : Value(id),
       templateId: Value(templateId),
       name: Value(name),
       startTime: Value(startTime),

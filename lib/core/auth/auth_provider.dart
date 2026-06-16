@@ -164,12 +164,13 @@ class AuthNotifier extends _$AuthNotifier {
 
     final authRepo = ref.read(authRepositoryProvider);
 
-    state = await AsyncValue.guard(() async {
+    final result = await AsyncValue.guard(() async {
       await authRepo.signOut();
     });
+    if (ref.mounted) state = result;
 
-    if (state.hasError) {
-      throw state.error!;
+    if (result.hasError) {
+      throw result.error!;
     }
   }
 
@@ -179,12 +180,13 @@ class AuthNotifier extends _$AuthNotifier {
 
     final authRepo = ref.read(authRepositoryProvider);
 
-    state = await AsyncValue.guard(() async {
+    final result = await AsyncValue.guard(() async {
       await authRepo.resetPassword(email);
     });
+    if (ref.mounted) state = result;
 
-    if (state.hasError) {
-      throw state.error!;
+    if (result.hasError) {
+      throw result.error!;
     }
   }
 
@@ -194,12 +196,13 @@ class AuthNotifier extends _$AuthNotifier {
 
     final authRepo = ref.read(authRepositoryProvider);
 
-    state = await AsyncValue.guard(() async {
+    final result = await AsyncValue.guard(() async {
       await authRepo.confirmSignUp(email, confirmationCode);
     });
+    if (ref.mounted) state = result;
 
-    if (state.hasError) {
-      throw state.error!;
+    if (result.hasError) {
+      throw result.error!;
     }
   }
 
@@ -213,12 +216,13 @@ class AuthNotifier extends _$AuthNotifier {
 
     final authRepo = ref.read(authRepositoryProvider);
 
-    state = await AsyncValue.guard(() async {
+    final result = await AsyncValue.guard(() async {
       await authRepo.confirmResetPassword(email, code, newPassword);
     });
+    if (ref.mounted) state = result;
 
-    if (state.hasError) {
-      throw state.error!;
+    if (result.hasError) {
+      throw result.error!;
     }
   }
 }

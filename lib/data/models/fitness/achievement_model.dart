@@ -68,7 +68,7 @@ class AchievementModel extends Achievement {
 
   AchievementsCompanion toCompanion() {
     return AchievementsCompanion(
-      id: Value(id),
+      id: id == 0 ? const Value.absent() : Value(id),
       type: Value(type),
       title: Value(title),
       description: Value(description),

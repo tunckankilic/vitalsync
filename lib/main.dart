@@ -97,6 +97,21 @@ Future<void> _bootstrap() async {
   }
 
   try {
+    // Initialize GetIt dependency injection FIRST.
+    //
+    // Its first action registers SharedPreferences (and AppDatabase) in GetIt —
+    // neither depends on Amplify. The root [VitalSyncApp] widget reads
+    // SharedPreferences-backed providers (theme/locale/Material You) the moment
+    // [runApp] runs, so those registrations must exist no matter what. If Amplify
+    // configuration fails (it ran first before, swallowing this step on error),
+    // SharedPreferences was left unregistered and the root widget threw
+    // "GetIt: SharedPreferences is not registered" — crashing before the splash
+    // could surface [appInitError]. Registering DI first keeps the root
+    // renderable and lets the splash show the real error instead of a white
+    // screen. Everything Amplify-backed here is registerLazySingleton, so it is
+    // only constructed on first use (well after this block) — ordering is safe.
+    await initializeDependencies();
+
     // Initialize AWS Amplify — critical, app cannot function without it
     if (!Amplify.isConfigured) {
       await Amplify.addPlugins([
@@ -105,9 +120,6 @@ Future<void> _bootstrap() async {
       ]);
       await Amplify.configure(AppEnvironment.amplifyConfig);
     }
-
-    // Initialize GetIt dependency injection
-    await initializeDependencies();
   } catch (e, stack) {
     _initError = e;
     FlutterError.reportError(

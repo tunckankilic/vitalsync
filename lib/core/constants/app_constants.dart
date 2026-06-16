@@ -347,15 +347,15 @@ abstract class AppConstants {
 
   /// Privacy policy URL (App Store Connect ve in-app linki için)
   static const String privacyPolicyUrl =
-      'https://tunckankilic.github.io/vitalsync/privacy.html';
+      'https://www.tunckankilic.site/vitalsynch-privacy-policy/';
 
   /// Terms of service URL
   static const String termsOfServiceUrl =
-      'https://tunckankilic.github.io/vitalsync/terms.html';
+      'https://www.tunckankilic.site/vitalsynch-terms-of-service/';
 
   /// Support / contact URL
   static const String supportUrl =
-      'https://tunckankilic.github.io/vitalsync/support.html';
+      'https://www.tunckankilic.site/vitalsynch-support/';
 
   /// GDPR consent types
   static const String gdprConsentTypeAnalytics = 'analytics';

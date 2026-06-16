@@ -26,7 +26,7 @@ class _MedicationListScreenState extends ConsumerState<MedicationListScreen>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 2, vsync: this);
     _searchController.addListener(() {
       setState(() {
         _searchQuery = _searchController.text.toLowerCase();
@@ -117,7 +117,6 @@ class _MedicationListScreenState extends ConsumerState<MedicationListScreen>
                         tabs: [
                           Tab(text: l10n.active), // "Active"
                           Tab(text: l10n.all), // "All"
-                          Tab(text: l10n.completed), // "Completed"
                         ],
                       ),
                     ),
@@ -129,6 +128,10 @@ class _MedicationListScreenState extends ConsumerState<MedicationListScreen>
               Expanded(
                 child: TabBarView(
                   controller: _tabController,
+                  // Disable horizontal page swiping so it doesn't steal the
+                  // gesture from the cards' swipe-to-take/skip Dismissible.
+                  // Tabs are still switched by tapping the TabBar above.
+                  physics: const NeverScrollableScrollPhysics(),
                   children: [
                     _MedicationList(
                       filter: _MedicationFilter.active,
@@ -138,10 +141,6 @@ class _MedicationListScreenState extends ConsumerState<MedicationListScreen>
                       filter: _MedicationFilter.all,
                       searchQuery: _searchQuery,
                     ),
-                    _MedicationList(
-                      filter: _MedicationFilter.completed,
-                      searchQuery: _searchQuery,
-                    ),
                   ],
                 ),
               ),
@@ -149,28 +148,46 @@ class _MedicationListScreenState extends ConsumerState<MedicationListScreen>
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => context.push('/health/add-medication'),
-        icon: const Icon(Icons.add_rounded),
-        label: Text(l10n.addMedication),
-        backgroundColor: AppTheme.healthPrimary,
-      ),
+      // No floatingActionButton here: this screen is the /health shell tab root,
+      // and AppShell's ContextAwareFab already renders the "Add Medication" FAB
+      // for the health tab (same /health/add-medication action). Declaring a
+      // second one here produced a duplicate FAB and a Hero tag collision
+      // (both used the default FloatingActionButton hero tag in one route).
     );
   }
 
   Widget _buildSearchBar(AppLocalizations l10n) {
     if (!_isSearchVisible) {
-      return Align(
-        alignment: Alignment.centerRight,
-        child: IconButton.filledTonal(
-          onPressed: () => setState(() => _isSearchVisible = true),
-          icon: const Icon(Icons.search_rounded),
-          style: IconButton.styleFrom(
-            backgroundColor: Theme.of(
-              context,
-            ).colorScheme.surfaceContainerHigh.withValues(alpha: 0.5),
+      final tonalStyle = IconButton.styleFrom(
+        backgroundColor: Theme.of(
+          context,
+        ).colorScheme.surfaceContainerHigh.withValues(alpha: 0.5),
+      );
+      return Row(
+        children: [
+          // Entry points to the other health views. Symptoms and the timeline
+          // previously had no navigation from this screen, so logged symptoms
+          // were effectively invisible to the user.
+          IconButton.filledTonal(
+            onPressed: () => context.push('/health/symptoms'),
+            icon: const Icon(Icons.healing_rounded),
+            tooltip: l10n.symptoms,
+            style: tonalStyle,
           ),
-        ),
+          const SizedBox(width: 8),
+          IconButton.filledTonal(
+            onPressed: () => context.push('/health/timeline'),
+            icon: const Icon(Icons.timeline_rounded),
+            tooltip: l10n.healthTimeline,
+            style: tonalStyle,
+          ),
+          const Spacer(),
+          IconButton.filledTonal(
+            onPressed: () => setState(() => _isSearchVisible = true),
+            icon: const Icon(Icons.search_rounded),
+            style: tonalStyle,
+          ),
+        ],
       );
     }
 
@@ -211,7 +228,7 @@ class _MedicationListScreenState extends ConsumerState<MedicationListScreen>
   }
 }
 
-enum _MedicationFilter { active, all, completed }
+enum _MedicationFilter { active, all }
 
 class _MedicationList extends ConsumerWidget {
   const _MedicationList({required this.filter, required this.searchQuery});
@@ -234,7 +251,8 @@ class _MedicationList extends ConsumerWidget {
             return false;
           }
 
-          // Tab filter
+          // Tab filter. A medication whose end date has passed is no longer
+          // active, so it's hidden from Active but still visible under All.
           final now = DateTime.now();
           final isCompleted = med.endDate != null && med.endDate!.isBefore(now);
 
@@ -243,8 +261,6 @@ class _MedicationList extends ConsumerWidget {
               return med.isActive && !isCompleted;
             case _MedicationFilter.all:
               return true;
-            case _MedicationFilter.completed:
-              return isCompleted;
           }
         }).toList();
 
