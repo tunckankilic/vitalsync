@@ -17,6 +17,11 @@ workflows:
         # group — never inline them here:
         #   SENTRY_DSN, SENTRY_ORG, SENTRY_PROJECT, SENTRY_AUTH_TOKEN
         - sentry_credentials
+        # Amplify backend config (git-ignored infra). Define as SECRET vars,
+        # base64 of the local files, restored before codegen:
+        #   AMPLIFY_CONFIG_DEV_B64  (lib/amplifyconfiguration.dart)
+        #   AMPLIFY_CONFIG_PROD_B64 (lib/amplifyconfiguration_prod.dart)
+        - amplify_config
       vars:
         BUNDLE_ID: "site.tunckankilic.vitalsync"
       # Pin the toolchain for reproducible release builds. Bump deliberately
@@ -48,6 +53,15 @@ workflows:
         script: |
           keychain add-certificates
           xcode-project use-profiles
+      - name: Restore Amplify config
+        script: |
+          # Amplify backend config is git-ignored (infra recon surface), so CI
+          # restores both files from base64 secrets before codegen reads them.
+          if [ -z "$AMPLIFY_CONFIG_DEV_B64" ] || [ -z "$AMPLIFY_CONFIG_PROD_B64" ]; then
+            echo "AMPLIFY_CONFIG_*_B64 secrets are not set — cannot build"; exit 1
+          fi
+          echo "$AMPLIFY_CONFIG_DEV_B64"  | base64 -d > lib/amplifyconfiguration.dart
+          echo "$AMPLIFY_CONFIG_PROD_B64" | base64 -d > lib/amplifyconfiguration_prod.dart
       - name: Install dependencies
         script: |
           flutter pub get
@@ -129,11 +143,24 @@ workflows:
         - pattern: 'Day-*'
           include: true
     environment:
+      # Amplify backend config secrets, same as the release workflow — needed
+      # because codegen/analyze read the (git-ignored) config files.
+      groups:
+        - amplify_config
       # Match the release workflow so PR checks catch the same toolchain issues.
       flutter: 3.44.0
       xcode: 26.4
       cocoapods: default
     scripts:
+      - name: Restore Amplify config
+        script: |
+          # Mirror the release workflow: restore git-ignored Amplify config from
+          # base64 secrets before codegen reads it.
+          if [ -z "$AMPLIFY_CONFIG_DEV_B64" ] || [ -z "$AMPLIFY_CONFIG_PROD_B64" ]; then
+            echo "AMPLIFY_CONFIG_*_B64 secrets are not set — cannot build"; exit 1
+          fi
+          echo "$AMPLIFY_CONFIG_DEV_B64"  | base64 -d > lib/amplifyconfiguration.dart
+          echo "$AMPLIFY_CONFIG_PROD_B64" | base64 -d > lib/amplifyconfiguration_prod.dart
       - name: Install dependencies
         script: |
           flutter pub get
