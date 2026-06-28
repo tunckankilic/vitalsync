@@ -22,8 +22,11 @@ workflows:
       # Pin the toolchain for reproducible release builds. Bump deliberately
       # after validating locally — never use 'stable'/'latest' for store builds,
       # an upstream bump can break a release without a code change.
+      # NOTE: xcode must be a version Codemagic pre-installs (see
+      # docs.codemagic.io/specs/versions-macos). 26.4 is their current default;
+      # local Xcode may be newer (e.g. 26.5) but that value will fail to provision.
       flutter: 3.44.0
-      xcode: 26.5
+      xcode: 26.4
       cocoapods: default
     integrations:
       app_store_connect: Code Magic CI/CD
@@ -120,7 +123,7 @@ workflows:
     environment:
       # Match the release workflow so PR checks catch the same toolchain issues.
       flutter: 3.44.0
-      xcode: 26.5
+      xcode: 26.4
       cocoapods: default
     scripts:
       - name: Install dependencies
