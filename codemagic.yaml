@@ -19,8 +19,11 @@ workflows:
         - sentry_credentials
       vars:
         BUNDLE_ID: "site.tunckankilic.vitalsync"
-      flutter: stable
-      xcode: latest
+      # Pin the toolchain for reproducible release builds. Bump deliberately
+      # after validating locally — never use 'stable'/'latest' for store builds,
+      # an upstream bump can break a release without a code change.
+      flutter: 3.44.0
+      xcode: 26.5
       cocoapods: default
     integrations:
       app_store_connect: Code Magic CI/CD
@@ -82,7 +85,16 @@ workflows:
     publishing:
       app_store_connect:
         auth: integration
+        # main push -> TestFlight only. App Store submission is intentionally
+        # manual: promote the build from App Store Connect when ready, so a
+        # routine push can never trigger an App Store review by accident.
         submit_to_testflight: true
+        # When you want CI to push straight to App Store review, uncomment the
+        # block below. release_type MANUAL keeps the final go-live in your hands
+        # (Apple approves, you press "Release"). Switch to AFTER_APPROVAL only
+        # once your release process is disciplined enough for auto go-live.
+        # submit_to_app_store: true
+        # release_type: MANUAL
       email:
         recipients:
           - tuncsoftwarehere@gmail.com
@@ -106,8 +118,9 @@ workflows:
         - pattern: 'Day-*'
           include: true
     environment:
-      flutter: stable
-      xcode: latest
+      # Match the release workflow so PR checks catch the same toolchain issues.
+      flutter: 3.44.0
+      xcode: 26.5
       cocoapods: default
     scripts:
       - name: Install dependencies
