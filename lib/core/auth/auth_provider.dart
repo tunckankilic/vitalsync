@@ -6,6 +6,8 @@
 ///  - authNotifier (signIn, signUp, signInWithGoogle, signInWithApple, signOut, resetPassword).
 library;
 
+import 'dart:async';
+
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../domain/entities/shared/user_profile.dart';
@@ -15,6 +17,7 @@ import '../../domain/repositories/shared/auth_repository.dart';
 import '../../domain/repositories/shared/user_repository.dart';
 import '../analytics/analytics_service.dart';
 import '../di/injection_container.dart';
+import '../sync/sync_provider.dart';
 
 part 'auth_provider.g.dart';
 
@@ -58,6 +61,18 @@ class AuthNotifier extends _$AuthNotifier {
     // No initial state needed
   }
 
+  /// Fire-and-forget cloud pull after a successful login, so a returning
+  /// user's backup lands immediately instead of waiting for a connectivity
+  /// change or app resume. [SyncService.sync] self-guards on consent,
+  /// connectivity and auth state, so this is safe to call unconditionally.
+  void _triggerPostLoginSync() {
+    unawaited(
+      ref.read(syncServiceProvider).sync().catchError((Object _) {
+        // Non-fatal: auto-sync retries on the next trigger.
+      }),
+    );
+  }
+
   /// Sign in with email and password
   Future<AppAuthResult> signIn(String email, String password) async {
     state = const AsyncValue.loading();
@@ -79,6 +94,7 @@ class AuthNotifier extends _$AuthNotifier {
       throw result.error!;
     }
 
+    _triggerPostLoginSync();
     return result.value as AppAuthResult;
   }
 
@@ -131,6 +147,7 @@ class AuthNotifier extends _$AuthNotifier {
       throw result.error!;
     }
 
+    _triggerPostLoginSync();
     return result.value as AppAuthResult;
   }
 
@@ -155,6 +172,7 @@ class AuthNotifier extends _$AuthNotifier {
       throw result.error!;
     }
 
+    _triggerPostLoginSync();
     return result.value as AppAuthResult;
   }
 
@@ -166,6 +184,9 @@ class AuthNotifier extends _$AuthNotifier {
 
     final result = await AsyncValue.guard(() async {
       await authRepo.signOut();
+      // Clear device-local data so the next account starts clean and pulls its
+      // own backup fresh. Wipe is consent-gated inside the sync service.
+      await ref.read(syncServiceProvider).clearLocalDataOnSignOut();
     });
     if (ref.mounted) state = result;
 

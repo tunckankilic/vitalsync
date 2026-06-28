@@ -3,6 +3,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:vitalsync/core/auth/auth_provider.dart';
 import 'package:vitalsync/core/errors/auth_exceptions.dart';
+import 'package:vitalsync/core/sync/sync_provider.dart';
+import 'package:vitalsync/core/sync/sync_service.dart';
 import 'package:vitalsync/domain/models/app_auth_result.dart';
 import 'package:vitalsync/domain/models/app_user.dart';
 import 'package:vitalsync/domain/repositories/shared/auth_repository.dart';
@@ -11,8 +13,11 @@ import 'package:vitalsync/domain/repositories/shared/auth_repository.dart';
 
 class MockAuthRepository extends Mock implements AuthRepository {}
 
+class MockSyncService extends Mock implements SyncService {}
+
 void main() {
   late MockAuthRepository mockAuth;
+  late MockSyncService mockSync;
   late ProviderContainer container;
 
   const email = 'jane@example.com';
@@ -29,8 +34,18 @@ void main() {
 
   setUp(() {
     mockAuth = MockAuthRepository();
+    mockSync = MockSyncService();
+    // Post-login pull and sign-out cleanup are fire-and-forget side effects;
+    // stub them so the notifier under test never touches a real sync service.
+    when(() => mockSync.sync()).thenAnswer((_) async {});
+    when(
+      () => mockSync.clearLocalDataOnSignOut(),
+    ).thenAnswer((_) async {});
     container = ProviderContainer(
-      overrides: [authRepositoryProvider.overrideWithValue(mockAuth)],
+      overrides: [
+        authRepositoryProvider.overrideWithValue(mockAuth),
+        syncServiceProvider.overrideWithValue(mockSync),
+      ],
     );
   });
 
@@ -54,6 +69,8 @@ void main() {
       expect(result.isNewUser, isFalse);
       expect(container.read(authProvider).hasError, isFalse);
       verify(() => mockAuth.signIn(email, password)).called(1);
+      // A successful login kicks a cloud pull so the user's backup lands.
+      verify(() => mockSync.sync()).called(1);
     });
 
     test('rethrows and ends in error state on wrong credentials', () async {
@@ -148,6 +165,8 @@ void main() {
 
       expect(container.read(authProvider).hasError, isFalse);
       verify(() => mockAuth.signOut()).called(1);
+      // Sign-out clears device-local data so the next account starts clean.
+      verify(() => mockSync.clearLocalDataOnSignOut()).called(1);
     });
 
     test('rethrows and ends in error state on failure', () async {

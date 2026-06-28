@@ -762,4 +762,38 @@ void main() {
       expect(syncService.isSyncing, isFalse);
     });
   });
+
+  // ── Sign-out cleanup (account switch / privacy) ────────────────────────────
+
+  group('SyncService.clearLocalDataOnSignOut', () {
+    test('wipes the local DB and resets bookmarks when a cloud backup exists',
+        () async {
+      SharedPreferences.setMockInitialValues({
+        AppConstants.prefKeyCloudBackupConsent: true,
+        'vitalsync_last_sync_medications': 123,
+      });
+      when(() => mockDatabase.deleteAllData()).thenAnswer((_) async {});
+
+      await syncService.clearLocalDataOnSignOut();
+
+      verify(() => mockDatabase.deleteAllData()).called(1);
+      final prefs = await SharedPreferences.getInstance();
+      expect(prefs.getInt('vitalsync_last_sync_medications'), isNull);
+    });
+
+    test('keeps the local DB without consent but still resets bookmarks',
+        () async {
+      // No cloud backup: wiping would destroy the user's only copy of the data.
+      SharedPreferences.setMockInitialValues({
+        AppConstants.prefKeyCloudBackupConsent: false,
+        'vitalsync_last_sync_symptoms': 456,
+      });
+
+      await syncService.clearLocalDataOnSignOut();
+
+      verifyNever(() => mockDatabase.deleteAllData());
+      final prefs = await SharedPreferences.getInstance();
+      expect(prefs.getInt('vitalsync_last_sync_symptoms'), isNull);
+    });
+  });
 }

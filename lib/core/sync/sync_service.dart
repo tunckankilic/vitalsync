@@ -435,6 +435,27 @@ class SyncService {
     log('Full data deletion completed');
   }
 
+  /// Clears device-local state on sign-out so the next account starts clean.
+  ///
+  /// Incremental-sync bookmarks are *always* reset, so the next user pulls
+  /// their full backup instead of an incremental slice anchored to the
+  /// previous account's timestamps. The encrypted local database is wiped
+  /// only when a cloud backup exists (consent granted) — without a backup,
+  /// wiping would destroy the user's only copy of their data.
+  Future<void> clearLocalDataOnSignOut() async {
+    final prefs = await SharedPreferences.getInstance();
+    for (final tableName in tablesToSync) {
+      await prefs.remove('$_lastSyncPrefix$tableName');
+    }
+
+    if (await _hasCloudBackupConsent()) {
+      await _database.deleteAllData();
+      log('Sign-out: local database wiped (cloud backup present)');
+    } else {
+      log('Sign-out: no cloud backup consent — keeping local data');
+    }
+  }
+
   /// Checks if sync is currently in progress.
   bool get isSyncing => _isSyncing;
 
