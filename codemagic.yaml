@@ -51,6 +51,9 @@ workflows:
       - name: Install dependencies
         script: |
           flutter pub get
+          # Generated sources (Riverpod providers, Drift db, json/freezed) are
+          # git-ignored, so CI must regenerate them before analyze/test/build.
+          dart run build_runner build --delete-conflicting-outputs
           cd ios && pod install --repo-update
       - name: Run analyze
         script: |
@@ -134,6 +137,9 @@ workflows:
       - name: Install dependencies
         script: |
           flutter pub get
+          # Same codegen step as the release workflow — providers/Drift classes
+          # are git-ignored and must be regenerated before analyze/test.
+          dart run build_runner build --delete-conflicting-outputs
       - name: Run analyze
         script: |
           flutter analyze --no-fatal-infos
