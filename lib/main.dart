@@ -4,6 +4,8 @@
 /// GDPR-compliant, multi-language, accessibility-first.
 library;
 
+import 'dart:async';
+
 import 'package:amplify_api/amplify_api.dart';
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
@@ -143,6 +145,12 @@ Future<void> _bootstrap() async {
 
       final syncService = getIt<SyncService>();
       syncService.startAutoSync();
+
+      // Pull cloud data on cold start for an already-authenticated user. The
+      // connectivity stream only emits on *change*, so an already-online
+      // returning user would otherwise not sync until the network toggled or
+      // the app was backgrounded. sync() self-guards on consent/auth/online.
+      unawaited(syncService.sync());
 
       // Flush the pending sync queue once when the app is backgrounded
       WidgetsBinding.instance.addObserver(

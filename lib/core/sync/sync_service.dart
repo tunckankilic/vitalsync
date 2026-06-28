@@ -219,6 +219,12 @@ class SyncService {
   /// Key prefix for persisting per-table last-synced timestamps.
   static const _lastSyncPrefix = 'vitalsync_last_sync_';
 
+  /// SharedPreferences key for a user's per-table incremental-sync bookmark.
+  /// Scoped by [uid] so a different account on the same device never inherits
+  /// the previous user's sync position (which would skip their older records).
+  String _bookmarkKey(String uid, String tableName) =>
+      '$_lastSyncPrefix${uid}_$tableName';
+
   /// Pulls remote changes from cloud **incrementally**.
   ///
   /// Only fetches documents whose `lastModifiedAt` is after the
@@ -233,7 +239,7 @@ class SyncService {
         log('Pulling $tableName from cloud...');
 
         // Incremental: only fetch docs modified after last sync
-        final lastSyncMs = prefs.getInt('$_lastSyncPrefix$tableName');
+        final lastSyncMs = prefs.getInt(_bookmarkKey(uid, tableName));
         DateTime? since;
         if (lastSyncMs != null) {
           since = DateTime.fromMillisecondsSinceEpoch(lastSyncMs);
@@ -293,7 +299,7 @@ class SyncService {
         // Persist the latest timestamp as bookmark for next sync
         if (latestTimestamp != null) {
           await prefs.setInt(
-            '$_lastSyncPrefix$tableName',
+            _bookmarkKey(uid, tableName),
             latestTimestamp.millisecondsSinceEpoch,
           );
         }
@@ -365,39 +371,6 @@ class SyncService {
     }
   }
 
-  /// Performs initial sync when user first signs in on a new device.
-  /// Downloads all user data from cloud to local database.
-  /// Requires authentication and cloud backup consent.
-  Future<void> initialSync() async {
-    final user = _auth.currentUser;
-    if (user == null) {
-      throw Exception('User must be authenticated for initial sync');
-    }
-
-    if (!await _hasCloudBackupConsent()) {
-      throw Exception('Cloud backup consent required for initial sync');
-    }
-
-    if (!await _connectivity.isConnected()) {
-      throw Exception('Internet connection required for initial sync');
-    }
-
-    log('Starting initial sync for user: ${user.id}');
-
-    try {
-      await _pullRemoteChanges(user.id);
-
-      final completedCount = await _database.syncDao.deleteCompletedOlderThan(
-        DateTime.now().subtract(const Duration(days: 1)),
-      );
-
-      log('Initial sync completed. Cleaned up $completedCount old sync items.');
-    } catch (e) {
-      log('Initial sync failed: $e');
-      rethrow;
-    }
-  }
-
   /// Deletes all user data from both Drift (local) and cloud.
   ///
   /// Used for GDPR right to erasure (Article 17).
@@ -433,6 +406,34 @@ class SyncService {
     }
 
     log('Full data deletion completed');
+  }
+
+  /// Clears device-local state on sign-out so the next account starts clean.
+  ///
+  /// The encrypted local database is wiped only when a cloud backup exists
+  /// (consent granted) — without a backup, wiping would destroy the user's
+  /// only copy of their data. When we do wipe, every per-user sync bookmark
+  /// is also dropped so the next login re-pulls a full backup into the empty
+  /// database instead of resuming from a stale incremental position.
+  ///
+  /// (Account switching itself is already safe via the user-scoped bookmark
+  /// keys; this reset is specifically to keep the wiped DB and its bookmarks
+  /// consistent.)
+  Future<void> clearLocalDataOnSignOut() async {
+    if (!await _hasCloudBackupConsent()) {
+      log('Sign-out: no cloud backup consent — keeping local data');
+      return;
+    }
+
+    await _database.deleteAllData();
+
+    final prefs = await SharedPreferences.getInstance();
+    for (final key in prefs.getKeys().toList()) {
+      if (key.startsWith(_lastSyncPrefix)) {
+        await prefs.remove(key);
+      }
+    }
+    log('Sign-out: local database wiped and sync bookmarks reset');
   }
 
   /// Checks if sync is currently in progress.

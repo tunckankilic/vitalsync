@@ -36,8 +36,13 @@ workflows:
           keychain initialize
       - name: Fetch signing files
         script: |
+          # --create needs a private key to bind the distribution certificate to.
+          # App Store Connect never stores private keys, so we supply our own via
+          # the CERTIFICATE_PRIVATE_KEY secret (PEM, set in app_store_credentials).
+          # On first run --create mints a fresh Apple Distribution cert from it.
           app-store-connect fetch-signing-files "$BUNDLE_ID" \
             --type IOS_APP_STORE \
+            --certificate-key @env:CERTIFICATE_PRIVATE_KEY \
             --create
       - name: Set up signing
         script: |

@@ -590,10 +590,10 @@ void main() {
         await syncService.sync();
 
         verify(() => mockMedicationDao.upsertFromRemote(5, any())).called(1);
-        // Bookmark advanced so the next pull is incremental.
+        // Bookmark advanced (user-scoped) so the next pull is incremental.
         final prefs = await SharedPreferences.getInstance();
         expect(
-          prefs.getInt('vitalsync_last_sync_medications'),
+          prefs.getInt('vitalsync_last_sync_${user.id}_medications'),
           modifiedAt.millisecondsSinceEpoch,
         );
       },
@@ -760,6 +760,44 @@ void main() {
       ).called(1);
       verify(() => mockSyncDao.markCompleted(item.id)).called(1);
       expect(syncService.isSyncing, isFalse);
+    });
+  });
+
+  // ── Sign-out cleanup (account switch / privacy) ────────────────────────────
+
+  group('SyncService.clearLocalDataOnSignOut', () {
+    test(
+        'wipes the local DB and resets every user-scoped bookmark when a '
+        'cloud backup exists', () async {
+      SharedPreferences.setMockInitialValues({
+        AppConstants.prefKeyCloudBackupConsent: true,
+        'vitalsync_last_sync_user-1_medications': 123,
+        'vitalsync_last_sync_user-2_symptoms': 456,
+      });
+      when(() => mockDatabase.deleteAllData()).thenAnswer((_) async {});
+
+      await syncService.clearLocalDataOnSignOut();
+
+      verify(() => mockDatabase.deleteAllData()).called(1);
+      final prefs = await SharedPreferences.getInstance();
+      expect(prefs.getInt('vitalsync_last_sync_user-1_medications'), isNull);
+      expect(prefs.getInt('vitalsync_last_sync_user-2_symptoms'), isNull);
+    });
+
+    test('without consent keeps both the local DB and its bookmarks',
+        () async {
+      // No cloud backup: wiping would destroy the user's only copy of the data,
+      // and the bookmark must stay consistent with the retained DB.
+      SharedPreferences.setMockInitialValues({
+        AppConstants.prefKeyCloudBackupConsent: false,
+        'vitalsync_last_sync_user-1_symptoms': 456,
+      });
+
+      await syncService.clearLocalDataOnSignOut();
+
+      verifyNever(() => mockDatabase.deleteAllData());
+      final prefs = await SharedPreferences.getInstance();
+      expect(prefs.getInt('vitalsync_last_sync_user-1_symptoms'), 456);
     });
   });
 }
