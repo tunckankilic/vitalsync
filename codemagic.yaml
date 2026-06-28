@@ -60,8 +60,13 @@ workflows:
           if [ -z "$AMPLIFY_CONFIG_DEV_B64" ] || [ -z "$AMPLIFY_CONFIG_PROD_B64" ]; then
             echo "AMPLIFY_CONFIG_*_B64 secrets are not set — cannot build"; exit 1
           fi
-          echo "$AMPLIFY_CONFIG_DEV_B64"  | base64 -d > lib/amplifyconfiguration.dart
-          echo "$AMPLIFY_CONFIG_PROD_B64" | base64 -d > lib/amplifyconfiguration_prod.dart
+          # openssl base64 -d -A is robust across the CI shell; plain `base64 -d`
+          # chokes on single-line input on some macOS builders.
+          printf '%s' "$AMPLIFY_CONFIG_DEV_B64"  | openssl base64 -d -A > lib/amplifyconfiguration.dart
+          printf '%s' "$AMPLIFY_CONFIG_PROD_B64" | openssl base64 -d -A > lib/amplifyconfiguration_prod.dart
+          # Fail fast (with a clear message) if a secret was pasted truncated.
+          grep -q 'amplifyconfig'     lib/amplifyconfiguration.dart      || { echo "DEV config decode looks wrong — re-check AMPLIFY_CONFIG_DEV_B64"; exit 1; }
+          grep -q 'amplifyconfigProd' lib/amplifyconfiguration_prod.dart || { echo "PROD config decode looks wrong — re-check AMPLIFY_CONFIG_PROD_B64"; exit 1; }
       - name: Install dependencies
         script: |
           flutter pub get
@@ -159,8 +164,13 @@ workflows:
           if [ -z "$AMPLIFY_CONFIG_DEV_B64" ] || [ -z "$AMPLIFY_CONFIG_PROD_B64" ]; then
             echo "AMPLIFY_CONFIG_*_B64 secrets are not set — cannot build"; exit 1
           fi
-          echo "$AMPLIFY_CONFIG_DEV_B64"  | base64 -d > lib/amplifyconfiguration.dart
-          echo "$AMPLIFY_CONFIG_PROD_B64" | base64 -d > lib/amplifyconfiguration_prod.dart
+          # openssl base64 -d -A is robust across the CI shell; plain `base64 -d`
+          # chokes on single-line input on some macOS builders.
+          printf '%s' "$AMPLIFY_CONFIG_DEV_B64"  | openssl base64 -d -A > lib/amplifyconfiguration.dart
+          printf '%s' "$AMPLIFY_CONFIG_PROD_B64" | openssl base64 -d -A > lib/amplifyconfiguration_prod.dart
+          # Fail fast (with a clear message) if a secret was pasted truncated.
+          grep -q 'amplifyconfig'     lib/amplifyconfiguration.dart      || { echo "DEV config decode looks wrong — re-check AMPLIFY_CONFIG_DEV_B64"; exit 1; }
+          grep -q 'amplifyconfigProd' lib/amplifyconfiguration_prod.dart || { echo "PROD config decode looks wrong — re-check AMPLIFY_CONFIG_PROD_B64"; exit 1; }
       - name: Install dependencies
         script: |
           flutter pub get
