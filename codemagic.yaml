@@ -60,10 +60,17 @@ workflows:
           if [ -z "$AMPLIFY_CONFIG_DEV_B64" ] || [ -z "$AMPLIFY_CONFIG_PROD_B64" ]; then
             echo "AMPLIFY_CONFIG_*_B64 secrets are not set — cannot build"; exit 1
           fi
+          # Diagnostics (lengths only — no secret content). Expect DEV=6064,
+          # PROD=6408; a different length means the secret was pasted truncated.
+          echo "b64 lengths -> DEV=${#AMPLIFY_CONFIG_DEV_B64} (expect 6064), PROD=${#AMPLIFY_CONFIG_PROD_B64} (expect 6408)"
           # openssl base64 -d -A is robust across the CI shell; plain `base64 -d`
           # chokes on single-line input on some macOS builders.
           printf '%s' "$AMPLIFY_CONFIG_DEV_B64"  | openssl base64 -d -A > lib/amplifyconfiguration.dart
           printf '%s' "$AMPLIFY_CONFIG_PROD_B64" | openssl base64 -d -A > lib/amplifyconfiguration_prod.dart
+          # The first line is a harmless const declaration (no secret) — log it
+          # so a bad decode is diagnosable from the build output.
+          echo "DEV decoded head:  $(head -c 26 lib/amplifyconfiguration.dart)"
+          echo "PROD decoded head: $(head -c 26 lib/amplifyconfiguration_prod.dart)"
           # Fail fast (with a clear message) if a secret was pasted truncated.
           grep -q 'amplifyconfig'     lib/amplifyconfiguration.dart      || { echo "DEV config decode looks wrong — re-check AMPLIFY_CONFIG_DEV_B64"; exit 1; }
           grep -q 'amplifyconfigProd' lib/amplifyconfiguration_prod.dart || { echo "PROD config decode looks wrong — re-check AMPLIFY_CONFIG_PROD_B64"; exit 1; }
@@ -164,10 +171,17 @@ workflows:
           if [ -z "$AMPLIFY_CONFIG_DEV_B64" ] || [ -z "$AMPLIFY_CONFIG_PROD_B64" ]; then
             echo "AMPLIFY_CONFIG_*_B64 secrets are not set — cannot build"; exit 1
           fi
+          # Diagnostics (lengths only — no secret content). Expect DEV=6064,
+          # PROD=6408; a different length means the secret was pasted truncated.
+          echo "b64 lengths -> DEV=${#AMPLIFY_CONFIG_DEV_B64} (expect 6064), PROD=${#AMPLIFY_CONFIG_PROD_B64} (expect 6408)"
           # openssl base64 -d -A is robust across the CI shell; plain `base64 -d`
           # chokes on single-line input on some macOS builders.
           printf '%s' "$AMPLIFY_CONFIG_DEV_B64"  | openssl base64 -d -A > lib/amplifyconfiguration.dart
           printf '%s' "$AMPLIFY_CONFIG_PROD_B64" | openssl base64 -d -A > lib/amplifyconfiguration_prod.dart
+          # The first line is a harmless const declaration (no secret) — log it
+          # so a bad decode is diagnosable from the build output.
+          echo "DEV decoded head:  $(head -c 26 lib/amplifyconfiguration.dart)"
+          echo "PROD decoded head: $(head -c 26 lib/amplifyconfiguration_prod.dart)"
           # Fail fast (with a clear message) if a secret was pasted truncated.
           grep -q 'amplifyconfig'     lib/amplifyconfiguration.dart      || { echo "DEV config decode looks wrong — re-check AMPLIFY_CONFIG_DEV_B64"; exit 1; }
           grep -q 'amplifyconfigProd' lib/amplifyconfiguration_prod.dart || { echo "PROD config decode looks wrong — re-check AMPLIFY_CONFIG_PROD_B64"; exit 1; }
