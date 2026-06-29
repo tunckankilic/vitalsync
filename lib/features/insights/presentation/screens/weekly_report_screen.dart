@@ -724,53 +724,69 @@ class _WeeklyReportScreenState extends ConsumerState<WeeklyReportScreen> {
     Widget widget,
     String filename,
   ) async {
-    try {
-      // Show loading
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(AppLocalizations.of(context).generatingImage)),
-      );
+    if (!mounted) return;
 
-      // Create a temporary widget tree to render
-      final overlay = OverlayEntry(
-        builder: (context) => Positioned(
-          left: -10000,
-          top: -10000,
-          child: RepaintBoundary(key: key, child: widget),
+    // Captured before any await so we never touch context across async gaps.
+    final theme = Theme.of(context);
+    final messenger = ScaffoldMessenger.of(context);
+    final l10n = AppLocalizations.of(context);
+
+    messenger.showSnackBar(SnackBar(content: Text(l10n.generatingImage)));
+
+    // Render with the app Theme + a Material ancestor so the off-screen card
+    // has the same styling context as on-screen widgets; without them the
+    // snapshot can come out unstyled ("broken page"). The neutral MediaQuery
+    // keeps user text-scaling from overflowing the fixed-width layout.
+    final overlay = OverlayEntry(
+      builder: (context) => Positioned(
+        left: -10000,
+        top: -10000,
+        child: RepaintBoundary(
+          key: key,
+          child: MediaQuery(
+            data: const MediaQueryData(),
+            child: Directionality(
+              textDirection: ui.TextDirection.ltr,
+              child: Theme(
+                data: theme,
+                child: Material(
+                  type: MaterialType.transparency,
+                  child: widget,
+                ),
+              ),
+            ),
+          ),
         ),
-      );
+      ),
+    );
 
-      Overlay.of(context).insert(overlay);
+    Overlay.of(context).insert(overlay);
 
-      // Wait for the widget to be rendered
-      await Future.delayed(const Duration(milliseconds: 500));
+    try {
+      // Wait until the off-screen card has actually painted before snapshotting
+      // (a flat delay races first-time glyph rasterization).
+      await WidgetsBinding.instance.endOfFrame;
+      await Future<void>.delayed(const Duration(milliseconds: 100));
+      await WidgetsBinding.instance.endOfFrame;
 
-      // Capture the image
       final boundary =
           key.currentContext?.findRenderObject() as RenderRepaintBoundary?;
-      if (boundary == null) {
-        throw Exception('Could not find render boundary');
-      }
+      if (boundary == null) return;
 
       final image = await boundary.toImage(pixelRatio: 2.0);
       final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
-      final pngBytes = byteData!.buffer.asUint8List();
+      if (byteData == null) return;
+      final pngBytes = byteData.buffer.asUint8List();
 
-      // Remove overlay
-      overlay.remove();
-
-      // Share the image
       await Share.shareXFiles([
         XFile.fromData(pngBytes, name: filename, mimeType: 'image/png'),
-      ], text: AppLocalizations.of(context).myWeeklyReport);
+      ], text: l10n.myWeeklyReport);
 
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      messenger.hideCurrentSnackBar();
     } catch (e) {
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(AppLocalizations.of(context).errorSharing(e))),
-      );
+      messenger.showSnackBar(SnackBar(content: Text(l10n.errorSharing(e))));
+    } finally {
+      overlay.remove();
     }
   }
 

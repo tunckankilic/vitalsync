@@ -381,6 +381,11 @@ class _WorkoutSummaryScreenState extends ConsumerState<WorkoutSummaryScreen>
   }
 
   Future<void> _shareAsImage(Widget card, Size size) async {
+    // Captured before any await so we never touch context across async gaps.
+    final theme = Theme.of(context);
+    final messenger = ScaffoldMessenger.of(context);
+    final l10n = AppLocalizations.of(context);
+
     final key = GlobalKey();
     final overlay = OverlayEntry(
       builder: (context) => Positioned(
@@ -391,11 +396,22 @@ class _WorkoutSummaryScreenState extends ConsumerState<WorkoutSummaryScreen>
           child: SizedBox(
             width: size.width,
             height: size.height,
+            // Render with the app Theme + a Material ancestor so the off-screen
+            // card has the same styling context as on-screen widgets. Without
+            // them the snapshot can come out unstyled ("broken page"). The
+            // neutral MediaQuery keeps user text-scaling from overflowing the
+            // fixed 1080-wide layout.
             child: MediaQuery(
               data: const MediaQueryData(),
               child: Directionality(
                 textDirection: ui.TextDirection.ltr,
-                child: card,
+                child: Theme(
+                  data: theme,
+                  child: Material(
+                    type: MaterialType.transparency,
+                    child: card,
+                  ),
+                ),
               ),
             ),
           ),
@@ -405,29 +421,37 @@ class _WorkoutSummaryScreenState extends ConsumerState<WorkoutSummaryScreen>
 
     Overlay.of(context).insert(overlay);
 
-    // Wait for rendering
-    await Future<void>.delayed(const Duration(milliseconds: 200));
-
     try {
+      // Wait until the off-screen card has actually painted before snapshotting.
+      // A flat delay races first-time glyph rasterization; endOfFrame guarantees
+      // a rendered frame, and the extra pass covers icon/emoji fonts that load
+      // lazily.
+      await WidgetsBinding.instance.endOfFrame;
+      await Future<void>.delayed(const Duration(milliseconds: 100));
+      await WidgetsBinding.instance.endOfFrame;
+
       final boundary =
-          key.currentContext!.findRenderObject()! as RenderRepaintBoundary;
+          key.currentContext?.findRenderObject() as RenderRepaintBoundary?;
+      if (boundary == null) return;
+
       final image = await boundary.toImage(pixelRatio: 1.0);
       final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+      if (byteData == null) return;
 
-      if (byteData != null) {
-        final bytes = byteData.buffer.asUint8List();
-        await SharePlus.instance.share(
-          ShareParams(
-            files: [
-              XFile.fromData(
-                bytes,
-                mimeType: 'image/png',
-                name: 'vitalsync_workout.png',
-              ),
-            ],
-          ),
-        );
-      }
+      final bytes = byteData.buffer.asUint8List();
+      await SharePlus.instance.share(
+        ShareParams(
+          files: [
+            XFile.fromData(
+              bytes,
+              mimeType: 'image/png',
+              name: 'vitalsync_workout.png',
+            ),
+          ],
+        ),
+      );
+    } catch (e) {
+      messenger.showSnackBar(SnackBar(content: Text(l10n.errorSharing(e))));
     } finally {
       overlay.remove();
     }

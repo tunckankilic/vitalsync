@@ -935,6 +935,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get logOut => 'Log Out';
 
   @override
+  String get logOutConfirmTitle => 'Log out?';
+
+  @override
+  String get logOutConfirmMessage =>
+      'You\'ll need to sign in again to access your account.';
+
+  @override
   String get workouts => 'Workouts';
 
   @override
@@ -1643,6 +1650,10 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get biometricLoginDescription =>
       'Use fingerprint or face recognition to sign in quickly';
+
+  @override
+  String get biometricSessionExpired =>
+      'Your session has expired. Please sign in again.';
 
   @override
   String get dashboardEditMode => 'Edit Dashboard';

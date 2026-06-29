@@ -941,6 +941,13 @@ class AppLocalizationsTr extends AppLocalizations {
   String get logOut => 'Çıkış Yap';
 
   @override
+  String get logOutConfirmTitle => 'Çıkış yapılsın mı?';
+
+  @override
+  String get logOutConfirmMessage =>
+      'Hesabına erişmek için tekrar giriş yapman gerekecek.';
+
+  @override
   String get workouts => 'Antrenmanlar';
 
   @override
@@ -1655,6 +1662,10 @@ class AppLocalizationsTr extends AppLocalizations {
   @override
   String get biometricLoginDescription =>
       'Hızlı giriş için parmak izi veya yüz tanıma kullan';
+
+  @override
+  String get biometricSessionExpired =>
+      'Oturumun sona erdi. Lütfen tekrar giriş yap.';
 
   @override
   String get dashboardEditMode => 'Dashboard Düzenle';

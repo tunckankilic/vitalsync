@@ -65,16 +65,19 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       );
       if (!authenticated || !mounted) return;
 
-      // Verify auth session is still valid before navigating
+      // Verify the persisted auth session is still valid before navigating.
+      // currentUser is only the in-memory cache (null on the login screen);
+      // refreshCurrentUser() consults the saved Amplify session, so a returning
+      // user with a valid session is let in and a genuinely expired one is
+      // caught — instead of always reporting "session expired".
       final authRepo = GetIt.instance<AuthRepository>();
-      final currentUser = authRepo.currentUser;
-      if (currentUser == null) {
-        // No cached auth user — biometric alone is not enough
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(l10n.loginFailed('Session expired'))),
-          );
-        }
+      final user = await authRepo.refreshCurrentUser();
+      if (!mounted) return;
+
+      if (user == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(l10n.biometricSessionExpired)),
+        );
         return;
       }
 

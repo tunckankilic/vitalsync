@@ -1870,6 +1870,18 @@ abstract class AppLocalizations {
   /// **'Log Out'**
   String get logOut;
 
+  /// Log out confirmation dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Log out?'**
+  String get logOutConfirmTitle;
+
+  /// Log out confirmation dialog message
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ll need to sign in again to access your account.'**
+  String get logOutConfirmMessage;
+
   /// Workouts stat label
   ///
   /// In en, this message translates to:
@@ -3117,6 +3129,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Use fingerprint or face recognition to sign in quickly'**
   String get biometricLoginDescription;
+
+  /// Shown when biometric unlock finds no valid saved session
+  ///
+  /// In en, this message translates to:
+  /// **'Your session has expired. Please sign in again.'**
+  String get biometricSessionExpired;
 
   /// Dashboard edit mode title
   ///

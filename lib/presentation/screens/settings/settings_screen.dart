@@ -364,10 +364,65 @@ class SettingsScreen extends ConsumerWidget {
             ],
           ),
 
+          const SizedBox(height: 24),
+
+          // Log Out — placed at the bottom and visually distinct (red) so it's
+          // easy to find; this is the conventional spot users look for it.
+          OutlinedButton.icon(
+            onPressed: () => _confirmAndSignOut(context, ref, l10n),
+            icon: const Icon(Icons.logout),
+            label: Text(l10n.logOut),
+            style: OutlinedButton.styleFrom(
+              foregroundColor: Colors.red,
+              side: const BorderSide(color: Colors.red),
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+            ),
+          ),
+
           const SizedBox(height: 48),
         ],
       ),
     );
+  }
+
+  /// Confirms, then signs out. The auth-state stream drives the GoRouter
+  /// redirect back to /auth/login, so no manual navigation is needed (same
+  /// pattern as [_performAccountDeletion]). The messenger is captured before
+  /// the await so an error can still be surfaced after teardown.
+  Future<void> _confirmAndSignOut(
+    BuildContext context,
+    WidgetRef ref,
+    AppLocalizations l10n,
+  ) async {
+    final messenger = ScaffoldMessenger.of(context);
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text(l10n.logOutConfirmTitle),
+        content: Text(l10n.logOutConfirmMessage),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext, false),
+            child: Text(l10n.cancel),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext, true),
+            style: TextButton.styleFrom(foregroundColor: Colors.red),
+            child: Text(l10n.logOut),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true) return;
+
+    try {
+      await ref.read(authProvider.notifier).signOut();
+    } catch (e) {
+      messenger.showSnackBar(SnackBar(content: Text(l10n.errorGeneric(e))));
+    }
   }
 
   String _getThemeName(ThemeMode mode, AppLocalizations l10n) {
