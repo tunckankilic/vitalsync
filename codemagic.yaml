@@ -89,13 +89,20 @@ workflows:
           flutter test
       - name: Increment build number
         script: |
-          LATEST_BUILD=$(app-store-connect get-latest-testflight-build-number "$BUNDLE_ID" 2>/dev/null || true)
-          if [ -z "$LATEST_BUILD" ] || [ "$LATEST_BUILD" = "0" ]; then
-            LATEST_BUILD=1
-          fi
-          NEW_BUILD=$((LATEST_BUILD + 1))
+          # Choose a build number guaranteed higher than anything already on
+          # TestFlight. Query App Store Connect, but floor it with Codemagic's
+          # own monotonic build counter ($BUILD_NUMBER) so a lagging/empty query
+          # can't reuse an existing number — which fails upload with a 409
+          # "bundle version already used".
+          ASC_LATEST=$(app-store-connect get-latest-testflight-build-number "$BUNDLE_ID" 2>/dev/null || echo 0)
+          case "$ASC_LATEST" in ''|*[!0-9]*) ASC_LATEST=0;; esac
+          CM_COUNT=${BUILD_NUMBER:-0}
+          case "$CM_COUNT" in ''|*[!0-9]*) CM_COUNT=0;; esac
+          BASE=$ASC_LATEST
+          [ "$CM_COUNT" -gt "$BASE" ] && BASE=$CM_COUNT
+          NEW_BUILD=$((BASE + 1))
           echo "BUILD_NUMBER=$NEW_BUILD" >> $CM_ENV
-          echo "Latest build: $LATEST_BUILD -> New build: $NEW_BUILD"
+          echo "ASC_LATEST=$ASC_LATEST CM_COUNT=$CM_COUNT -> NEW_BUILD=$NEW_BUILD"
       - name: Build iOS
         script: |
           flutter build ipa \
