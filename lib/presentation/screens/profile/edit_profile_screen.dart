@@ -3,9 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:vitalsync/core/auth/auth_provider.dart';
+import 'package:vitalsync/core/di/injection_container.dart';
 import 'package:vitalsync/core/enums/gender.dart';
+import 'package:vitalsync/core/gdpr/gdpr_manager.dart';
 import 'package:vitalsync/core/l10n/app_localizations.dart';
 import 'package:vitalsync/domain/entities/shared/user_profile.dart';
+import 'package:vitalsync/domain/models/app_user.dart';
 
 class EditProfileScreen extends ConsumerStatefulWidget {
   const EditProfileScreen({super.key});
@@ -51,6 +54,22 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
     }
   }
 
+  /// Builds a blank profile seeded from the Cognito identity, used when no local
+  /// profile exists yet (typical for Apple sign-in). [saveProfile] will insert
+  /// it on save because [UserProfile.id] is 0.
+  UserProfile _emptyProfileFrom(AppUser? authUser) {
+    final now = DateTime.now();
+    return UserProfile(
+      id: 0,
+      authUid: authUser?.id ?? '',
+      name: authUser?.displayName ?? '',
+      gdprConsentVersion: getIt<GDPRManager>().getCurrentPolicyVersion(),
+      gdprConsentDate: now,
+      createdAt: now,
+      updatedAt: now,
+    );
+  }
+
   Future<void> _saveProfile(
     UserProfile currentUser,
     AppLocalizations l10n,
@@ -73,7 +92,20 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
         updatedAt: DateTime.now(),
       );
 
-      await ref.read(userRepositoryProvider).updateProfile(updatedProfile);
+      // saveProfile inserts when there's no existing row (id == 0) and updates
+      // otherwise, so this also works for an Apple user creating their profile
+      // for the first time — not just editing an existing one.
+      await ref.read(userRepositoryProvider).saveProfile(updatedProfile);
+
+      // Also persist the name on Cognito so it survives reinstalls and reaches
+      // other devices (Apple only ever sends the name on first sign-in). The
+      // local save above is the source of truth, so a failure here — e.g.
+      // offline — must not block saving.
+      try {
+        await ref
+            .read(authRepositoryProvider)
+            .updateDisplayName(updatedProfile.name);
+      } catch (_) {}
 
       // Refresh the current user provider
       ref.invalidate(currentUserProvider);
@@ -118,6 +150,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final userAsync = ref.watch(currentUserProvider);
+    final authUser = ref.watch(authStateProvider).value;
     final l10n = AppLocalizations.of(context);
 
     return Scaffold(
@@ -127,8 +160,11 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
         backgroundColor: Colors.transparent,
       ),
       body: userAsync.when(
-        data: (user) {
-          if (user == null) return Center(child: Text(l10n.userNotFound));
+        data: (localUser) {
+          // No local profile yet (typical for Apple sign-in): seed a blank one
+          // from the Cognito identity so the name is pre-filled and editable,
+          // instead of dead-ending on "user not found".
+          final user = localUser ?? _emptyProfileFrom(authUser);
           _initializeWithUser(user);
 
           return SingleChildScrollView(

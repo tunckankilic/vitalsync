@@ -108,18 +108,22 @@ class CognitoAuthRepositoryImpl implements AuthRepository {
       log('Failed to fetch user attributes (identity preserved): $e');
     }
 
-    // Sign in with Apple (via Cognito) supplies the user's name as
-    // firstName/lastName — which Cognito maps to `given_name`/`family_name`,
-    // not the single `name` attribute — and only on the first authorization.
-    // Prefer an explicit `name`, but fall back to composing one from
-    // given/family so federated users aren't shown as a blank "User".
-    final composedName = [givenName, familyName]
-        .where((part) => part != null && part.trim().isNotEmpty)
+    // Build the display name from first + last parts. `name` carries the full
+    // name for email/password sign-up, but only the FIRST name for Sign in with
+    // Apple — this pool maps Apple firstName -> name and lastName ->
+    // family_name (given_name is left unmapped, kept here as an extra fallback).
+    // Combining them yields a complete name for both, instead of showing only
+    // the first name or a blank "User". Apple only sends the name on the first
+    // authorization, so it may legitimately be absent for returning users.
+    final firstPart = (name != null && name.trim().isNotEmpty)
+        ? name.trim()
+        : givenName?.trim();
+    final lastPart = familyName?.trim();
+    final composedName = [firstPart, lastPart]
+        .where((part) => part != null && part.isNotEmpty)
         .join(' ')
         .trim();
-    final displayName = (name != null && name.trim().isNotEmpty)
-        ? name
-        : (composedName.isNotEmpty ? composedName : null);
+    final displayName = composedName.isNotEmpty ? composedName : null;
 
     return AppUser(
       id: userId,
@@ -134,6 +138,44 @@ class CognitoAuthRepositoryImpl implements AuthRepository {
 
   @override
   AppUser? get currentUser => _cachedUser;
+
+  @override
+  Future<AppUser?> refreshCurrentUser() async {
+    // Consult Amplify's persisted session rather than the in-memory cache, so a
+    // valid session that hasn't been cached yet (cold-start race) is detected,
+    // and a genuinely expired one is reported as such. Used by biometric unlock.
+    try {
+      final session = await Amplify.Auth.fetchAuthSession();
+      if (!session.isSignedIn) {
+        _cachedUser = null;
+        _authStateController.add(null);
+        return null;
+      }
+      _cachedUser = await _fetchCurrentUser();
+    } on SignedOutException {
+      _cachedUser = null;
+    } catch (e) {
+      // Transient failure (e.g. no connectivity): keep whatever identity is
+      // already cached instead of falsely reporting an expired session.
+      log('refreshCurrentUser failed: $e');
+    }
+    _authStateController.add(_cachedUser);
+    return _cachedUser;
+  }
+
+  @override
+  Future<void> updateDisplayName(String name) async {
+    // Persist the name on the Cognito `name` attribute so it survives a
+    // reinstall and reaches other devices — important for Apple users, whose
+    // name Apple only ever sends on the first authorization. Refresh the cache
+    // afterwards so listeners (profile screen) update immediately.
+    await Amplify.Auth.updateUserAttribute(
+      userAttributeKey: AuthUserAttributeKey.name,
+      value: name,
+    );
+    _cachedUser = await _fetchCurrentUser();
+    _authStateController.add(_cachedUser);
+  }
 
   @override
   Future<AppAuthResult> signIn(String email, String password) async {

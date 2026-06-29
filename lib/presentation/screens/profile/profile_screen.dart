@@ -56,9 +56,20 @@ class ProfileScreen extends ConsumerWidget {
                   // Profile Header
                   userAsync.when(
                     data: (user) {
-                      final name = user?.name ?? l10n.defaultUser;
-                      final authState = ref.watch(authStateProvider);
-                      final email = authState.value?.email ?? l10n.noEmail;
+                      final authUser = ref.watch(authStateProvider).value;
+                      // Prefer a locally-edited name, then the identity name
+                      // from Cognito (Apple / email sign-up). This screen used
+                      // to read only the local DB, so Apple users — who have no
+                      // local profile until they edit one — always showed "User"
+                      // even when Cognito had their name.
+                      final localName = user?.name.trim() ?? '';
+                      final cognitoName = authUser?.displayName?.trim() ?? '';
+                      final name = localName.isNotEmpty
+                          ? localName
+                          : (cognitoName.isNotEmpty
+                                ? cognitoName
+                                : l10n.defaultUser);
+                      final email = authUser?.email ?? l10n.noEmail;
                       // final photoUrl = user?.photoUrl;
 
                       return Column(
@@ -279,11 +290,7 @@ class ProfileScreen extends ConsumerWidget {
                   const SizedBox(height: 16),
 
                   TextButton(
-                    onPressed: () {
-                      ref.read(authProvider.notifier).signOut();
-                      // Go router redirect should handle this, or:
-                      // context.go('/auth/login');
-                    },
+                    onPressed: () => _confirmAndSignOut(context, ref, l10n),
                     style: TextButton.styleFrom(foregroundColor: Colors.red),
                     child: Text(l10n.logOut),
                   ),
@@ -294,6 +301,43 @@ class ProfileScreen extends ConsumerWidget {
         ],
       ),
     );
+  }
+
+  /// Confirms, then signs out. The auth-state stream drives the GoRouter
+  /// redirect back to /auth/login, so no manual navigation is needed. The
+  /// messenger is captured before the await so an error can still be surfaced
+  /// after the widget is torn down.
+  Future<void> _confirmAndSignOut(
+    BuildContext context,
+    WidgetRef ref,
+    AppLocalizations l10n,
+  ) async {
+    final messenger = ScaffoldMessenger.of(context);
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text(l10n.logOutConfirmTitle),
+        content: Text(l10n.logOutConfirmMessage),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext, false),
+            child: Text(l10n.cancel),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext, true),
+            style: TextButton.styleFrom(foregroundColor: Colors.red),
+            child: Text(l10n.logOut),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true) return;
+
+    try {
+      await ref.read(authProvider.notifier).signOut();
+    } catch (e) {
+      messenger.showSnackBar(SnackBar(content: Text(l10n.errorGeneric(e))));
+    }
   }
 }
 
