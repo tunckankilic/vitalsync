@@ -60,7 +60,6 @@ import '../gdpr/gdpr_manager.dart';
 import '../l10n/app_localizations.dart';
 import '../network/connectivity_service.dart';
 import '../notifications/notification_service.dart';
-import '../services/biometric_service.dart';
 import '../sync/cloud_sync_client.dart';
 import '../sync/rest_sync_client.dart';
 import '../sync/sync_service.dart';
@@ -132,8 +131,6 @@ Future<void> initializeDependencies() async {
   getIt.registerLazySingleton<ConnectivityService>(
     () => ConnectivityService(connectivity: getIt<Connectivity>()),
   );
-
-  getIt.registerLazySingleton<BiometricService>(BiometricService.new);
 
   getIt.registerLazySingleton<SyncService>(
     () => SyncService(

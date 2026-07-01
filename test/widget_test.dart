@@ -5,13 +5,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:get_it/get_it.dart';
-import 'package:local_auth/local_auth.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vitalsync/core/auth/auth_provider.dart';
 import 'package:vitalsync/core/errors/auth_exceptions.dart';
-import 'package:vitalsync/core/services/biometric_service.dart';
 import 'package:vitalsync/domain/repositories/shared/auth_repository.dart';
 import 'package:vitalsync/presentation/screens/auth/login_screen.dart';
 
@@ -19,32 +16,12 @@ import 'support/pump_app.dart';
 
 class MockAuthRepository extends Mock implements AuthRepository {}
 
-class MockBiometricService extends Mock implements BiometricService {}
-
 void main() {
   late MockAuthRepository mockAuth;
-  late MockBiometricService mockBiometric;
 
   setUp(() {
     SharedPreferences.setMockInitialValues({});
     mockAuth = MockAuthRepository();
-    mockBiometric = MockBiometricService();
-
-    // LoginScreen resolves BiometricService from GetIt at construction.
-    final getIt = GetIt.instance;
-    if (getIt.isRegistered<BiometricService>()) {
-      getIt.unregister<BiometricService>();
-    }
-    getIt.registerSingleton<BiometricService>(mockBiometric);
-
-    // Keep the biometric button hidden so tests focus on the password form.
-    when(() => mockBiometric.isAvailable()).thenAnswer((_) async => false);
-    when(() => mockBiometric.getAvailableBiometrics())
-        .thenAnswer((_) async => <BiometricType>[]);
-  });
-
-  tearDown(() {
-    GetIt.instance.reset();
   });
 
   Future<void> pumpLogin(WidgetTester tester) {

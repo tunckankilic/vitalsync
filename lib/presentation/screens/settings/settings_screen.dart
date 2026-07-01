@@ -139,30 +139,6 @@ class SettingsScreen extends ConsumerWidget {
 
           const SizedBox(height: 24),
 
-          // Security Section
-          _SettingsSection(
-            title: l10n.security,
-            children: [
-              SwitchListTile(
-                title: Text(l10n.biometricLogin),
-                subtitle: Text(l10n.biometricLoginDescription),
-                secondary: const Icon(Icons.fingerprint),
-                value: ref.watch(biometricSettingProvider),
-                onChanged: (val) {
-                  ref
-                      .read(biometricSettingProvider.notifier)
-                      .setEnabled(val);
-                },
-                activeThumbColor: Theme.of(context).primaryColor,
-                activeTrackColor: Theme.of(
-                  context,
-                ).primaryColor.withValues(alpha: 0.5),
-              ),
-            ],
-          ),
-
-          const SizedBox(height: 24),
-
           // Units Section
           _SettingsSection(
             title: l10n.units,
@@ -255,10 +231,8 @@ class SettingsScreen extends ConsumerWidget {
                 title: l10n.support,
                 subtitle: l10n.supportSubtitle,
                 icon: Icons.help_outline,
-                onTap: () => UrlLauncherHelper.open(
-                  context,
-                  AppConstants.supportUrl,
-                ),
+                onTap: () =>
+                    UrlLauncherHelper.open(context, AppConstants.supportUrl),
               ),
             ],
           ),
@@ -295,9 +269,7 @@ class SettingsScreen extends ConsumerWidget {
                           // before any await to stay off context across gaps.
                           final messenger = ScaffoldMessenger.of(context);
 
-                          final consents = ref.read(
-                            gdprConsentSettingProvider,
-                          );
+                          final consents = ref.read(gdprConsentSettingProvider);
                           if (!(consents[AppConstants
                                   .gdprConsentTypeCloudBackup] ??
                               false)) {
@@ -465,9 +437,7 @@ class SettingsScreen extends ConsumerWidget {
       context: context,
       builder: (dialogContext) => AlertDialog(
         title: Text(l10n.healthDisclaimerTitle),
-        content: SingleChildScrollView(
-          child: Text(l10n.healthDisclaimerBody),
-        ),
+        content: SingleChildScrollView(child: Text(l10n.healthDisclaimerBody)),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(),
@@ -557,9 +527,7 @@ class SettingsScreen extends ConsumerWidget {
           library: 'settings.deleteAccount',
         ),
       );
-      messenger.showSnackBar(
-        SnackBar(content: Text(l10n.deleteAccountFailed)),
-      );
+      messenger.showSnackBar(SnackBar(content: Text(l10n.deleteAccountFailed)));
     }
   }
 }

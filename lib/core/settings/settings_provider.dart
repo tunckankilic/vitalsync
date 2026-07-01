@@ -8,7 +8,6 @@
 library;
 
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -228,39 +227,6 @@ class GdprConsentSetting extends _$GdprConsentSetting {
     }
 
     state = consents;
-  }
-}
-
-/// Secure storage key for biometric flag
-const _biometricStorageKey = 'vitalsync_biometric_enabled';
-
-/// Biometric login enabled provider with FlutterSecureStorage persistence
-@riverpod
-class BiometricSetting extends _$BiometricSetting {
-  static const _secureStorage = FlutterSecureStorage();
-
-  @override
-  bool build() {
-    // Kick off an async read; default to false until resolved
-    _loadFromSecureStorage();
-    return false;
-  }
-
-  Future<void> _loadFromSecureStorage() async {
-    final value = await _secureStorage.read(key: _biometricStorageKey);
-    final enabled = value == 'true';
-    if (state != enabled) {
-      state = enabled;
-    }
-  }
-
-  /// Toggle biometric login (persisted in secure storage)
-  Future<void> setEnabled(bool enabled) async {
-    await _secureStorage.write(
-      key: _biometricStorageKey,
-      value: enabled.toString(),
-    );
-    state = enabled;
   }
 }
 
