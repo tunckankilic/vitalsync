@@ -1,0 +1,7 @@
+{
+  "name": "vitalsync-apple-revoke",
+  "version": "1.0.0",
+  "description": "Sign in with Apple token revocation for VitalSync account deletion",
+  "type": "module",
+  "private": true
+}

@@ -63,3 +63,12 @@ class InsightGenerationException extends VitalSyncException {
 class AccountDeletionException extends VitalSyncException {
   const AccountDeletionException(super.message, {super.cause});
 }
+
+/// Thrown when revoking the Sign in with Apple grant during account deletion
+/// fails (App Store Guideline 5.1.1(v)).
+///
+/// Handled best-effort: the account deletion still proceeds, but the failure is
+/// reported to crash reporting so a systematically-failing revoke stays visible.
+class AppleRevocationException extends VitalSyncException {
+  const AppleRevocationException(super.message, {super.cause});
+}

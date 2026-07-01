@@ -54,7 +54,9 @@ import '../../features/health/domain/services/medication_reminder_service.dart';
 import '../../features/insights/domain/insight_engine.dart';
 import '../../features/insights/domain/weekly_report_service.dart';
 import '../analytics/analytics_service.dart';
+import '../auth/apple_token_revocation_service.dart';
 import '../background/background_service.dart';
+import '../config/app_environment.dart';
 import '../constants/app_constants.dart';
 import '../gdpr/gdpr_manager.dart';
 import '../l10n/app_localizations.dart';
@@ -96,7 +98,21 @@ Future<void> initializeDependencies() async {
   getIt.registerLazySingleton<CloudSyncClient>(RestSyncClient.new);
 
   // AUTH REPOSITORY (AWS Cognito via Amplify)
-  getIt.registerLazySingleton<AuthRepository>(CognitoAuthRepositoryImpl.new);
+  //
+  // The Apple token revocation service is injected so account deletion can
+  // revoke the Sign in with Apple grant (App Store Guideline 5.1.1(v)). It is
+  // inert unless APPLE_REVOKE_ENDPOINT is supplied at build time, so builds
+  // without the dart-define keep the exact previous deletion behaviour.
+  getIt.registerLazySingleton<AppleTokenRevocationService>(
+    () => AppleTokenRevocationService(
+      endpoint: AppEnvironment.appleRevokeEndpoint,
+    ),
+  );
+  getIt.registerLazySingleton<AuthRepository>(
+    () => CognitoAuthRepositoryImpl(
+      revocationService: getIt<AppleTokenRevocationService>(),
+    ),
+  );
 
   // SHARED SERVICES
 

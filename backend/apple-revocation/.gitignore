@@ -1,0 +1,8 @@
+# SAM build artifacts
+.aws-sam/
+
+# Local SAM config (may contain account-specific parameter values)
+samconfig.toml
+
+# Never commit Apple secrets
+*.p8
