@@ -87,8 +87,10 @@ Future<void> initializeDependencies() async {
   // Seed default data (exercises, default templates, achievements) on first
   // launch. Idempotent and non-critical: only runs when the exercises table is
   // empty, so existing users' data is never touched, and a seed failure is
-  // logged rather than aborting app startup (graceful degrade).
-  await _seedDefaultDataIfEmpty(getIt<AppDatabase>());
+  // logged rather than aborting app startup (graceful degrade). The same guard
+  // also runs after every login (see AuthNotifier) to restore the catalogue
+  // for a returning user whose local DB was wiped on sign-out.
+  await seedDefaultDataIfEmpty(getIt<AppDatabase>());
 
   // CLOUD SYNC CLIENT (AWS REST API via Amplify)
   getIt.registerLazySingleton<CloudSyncClient>(RestSyncClient.new);
@@ -264,13 +266,19 @@ Future<void> initializeDependencies() async {
   log(' All dependencies initialized successfully');
 }
 
-/// Seeds default data on first launch only.
+/// Seeds the default catalogue (exercises, templates, achievements) whenever
+/// the local database is empty.
+///
+/// Invoked both at cold-start (above) and after every login (see
+/// [AuthNotifier]); the post-login call restores the catalogue for a returning
+/// user whose local database was wiped on sign-out (consent-gated) or lost to a
+/// reinstall — without it the re-seed would only happen on the next cold start.
 ///
 /// Idempotent: seeding runs solely when the exercises table is empty, so an
-/// existing user's database is never re-seeded or overwritten. Non-critical:
-/// a failure here is logged and swallowed so it can't abort app startup — the
-/// app still runs, just without the default catalogue until the next launch.
-Future<void> _seedDefaultDataIfEmpty(AppDatabase db) async {
+/// existing user's data is never re-seeded or overwritten, and a user who
+/// deleted individual exercises keeps that choice. Non-critical: a failure is
+/// logged and swallowed so it can never abort startup or a login.
+Future<void> seedDefaultDataIfEmpty(AppDatabase db) async {
   try {
     final existing = await db.exerciseDao.getAll();
     if (existing.isEmpty) {
