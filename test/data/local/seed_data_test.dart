@@ -21,14 +21,17 @@ void main() {
   });
 
   group('seedDefaultDataIfEmpty', () {
-    test('seeds the default exercise catalogue and templates when empty', () async {
-      expect(await db.exerciseDao.getAll(), isEmpty);
+    test(
+      'seeds the default exercise catalogue and templates when empty',
+      () async {
+        expect(await db.exerciseDao.getAll(), isEmpty);
 
-      await seedDefaultDataIfEmpty(db);
+        await seedDefaultDataIfEmpty(db);
 
-      expect((await db.exerciseDao.getAll()).length, greaterThan(40));
-      expect(await db.workoutTemplateDao.getAll(), isNotEmpty);
-    });
+        expect((await db.exerciseDao.getAll()).length, greaterThan(40));
+        expect(await db.workoutTemplateDao.getAll(), isNotEmpty);
+      },
+    );
 
     test('restores the catalogue after a sign-out / reinstall wipe', () async {
       await seedDefaultDataIfEmpty(db);
@@ -46,16 +49,23 @@ void main() {
       expect(await db.workoutTemplateDao.getAll(), isNotEmpty);
     });
 
-    test('is a no-op when exercises already exist (never duplicates)', () async {
-      await seedDefaultDataIfEmpty(db);
-      final firstCount = (await db.exerciseDao.getAll()).length;
-      final firstTemplateCount = (await db.workoutTemplateDao.getAll()).length;
+    test(
+      'is a no-op when exercises already exist (never duplicates)',
+      () async {
+        await seedDefaultDataIfEmpty(db);
+        final firstCount = (await db.exerciseDao.getAll()).length;
+        final firstTemplateCount =
+            (await db.workoutTemplateDao.getAll()).length;
 
-      // A second guard run (e.g. a later login) must not duplicate anything.
-      await seedDefaultDataIfEmpty(db);
+        // A second guard run (e.g. a later login) must not duplicate anything.
+        await seedDefaultDataIfEmpty(db);
 
-      expect((await db.exerciseDao.getAll()).length, firstCount);
-      expect((await db.workoutTemplateDao.getAll()).length, firstTemplateCount);
-    });
+        expect((await db.exerciseDao.getAll()).length, firstCount);
+        expect(
+          (await db.workoutTemplateDao.getAll()).length,
+          firstTemplateCount,
+        );
+      },
+    );
   });
 }

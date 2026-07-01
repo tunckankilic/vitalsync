@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vitalsync/core/errors/exceptions.dart';
 import 'package:vitalsync/core/gdpr/gdpr_manager.dart';
 import 'package:vitalsync/core/sync/cloud_sync_client.dart';
+import 'package:vitalsync/core/sync/sync_service.dart';
 import 'package:vitalsync/data/local/database.dart';
 import 'package:vitalsync/domain/models/app_user.dart';
 import 'package:vitalsync/domain/repositories/shared/auth_repository.dart';
@@ -96,29 +97,58 @@ void main() {
       },
     );
 
-    test(
-      'aborts without deleting local data or the account when cloud delete '
-      'fails (no orphaned server data)',
-      () async {
-        when(() => mockAuth.currentUser).thenReturn(user);
-        when(
-          () => mockCloudClient.deleteAllUserData(
-            userId: any(named: 'userId'),
-            collections: any(named: 'collections'),
-          ),
-        ).thenThrow(Exception('offline'));
+    test('erasure targets every synced collection — including workout_sets and '
+        'personal_records — so no cloud health data is orphaned', () async {
+      when(() => mockAuth.currentUser).thenReturn(user);
+      when(
+        () => mockCloudClient.deleteAllUserData(
+          userId: any(named: 'userId'),
+          collections: any(named: 'collections'),
+        ),
+      ).thenAnswer((_) async {});
+      when(() => mockDatabase.deleteAllData()).thenAnswer((_) async {});
+      when(() => mockAuth.deleteAccount()).thenAnswer((_) async {});
 
-        await expectLater(
-          manager.deleteAllUserData(),
-          throwsA(isA<AccountDeletionException>()),
-        );
+      await manager.deleteAllUserData();
 
-        // Nothing destructive ran after the cloud failure.
-        verifyNever(() => mockDatabase.deleteAllData());
-        verifyNever(() => mockAuth.deleteAccount());
-        // Local prefs are left intact so the user can retry.
-        expect(prefs.getBool('some_setting'), isTrue);
-      },
-    );
+      final erased =
+          verify(
+                () => mockCloudClient.deleteAllUserData(
+                  userId: user.id,
+                  collections: captureAny(named: 'collections'),
+                ),
+              ).captured.single
+              as List<String>;
+
+      // Must cover the full canonical sync set (guards against the list
+      // drifting behind SyncService again) plus the previously missing
+      // fitness detail tables.
+      expect(erased, containsAll(SyncService.tablesToSync));
+      expect(erased, contains('workout_sets'));
+      expect(erased, contains('personal_records'));
+      expect(erased, contains('insights'));
+    });
+
+    test('aborts without deleting local data or the account when cloud delete '
+        'fails (no orphaned server data)', () async {
+      when(() => mockAuth.currentUser).thenReturn(user);
+      when(
+        () => mockCloudClient.deleteAllUserData(
+          userId: any(named: 'userId'),
+          collections: any(named: 'collections'),
+        ),
+      ).thenThrow(Exception('offline'));
+
+      await expectLater(
+        manager.deleteAllUserData(),
+        throwsA(isA<AccountDeletionException>()),
+      );
+
+      // Nothing destructive ran after the cloud failure.
+      verifyNever(() => mockDatabase.deleteAllData());
+      verifyNever(() => mockAuth.deleteAccount());
+      // Local prefs are left intact so the user can retry.
+      expect(prefs.getBool('some_setting'), isTrue);
+    });
   });
 }

@@ -10,6 +10,8 @@ import 'dart:developer' show log;
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:vitalsync/core/errors/auth_exceptions.dart';
+import 'package:vitalsync/core/errors/exceptions.dart'
+    show AccountDeletionException;
 import 'package:vitalsync/domain/models/app_auth_result.dart';
 import 'package:vitalsync/domain/models/app_user.dart';
 import 'package:vitalsync/domain/repositories/shared/auth_repository.dart';
@@ -119,10 +121,10 @@ class CognitoAuthRepositoryImpl implements AuthRepository {
         ? name.trim()
         : givenName?.trim();
     final lastPart = familyName?.trim();
-    final composedName = [firstPart, lastPart]
-        .where((part) => part != null && part.isNotEmpty)
-        .join(' ')
-        .trim();
+    final composedName = [
+      firstPart,
+      lastPart,
+    ].where((part) => part != null && part.isNotEmpty).join(' ').trim();
     final displayName = composedName.isNotEmpty ? composedName : null;
 
     return AppUser(
@@ -236,10 +238,7 @@ class CognitoAuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<void> confirmSignUp(
-    String email,
-    String confirmationCode,
-  ) async {
+  Future<void> confirmSignUp(String email, String confirmationCode) async {
     final result = await Amplify.Auth.confirmSignUp(
       username: email,
       confirmationCode: confirmationCode,
@@ -271,9 +270,7 @@ class CognitoAuthRepositoryImpl implements AuthRepository {
     );
 
     if (!result.isSignedIn) {
-      throw const SignInFailedException(
-        'Apple Sign-In tamamlanamadı.',
-      );
+      throw const SignInFailedException('Apple Sign-In tamamlanamadı.');
     }
 
     _cachedUser = await _fetchCurrentUser();
@@ -320,7 +317,15 @@ class CognitoAuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<void> deleteAccount() async {
-    await Amplify.Auth.deleteUser();
+    try {
+      await Amplify.Auth.deleteUser();
+    } catch (e) {
+      // Surface a typed, cause-carrying failure so the GDPR erasure flow and
+      // crash reporting get a consistent signal instead of a raw AuthException.
+      // The cache is left untouched — on failure the account still exists.
+      log('Account deletion failed: $e');
+      throw AccountDeletionException('Account deletion failed.', cause: e);
+    }
     _cachedUser = null;
   }
 
