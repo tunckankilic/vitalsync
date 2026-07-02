@@ -1201,5 +1201,36 @@
   "@medicationFollowUpBody": {
     "description": "Body of the follow-up notification asking the user to log a dose",
     "placeholders": { "name": { "type": "String" } }
-  }
+  },
+  "verifyEmailTitle": "Verify Your Email",
+  "@verifyEmailTitle": { "description": "Sign-up email confirmation screen title" },
+  "verifyEmailSubtitle": "Enter the verification code we sent to {email}",
+  "@verifyEmailSubtitle": {
+    "description": "Sign-up email confirmation screen subtitle",
+    "placeholders": { "email": { "type": "String" } }
+  },
+  "verificationCode": "Verification code",
+  "@verificationCode": { "description": "Confirmation code field hint" },
+  "enterVerificationCode": "Please enter the verification code",
+  "@enterVerificationCode": { "description": "Empty confirmation code validation error" },
+  "verificationCodeTooShort": "The code must be 6 digits",
+  "@verificationCodeTooShort": { "description": "Confirmation code length validation error" },
+  "verifyButton": "Verify",
+  "@verifyButton": { "description": "Confirm sign-up submit button" },
+  "resendCode": "Resend Code",
+  "@resendCode": { "description": "Resend confirmation code button" },
+  "codeResent": "A new verification code was sent to your email.",
+  "@codeResent": { "description": "Confirmation code resent snackbar" },
+  "resendCodeFailed": "Could not resend the code: {error}",
+  "@resendCodeFailed": {
+    "description": "Confirmation code resend failure snackbar",
+    "placeholders": { "error": { "type": "Object" } }
+  },
+  "verificationFailed": "Verification failed: {error}",
+  "@verificationFailed": {
+    "description": "Sign-up confirmation failure snackbar",
+    "placeholders": { "error": { "type": "Object" } }
+  },
+  "emailVerifiedPleaseLogin": "Email verified. Please log in.",
+  "@emailVerifiedPleaseLogin": { "description": "Snackbar after successful email confirmation when auto sign-in is unavailable" }
 }

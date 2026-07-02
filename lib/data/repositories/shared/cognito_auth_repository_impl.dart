@@ -259,6 +259,11 @@ class CognitoAuthRepositoryImpl implements AuthRepository {
   }
 
   @override
+  Future<void> resendSignUpCode(String email) async {
+    await Amplify.Auth.resendSignUpCode(username: email);
+  }
+
+  @override
   Future<AppAuthResult> signInWithGoogle() {
     throw UnimplementedError(
       'Google Sign-In is no longer supported. Use Apple Sign-In instead.',
