@@ -55,4 +55,16 @@ class AppEnvironment {
   /// `--dart-define=SENTRY_DSN=...`. Empty in local/dev builds disables
   /// Sentry (see `main.dart`).
   static const String sentryDsn = String.fromEnvironment('SENTRY_DSN');
+
+  /// Backend endpoint that revokes the user's Sign in with Apple token on
+  /// account deletion (App Store Guideline 5.1.1(v)), supplied per build via
+  /// `--dart-define=APPLE_REVOKE_ENDPOINT=...`.
+  ///
+  /// Empty disables the revoke step entirely: the account deletion still
+  /// completes, so a build without the define behaves exactly as before. The
+  /// app never holds Apple secrets — it only forwards a short-lived Apple
+  /// authorization code to this endpoint, which performs the actual revoke.
+  static const String appleRevokeEndpoint = String.fromEnvironment(
+    'APPLE_REVOKE_ENDPOINT',
+  );
 }

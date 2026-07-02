@@ -1,0 +1,80 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  VitalSync — Sign in with Apple token revocation endpoint (App Store Guideline
+  5.1.1(v)). An HTTP API (Cognito JWT authorizer) fronting a Lambda that
+  exchanges an Apple authorization code for a refresh token and revokes it.
+
+Parameters:
+  AppleTeamId:
+    Type: String
+    Description: Apple Developer Team ID (10 chars).
+  AppleKeyId:
+    Type: String
+    Description: Key ID of the Sign in with Apple private key.
+  AppleClientId:
+    Type: String
+    Description: >
+      client_id the authorization code was issued to. For a code obtained
+      natively via sign_in_with_apple this is the app bundle identifier.
+  AppleKeySecretArn:
+    Type: String
+    Description: >
+      Secrets Manager ARN whose SecretString is the raw .p8 private key.
+  CognitoUserPoolId:
+    Type: String
+    Description: Cognito User Pool ID whose tokens authorize calls to this API.
+  CognitoAppClientId:
+    Type: String
+    Description: >
+      Cognito app client id — the audience the JWT authorizer validates against.
+
+Globals:
+  Function:
+    Runtime: nodejs20.x
+    Timeout: 15
+    MemorySize: 256
+
+Resources:
+  RevokeApi:
+    Type: AWS::Serverless::HttpApi
+    Properties:
+      Auth:
+        Authorizers:
+          CognitoJwtAuthorizer:
+            IdentitySource: $request.header.Authorization
+            JwtConfiguration:
+              issuer: !Sub https://cognito-idp.${AWS::Region}.amazonaws.com/${CognitoUserPoolId}
+              audience:
+                - !Ref CognitoAppClientId
+        DefaultAuthorizer: CognitoJwtAuthorizer
+
+  RevokeFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: index.handler
+      CodeUri: src/
+      Environment:
+        Variables:
+          APPLE_TEAM_ID: !Ref AppleTeamId
+          APPLE_KEY_ID: !Ref AppleKeyId
+          APPLE_CLIENT_ID: !Ref AppleClientId
+          APPLE_KEY_SECRET_ARN: !Ref AppleKeySecretArn
+      Policies:
+        - Statement:
+            - Effect: Allow
+              Action: secretsmanager:GetSecretValue
+              Resource: !Ref AppleKeySecretArn
+      Events:
+        Revoke:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref RevokeApi
+            Method: POST
+            Path: /revoke
+
+Outputs:
+  RevokeEndpoint:
+    Description: >
+      Full URL to pass to the app as --dart-define=APPLE_REVOKE_ENDPOINT.
+    Value: !Sub https://${RevokeApi}.execute-api.${AWS::Region}.amazonaws.com/revoke

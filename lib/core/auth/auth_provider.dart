@@ -10,6 +10,7 @@ import 'dart:async';
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../data/local/database.dart';
 import '../../domain/entities/shared/user_profile.dart';
 import '../../domain/models/app_auth_result.dart';
 import '../../domain/models/app_user.dart';
@@ -73,6 +74,27 @@ class AuthNotifier extends _$AuthNotifier {
     );
   }
 
+  /// Restores the default catalogue (exercises, workout templates, achievements)
+  /// after login when the local database is empty — e.g. it was wiped on a
+  /// previous sign-out (consent-gated) or lost to a reinstall. Fire-and-forget
+  /// and idempotent: [seedDefaultDataIfEmpty] seeds only when the exercises
+  /// table is empty, so a user who deleted exercises one-by-one keeps that
+  /// choice and a returning user with data is left untouched. Without this, a
+  /// re-seed would only occur on the next cold start, leaving an in-session
+  /// sign-out → sign-in with an empty exercise library and no saved templates.
+  ///
+  /// Best-effort: like the post-login sync, any failure (including an
+  /// unavailable database) is swallowed so it can never break authentication.
+  void _ensureSeedData() {
+    unawaited(
+      Future(() => seedDefaultDataIfEmpty(getIt<AppDatabase>())).catchError((
+        Object _,
+      ) {
+        // Non-fatal: catalogue restore is best-effort, never blocks login.
+      }),
+    );
+  }
+
   /// Sign in with email and password
   Future<AppAuthResult> signIn(String email, String password) async {
     state = const AsyncValue.loading();
@@ -94,6 +116,7 @@ class AuthNotifier extends _$AuthNotifier {
       throw result.error!;
     }
 
+    _ensureSeedData();
     _triggerPostLoginSync();
     return result.value as AppAuthResult;
   }
@@ -147,6 +170,7 @@ class AuthNotifier extends _$AuthNotifier {
       throw result.error!;
     }
 
+    _ensureSeedData();
     _triggerPostLoginSync();
     return result.value as AppAuthResult;
   }
@@ -172,6 +196,7 @@ class AuthNotifier extends _$AuthNotifier {
       throw result.error!;
     }
 
+    _ensureSeedData();
     _triggerPostLoginSync();
     return result.value as AppAuthResult;
   }

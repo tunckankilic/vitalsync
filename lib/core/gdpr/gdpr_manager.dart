@@ -19,6 +19,7 @@ import '../../domain/repositories/shared/auth_repository.dart';
 import '../constants/app_constants.dart';
 import '../errors/exceptions.dart';
 import '../sync/cloud_sync_client.dart';
+import '../sync/sync_service.dart';
 
 /// GDPR Compliance Manager for VitalSync.
 ///
@@ -226,14 +227,11 @@ class GDPRManager {
     }
 
     // Step 1: Delete cloud user data (must succeed before anything destructive).
-    const collections = [
-      'medications',
-      'medication_logs',
-      'symptoms',
-      'workout_sessions',
-      'achievements',
-      'insights',
-    ];
+    // Mirror SyncService's canonical table list (plus the optional insights
+    // collection) so the erasure set can never silently drift behind what is
+    // actually synced. The previous hardcoded copy was missing workout_sets and
+    // personal_records, orphaning that health data in the cloud after deletion.
+    const collections = [...SyncService.tablesToSync, 'insights'];
     try {
       await _cloudClient.deleteAllUserData(
         userId: user.id,

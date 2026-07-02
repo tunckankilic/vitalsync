@@ -9,15 +9,24 @@ import 'dart:developer' show log;
 
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
+import 'package:flutter/foundation.dart';
+import 'package:vitalsync/core/auth/apple_token_revocation_service.dart';
 import 'package:vitalsync/core/errors/auth_exceptions.dart';
+import 'package:vitalsync/core/errors/exceptions.dart'
+    show AccountDeletionException;
 import 'package:vitalsync/domain/models/app_auth_result.dart';
 import 'package:vitalsync/domain/models/app_user.dart';
 import 'package:vitalsync/domain/repositories/shared/auth_repository.dart';
 
 class CognitoAuthRepositoryImpl implements AuthRepository {
-  CognitoAuthRepositoryImpl() {
+  CognitoAuthRepositoryImpl({AppleTokenRevocationService? revocationService})
+    : _revocationService = revocationService {
     _initAuthStream();
   }
+
+  /// Revokes the Sign in with Apple grant on account deletion. Optional: when
+  /// null (or unconfigured) the revoke step is skipped entirely.
+  final AppleTokenRevocationService? _revocationService;
 
   AppUser? _cachedUser;
   final _authStateController = StreamController<AppUser?>.broadcast();
@@ -119,10 +128,10 @@ class CognitoAuthRepositoryImpl implements AuthRepository {
         ? name.trim()
         : givenName?.trim();
     final lastPart = familyName?.trim();
-    final composedName = [firstPart, lastPart]
-        .where((part) => part != null && part.isNotEmpty)
-        .join(' ')
-        .trim();
+    final composedName = [
+      firstPart,
+      lastPart,
+    ].where((part) => part != null && part.isNotEmpty).join(' ').trim();
     final displayName = composedName.isNotEmpty ? composedName : null;
 
     return AppUser(
@@ -236,10 +245,7 @@ class CognitoAuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<void> confirmSignUp(
-    String email,
-    String confirmationCode,
-  ) async {
+  Future<void> confirmSignUp(String email, String confirmationCode) async {
     final result = await Amplify.Auth.confirmSignUp(
       username: email,
       confirmationCode: confirmationCode,
@@ -271,9 +277,7 @@ class CognitoAuthRepositoryImpl implements AuthRepository {
     );
 
     if (!result.isSignedIn) {
-      throw const SignInFailedException(
-        'Apple Sign-In tamamlanamadı.',
-      );
+      throw const SignInFailedException('Apple Sign-In tamamlanamadı.');
     }
 
     _cachedUser = await _fetchCurrentUser();
@@ -320,8 +324,87 @@ class CognitoAuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<void> deleteAccount() async {
-    await Amplify.Auth.deleteUser();
+    // Revoke the Sign in with Apple grant *before* deleting the Cognito user,
+    // while the session (and thus the API authorizer token) is still valid.
+    // Best-effort: a failure here must never block the deletion itself — it is
+    // reported to crash reporting and swallowed (App Store Guideline 5.1.1(v)).
+    await _revokeAppleGrantBestEffort();
+
+    try {
+      await Amplify.Auth.deleteUser();
+    } catch (e) {
+      // Surface a typed, cause-carrying failure so the GDPR erasure flow and
+      // crash reporting get a consistent signal instead of a raw AuthException.
+      // The cache is left untouched — on failure the account still exists.
+      log('Account deletion failed: $e');
+      throw AccountDeletionException('Account deletion failed.', cause: e);
+    }
     _cachedUser = null;
+  }
+
+  /// Best-effort revocation of the Sign in with Apple grant for Apple-linked
+  /// users. Never throws — a failure is reported and swallowed so the account
+  /// deletion always proceeds.
+  ///
+  /// No-op when no revoke endpoint is configured (build without the
+  /// `APPLE_REVOKE_ENDPOINT` dart-define) or when the signed-in user did not
+  /// federate through Apple, so email/password users are never shown the Apple
+  /// authorization sheet.
+  Future<void> _revokeAppleGrantBestEffort() async {
+    final service = _revocationService;
+    if (service == null || !service.isConfigured) return;
+
+    try {
+      if (!await _isAppleLinkedUser()) return;
+
+      // Forward the Cognito ID token — it carries an `aud` claim (the app
+      // client id) that the backend's JWT authorizer validates. (Access tokens
+      // omit `aud`, so the ID token is the reliable choice here.)
+      final session =
+          await Amplify.Auth.fetchAuthSession() as CognitoAuthSession;
+      final idToken = session.userPoolTokensResult.value.idToken.raw;
+
+      await service.revoke(authToken: idToken);
+    } catch (e, stack) {
+      // Best-effort: deletion proceeds regardless. Report so a systematically
+      // failing revoke (e.g. a client_id mismatch) stays visible in crash
+      // reporting instead of silently passing App review then failing in prod.
+      log('Apple grant revocation failed (deletion continues): $e');
+      FlutterError.reportError(
+        FlutterErrorDetails(
+          exception: e,
+          stack: stack,
+          library: 'auth.appleRevocation',
+        ),
+      );
+    }
+  }
+
+  /// Whether the signed-in Cognito user federated through Sign in with Apple.
+  ///
+  /// Checks the Cognito username first (federated users are named
+  /// `SignInWithApple_…`) and falls back to the `identities` attribute. Any
+  /// failure resolves to false, so a non-Apple user is never prompted.
+  Future<bool> _isAppleLinkedUser() async {
+    try {
+      final user = await Amplify.Auth.getCurrentUser();
+      if (user.username.toLowerCase().contains('apple')) return true;
+    } catch (e) {
+      log('Apple-link detection via username failed: $e');
+    }
+
+    try {
+      final attributes = await Amplify.Auth.fetchUserAttributes();
+      for (final attribute in attributes) {
+        if (attribute.userAttributeKey.key == 'identities') {
+          return attribute.value.toLowerCase().contains('apple');
+        }
+      }
+    } catch (e) {
+      log('Apple-link detection via identities failed: $e');
+    }
+
+    return false;
   }
 
   /// Dispose resources.

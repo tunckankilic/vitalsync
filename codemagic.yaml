@@ -21,6 +21,9 @@ workflows:
         # base64 of the local files, restored before codegen:
         #   AMPLIFY_CONFIG_DEV_B64  (lib/amplifyconfiguration.dart)
         #   AMPLIFY_CONFIG_PROD_B64 (lib/amplifyconfiguration_prod.dart)
+        # Also holds APPLE_REVOKE_ENDPOINT — the Sign in with Apple revocation
+        # API URL (backend/apple-revocation), kept out of git like the rest of
+        # the infra config and passed to the build as a dart-define below.
         - amplify_config
       vars:
         BUNDLE_ID: "site.tunckankilic.vitalsync"
@@ -105,6 +108,12 @@ workflows:
           echo "ASC_LATEST=$ASC_LATEST CM_COUNT=$CM_COUNT -> NEW_BUILD=$NEW_BUILD"
       - name: Build iOS
         script: |
+          # An empty APPLE_REVOKE_ENDPOINT silently disables the Sign in with
+          # Apple revocation step (account deletion still completes) — warn
+          # loudly so a store build can't quietly ship without it (5.1.1(v)).
+          if [ -z "$APPLE_REVOKE_ENDPOINT" ]; then
+            echo "WARNING: APPLE_REVOKE_ENDPOINT is not set — Apple token revocation will be DISABLED in this build"
+          fi
           flutter build ipa \
             --release \
             --build-number=$BUILD_NUMBER \
@@ -112,6 +121,7 @@ workflows:
             --split-debug-info=build/symbols \
             --dart-define=ENV=prod \
             --dart-define=SENTRY_DSN="$SENTRY_DSN" \
+            --dart-define=APPLE_REVOKE_ENDPOINT="$APPLE_REVOKE_ENDPOINT" \
             --export-options-plist=/Users/builder/export_options.plist
       - name: Upload symbols to Sentry
         script: |
