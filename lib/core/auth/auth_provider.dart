@@ -40,11 +40,18 @@ AnalyticsService analyticsService(Ref ref) {
   return getIt<AnalyticsService>();
 }
 
-/// Stream provider for auth state changes (provider-agnostic)
+/// Stream provider for auth state changes (provider-agnostic).
+///
+/// Emits the repository's cached user first: the underlying stream is a plain
+/// broadcast controller that does not replay past events, so a subscriber that
+/// starts after sign-in — this provider is auto-disposed and is typically
+/// (re)created when the profile screens open — would otherwise see nothing
+/// until the next auth event and render the user as signed-out.
 @riverpod
-Stream<AppUser?> authState(Ref ref) {
+Stream<AppUser?> authState(Ref ref) async* {
   final repository = ref.watch(authRepositoryProvider);
-  return repository.authStateChanges;
+  yield repository.currentUser;
+  yield* repository.authStateChanges;
 }
 
 /// Provider for current UserProfile from local database
