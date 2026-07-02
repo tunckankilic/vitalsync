@@ -1275,5 +1275,16 @@
   "requiredTag": "GEREKLİ",
   "consentRequiredMessage": "Bu, {module} modülünün çalışması için gereklidir.",
   "medicationFollowUpTitle": "İlacını aldın mı?",
-  "medicationFollowUpBody": "{name} ilacını aldın mı? Kaydetmeyi unutma."
+  "medicationFollowUpBody": "{name} ilacını aldın mı? Kaydetmeyi unutma.",
+  "verifyEmailTitle": "E-postanı Doğrula",
+  "verifyEmailSubtitle": "{email} adresine gönderdiğimiz doğrulama kodunu gir",
+  "verificationCode": "Doğrulama kodu",
+  "enterVerificationCode": "Lütfen doğrulama kodunu girin",
+  "verificationCodeTooShort": "Kod 6 haneli olmalı",
+  "verifyButton": "Doğrula",
+  "resendCode": "Kodu Tekrar Gönder",
+  "codeResent": "Yeni doğrulama kodu e-postana gönderildi.",
+  "resendCodeFailed": "Kod tekrar gönderilemedi: {error}",
+  "verificationFailed": "Doğrulama başarısız: {error}",
+  "emailVerifiedPleaseLogin": "E-posta doğrulandı. Lütfen giriş yap."
 }

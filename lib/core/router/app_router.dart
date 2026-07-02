@@ -38,6 +38,7 @@ import '../../presentation/pages/dashboard_page.dart';
 import '../../presentation/pages/onboarding_page.dart';
 import '../../presentation/pages/splash_page.dart';
 import '../../presentation/screens/app_shell.dart';
+import '../../presentation/screens/auth/confirm_signup_screen.dart';
 import '../../presentation/screens/auth/forgot_password_screen.dart';
 import '../../presentation/screens/auth/login_screen.dart';
 import '../../presentation/screens/auth/register_screen.dart';
@@ -128,6 +129,25 @@ final GoRouter appRouter = GoRouter(
             state,
             const RegisterScreen(),
           ),
+        ),
+        GoRoute(
+          path: 'confirm',
+          name: 'confirm_signup',
+          pageBuilder: (context, state) {
+            // Reached only via register/login, which pass the args; a deep
+            // link or restored route without them falls back to login.
+            final args = state.extra as ConfirmSignUpArgs?;
+            return _buildPageWithFadeTransition(
+              context,
+              state,
+              args == null
+                  ? const LoginScreen()
+                  : ConfirmSignUpScreen(
+                      email: args.email,
+                      password: args.password,
+                    ),
+            );
+          },
         ),
         GoRoute(
           path: 'forgot-password',
@@ -413,6 +433,7 @@ final GoRouter appRouter = GoRouter(
       '/gdpr-consent',
       '/auth/login',
       '/auth/register',
+      '/auth/confirm',
       '/auth/forgot-password',
     ];
 

@@ -19,8 +19,12 @@ class FakeAuthRepository implements AuthRepository {
   /// `(email, code)` arguments captured from [confirmSignUp] calls.
   final confirmSignUpCalls = <(String, String)>[];
 
+  /// Emails captured from [resendSignUpCode] calls.
+  final resendSignUpCodeCalls = <String>[];
+
   /// When set, the matching method throws after recording its arguments.
   Exception? confirmSignUpError;
+  Exception? resendSignUpCodeError;
 
   @override
   Stream<AppUser?> get authStateChanges => _controller.stream;
@@ -42,6 +46,13 @@ class FakeAuthRepository implements AuthRepository {
   Future<void> confirmSignUp(String email, String confirmationCode) async {
     confirmSignUpCalls.add((email, confirmationCode));
     final error = confirmSignUpError;
+    if (error != null) throw error;
+  }
+
+  @override
+  Future<void> resendSignUpCode(String email) async {
+    resendSignUpCodeCalls.add(email);
+    final error = resendSignUpCodeError;
     if (error != null) throw error;
   }
 

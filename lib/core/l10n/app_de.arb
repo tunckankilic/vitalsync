@@ -1275,5 +1275,16 @@
   "requiredTag": "ERFORDERLICH",
   "consentRequiredMessage": "Dies ist für die Funktion des Moduls {module} erforderlich.",
   "medicationFollowUpTitle": "Hast du dein Medikament genommen?",
-  "medicationFollowUpBody": "Hast du {name} eingenommen? Vergiss nicht, es einzutragen."
+  "medicationFollowUpBody": "Hast du {name} eingenommen? Vergiss nicht, es einzutragen.",
+  "verifyEmailTitle": "E-Mail bestätigen",
+  "verifyEmailSubtitle": "Gib den Bestätigungscode ein, den wir an {email} gesendet haben",
+  "verificationCode": "Bestätigungscode",
+  "enterVerificationCode": "Bitte gib den Bestätigungscode ein",
+  "verificationCodeTooShort": "Der Code muss 6-stellig sein",
+  "verifyButton": "Bestätigen",
+  "resendCode": "Code erneut senden",
+  "codeResent": "Ein neuer Bestätigungscode wurde an deine E-Mail gesendet.",
+  "resendCodeFailed": "Code konnte nicht erneut gesendet werden: {error}",
+  "verificationFailed": "Bestätigung fehlgeschlagen: {error}",
+  "emailVerifiedPleaseLogin": "E-Mail bestätigt. Bitte melde dich an."
 }

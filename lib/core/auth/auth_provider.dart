@@ -259,6 +259,22 @@ class AuthNotifier extends _$AuthNotifier {
     }
   }
 
+  /// Resend the sign-up email verification code
+  Future<void> resendSignUpCode(String email) async {
+    state = const AsyncValue.loading();
+
+    final authRepo = ref.read(authRepositoryProvider);
+
+    final result = await AsyncValue.guard(() async {
+      await authRepo.resendSignUpCode(email);
+    });
+    if (ref.mounted) state = result;
+
+    if (result.hasError) {
+      throw result.error!;
+    }
+  }
+
   /// Confirm password reset with code and new password
   Future<void> confirmResetPassword(
     String email,

@@ -3189,6 +3189,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Did you take {name}? Don\'t forget to log it.'**
   String medicationFollowUpBody(String name);
+
+  /// Sign-up email confirmation screen title
+  ///
+  /// In en, this message translates to:
+  /// **'Verify Your Email'**
+  String get verifyEmailTitle;
+
+  /// Sign-up email confirmation screen subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the verification code we sent to {email}'**
+  String verifyEmailSubtitle(String email);
+
+  /// Confirmation code field hint
+  ///
+  /// In en, this message translates to:
+  /// **'Verification code'**
+  String get verificationCode;
+
+  /// Empty confirmation code validation error
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter the verification code'**
+  String get enterVerificationCode;
+
+  /// Confirmation code length validation error
+  ///
+  /// In en, this message translates to:
+  /// **'The code must be 6 digits'**
+  String get verificationCodeTooShort;
+
+  /// Confirm sign-up submit button
+  ///
+  /// In en, this message translates to:
+  /// **'Verify'**
+  String get verifyButton;
+
+  /// Resend confirmation code button
+  ///
+  /// In en, this message translates to:
+  /// **'Resend Code'**
+  String get resendCode;
+
+  /// Confirmation code resent snackbar
+  ///
+  /// In en, this message translates to:
+  /// **'A new verification code was sent to your email.'**
+  String get codeResent;
+
+  /// Confirmation code resend failure snackbar
+  ///
+  /// In en, this message translates to:
+  /// **'Could not resend the code: {error}'**
+  String resendCodeFailed(Object error);
+
+  /// Sign-up confirmation failure snackbar
+  ///
+  /// In en, this message translates to:
+  /// **'Verification failed: {error}'**
+  String verificationFailed(Object error);
+
+  /// Snackbar after successful email confirmation when auto sign-in is unavailable
+  ///
+  /// In en, this message translates to:
+  /// **'Email verified. Please log in.'**
+  String get emailVerifiedPleaseLogin;
 }
 
 class _AppLocalizationsDelegate

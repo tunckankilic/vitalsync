@@ -1683,4 +1683,43 @@ class AppLocalizationsEn extends AppLocalizations {
   String medicationFollowUpBody(String name) {
     return 'Did you take $name? Don\'t forget to log it.';
   }
+
+  @override
+  String get verifyEmailTitle => 'Verify Your Email';
+
+  @override
+  String verifyEmailSubtitle(String email) {
+    return 'Enter the verification code we sent to $email';
+  }
+
+  @override
+  String get verificationCode => 'Verification code';
+
+  @override
+  String get enterVerificationCode => 'Please enter the verification code';
+
+  @override
+  String get verificationCodeTooShort => 'The code must be 6 digits';
+
+  @override
+  String get verifyButton => 'Verify';
+
+  @override
+  String get resendCode => 'Resend Code';
+
+  @override
+  String get codeResent => 'A new verification code was sent to your email.';
+
+  @override
+  String resendCodeFailed(Object error) {
+    return 'Could not resend the code: $error';
+  }
+
+  @override
+  String verificationFailed(Object error) {
+    return 'Verification failed: $error';
+  }
+
+  @override
+  String get emailVerifiedPleaseLogin => 'Email verified. Please log in.';
 }

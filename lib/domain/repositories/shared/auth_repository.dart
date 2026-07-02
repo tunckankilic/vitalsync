@@ -26,6 +26,10 @@ abstract class AuthRepository {
   Future<void> signOut();
   Future<void> resetPassword(String email);
   Future<void> confirmSignUp(String email, String confirmationCode);
+
+  /// Emails a fresh sign-up confirmation code to [email], for a registered
+  /// but not-yet-confirmed user whose original code was lost or expired.
+  Future<void> resendSignUpCode(String email);
   Future<void> confirmResetPassword(
     String email,
     String code,

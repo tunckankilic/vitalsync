@@ -1703,4 +1703,45 @@ class AppLocalizationsDe extends AppLocalizations {
   String medicationFollowUpBody(String name) {
     return 'Hast du $name eingenommen? Vergiss nicht, es einzutragen.';
   }
+
+  @override
+  String get verifyEmailTitle => 'E-Mail bestätigen';
+
+  @override
+  String verifyEmailSubtitle(String email) {
+    return 'Gib den Bestätigungscode ein, den wir an $email gesendet haben';
+  }
+
+  @override
+  String get verificationCode => 'Bestätigungscode';
+
+  @override
+  String get enterVerificationCode => 'Bitte gib den Bestätigungscode ein';
+
+  @override
+  String get verificationCodeTooShort => 'Der Code muss 6-stellig sein';
+
+  @override
+  String get verifyButton => 'Bestätigen';
+
+  @override
+  String get resendCode => 'Code erneut senden';
+
+  @override
+  String get codeResent =>
+      'Ein neuer Bestätigungscode wurde an deine E-Mail gesendet.';
+
+  @override
+  String resendCodeFailed(Object error) {
+    return 'Code konnte nicht erneut gesendet werden: $error';
+  }
+
+  @override
+  String verificationFailed(Object error) {
+    return 'Bestätigung fehlgeschlagen: $error';
+  }
+
+  @override
+  String get emailVerifiedPleaseLogin =>
+      'E-Mail bestätigt. Bitte melde dich an.';
 }

@@ -1697,4 +1697,44 @@ class AppLocalizationsTr extends AppLocalizations {
   String medicationFollowUpBody(String name) {
     return '$name ilacını aldın mı? Kaydetmeyi unutma.';
   }
+
+  @override
+  String get verifyEmailTitle => 'E-postanı Doğrula';
+
+  @override
+  String verifyEmailSubtitle(String email) {
+    return '$email adresine gönderdiğimiz doğrulama kodunu gir';
+  }
+
+  @override
+  String get verificationCode => 'Doğrulama kodu';
+
+  @override
+  String get enterVerificationCode => 'Lütfen doğrulama kodunu girin';
+
+  @override
+  String get verificationCodeTooShort => 'Kod 6 haneli olmalı';
+
+  @override
+  String get verifyButton => 'Doğrula';
+
+  @override
+  String get resendCode => 'Kodu Tekrar Gönder';
+
+  @override
+  String get codeResent => 'Yeni doğrulama kodu e-postana gönderildi.';
+
+  @override
+  String resendCodeFailed(Object error) {
+    return 'Kod tekrar gönderilemedi: $error';
+  }
+
+  @override
+  String verificationFailed(Object error) {
+    return 'Doğrulama başarısız: $error';
+  }
+
+  @override
+  String get emailVerifiedPleaseLogin =>
+      'E-posta doğrulandı. Lütfen giriş yap.';
 }

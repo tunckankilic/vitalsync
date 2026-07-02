@@ -3,7 +3,9 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:vitalsync/core/auth/auth_provider.dart';
+import 'package:vitalsync/core/errors/auth_exceptions.dart';
 import 'package:vitalsync/core/l10n/app_localizations.dart';
+import 'package:vitalsync/presentation/screens/auth/confirm_signup_screen.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -38,6 +40,19 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         // Check if mounted
         if (mounted) {
           context.go('/dashboard');
+        }
+      } on EmailNotVerifiedException {
+        // Registered but never entered the emailed code (the account is stuck
+        // UNCONFIRMED in Cognito) — send them to the verification screen; its
+        // resend button issues a fresh code.
+        if (mounted) {
+          context.go(
+            '/auth/confirm',
+            extra: ConfirmSignUpArgs(
+              email: _emailController.text.trim(),
+              password: _passwordController.text.trim(),
+            ),
+          );
         }
       } catch (e) {
         if (mounted) {

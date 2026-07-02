@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:vitalsync/core/auth/auth_provider.dart';
 import 'package:vitalsync/core/l10n/app_localizations.dart';
+import 'package:vitalsync/presentation/screens/auth/confirm_signup_screen.dart';
 
 class RegisterScreen extends ConsumerStatefulWidget {
   const RegisterScreen({super.key});
@@ -35,15 +36,23 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
   Future<void> _handleRegister() async {
     if (_formKey.currentState!.validate()) {
+      final email = _emailController.text.trim();
+      final password = _passwordController.text.trim();
       try {
-        await ref
+        final result = await ref
             .read(authProvider.notifier)
-            .signUp(
-              _emailController.text.trim(),
-              _passwordController.text.trim(),
-              _nameController.text.trim(),
-            );
-        if (mounted) {
+            .signUp(email, password, _nameController.text.trim());
+        if (!mounted) return;
+        if (result.user.id.isEmpty) {
+          // Cognito created the account UNCONFIRMED and emailed a code; the
+          // password rides along (in memory only) so a successful
+          // confirmation can sign the user in without re-typing it.
+          context.go(
+            '/auth/confirm',
+            extra: ConfirmSignUpArgs(email: email, password: password),
+          );
+        } else {
+          // Auto-confirmed pools sign in directly.
           context.go('/dashboard');
         }
       } catch (e) {
