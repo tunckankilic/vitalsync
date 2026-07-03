@@ -9,6 +9,8 @@ import 'package:mocktail/mocktail.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vitalsync/core/auth/auth_provider.dart';
 import 'package:vitalsync/core/errors/auth_exceptions.dart';
+import 'package:vitalsync/core/sync/sync_provider.dart';
+import 'package:vitalsync/core/sync/sync_service.dart';
 import 'package:vitalsync/domain/repositories/shared/auth_repository.dart';
 import 'package:vitalsync/presentation/screens/auth/login_screen.dart';
 
@@ -16,19 +18,28 @@ import 'support/pump_app.dart';
 
 class MockAuthRepository extends Mock implements AuthRepository {}
 
+class MockSyncService extends Mock implements SyncService {}
+
 void main() {
   late MockAuthRepository mockAuth;
+  late MockSyncService mockSync;
 
   setUp(() {
     SharedPreferences.setMockInitialValues({});
     mockAuth = MockAuthRepository();
+    mockSync = MockSyncService();
   });
 
   Future<void> pumpLogin(WidgetTester tester) {
     return pumpScreen(
       tester,
       const LoginScreen(),
-      overrides: [authRepositoryProvider.overrideWithValue(mockAuth)],
+      overrides: [
+        authRepositoryProvider.overrideWithValue(mockAuth),
+        // signIn resolves the sync service up front (post-login sync), so the
+        // provider must exist even on the failure path exercised here.
+        syncServiceProvider.overrideWithValue(mockSync),
+      ],
     );
   }
 

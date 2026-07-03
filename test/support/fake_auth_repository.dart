@@ -26,6 +26,10 @@ class FakeAuthRepository implements AuthRepository {
   Exception? confirmSignUpError;
   Exception? resendSignUpCodeError;
 
+  /// When set, [signOut] waits on this gate before completing, letting tests
+  /// dispose the calling notifier mid-flight to reproduce disposal races.
+  Completer<void>? signOutGate;
+
   @override
   Stream<AppUser?> get authStateChanges => _controller.stream;
 
@@ -75,7 +79,11 @@ class FakeAuthRepository implements AuthRepository {
   Future<AppAuthResult> signInWithApple() => throw UnimplementedError();
 
   @override
-  Future<void> signOut() => throw UnimplementedError();
+  Future<void> signOut() async {
+    final gate = signOutGate;
+    if (gate != null) await gate.future;
+    emit(null);
+  }
 
   @override
   Future<void> resetPassword(String email) => throw UnimplementedError();

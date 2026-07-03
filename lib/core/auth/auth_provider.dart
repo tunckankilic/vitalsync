@@ -19,6 +19,7 @@ import '../../domain/repositories/shared/user_repository.dart';
 import '../analytics/analytics_service.dart';
 import '../di/injection_container.dart';
 import '../sync/sync_provider.dart';
+import '../sync/sync_service.dart';
 
 part 'auth_provider.g.dart';
 
@@ -73,9 +74,15 @@ class AuthNotifier extends _$AuthNotifier {
   /// user's backup lands immediately instead of waiting for a connectivity
   /// change or app resume. [SyncService.sync] self-guards on consent,
   /// connectivity and auth state, so this is safe to call unconditionally.
-  void _triggerPostLoginSync() {
+  ///
+  /// Takes the service instead of reading it through [ref]: this notifier is
+  /// auto-disposed and its only watchers are the auth screens, so the moment
+  /// the auth state flips the router swaps screens and the notifier can be
+  /// torn down while the sign-in/out method is still running — touching [ref]
+  /// after that gap throws. Callers resolve the service before any await.
+  void _triggerPostLoginSync(SyncService syncService) {
     unawaited(
-      ref.read(syncServiceProvider).sync().catchError((Object _) {
+      syncService.sync().catchError((Object _) {
         // Non-fatal: auto-sync retries on the next trigger.
       }),
     );
@@ -107,24 +114,27 @@ class AuthNotifier extends _$AuthNotifier {
     state = const AsyncValue.loading();
 
     final authRepo = ref.read(authRepositoryProvider);
+    final syncService = ref.read(syncServiceProvider);
 
     final result = await AsyncValue.guard(() async {
       final authResult = await authRepo.signIn(email, password);
       return authResult;
     });
 
-    state = result.when(
-      data: (_) => const AsyncValue.data(null),
-      error: AsyncValue.error,
-      loading: () => const AsyncValue.loading(),
-    );
+    if (ref.mounted) {
+      state = result.when(
+        data: (_) => const AsyncValue.data(null),
+        error: AsyncValue.error,
+        loading: () => const AsyncValue.loading(),
+      );
+    }
 
     if (result.hasError) {
       throw result.error!;
     }
 
     _ensureSeedData();
-    _triggerPostLoginSync();
+    _triggerPostLoginSync(syncService);
     return result.value as AppAuthResult;
   }
 
@@ -161,24 +171,27 @@ class AuthNotifier extends _$AuthNotifier {
     state = const AsyncValue.loading();
 
     final authRepo = ref.read(authRepositoryProvider);
+    final syncService = ref.read(syncServiceProvider);
 
     final result = await AsyncValue.guard(() async {
       final authResult = await authRepo.signInWithGoogle();
       return authResult;
     });
 
-    state = result.when(
-      data: (_) => const AsyncValue.data(null),
-      error: AsyncValue.error,
-      loading: () => const AsyncValue.loading(),
-    );
+    if (ref.mounted) {
+      state = result.when(
+        data: (_) => const AsyncValue.data(null),
+        error: AsyncValue.error,
+        loading: () => const AsyncValue.loading(),
+      );
+    }
 
     if (result.hasError) {
       throw result.error!;
     }
 
     _ensureSeedData();
-    _triggerPostLoginSync();
+    _triggerPostLoginSync(syncService);
     return result.value as AppAuthResult;
   }
 
@@ -187,24 +200,27 @@ class AuthNotifier extends _$AuthNotifier {
     state = const AsyncValue.loading();
 
     final authRepo = ref.read(authRepositoryProvider);
+    final syncService = ref.read(syncServiceProvider);
 
     final result = await AsyncValue.guard(() async {
       final authResult = await authRepo.signInWithApple();
       return authResult;
     });
 
-    state = result.when(
-      data: (_) => const AsyncValue.data(null),
-      error: AsyncValue.error,
-      loading: () => const AsyncValue.loading(),
-    );
+    if (ref.mounted) {
+      state = result.when(
+        data: (_) => const AsyncValue.data(null),
+        error: AsyncValue.error,
+        loading: () => const AsyncValue.loading(),
+      );
+    }
 
     if (result.hasError) {
       throw result.error!;
     }
 
     _ensureSeedData();
-    _triggerPostLoginSync();
+    _triggerPostLoginSync(syncService);
     return result.value as AppAuthResult;
   }
 
@@ -213,12 +229,17 @@ class AuthNotifier extends _$AuthNotifier {
     state = const AsyncValue.loading();
 
     final authRepo = ref.read(authRepositoryProvider);
+    // Resolved before the first await: signing out flips the auth state
+    // mid-call, the router swaps to the login screen and this auto-disposed
+    // notifier can be torn down while still awaiting — reading through [ref]
+    // after that gap threw and skipped the local-data wipe below.
+    final syncService = ref.read(syncServiceProvider);
 
     final result = await AsyncValue.guard(() async {
       await authRepo.signOut();
       // Clear device-local data so the next account starts clean and pulls its
       // own backup fresh. Wipe is consent-gated inside the sync service.
-      await ref.read(syncServiceProvider).clearLocalDataOnSignOut();
+      await syncService.clearLocalDataOnSignOut();
     });
     if (ref.mounted) state = result;
 
