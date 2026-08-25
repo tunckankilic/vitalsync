@@ -561,8 +561,8 @@ void callbackDispatcher() {
 Future<void> _handleCheckMissedMedications(_BackgroundDeps deps) async {
   log('Checking for missed medications...');
 
-  final medRepo = MedicationRepositoryImpl(deps.db.medicationDao);
-  final logRepo = MedicationLogRepositoryImpl(deps.db.medicationLogDao);
+  final medRepo = MedicationRepositoryImpl(deps.db.medicationDao, deps.db);
+  final logRepo = MedicationLogRepositoryImpl(deps.db.medicationLogDao, deps.db);
 
   // Get active medications
   final activeMeds = await medRepo.getActive();
@@ -633,11 +633,11 @@ Future<void> _handleCheckMissedMedications(_BackgroundDeps deps) async {
 Future<void> _handleGenerateInsights(_BackgroundDeps deps) async {
   log('Generating daily insights...');
 
-  final medLogRepo = MedicationLogRepositoryImpl(deps.db.medicationLogDao);
-  final workoutRepo = WorkoutSessionRepositoryImpl(deps.db.workoutSessionDao);
-  final symptomRepo = SymptomRepositoryImpl(deps.db.symptomDao);
+  final medLogRepo = MedicationLogRepositoryImpl(deps.db.medicationLogDao, deps.db);
+  final workoutRepo = WorkoutSessionRepositoryImpl(deps.db.workoutSessionDao, deps.db);
+  final symptomRepo = SymptomRepositoryImpl(deps.db.symptomDao, deps.db);
   final insightRepo = InsightRepositoryImpl(deps.db.insightDao);
-  final prRepo = PersonalRecordRepositoryImpl(deps.db.personalRecordDao);
+  final prRepo = PersonalRecordRepositoryImpl(deps.db.personalRecordDao, deps.db);
   final streakRepo = StreakRepositoryImpl(
     deps.db.userStatsDao,
     deps.db.workoutSessionDao,
@@ -709,7 +709,7 @@ Future<void> _handleSyncPendingData(_BackgroundDeps deps) async {
 Future<void> _handleDailySummary(_BackgroundDeps deps) async {
   log('Generating daily summary notification...');
 
-  final logRepo = MedicationLogRepositoryImpl(deps.db.medicationLogDao);
+  final logRepo = MedicationLogRepositoryImpl(deps.db.medicationLogDao, deps.db);
   final todayLogs = await logRepo.getTodayLogs();
 
   if (todayLogs.isEmpty) {
@@ -748,7 +748,7 @@ Future<void> _handleStreakWarning(_BackgroundDeps deps) async {
     deps.db.userStatsDao,
     deps.db.workoutSessionDao,
   );
-  final workoutRepo = WorkoutSessionRepositoryImpl(deps.db.workoutSessionDao);
+  final workoutRepo = WorkoutSessionRepositoryImpl(deps.db.workoutSessionDao, deps.db);
 
   final streakService = StreakService(
     streakRepository: streakRepo,
@@ -804,11 +804,11 @@ Future<void> _handleImportHealthData(_BackgroundDeps deps) async {
 Future<void> _handleWeeklyReport(_BackgroundDeps deps) async {
   log('Generating weekly report...');
 
-  final medLogRepo = MedicationLogRepositoryImpl(deps.db.medicationLogDao);
-  final workoutRepo = WorkoutSessionRepositoryImpl(deps.db.workoutSessionDao);
-  final symptomRepo = SymptomRepositoryImpl(deps.db.symptomDao);
+  final medLogRepo = MedicationLogRepositoryImpl(deps.db.medicationLogDao, deps.db);
+  final workoutRepo = WorkoutSessionRepositoryImpl(deps.db.workoutSessionDao, deps.db);
+  final symptomRepo = SymptomRepositoryImpl(deps.db.symptomDao, deps.db);
   final insightRepo = InsightRepositoryImpl(deps.db.insightDao);
-  final prRepo = PersonalRecordRepositoryImpl(deps.db.personalRecordDao);
+  final prRepo = PersonalRecordRepositoryImpl(deps.db.personalRecordDao, deps.db);
   final streakRepo = StreakRepositoryImpl(
     deps.db.userStatsDao,
     deps.db.workoutSessionDao,

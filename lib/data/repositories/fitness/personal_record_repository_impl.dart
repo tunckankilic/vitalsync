@@ -1,4 +1,5 @@
 import 'package:drift/drift.dart';
+import 'package:vitalsync/core/enums/sync_enums.dart';
 import 'package:vitalsync/data/local/daos/fitness/workout_dao.dart';
 import 'package:vitalsync/data/local/database.dart';
 import 'package:vitalsync/data/models/fitness/personal_record_model.dart';
@@ -6,8 +7,13 @@ import 'package:vitalsync/domain/entities/fitness/personal_record.dart';
 import 'package:vitalsync/domain/repositories/fitness/personal_record_repository.dart';
 
 class PersonalRecordRepositoryImpl implements PersonalRecordRepository {
-  PersonalRecordRepositoryImpl(this._dao);
+  PersonalRecordRepositoryImpl(this._dao, this._database);
   final PersonalRecordDao _dao;
+  final AppDatabase _database;
+
+  /// Cloud collection name. Must match the entry in
+  /// `SyncService.tablesToSync` and the Lambda's `COLLECTION_PREFIX`.
+  static const _collection = 'personal_records';
 
   @override
   Future<List<PersonalRecord>> getAll() async {
@@ -44,7 +50,21 @@ class PersonalRecordRepositoryImpl implements PersonalRecordRepository {
         estimated1RM: Value(estimated1RM),
         achievedAt: Value(now),
       );
-      await _dao.insert(companion);
+      final id = await _dao.insert(companion);
+
+      await _database.addToSyncQueue(_collection, id, SyncOperation.insert, {
+        ...PersonalRecordModel(
+          id: id,
+          exerciseId: exerciseId,
+          weight: weight,
+          reps: reps,
+          estimated1RM: estimated1RM,
+          achievedAt: now,
+        ).toJson(),
+        // The table has no lastModifiedAt column; achievedAt is what the
+        // pull side compares against, so the push conflict check uses it too.
+        'lastModifiedAt': now.toIso8601String(),
+      });
     }
   }
 

@@ -82,6 +82,24 @@ class WorkoutSessionModel extends WorkoutSession {
     );
   }
 
+  /// Cloud payload. Mirrors [WorkoutSessionModel.fromJson] and the shape
+  /// `WorkoutSessionDao.upsertFromRemote` reads.
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'templateId': templateId,
+      'name': name,
+      'startTime': startTime.toIso8601String(),
+      'endTime': endTime?.toIso8601String(),
+      'totalVolume': totalVolume,
+      'notes': notes,
+      'rating': rating?.name,
+      'syncStatus': syncStatus.name,
+      'lastModifiedAt': lastModifiedAt.toIso8601String(),
+      'createdAt': createdAt.toIso8601String(),
+    };
+  }
+
   WorkoutSession toEntity() {
     return WorkoutSession(
       id: id,

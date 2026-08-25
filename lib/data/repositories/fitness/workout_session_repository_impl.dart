@@ -1,3 +1,4 @@
+import 'package:vitalsync/core/enums/sync_enums.dart';
 import 'package:vitalsync/data/local/daos/fitness/workout_dao.dart';
 import 'package:vitalsync/data/local/database.dart';
 import 'package:vitalsync/data/models/fitness/workout_session_model.dart';
@@ -7,8 +8,28 @@ import 'package:vitalsync/domain/entities/fitness/workout_set.dart';
 import 'package:vitalsync/domain/repositories/fitness/workout_session_repository.dart';
 
 class WorkoutSessionRepositoryImpl implements WorkoutSessionRepository {
-  WorkoutSessionRepositoryImpl(this._dao);
+  WorkoutSessionRepositoryImpl(this._dao, this._database);
   final WorkoutSessionDao _dao;
+  final AppDatabase _database;
+
+  /// Cloud collection names. Must match the entries in
+  /// `SyncService.tablesToSync` and the Lambda's `COLLECTION_PREFIX`.
+  static const _sessionCollection = 'workout_sessions';
+  static const _setCollection = 'workout_sets';
+
+  /// Queues the current state of a session. Sessions are edited in place
+  /// (started, then ended, then possibly re-rated), so the row is re-read
+  /// rather than reconstructed from the caller's argument.
+  Future<void> _enqueueSession(int id, SyncOperation operation) async {
+    final row = await _dao.getById(id);
+    if (row == null) return;
+    await _database.addToSyncQueue(
+      _sessionCollection,
+      id,
+      operation,
+      WorkoutSessionModel.fromDrift(row).toJson(),
+    );
+  }
 
   @override
   Future<List<WorkoutSession>> getAll() async {
@@ -38,10 +59,12 @@ class WorkoutSessionRepositoryImpl implements WorkoutSessionRepository {
   }
 
   @override
-  Future<int> startSession(WorkoutSession session) {
-    return _dao.startSession(
+  Future<int> startSession(WorkoutSession session) async {
+    final id = await _dao.startSession(
       WorkoutSessionModel.fromEntity(session).toCompanion(),
     );
+    await _enqueueSession(id, SyncOperation.insert);
+    return id;
   }
 
   @override
@@ -58,11 +81,25 @@ class WorkoutSessionRepositoryImpl implements WorkoutSessionRepository {
       rating: rating,
       totalVolume: totalVolume,
     );
+    await _enqueueSession(id, SyncOperation.update);
   }
 
   @override
-  Future<void> addSet(WorkoutSet set) {
-    return _dao.addSet(WorkoutSetModel.fromEntity(set).toCompanion());
+  Future<void> addSet(WorkoutSet set) async {
+    final model = WorkoutSetModel.fromEntity(set);
+    final id = await _dao.addSet(model.toCompanion());
+    await _database.addToSyncQueue(
+      _setCollection,
+      id,
+      SyncOperation.insert,
+      // The row carries the auto-assigned id, which the caller's set does
+      // not; everything else is the caller's.
+      {...model.toJson(), 'id': id},
+    );
+
+    // A set changes the session's volume, so the session is stale in the
+    // cloud until it is pushed again.
+    await _enqueueSession(set.sessionId, SyncOperation.update);
   }
 
   @override
@@ -80,16 +117,54 @@ class WorkoutSessionRepositoryImpl implements WorkoutSessionRepository {
       completedAt: model.completedAt,
     );
     await _dao.updateSet(data);
+    await _database.addToSyncQueue(
+      _setCollection,
+      model.id,
+      SyncOperation.update,
+      model.toJson(),
+    );
+    await _enqueueSession(set.sessionId, SyncOperation.update);
   }
 
   @override
-  Future<void> deleteSet(int id) {
-    return _dao.deleteSet(id);
+  Future<void> deleteSet(int id) async {
+    // Read the owning session before the row is gone, so its volume can be
+    // pushed again afterwards.
+    final existing = await _dao.getSetById(id);
+    await _dao.deleteSet(id);
+    await _database.addToSyncQueue(
+      _setCollection,
+      id,
+      SyncOperation.delete,
+      const {},
+    );
+    if (existing != null) {
+      await _enqueueSession(existing.sessionId, SyncOperation.update);
+    }
   }
 
   @override
-  Future<void> deleteSession(int sessionId) {
-    return _dao.deleteSession(sessionId);
+  Future<void> deleteSession(int sessionId) async {
+    // The sets go with the session locally (cascade), so each one is queued
+    // for removal too — otherwise they would be pulled back on the next
+    // sync from a device that still has them.
+    final sets = await _dao.getSessionSets(sessionId);
+    await _dao.deleteSession(sessionId);
+
+    for (final set in sets) {
+      await _database.addToSyncQueue(
+        _setCollection,
+        set.id,
+        SyncOperation.delete,
+        const {},
+      );
+    }
+    await _database.addToSyncQueue(
+      _sessionCollection,
+      sessionId,
+      SyncOperation.delete,
+      const {},
+    );
   }
 
   @override

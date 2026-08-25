@@ -211,15 +211,24 @@ Future<void> initializeDependencies() async {
   // HEALTH MODULE - Repositories
 
   getIt.registerLazySingleton<MedicationRepository>(
-    () => MedicationRepositoryImpl(getIt<AppDatabase>().medicationDao),
+    () => MedicationRepositoryImpl(
+      getIt<AppDatabase>().medicationDao,
+      getIt<AppDatabase>(),
+    ),
   );
 
   getIt.registerLazySingleton<MedicationLogRepository>(
-    () => MedicationLogRepositoryImpl(getIt<AppDatabase>().medicationLogDao),
+    () => MedicationLogRepositoryImpl(
+      getIt<AppDatabase>().medicationLogDao,
+      getIt<AppDatabase>(),
+    ),
   );
 
   getIt.registerLazySingleton<SymptomRepository>(
-    () => SymptomRepositoryImpl(getIt<AppDatabase>().symptomDao),
+    () => SymptomRepositoryImpl(
+      getIt<AppDatabase>().symptomDao,
+      getIt<AppDatabase>(),
+    ),
   );
 
   getIt.registerLazySingleton<GlucoseRepository>(
@@ -281,11 +290,17 @@ Future<void> initializeDependencies() async {
   );
 
   getIt.registerLazySingleton<WorkoutSessionRepository>(
-    () => WorkoutSessionRepositoryImpl(getIt<AppDatabase>().workoutSessionDao),
+    () => WorkoutSessionRepositoryImpl(
+      getIt<AppDatabase>().workoutSessionDao,
+      getIt<AppDatabase>(),
+    ),
   );
 
   getIt.registerLazySingleton<PersonalRecordRepository>(
-    () => PersonalRecordRepositoryImpl(getIt<AppDatabase>().personalRecordDao),
+    () => PersonalRecordRepositoryImpl(
+      getIt<AppDatabase>().personalRecordDao,
+      getIt<AppDatabase>(),
+    ),
   );
 
   getIt.registerLazySingleton<StreakRepository>(
@@ -296,7 +311,10 @@ Future<void> initializeDependencies() async {
   );
 
   getIt.registerLazySingleton<AchievementRepository>(
-    () => AchievementRepositoryImpl(getIt<AppDatabase>().achievementDao),
+    () => AchievementRepositoryImpl(
+      getIt<AppDatabase>().achievementDao,
+      getIt<AppDatabase>(),
+    ),
   );
 
   // INSIGHTS MODULE - Repository

@@ -1,6 +1,8 @@
 import 'package:vitalsync/core/di/injection_container.dart';
 import 'package:vitalsync/core/enums/achievement_type.dart';
+import 'package:vitalsync/core/enums/sync_enums.dart';
 import 'package:vitalsync/data/local/daos/fitness/workout_dao.dart';
+import 'package:vitalsync/data/local/database.dart';
 import 'package:vitalsync/data/models/fitness/achievement_model.dart';
 import 'package:vitalsync/domain/entities/fitness/achievement.dart';
 import 'package:vitalsync/domain/repositories/fitness/achievement_repository.dart';
@@ -10,8 +12,13 @@ import 'package:vitalsync/domain/repositories/fitness/workout_session_repository
 import 'package:vitalsync/domain/repositories/health/medication_log_repository.dart';
 
 class AchievementRepositoryImpl implements AchievementRepository {
-  AchievementRepositoryImpl(this._dao);
+  AchievementRepositoryImpl(this._dao, this._database);
   final AchievementDao _dao;
+  final AppDatabase _database;
+
+  /// Cloud collection name. Must match the entry in
+  /// `SyncService.tablesToSync` and the Lambda's `COLLECTION_PREFIX`.
+  static const _collection = 'achievements';
 
   @override
   Future<List<Achievement>> getAll() async {
@@ -93,6 +100,21 @@ class AchievementRepositoryImpl implements AchievementRepository {
       // Unlock if conditions met
       if (shouldUnlock) {
         await _dao.unlock(achievement.id);
+
+        // Re-read for the timestamp the DAO stamped on the row.
+        final unlocked = await _dao.getById(achievement.id);
+        if (unlocked == null) continue;
+        await _database.addToSyncQueue(
+          _collection,
+          achievement.id,
+          SyncOperation.update,
+          {
+            ...AchievementModel.fromDrift(unlocked).toJson(),
+            // The table has no lastModifiedAt column; unlockedAt is what the
+            // pull side compares against, so the push uses it too.
+            'lastModifiedAt': unlocked.unlockedAt?.toIso8601String(),
+          },
+        );
       }
     }
   }

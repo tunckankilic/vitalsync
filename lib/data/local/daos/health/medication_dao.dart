@@ -10,6 +10,7 @@ import 'package:vitalsync/data/local/database.dart';
 import '../../tables/health/medication_logs_table.dart';
 import '../../tables/health/medications_table.dart';
 import '../../tables/health/symptoms_table.dart';
+import '../remote_payload.dart';
 
 part 'medication_dao.g.dart';
 
@@ -92,7 +93,10 @@ class MedicationDao extends DatabaseAccessor<AppDatabase>
             orElse: () => MedicationFrequency.daily,
           ),
         ),
-        times: Value(data['times'] as String? ?? '[]'),
+        // The push payload is the model's toJson(), where `times` is a List;
+        // an older client or a raw Drift row sends the encoded string. Both
+        // shapes are accepted so a round trip cannot fail on a cast.
+        times: Value(encodeJsonColumn(data['times'], fallback: '[]')),
         startDate: Value(DateTime.parse(data['startDate'] as String)),
         endDate: Value(
           data['endDate'] != null
@@ -290,7 +294,8 @@ class SymptomDao extends DatabaseAccessor<AppDatabase> with _$SymptomDaoMixin {
         severity: Value(data['severity'] as int),
         date: Value(DateTime.parse(data['date'] as String)),
         notes: Value(data['notes'] as String?),
-        tags: Value(data['tags'] as String? ?? '[]'),
+        // Same two shapes as `times` above — see [encodeJsonColumn].
+        tags: Value(encodeJsonColumn(data['tags'], fallback: '[]')),
         syncStatus: const Value(SyncStatus.synced),
         lastModifiedAt: Value(DateTime.parse(data['lastModifiedAt'] as String)),
         createdAt: Value(DateTime.parse(data['createdAt'] as String)),

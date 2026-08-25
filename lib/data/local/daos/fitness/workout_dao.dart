@@ -337,12 +337,32 @@ class WorkoutSessionDao extends DatabaseAccessor<AppDatabase>
         ),
         totalVolume: Value((data['totalVolume'] as num?)?.toDouble() ?? 0.0),
         notes: Value(data['notes'] as String?),
-        rating: Value(WorkoutRating.fromValue(data['rating']! as int)),
+        // The payload carries the enum's name; older rows carried its int
+        // value; an unrated session carries nothing. The bang on this cast
+        // used to abort the whole pull for any of the last two.
+        rating: Value(_ratingFromRemote(data['rating'])),
         syncStatus: const Value(SyncStatus.synced),
         lastModifiedAt: Value(DateTime.parse(data['lastModifiedAt'] as String)),
         createdAt: Value(DateTime.parse(data['createdAt'] as String)),
       ),
     );
+  }
+
+  /// Reads a remote rating in any shape it can arrive in: the enum name
+  /// (what the push payload carries), its int value, or nothing at all for
+  /// a session the user never rated.
+  ///
+  /// The column is non-nullable, so an absent rating falls back to
+  /// [WorkoutRating.okay] — the same default `toCompanion` uses locally.
+  WorkoutRating _ratingFromRemote(Object? value) {
+    if (value is int) return WorkoutRating.fromValue(value);
+    if (value is String) {
+      return WorkoutRating.values.firstWhere(
+        (e) => e.name == value,
+        orElse: () => WorkoutRating.okay,
+      );
+    }
+    return WorkoutRating.okay;
   }
 
   /// Get a single workout set by ID.

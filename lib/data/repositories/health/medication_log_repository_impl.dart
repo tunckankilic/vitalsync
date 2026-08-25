@@ -1,5 +1,6 @@
 import 'package:drift/drift.dart';
 import 'package:vitalsync/core/enums/medication_log_status.dart';
+import 'package:vitalsync/core/enums/sync_enums.dart';
 import 'package:vitalsync/core/enums/sync_status.dart';
 import 'package:vitalsync/data/local/daos/health/medication_dao.dart';
 import 'package:vitalsync/data/local/database.dart';
@@ -8,8 +9,13 @@ import 'package:vitalsync/domain/entities/health/medication_log.dart';
 import 'package:vitalsync/domain/repositories/health/medication_log_repository.dart';
 
 class MedicationLogRepositoryImpl implements MedicationLogRepository {
-  MedicationLogRepositoryImpl(this._dao);
+  MedicationLogRepositoryImpl(this._dao, this._database);
   final MedicationLogDao _dao;
+  final AppDatabase _database;
+
+  /// Cloud collection name. Must match the entry in
+  /// `SyncService.tablesToSync` and the Lambda's `COLLECTION_PREFIX`.
+  static const _collection = 'medication_logs';
 
   @override
   Future<List<MedicationLog>> getByMedicationId(int medicationId) async {
@@ -33,7 +39,7 @@ class MedicationLogRepositoryImpl implements MedicationLogRepository {
   }
 
   @override
-  Future<void> logMedication(int medicationId, MedicationLogStatus status) {
+  Future<void> logMedication(int medicationId, MedicationLogStatus status) async {
     // Basic implementation: Log for current time.
     // Ideally this should link to a scheduled slot, but for now we create a log.
     final now = DateTime.now();
@@ -46,7 +52,18 @@ class MedicationLogRepositoryImpl implements MedicationLogRepository {
       lastModifiedAt: Value(now),
       createdAt: Value(now),
     );
-    return _dao.insert(companion);
+    final id = await _dao.insert(companion);
+
+    // Re-read so the payload carries the row the database actually wrote,
+    // auto-assigned id included.
+    final inserted = await _dao.getById(id);
+    if (inserted == null) return;
+    await _database.addToSyncQueue(
+      _collection,
+      id,
+      SyncOperation.insert,
+      MedicationLogModel.fromDrift(inserted).toJson(),
+    );
   }
 
   @override

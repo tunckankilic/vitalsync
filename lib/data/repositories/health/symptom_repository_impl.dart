@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:vitalsync/core/enums/sync_enums.dart';
 import 'package:vitalsync/data/local/daos/health/medication_dao.dart';
 import 'package:vitalsync/data/local/database.dart';
 import 'package:vitalsync/data/models/health/symptom_model.dart';
@@ -6,8 +7,13 @@ import 'package:vitalsync/domain/entities/health/symptom.dart';
 import 'package:vitalsync/domain/repositories/health/symptom_repository.dart';
 
 class SymptomRepositoryImpl implements SymptomRepository {
-  SymptomRepositoryImpl(this._dao);
+  SymptomRepositoryImpl(this._dao, this._database);
   final SymptomDao _dao;
+  final AppDatabase _database;
+
+  /// Cloud collection name. Must match the entry in
+  /// `SyncService.tablesToSync` and the Lambda's `COLLECTION_PREFIX`.
+  static const _collection = 'symptoms';
 
   @override
   Future<List<Symptom>> getAll() async {
@@ -22,8 +28,16 @@ class SymptomRepositoryImpl implements SymptomRepository {
   }
 
   @override
-  Future<int> insert(Symptom symptom) {
-    return _dao.insert(SymptomModel.fromEntity(symptom).toCompanion());
+  Future<int> insert(Symptom symptom) async {
+    final model = SymptomModel.fromEntity(symptom);
+    final id = await _dao.insert(model.toCompanion());
+    await _database.addToSyncQueue(
+      _collection,
+      id,
+      SyncOperation.insert,
+      model.toJson(),
+    );
+    return id;
   }
 
   @override
@@ -43,11 +57,23 @@ class SymptomRepositoryImpl implements SymptomRepository {
       createdAt: model.createdAt,
     );
     await _dao.updateSymptom(data);
+    await _database.addToSyncQueue(
+      _collection,
+      model.id,
+      SyncOperation.update,
+      model.toJson(),
+    );
   }
 
   @override
-  Future<void> delete(int id) {
-    return _dao.deleteSymptom(id);
+  Future<void> delete(int id) async {
+    await _dao.deleteSymptom(id);
+    await _database.addToSyncQueue(
+      _collection,
+      id,
+      SyncOperation.delete,
+      const {},
+    );
   }
 
   @override
