@@ -86,6 +86,11 @@ abstract class AppConstants {
   static const String prefKeyLastSyncTimestamp =
       '${prefKeyPrefix}last_sync_timestamp';
 
+  /// Last successful Apple Health import timestamp (ISO-8601).
+  /// The next import reads only samples newer than this.
+  static const String prefKeyLastHealthImport =
+      '${prefKeyPrefix}last_health_import';
+
   /// User ID (Auth UID)
   static const String prefKeyUserId = '${prefKeyPrefix}user_id';
 
@@ -421,6 +426,9 @@ abstract class AppConstants {
 
   /// Background task: streak warning check (20:00)
   static const String taskStreakWarning = 'com.vitalsync.streakWarning';
+
+  /// Background task: import new Apple Health samples (every 3 hours)
+  static const String taskImportHealthData = 'com.vitalsync.importHealthData';
 
   // UI CONSTANTS
 

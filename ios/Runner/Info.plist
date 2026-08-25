@@ -39,6 +39,8 @@
 	<false/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSHealthShareUsageDescription</key>
+	<string>VitalSync reads your glucose, activity and sleep data from the Health app so it can show your meals and blood sugar measurements on one timeline. Your data stays on your device; a cloud backup is only turned on if you allow it.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

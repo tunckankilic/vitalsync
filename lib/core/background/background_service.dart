@@ -36,6 +36,9 @@ import '../config/app_environment.dart';
 import '../constants/app_constants.dart';
 import '../enums/insight_priority.dart';
 import '../enums/medication_log_status.dart';
+import '../errors/exceptions.dart';
+import '../health/apple_health_data_source.dart';
+import '../health/health_import_service.dart';
 import '../network/connectivity_service.dart';
 import '../sync/cloud_sync_client.dart';
 import '../sync/rest_sync_client.dart';
@@ -72,6 +75,7 @@ class BackgroundService {
     await scheduleDailySummary();
     await scheduleStreakWarning();
     await scheduleWeeklyReport();
+    await scheduleImportHealthData();
     log('All periodic background tasks scheduled');
   }
 
@@ -190,6 +194,24 @@ class BackgroundService {
       constraints: Constraints(networkType: NetworkType.notRequired),
       existingWorkPolicy: ExistingWorkPolicy.replace,
       tag: 'insights',
+    );
+  }
+
+  // HEALTH: Apple Health Import
+
+  /// Schedules the periodic Apple Health import.
+  ///
+  /// Runs every **3 hours**. No network required — the platform health store
+  /// is local. Complements the foreground import in `HealthLifecycleObserver`
+  /// so a user who rarely opens the app still accumulates samples.
+  Future<void> scheduleImportHealthData() async {
+    await _workmanager.registerPeriodicTask(
+      AppConstants.taskImportHealthData,
+      AppConstants.taskImportHealthData,
+      frequency: const Duration(hours: 3),
+      constraints: Constraints(networkType: NetworkType.notRequired),
+      existingWorkPolicy: ExistingPeriodicWorkPolicy.replace,
+      tag: 'health',
     );
   }
 
@@ -500,6 +522,11 @@ void callbackDispatcher() {
           await _handleWeeklyReport(deps);
           break;
 
+        // ─── HEALTH: Apple Health Import ────────────────────────────
+        case AppConstants.taskImportHealthData:
+          await _handleImportHealthData(deps);
+          break;
+
         default:
           log('Unknown background task: $task');
       }
@@ -736,6 +763,29 @@ Future<void> _handleStreakWarning(_BackgroundDeps deps) async {
   // User has a streak but hasn't worked out today — warn them
   await deps.notifications.showStreakWarning(currentStreak);
   log('Streak warning sent: $currentStreak-day streak at risk');
+}
+
+/// Imports new Apple Health samples into the local database.
+///
+/// Builds its own [HealthImportService] because the WorkManager isolate has no
+/// access to GetIt. A missing authorization is the expected quiet case: the
+/// import throws [HealthDataException], which is logged and swallowed so the
+/// task is not reported as failed and rescheduled aggressively.
+Future<void> _handleImportHealthData(_BackgroundDeps deps) async {
+  log('Importing Apple Health samples...');
+
+  final importService = HealthImportService(
+    source: AppleHealthDataSource(),
+    glucoseDao: deps.db.glucoseDao,
+    healthSampleDao: deps.db.healthSampleDao,
+  );
+
+  try {
+    final result = await importService.import();
+    log('Apple Health import completed: $result');
+  } on HealthDataException catch (e) {
+    log('Apple Health import skipped: $e');
+  }
 }
 
 /// Generates the weekly report and sends a notification.

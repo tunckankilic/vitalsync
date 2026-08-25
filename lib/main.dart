@@ -20,6 +20,7 @@ import 'core/background/background_service.dart';
 import 'core/config/app_environment.dart';
 import 'core/constants/app_constants.dart';
 import 'core/di/injection_container.dart';
+import 'core/health/health_lifecycle_observer.dart';
 import 'core/network/connectivity_service.dart';
 import 'core/notifications/notification_service.dart';
 import 'core/router/app_router.dart';
@@ -156,6 +157,11 @@ Future<void> _bootstrap() async {
       WidgetsBinding.instance.addObserver(
         SyncLifecycleObserver(syncService: syncService),
       );
+
+      // Import new Apple Health samples when the app returns to the
+      // foreground. Self-guards on authorization, so this is a no-op until
+      // the user connects Apple Health.
+      WidgetsBinding.instance.addObserver(getIt<HealthLifecycleObserver>());
     } catch (e, stack) {
       // Non-critical — log but don't block app launch
       debugPrint('Non-critical initialization error: $e');

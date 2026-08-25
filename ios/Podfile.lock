@@ -5,6 +5,8 @@ PODS:
   - amplify_secure_storage (0.0.1):
     - Flutter
   - Flutter (1.0.0)
+  - health (13.3.1):
+    - Flutter
   - workmanager_apple (0.0.1):
     - Flutter
 
@@ -12,6 +14,7 @@ DEPENDENCIES:
   - amplify_auth_cognito (from `.symlinks/plugins/amplify_auth_cognito/darwin`)
   - amplify_secure_storage (from `.symlinks/plugins/amplify_secure_storage/ios`)
   - Flutter (from `Flutter`)
+  - health (from `.symlinks/plugins/health/ios`)
   - workmanager_apple (from `.symlinks/plugins/workmanager_apple/ios`)
 
 EXTERNAL SOURCES:
@@ -21,6 +24,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/amplify_secure_storage/ios"
   Flutter:
     :path: Flutter
+  health:
+    :path: ".symlinks/plugins/health/ios"
   workmanager_apple:
     :path: ".symlinks/plugins/workmanager_apple/ios"
 
@@ -28,6 +33,7 @@ SPEC CHECKSUMS:
   amplify_auth_cognito: a5d9cb77abfbe05e3501ad0c45dddc81503e7074
   amplify_secure_storage: 3edc30177ffefbcee786c408a21c02f8ab9f168e
   Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
+  health: 4decf5d74e8f54c58a8c07a385fc72f629a831d9
   workmanager_apple: 904529ae31e97fc5be632cf628507652294a0778
 
 PODFILE CHECKSUM: 1857a7cdb7dfafe45f2b0e9a9af44644190f7506

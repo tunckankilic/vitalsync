@@ -1,0 +1,3 @@
+/* Apple Health read permission prompt. Describes what is read and why.
+   No medical claim, no diagnosis or treatment wording (App Store 1.4.1). */
+"NSHealthShareUsageDescription" = "Öğünlerinle kan şekeri ölçümlerini aynı zaman çizelgesinde gösterebilmek için Sağlık uygulamandaki glukoz, aktivite ve uyku verini okur. Veri cihazında kalır; bulut yedeği yalnızca izin verirsen açılır.";

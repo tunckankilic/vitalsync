@@ -64,6 +64,16 @@ class AccountDeletionException extends VitalSyncException {
   const AccountDeletionException(super.message, {super.cause});
 }
 
+/// Thrown when reading from the platform health store fails — permission
+/// denied, the platform rejected the query, or the returned payload could not
+/// be interpreted.
+///
+/// Never carries a health value in [message]: the exception surfaces in logs
+/// and crash reports, and a glucose reading must not reach either.
+class HealthDataException extends VitalSyncException {
+  const HealthDataException(super.message, {super.cause});
+}
+
 /// Thrown when revoking the Sign in with Apple grant during account deletion
 /// fails (App Store Guideline 5.1.1(v)).
 ///

@@ -67,6 +67,10 @@ import '../background/background_service.dart';
 import '../config/app_environment.dart';
 import '../constants/app_constants.dart';
 import '../gdpr/gdpr_manager.dart';
+import '../health/apple_health_data_source.dart';
+import '../health/health_data_source.dart';
+import '../health/health_import_service.dart';
+import '../health/health_lifecycle_observer.dart';
 import '../l10n/app_localizations.dart';
 import '../network/connectivity_service.dart';
 import '../notifications/notification_service.dart';
@@ -156,6 +160,24 @@ Future<void> initializeDependencies() async {
 
   getIt.registerLazySingleton<ConnectivityService>(
     () => ConnectivityService(connectivity: getIt<Connectivity>()),
+  );
+
+  // HEALTH DATA IMPORT (Apple Health, read-only)
+
+  getIt.registerLazySingleton<HealthDataSource>(AppleHealthDataSource.new);
+
+  getIt.registerLazySingleton<HealthImportService>(
+    () => HealthImportService(
+      source: getIt<HealthDataSource>(),
+      glucoseDao: getIt<AppDatabase>().glucoseDao,
+      healthSampleDao: getIt<AppDatabase>().healthSampleDao,
+    ),
+  );
+
+  getIt.registerLazySingleton<HealthLifecycleObserver>(
+    () => HealthLifecycleObserver(
+      importService: getIt<HealthImportService>(),
+    ),
   );
 
   getIt.registerLazySingleton<SyncService>(

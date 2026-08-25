@@ -1,0 +1,3 @@
+/* Apple Health read permission prompt. Describes what is read and why.
+   No medical claim, no diagnosis or treatment wording (App Store 1.4.1). */
+"NSHealthShareUsageDescription" = "VitalSync liest Glukose-, Aktivitäts- und Schlafdaten aus der Health-App, um deine Mahlzeiten und Blutzuckermessungen auf einer gemeinsamen Zeitachse zu zeigen. Deine Daten bleiben auf deinem Gerät; eine Cloud-Sicherung wird nur mit deiner Zustimmung aktiviert.";
