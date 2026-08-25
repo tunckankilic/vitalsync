@@ -3633,6 +3633,78 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Sleep'**
   String get healthSourceTypeSleep;
+
+  /// Badge on a meal that has enough readings around it
+  ///
+  /// In en, this message translates to:
+  /// **'Measurement data'**
+  String get mealCoverageCovered;
+
+  /// Badge on a meal that does not have enough readings around it
+  ///
+  /// In en, this message translates to:
+  /// **'No measurement data'**
+  String get mealCoverageUncovered;
+
+  /// Coverage reason: not enough readings in the window
+  ///
+  /// In en, this message translates to:
+  /// **'Too few readings'**
+  String get mealCoverageReasonNoReadings;
+
+  /// Coverage reason: readings leave too wide a gap
+  ///
+  /// In en, this message translates to:
+  /// **'Gap between readings'**
+  String get mealCoverageReasonGapInData;
+
+  /// Coverage reason: a second meal shares the window
+  ///
+  /// In en, this message translates to:
+  /// **'Another meal nearby'**
+  String get mealCoverageReasonOverlappingMeal;
+
+  /// Coverage reason: activity was recorded in the window
+  ///
+  /// In en, this message translates to:
+  /// **'Activity recorded'**
+  String get mealCoverageReasonActivityInWindow;
+
+  /// Weekly report line stating how many meals had readings around them
+  ///
+  /// In en, this message translates to:
+  /// **'{covered} of {total} meals had measurement data'**
+  String weeklyMealCoverage(int covered, int total);
+
+  /// Settings toggle for the opt-in counters
+  ///
+  /// In en, this message translates to:
+  /// **'Calibration Metrics'**
+  String get calibrationMetrics;
+
+  /// Settings toggle subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Send counts only, never your health data'**
+  String get calibrationMetricsSubtitle;
+
+  /// Consent explanation. Must not describe the data as anonymous: it is stored under the user's own account.
+  ///
+  /// In en, this message translates to:
+  /// **'To improve the app, VitalSync sends only the counts — how many meals, how many readings — stored under your account. Meal names, notes and measurement values are not sent. You can turn this off at any time.'**
+  String get calibrationMetricsConsentBody;
+
+  /// Snackbar after enabling the opt-in counters
+  ///
+  /// In en, this message translates to:
+  /// **'Calibration metrics turned on'**
+  String get calibrationMetricsEnabled;
+
+  /// Snackbar after disabling the opt-in counters
+  ///
+  /// In en, this message translates to:
+  /// **'Calibration metrics turned off'**
+  String get calibrationMetricsDisabled;
 }
 
 class _AppLocalizationsDelegate

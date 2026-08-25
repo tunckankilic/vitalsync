@@ -15,6 +15,7 @@ class WeeklyReportModel extends WeeklyReport {
     super.mostFrequentSymptom,
     super.mealsLoggedCount,
     super.glucoseReadingsCount,
+    super.mealsWithCoverageCount,
     // Fitness Summary
     required super.workoutCount,
     required super.totalVolume,
@@ -43,6 +44,7 @@ class WeeklyReportModel extends WeeklyReport {
       mostFrequentSymptom: entity.mostFrequentSymptom,
       mealsLoggedCount: entity.mealsLoggedCount,
       glucoseReadingsCount: entity.glucoseReadingsCount,
+      mealsWithCoverageCount: entity.mealsWithCoverageCount,
       workoutCount: entity.workoutCount,
       totalVolume: entity.totalVolume,
       volumeTrendVsPrevious: entity.volumeTrendVsPrevious,

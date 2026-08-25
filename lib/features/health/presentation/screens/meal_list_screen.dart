@@ -2,9 +2,9 @@
 ///
 /// Lists logged meals, newest first.
 ///
-/// No comment, only measurement: each row states the name, the time and the
-/// tags the user picked. Nothing here ranks a meal or relates it to a
-/// glucose reading.
+/// No comment, only measurement: each row states the name, the time, the
+/// tags the user picked, and whether measurement data exists around it.
+/// Nothing here ranks a meal or says anything about the readings themselves.
 library;
 
 import 'package:flutter/material.dart';
@@ -15,6 +15,8 @@ import 'package:vitalsync/core/l10n/app_localizations.dart';
 import 'package:vitalsync/core/theme/app_theme.dart';
 import 'package:vitalsync/core/utils/extensions.dart';
 import 'package:vitalsync/domain/entities/health/meal.dart';
+import 'package:vitalsync/features/health/domain/services/meal_data_coverage_service.dart';
+import 'package:vitalsync/features/health/presentation/health_labels.dart';
 import 'package:vitalsync/features/health/presentation/providers/meal_provider.dart';
 import 'package:vitalsync/presentation/widgets/glassmorphic_card.dart';
 
@@ -27,6 +29,9 @@ class MealListScreen extends ConsumerWidget {
     final theme = Theme.of(context);
 
     final mealsAsync = ref.watch(mealsProvider());
+    // Data completeness only: whether measurements exist around a meal,
+    // never anything about the measurements themselves.
+    final coverage = ref.watch(mealCoverageProvider()).value;
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -101,10 +106,16 @@ class MealListScreen extends ConsumerWidget {
                     return ListView.builder(
                       padding: const EdgeInsets.all(16),
                       itemCount: meals.length,
-                      itemBuilder: (context, index) => Padding(
-                        padding: const EdgeInsets.only(bottom: 8),
-                        child: _MealCard(meal: meals[index]),
-                      ),
+                      itemBuilder: (context, index) {
+                        final meal = meals[index];
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 8),
+                          child: _MealCard(
+                            meal: meal,
+                            coverage: coverage?[meal.id],
+                          ),
+                        );
+                      },
                     );
                   },
                   loading: () =>
@@ -129,9 +140,12 @@ class MealListScreen extends ConsumerWidget {
 }
 
 class _MealCard extends StatelessWidget {
-  const _MealCard({required this.meal});
+  const _MealCard({required this.meal, this.coverage});
 
   final Meal meal;
+
+  /// Null while the verdicts are still loading.
+  final MealCoverage? coverage;
 
   @override
   Widget build(BuildContext context) {
@@ -190,11 +204,59 @@ class _MealCard extends StatelessWidget {
                     style: TextStyle(color: theme.disabledColor),
                   ),
                 ],
+                if (coverage != null) ...[
+                  const SizedBox(height: 8),
+                  _CoverageBadge(coverage: coverage!),
+                ],
               ],
             ),
           ),
         ],
       ),
+    );
+  }
+}
+
+/// States whether measurements exist around a meal, and if not, why.
+///
+/// A statement about the recording, not about the meal or the user. The
+/// colours are the theme's neutral roles on purpose — nothing here reads as
+/// "good" or "bad".
+class _CoverageBadge extends StatelessWidget {
+  const _CoverageBadge({required this.coverage});
+
+  final MealCoverage coverage;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final theme = Theme.of(context);
+
+    final label = coverage.isCovered
+        ? l10n.mealCoverageCovered
+        : '${l10n.mealCoverageUncovered} · ${coverage.reason!.label(l10n)}';
+
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(
+          coverage.isCovered
+              ? Icons.check_circle_outline_rounded
+              : Icons.remove_circle_outline_rounded,
+          size: 14,
+          color: theme.colorScheme.onSurfaceVariant,
+        ),
+        const SizedBox(width: 6),
+        Flexible(
+          child: Text(
+            label,
+            style: theme.textTheme.labelSmall?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+      ],
     );
   }
 }

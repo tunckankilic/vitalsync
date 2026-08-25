@@ -16,6 +16,7 @@ import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:workmanager/workmanager.dart';
 
 import '../../data/local/database.dart';
@@ -24,14 +25,18 @@ import '../../data/repositories/fitness/personal_record_repository_impl.dart';
 import '../../data/repositories/fitness/streak_repository_impl.dart';
 import '../../data/repositories/fitness/workout_session_repository_impl.dart';
 import '../../data/repositories/health/glucose_repository_impl.dart';
+import '../../data/repositories/health/health_sample_repository_impl.dart';
 import '../../data/repositories/health/meal_repository_impl.dart';
 import '../../data/repositories/health/medication_log_repository_impl.dart';
 import '../../data/repositories/health/medication_repository_impl.dart';
 import '../../data/repositories/health/symptom_repository_impl.dart';
 import '../../data/repositories/insights/insight_repository_impl.dart';
+import '../../data/repositories/shared/calibration_metric_repository_impl.dart';
 import '../../data/repositories/shared/cognito_auth_repository_impl.dart';
 import '../../domain/repositories/shared/auth_repository.dart';
 import '../../features/fitness/domain/services/streak_service.dart';
+import '../../features/health/domain/services/calibration_metrics_service.dart';
+import '../../features/health/domain/services/meal_data_coverage_service.dart';
 import '../../features/insights/domain/insight_engine.dart';
 import '../../features/insights/domain/weekly_report_service.dart';
 import '../config/app_environment.dart';
@@ -811,6 +816,13 @@ Future<void> _handleWeeklyReport(_BackgroundDeps deps) async {
 
   final mealRepo = MealRepositoryImpl(deps.db.mealDao, deps.db);
   final glucoseRepo = GlucoseRepositoryImpl(deps.db.glucoseDao, deps.db);
+  final coverageService = MealDataCoverageService(
+    mealRepository: mealRepo,
+    glucoseRepository: glucoseRepo,
+    healthSampleRepository: HealthSampleRepositoryImpl(
+      deps.db.healthSampleDao,
+    ),
+  );
 
   final reportService = WeeklyReportService(
     medicationLogRepository: medLogRepo,
@@ -821,10 +833,20 @@ Future<void> _handleWeeklyReport(_BackgroundDeps deps) async {
     streakRepository: streakRepo,
     mealRepository: mealRepo,
     glucoseRepository: glucoseRepo,
+    coverageService: coverageService,
   );
 
   await reportService.generateCurrentWeekReport();
   log('Weekly report generated successfully');
+
+  // Opt-in calibration counters ride along with the weekly task. Isolated
+  // so a failure here cannot cost the user their report or the
+  // re-scheduling below.
+  try {
+    await _collectCalibrationMetrics(deps, mealRepo, glucoseRepo, coverageService);
+  } catch (e) {
+    log('Calibration metrics collection skipped: $e');
+  }
 
   // Notify user
   await deps.notifications.showWeeklyReportReady();
@@ -839,4 +861,54 @@ Future<void> _handleWeeklyReport(_BackgroundDeps deps) async {
     tag: 'insights',
   );
   log('Weekly report re-scheduled for next week');
+}
+
+/// Collects the opt-in calibration counters for the week that just ended.
+///
+/// The week is the completed one, not the current partial week: the task
+/// fires mid-week and a partial tally would misstate how much was recorded.
+/// Re-running is safe — the service upserts by week start.
+///
+/// Consent is read straight from preferences here. [GDPRManager] is not
+/// available in this isolate (it needs the cloud client, auth and the app's
+/// database), but the flag it writes is just a bool in the same store.
+Future<void> _collectCalibrationMetrics(
+  _BackgroundDeps deps,
+  MealRepositoryImpl mealRepo,
+  GlucoseRepositoryImpl glucoseRepo,
+  MealDataCoverageService coverageService,
+) async {
+  final prefs = await SharedPreferences.getInstance();
+  final consented =
+      prefs.getBool(AppConstants.prefKeyCalibrationMetricsConsent) ?? false;
+
+  final metricsService = CalibrationMetricsService(
+    coverageService: coverageService,
+    mealRepository: mealRepo,
+    glucoseRepository: glucoseRepo,
+    metricRepository: CalibrationMetricRepositoryImpl(
+      deps.db.calibrationMetricDao,
+      deps.db,
+    ),
+    isConsentGranted: () => consented,
+    appVersion: AppConstants.appVersion,
+  );
+
+  final weekStart = _startOfWeek(
+    DateTime.now(),
+  ).subtract(const Duration(days: 7));
+
+  final metric = await metricsService.collectForWeek(weekStart);
+  if (metric == null) {
+    log('Calibration metrics consent is off, nothing collected');
+    return;
+  }
+  // Counts only — the row itself is never logged.
+  log('Calibration metrics collected for week starting $weekStart');
+}
+
+/// Monday of the week [date] falls in, at midnight local time.
+DateTime _startOfWeek(DateTime date) {
+  final day = DateTime(date.year, date.month, date.day);
+  return day.subtract(Duration(days: day.weekday - 1));
 }

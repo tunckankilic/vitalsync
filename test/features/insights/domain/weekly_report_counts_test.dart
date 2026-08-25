@@ -14,10 +14,12 @@ import 'package:vitalsync/domain/repositories/fitness/personal_record_repository
 import 'package:vitalsync/domain/repositories/fitness/streak_repository.dart';
 import 'package:vitalsync/domain/repositories/fitness/workout_session_repository.dart';
 import 'package:vitalsync/domain/repositories/health/glucose_repository.dart';
+import 'package:vitalsync/domain/repositories/health/health_sample_repository.dart';
 import 'package:vitalsync/domain/repositories/health/meal_repository.dart';
 import 'package:vitalsync/domain/repositories/health/medication_log_repository.dart';
 import 'package:vitalsync/domain/repositories/health/symptom_repository.dart';
 import 'package:vitalsync/domain/repositories/insights/insight_repository.dart';
+import 'package:vitalsync/features/health/domain/services/meal_data_coverage_service.dart';
 import 'package:vitalsync/features/insights/domain/weekly_report_service.dart';
 
 class _MockMedicationLogRepository extends Mock
@@ -39,11 +41,15 @@ class _MockMealRepository extends Mock implements MealRepository {}
 
 class _MockGlucoseRepository extends Mock implements GlucoseRepository {}
 
+class _MockHealthSampleRepository extends Mock
+    implements HealthSampleRepository {}
+
 void main() {
   final weekStart = DateTime(2026, 8, 24);
 
   late _MockMealRepository mealRepository;
   late _MockGlucoseRepository glucoseRepository;
+  late _MockHealthSampleRepository healthSampleRepository;
   late WeeklyReportService service;
 
   Meal meal(int id, DateTime eatenAt) => Meal(
@@ -71,6 +77,10 @@ void main() {
   setUp(() {
     mealRepository = _MockMealRepository();
     glucoseRepository = _MockGlucoseRepository();
+    healthSampleRepository = _MockHealthSampleRepository();
+    when(
+      () => healthSampleRepository.getByDateRange(any(), any()),
+    ).thenAnswer((_) async => []);
 
     final medicationLogRepository = _MockMedicationLogRepository();
     final workoutRepository = _MockWorkoutSessionRepository();
@@ -105,6 +115,11 @@ void main() {
       streakRepository: streakRepository,
       mealRepository: mealRepository,
       glucoseRepository: glucoseRepository,
+      coverageService: MealDataCoverageService(
+        mealRepository: mealRepository,
+        glucoseRepository: glucoseRepository,
+        healthSampleRepository: healthSampleRepository,
+      ),
     );
   });
 

@@ -1352,5 +1352,19 @@
   "healthSourceTypeSteps": "Schritte",
   "healthSourceTypeActiveEnergy": "Aktive Energie",
   "healthSourceTypeWorkouts": "Workouts",
-  "healthSourceTypeSleep": "Schlaf"
+  "healthSourceTypeSleep": "Schlaf",
+
+  "mealCoverageCovered": "Messdaten vorhanden",
+  "mealCoverageUncovered": "Keine Messdaten",
+  "mealCoverageReasonNoReadings": "Zu wenige Messungen",
+  "mealCoverageReasonGapInData": "Lücke zwischen Messungen",
+  "mealCoverageReasonOverlappingMeal": "Weitere Mahlzeit in der Nähe",
+  "mealCoverageReasonActivityInWindow": "Aktivität erfasst",
+  "weeklyMealCoverage": "Bei {covered} von {total} Mahlzeiten lagen Messdaten vor",
+
+  "calibrationMetrics": "Kalibrierungsdaten",
+  "calibrationMetricsSubtitle": "Es werden nur Zahlen gesendet, nie deine Gesundheitsdaten",
+  "calibrationMetricsConsentBody": "Zur Verbesserung der App sendet VitalSync nur die Zahlen — wie viele Mahlzeiten, wie viele Messungen — gespeichert unter deinem Konto. Namen von Mahlzeiten, Notizen und Messwerte werden nicht gesendet. Du kannst dies jederzeit ausschalten.",
+  "calibrationMetricsEnabled": "Kalibrierungsdaten eingeschaltet",
+  "calibrationMetricsDisabled": "Kalibrierungsdaten ausgeschaltet"
 }

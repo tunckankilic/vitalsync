@@ -10,6 +10,7 @@ library;
 import '../../../core/enums/glucose_source.dart';
 import '../../../core/enums/meal_context.dart';
 import '../../../core/l10n/app_localizations.dart';
+import '../domain/services/meal_data_coverage_service.dart';
 
 extension MealContextLabel on MealContext {
   String label(AppLocalizations l10n) {
@@ -33,6 +34,24 @@ extension GlucoseSourceLabel on GlucoseSource {
         return l10n.glucoseSourceAppleHealth;
       case GlucoseSource.manual:
         return l10n.glucoseSourceManual;
+    }
+  }
+}
+
+/// Why a meal's window fell short, stated as a fact about the data.
+///
+/// These strings talk about the recording, never about the user's health.
+extension UncoveredReasonLabel on UncoveredReason {
+  String label(AppLocalizations l10n) {
+    switch (this) {
+      case UncoveredReason.noReadings:
+        return l10n.mealCoverageReasonNoReadings;
+      case UncoveredReason.gapInData:
+        return l10n.mealCoverageReasonGapInData;
+      case UncoveredReason.overlappingMeal:
+        return l10n.mealCoverageReasonOverlappingMeal;
+      case UncoveredReason.activityInWindow:
+        return l10n.mealCoverageReasonActivityInWindow;
     }
   }
 }

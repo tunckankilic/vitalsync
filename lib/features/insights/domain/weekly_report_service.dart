@@ -3,7 +3,8 @@
 /// Generates comprehensive weekly reports aggregating health and fitness data.
 ///
 /// Report includes:
-/// 1. Health Summary: Compliance, trends, symptoms, meal and glucose counts
+/// 1. Health Summary: Compliance, trends, symptoms, meal and glucose counts,
+///    and how many meals had measurement data around them
 /// 2. Fitness Summary: Workouts, volume, PRs, streaks
 /// 3. Cross-Module Highlights: Health score, best day, top insights
 /// 4. Next Week Suggestions: Actionable recommendations
@@ -26,6 +27,7 @@ import 'package:vitalsync/domain/repositories/health/meal_repository.dart';
 import 'package:vitalsync/domain/repositories/health/medication_log_repository.dart';
 import 'package:vitalsync/domain/repositories/health/symptom_repository.dart';
 import 'package:vitalsync/domain/repositories/insights/insight_repository.dart';
+import 'package:vitalsync/features/health/domain/services/meal_data_coverage_service.dart';
 
 class WeeklyReportService {
   WeeklyReportService({
@@ -37,6 +39,7 @@ class WeeklyReportService {
     required StreakRepository streakRepository,
     required MealRepository mealRepository,
     required GlucoseRepository glucoseRepository,
+    required MealDataCoverageService coverageService,
   }) : _medicationLogRepository = medicationLogRepository,
        _workoutRepository = workoutRepository,
        _symptomRepository = symptomRepository,
@@ -44,7 +47,8 @@ class WeeklyReportService {
        _personalRecordRepository = personalRecordRepository,
        _streakRepository = streakRepository,
        _mealRepository = mealRepository,
-       _glucoseRepository = glucoseRepository;
+       _glucoseRepository = glucoseRepository,
+       _coverageService = coverageService;
 
   final MedicationLogRepository _medicationLogRepository;
   final WorkoutSessionRepository _workoutRepository;
@@ -57,6 +61,10 @@ class WeeklyReportService {
   /// [_calculateHealthSummary].
   final MealRepository _mealRepository;
   final GlucoseRepository _glucoseRepository;
+
+  /// Used only for the data-completeness tally — see
+  /// [MealDataCoverageService], which produces no interpretation.
+  final MealDataCoverageService _coverageService;
 
   // ── Public API ──────────────────────────────────────────────────────
 
@@ -147,6 +155,7 @@ class WeeklyReportService {
         mostFrequentSymptom: healthData.mostFrequentSymptom,
         mealsLoggedCount: healthData.mealCount,
         glucoseReadingsCount: healthData.glucoseReadingCount,
+        mealsWithCoverageCount: healthData.coveredMealCount,
         // Fitness Summary
         workoutCount: fitnessData.workoutCount,
         totalVolume: fitnessData.totalVolume,
@@ -223,6 +232,7 @@ class WeeklyReportService {
       weekStart,
       weekEnd,
     );
+    final coverage = await _coverageService.evaluateMeals(meals);
 
     return _HealthSummaryData(
       compliance: currentCompliance,
@@ -233,6 +243,7 @@ class WeeklyReportService {
       mostFrequentSymptom: mostFrequentSymptom,
       mealCount: meals.length,
       glucoseReadingCount: glucoseReadings.length,
+      coveredMealCount: coverage.where((c) => c.isCovered).length,
     );
   }
 
@@ -581,6 +592,7 @@ class _HealthSummaryData {
     required this.mostFrequentSymptom,
     required this.mealCount,
     required this.glucoseReadingCount,
+    required this.coveredMealCount,
   });
 
   final double compliance;
@@ -591,6 +603,7 @@ class _HealthSummaryData {
   final String? mostFrequentSymptom;
   final int mealCount;
   final int glucoseReadingCount;
+  final int coveredMealCount;
 }
 
 class _FitnessSummaryData {

@@ -58,6 +58,8 @@ import '../../domain/repositories/shared/user_repository.dart';
 // Services
 import '../../features/fitness/domain/services/achievement_service.dart';
 import '../../features/fitness/domain/services/streak_service.dart';
+import '../../features/health/domain/services/calibration_metrics_service.dart';
+import '../../features/health/domain/services/meal_data_coverage_service.dart';
 import '../../features/health/domain/services/medication_reminder_service.dart';
 import '../../features/insights/domain/insight_engine.dart';
 import '../../features/insights/domain/weekly_report_service.dart';
@@ -241,6 +243,31 @@ Future<void> initializeDependencies() async {
     ),
   );
 
+  // HEALTH MODULE - Data coverage and opt-in calibration metrics
+
+  getIt.registerLazySingleton<MealDataCoverageService>(
+    () => MealDataCoverageService(
+      mealRepository: getIt<MealRepository>(),
+      glucoseRepository: getIt<GlucoseRepository>(),
+      healthSampleRepository: getIt<HealthSampleRepository>(),
+    ),
+  );
+
+  getIt.registerLazySingleton<CalibrationMetricsService>(
+    () => CalibrationMetricsService(
+      coverageService: getIt<MealDataCoverageService>(),
+      mealRepository: getIt<MealRepository>(),
+      glucoseRepository: getIt<GlucoseRepository>(),
+      metricRepository: getIt<CalibrationMetricRepository>(),
+      // Consent is read at call time, not captured: the user can turn the
+      // toggle off between two collections.
+      isConsentGranted: () => getIt<GDPRManager>().hasConsent(
+        AppConstants.gdprConsentTypeCalibrationMetrics,
+      ),
+      appVersion: AppConstants.appVersion,
+    ),
+  );
+
   // FITNESS MODULE - Repositories
 
   getIt.registerLazySingleton<ExerciseRepository>(
@@ -330,6 +357,7 @@ Future<void> initializeDependencies() async {
       streakRepository: getIt<StreakRepository>(),
       mealRepository: getIt<MealRepository>(),
       glucoseRepository: getIt<GlucoseRepository>(),
+      coverageService: getIt<MealDataCoverageService>(),
     ),
   );
 

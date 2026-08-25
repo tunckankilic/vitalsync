@@ -168,6 +168,8 @@ class GdprConsentSetting extends _$GdprConsentSetting {
           prefs.getBool(AppConstants.prefKeyFitnessDataConsent) ?? false,
       AppConstants.gdprConsentTypeCloudBackup:
           prefs.getBool(AppConstants.prefKeyCloudBackupConsent) ?? false,
+      AppConstants.gdprConsentTypeCalibrationMetrics:
+          prefs.getBool(AppConstants.prefKeyCalibrationMetricsConsent) ?? false,
     };
   }
 
@@ -187,6 +189,8 @@ class GdprConsentSetting extends _$GdprConsentSetting {
         prefKey = AppConstants.prefKeyFitnessDataConsent;
       case AppConstants.gdprConsentTypeCloudBackup:
         prefKey = AppConstants.prefKeyCloudBackupConsent;
+      case AppConstants.gdprConsentTypeCalibrationMetrics:
+        prefKey = AppConstants.prefKeyCalibrationMetricsConsent;
       default:
         throw ArgumentError('Unknown consent type: $consentType');
     }

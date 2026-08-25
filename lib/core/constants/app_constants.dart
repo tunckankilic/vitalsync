@@ -78,6 +78,14 @@ abstract class AppConstants {
   static const String prefKeyCloudBackupConsent =
       '${prefKeyPrefix}cloud_backup_consent';
 
+  /// Calibration metrics consent granted.
+  ///
+  /// Off unless the user turns it on. While it is off no calibration
+  /// metrics row is created at all — not written and withheld, but never
+  /// produced.
+  static const String prefKeyCalibrationMetricsConsent =
+      '${prefKeyPrefix}calibration_metrics_consent';
+
   /// Biometric login enabled flag
   static const String prefKeyBiometricEnabled =
       '${prefKeyPrefix}biometric_enabled';
@@ -367,6 +375,8 @@ abstract class AppConstants {
   static const String gdprConsentTypeHealthData = 'health_data';
   static const String gdprConsentTypeFitnessData = 'fitness_data';
   static const String gdprConsentTypeCloudBackup = 'cloud_backup';
+  static const String gdprConsentTypeCalibrationMetrics =
+      'calibration_metrics';
 
   // SYNC & NETWORK
 

@@ -1,6 +1,7 @@
 /// VitalSync — GDPR Compliance Manager.
 ///
-/// Consent management (analytics, health data, fitness data, cloud backup).
+/// Consent management (analytics, health data, fitness data, cloud backup,
+/// calibration metrics).
 /// Data export (JSON format for portability).
 /// Right to deletion (account + all local data + cloud data).
 /// Privacy policy versioning and consent logging with timestamps.
@@ -49,6 +50,7 @@ class GDPRManager {
   /// - AppConstants.gdprConsentTypeHealthData
   /// - AppConstants.gdprConsentTypeFitnessData
   /// - AppConstants.gdprConsentTypeCloudBackup
+  /// - AppConstants.gdprConsentTypeCalibrationMetrics
   ///
   /// Logs the consent grant with timestamp and policy version.
   Future<void> grantConsent(String consentType) async {
@@ -78,6 +80,11 @@ class GDPRManager {
         return _prefs.getBool(AppConstants.prefKeyFitnessDataConsent) ?? false;
       case AppConstants.gdprConsentTypeCloudBackup:
         return _prefs.getBool(AppConstants.prefKeyCloudBackupConsent) ?? false;
+      case AppConstants.gdprConsentTypeCalibrationMetrics:
+        return _prefs.getBool(
+              AppConstants.prefKeyCalibrationMetricsConsent,
+            ) ??
+            false;
       default:
         throw ArgumentError('Unknown consent type: $consentType');
     }
@@ -97,6 +104,9 @@ class GDPRManager {
       ),
       AppConstants.gdprConsentTypeCloudBackup: hasConsent(
         AppConstants.gdprConsentTypeCloudBackup,
+      ),
+      AppConstants.gdprConsentTypeCalibrationMetrics: hasConsent(
+        AppConstants.gdprConsentTypeCalibrationMetrics,
       ),
     };
   }
@@ -268,6 +278,8 @@ class GDPRManager {
         prefKey = AppConstants.prefKeyFitnessDataConsent;
       case AppConstants.gdprConsentTypeCloudBackup:
         prefKey = AppConstants.prefKeyCloudBackupConsent;
+      case AppConstants.gdprConsentTypeCalibrationMetrics:
+        prefKey = AppConstants.prefKeyCalibrationMetricsConsent;
       default:
         throw ArgumentError('Unknown consent type: $consentType');
     }

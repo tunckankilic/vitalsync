@@ -195,6 +195,8 @@ class _WeeklyReportScreenState extends ConsumerState<WeeklyReportScreen> {
     final mealsLogged = (healthSummary?['meals_logged_count'] as int?) ?? 0;
     final glucoseReadings =
         (healthSummary?['glucose_readings_count'] as int?) ?? 0;
+    final mealsWithCoverage =
+        (healthSummary?['meals_with_coverage_count'] as int?) ?? 0;
 
     final complianceChange = complianceRate - previousComplianceRate;
 
@@ -289,6 +291,18 @@ class _WeeklyReportScreenState extends ConsumerState<WeeklyReportScreen> {
                     visualDensity: VisualDensity.compact,
                   ),
                 ],
+              ),
+            ],
+            // How complete the recording was — a statement about the data,
+            // not about the meals or the readings.
+            if (mealsLogged > 0) ...[
+              const SizedBox(height: 8),
+              Text(
+                l10n.weeklyMealCoverage(mealsWithCoverage, mealsLogged),
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+                textAlign: TextAlign.center,
               ),
             ],
             // Most problematic time slot badge

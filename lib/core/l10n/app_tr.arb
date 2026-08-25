@@ -1352,5 +1352,19 @@
   "healthSourceTypeSteps": "Adım",
   "healthSourceTypeActiveEnergy": "Aktif enerji",
   "healthSourceTypeWorkouts": "Egzersizler",
-  "healthSourceTypeSleep": "Uyku"
+  "healthSourceTypeSleep": "Uyku",
+
+  "mealCoverageCovered": "Ölçüm verisi var",
+  "mealCoverageUncovered": "Ölçüm verisi yok",
+  "mealCoverageReasonNoReadings": "Yeterli ölçüm yok",
+  "mealCoverageReasonGapInData": "Ölçümler arasında boşluk",
+  "mealCoverageReasonOverlappingMeal": "Yakınında başka öğün",
+  "mealCoverageReasonActivityInWindow": "Aktivite kaydı var",
+  "weeklyMealCoverage": "{total} öğünün {covered} tanesinde ölçüm verisi vardı",
+
+  "calibrationMetrics": "Kalibrasyon Metrikleri",
+  "calibrationMetricsSubtitle": "Sadece sayılar gönderilir, sağlık verin gönderilmez",
+  "calibrationMetricsConsentBody": "Uygulamayı geliştirmek için, sağlık verinin kendisini değil yalnızca sayıları (kaç öğün, kaç ölçüm) hesabına bağlı olarak gönderir. Öğün adları, notlar ve ölçüm değerleri gönderilmez. İstediğin zaman kapatabilirsin.",
+  "calibrationMetricsEnabled": "Kalibrasyon metrikleri açıldı",
+  "calibrationMetricsDisabled": "Kalibrasyon metrikleri kapatıldı"
 }

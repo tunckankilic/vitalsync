@@ -1379,5 +1379,37 @@
   "healthSourceTypeWorkouts": "Workouts",
   "@healthSourceTypeWorkouts": { "description": "Apple Health sample type read by VitalSync" },
   "healthSourceTypeSleep": "Sleep",
-  "@healthSourceTypeSleep": { "description": "Apple Health sample type read by VitalSync" }
+  "@healthSourceTypeSleep": { "description": "Apple Health sample type read by VitalSync" },
+
+  "mealCoverageCovered": "Measurement data",
+  "@mealCoverageCovered": { "description": "Badge on a meal that has enough readings around it" },
+  "mealCoverageUncovered": "No measurement data",
+  "@mealCoverageUncovered": { "description": "Badge on a meal that does not have enough readings around it" },
+  "mealCoverageReasonNoReadings": "Too few readings",
+  "@mealCoverageReasonNoReadings": { "description": "Coverage reason: not enough readings in the window" },
+  "mealCoverageReasonGapInData": "Gap between readings",
+  "@mealCoverageReasonGapInData": { "description": "Coverage reason: readings leave too wide a gap" },
+  "mealCoverageReasonOverlappingMeal": "Another meal nearby",
+  "@mealCoverageReasonOverlappingMeal": { "description": "Coverage reason: a second meal shares the window" },
+  "mealCoverageReasonActivityInWindow": "Activity recorded",
+  "@mealCoverageReasonActivityInWindow": { "description": "Coverage reason: activity was recorded in the window" },
+  "weeklyMealCoverage": "{covered} of {total} meals had measurement data",
+  "@weeklyMealCoverage": {
+    "description": "Weekly report line stating how many meals had readings around them",
+    "placeholders": {
+      "covered": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+
+  "calibrationMetrics": "Calibration Metrics",
+  "@calibrationMetrics": { "description": "Settings toggle for the opt-in counters" },
+  "calibrationMetricsSubtitle": "Send counts only, never your health data",
+  "@calibrationMetricsSubtitle": { "description": "Settings toggle subtitle" },
+  "calibrationMetricsConsentBody": "To improve the app, VitalSync sends only the counts — how many meals, how many readings — stored under your account. Meal names, notes and measurement values are not sent. You can turn this off at any time.",
+  "@calibrationMetricsConsentBody": { "description": "Consent explanation. Must not describe the data as anonymous: it is stored under the user's own account." },
+  "calibrationMetricsEnabled": "Calibration metrics turned on",
+  "@calibrationMetricsEnabled": { "description": "Snackbar after enabling the opt-in counters" },
+  "calibrationMetricsDisabled": "Calibration metrics turned off",
+  "@calibrationMetricsDisabled": { "description": "Snackbar after disabling the opt-in counters" }
 }

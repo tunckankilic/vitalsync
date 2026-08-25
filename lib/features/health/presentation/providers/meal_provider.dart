@@ -9,6 +9,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../../core/di/injection_container.dart';
 import '../../../../domain/entities/health/meal.dart';
 import '../../../../domain/repositories/health/meal_repository.dart';
+import '../../domain/services/meal_data_coverage_service.dart';
 
 part 'meal_provider.g.dart';
 
@@ -16,6 +17,25 @@ part 'meal_provider.g.dart';
 @Riverpod(keepAlive: true)
 MealRepository mealRepository(Ref ref) {
   return getIt<MealRepository>();
+}
+
+/// Provider for the MealDataCoverageService instance
+@Riverpod(keepAlive: true)
+MealDataCoverageService mealDataCoverageService(Ref ref) {
+  return getIt<MealDataCoverageService>();
+}
+
+/// Coverage verdicts for the meals the list is showing, keyed by meal id.
+///
+/// Data completeness only — see [MealDataCoverageService]. A verdict says
+/// whether measurements exist around a meal, never anything about them.
+@riverpod
+Future<Map<int, MealCoverage>> mealCoverage(Ref ref, {int limit = 50}) async {
+  final meals = await ref.watch(mealsProvider(limit: limit).future);
+  final service = ref.watch(mealDataCoverageServiceProvider);
+
+  final coverages = await service.evaluateMeals(meals);
+  return {for (final coverage in coverages) coverage.mealId: coverage};
 }
 
 /// Stream provider for the most recent meals

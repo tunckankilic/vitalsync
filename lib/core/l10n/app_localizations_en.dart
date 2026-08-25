@@ -1942,4 +1942,44 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get healthSourceTypeSleep => 'Sleep';
+
+  @override
+  String get mealCoverageCovered => 'Measurement data';
+
+  @override
+  String get mealCoverageUncovered => 'No measurement data';
+
+  @override
+  String get mealCoverageReasonNoReadings => 'Too few readings';
+
+  @override
+  String get mealCoverageReasonGapInData => 'Gap between readings';
+
+  @override
+  String get mealCoverageReasonOverlappingMeal => 'Another meal nearby';
+
+  @override
+  String get mealCoverageReasonActivityInWindow => 'Activity recorded';
+
+  @override
+  String weeklyMealCoverage(int covered, int total) {
+    return '$covered of $total meals had measurement data';
+  }
+
+  @override
+  String get calibrationMetrics => 'Calibration Metrics';
+
+  @override
+  String get calibrationMetricsSubtitle =>
+      'Send counts only, never your health data';
+
+  @override
+  String get calibrationMetricsConsentBody =>
+      'To improve the app, VitalSync sends only the counts — how many meals, how many readings — stored under your account. Meal names, notes and measurement values are not sent. You can turn this off at any time.';
+
+  @override
+  String get calibrationMetricsEnabled => 'Calibration metrics turned on';
+
+  @override
+  String get calibrationMetricsDisabled => 'Calibration metrics turned off';
 }

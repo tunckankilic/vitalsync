@@ -13,6 +13,8 @@ import 'package:vitalsync/core/network/connectivity_service.dart';
 import 'package:vitalsync/core/settings/settings_provider.dart';
 import 'package:vitalsync/core/sync/sync_provider.dart';
 import 'package:vitalsync/core/utils/url_launcher_helper.dart';
+import 'package:vitalsync/presentation/screens/gdpr/consent_screen.dart'
+    show gdprManagerProvider;
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -25,6 +27,11 @@ class SettingsScreen extends ConsumerWidget {
     final locale = ref.watch(localeSettingProvider);
     final notificationsEnabled = ref.watch(notificationSettingProvider);
     final unitSystem = ref.watch(unitSystemSettingProvider);
+
+    final calibrationMetricsConsent =
+        ref.watch(gdprConsentSettingProvider)[AppConstants
+            .gdprConsentTypeCalibrationMetrics] ??
+        false;
 
     // Sync state
     final syncStatus = ref.watch(syncStatusProvider);
@@ -188,6 +195,44 @@ class SettingsScreen extends ConsumerWidget {
                 onTap: () {
                   context.pushNamed('health_sources');
                 },
+              ),
+              // Opt-in, off unless the user turns it on. While it is off no
+              // calibration metrics row is produced at all.
+              _SettingsTile(
+                title: l10n.calibrationMetrics,
+                subtitle: l10n.calibrationMetricsSubtitle,
+                icon: Icons.insights_outlined,
+                onTap: () => _showCalibrationMetricsInfo(context, l10n),
+                trailing: Switch(
+                  value: calibrationMetricsConsent,
+                  activeThumbColor: Theme.of(context).primaryColor,
+                  activeTrackColor: Theme.of(
+                    context,
+                  ).primaryColor.withValues(alpha: 0.5),
+                  onChanged: (granted) async {
+                    final messenger = ScaffoldMessenger.of(context);
+                    final manager = ref.read(gdprManagerProvider);
+                    if (granted) {
+                      await manager.grantConsent(
+                        AppConstants.gdprConsentTypeCalibrationMetrics,
+                      );
+                    } else {
+                      await manager.revokeConsent(
+                        AppConstants.gdprConsentTypeCalibrationMetrics,
+                      );
+                    }
+                    ref.invalidate(gdprConsentSettingProvider);
+                    messenger.showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          granted
+                              ? l10n.calibrationMetricsEnabled
+                              : l10n.calibrationMetricsDisabled,
+                        ),
+                      ),
+                    );
+                  },
+                ),
               ),
               _SettingsTile(
                 title: l10n.manageConsents,
@@ -446,6 +491,31 @@ class SettingsScreen extends ConsumerWidget {
       builder: (dialogContext) => AlertDialog(
         title: Text(l10n.healthDisclaimerTitle),
         content: SingleChildScrollView(child: Text(l10n.healthDisclaimerBody)),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(),
+            child: Text(l10n.understood),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Explains exactly what the opt-in counters send.
+  ///
+  /// The wording never calls the data anonymous: it is stored under the
+  /// user's own Cognito partition, so it is tied to their account.
+  void _showCalibrationMetricsInfo(
+    BuildContext context,
+    AppLocalizations l10n,
+  ) {
+    showDialog<void>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text(l10n.calibrationMetrics),
+        content: SingleChildScrollView(
+          child: Text(l10n.calibrationMetricsConsentBody),
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(),

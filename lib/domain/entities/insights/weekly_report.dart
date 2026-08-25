@@ -26,6 +26,7 @@ class WeeklyReport {
     // existed - or restored from an older export - still constructs.
     this.mealsLoggedCount = 0,
     this.glucoseReadingsCount = 0,
+    this.mealsWithCoverageCount = 0,
     // Fitness Summary
     required this.workoutCount,
     required this.totalVolume,
@@ -63,6 +64,8 @@ class WeeklyReport {
       mealsLoggedCount: healthSummary['meals_logged_count'] as int? ?? 0,
       glucoseReadingsCount:
           healthSummary['glucose_readings_count'] as int? ?? 0,
+      mealsWithCoverageCount:
+          healthSummary['meals_with_coverage_count'] as int? ?? 0,
       workoutCount: fitnessSummary['workout_count'] as int,
       totalVolume: fitnessSummary['total_volume_kg'] as double,
       volumeTrendVsPrevious: TrendDirection.values.firstWhere(
@@ -113,6 +116,11 @@ class WeeklyReport {
   /// source. A count only: no average, no range, no trend.
   final int glucoseReadingsCount;
 
+  /// How many of [mealsLoggedCount] had enough measurement data around them,
+  /// per `MealDataCoverageService`. A data-completeness tally — it says
+  /// nothing about the meals or the readings.
+  final int mealsWithCoverageCount;
+
   // ── Fitness Summary ────────────────────────────────────────────────
   final int workoutCount;
   final double totalVolume; // kg
@@ -141,6 +149,7 @@ class WeeklyReport {
     String? mostFrequentSymptom,
     int? mealsLoggedCount,
     int? glucoseReadingsCount,
+    int? mealsWithCoverageCount,
     int? workoutCount,
     double? totalVolume,
     TrendDirection? volumeTrendVsPrevious,
@@ -167,6 +176,8 @@ class WeeklyReport {
       mostFrequentSymptom: mostFrequentSymptom ?? this.mostFrequentSymptom,
       mealsLoggedCount: mealsLoggedCount ?? this.mealsLoggedCount,
       glucoseReadingsCount: glucoseReadingsCount ?? this.glucoseReadingsCount,
+      mealsWithCoverageCount:
+          mealsWithCoverageCount ?? this.mealsWithCoverageCount,
       workoutCount: workoutCount ?? this.workoutCount,
       totalVolume: totalVolume ?? this.totalVolume,
       volumeTrendVsPrevious:
@@ -196,6 +207,7 @@ class WeeklyReport {
         'most_frequent_symptom': mostFrequentSymptom,
         'meals_logged_count': mealsLoggedCount,
         'glucose_readings_count': glucoseReadingsCount,
+        'meals_with_coverage_count': mealsWithCoverageCount,
       },
       'fitness_summary': {
         'workout_count': workoutCount,
@@ -249,6 +261,7 @@ class WeeklyReport {
         other.mostFrequentSymptom == mostFrequentSymptom &&
         other.mealsLoggedCount == mealsLoggedCount &&
         other.glucoseReadingsCount == glucoseReadingsCount &&
+        other.mealsWithCoverageCount == mealsWithCoverageCount &&
         other.workoutCount == workoutCount &&
         other.totalVolume == totalVolume &&
         other.volumeTrendVsPrevious == volumeTrendVsPrevious &&
@@ -274,6 +287,7 @@ class WeeklyReport {
         mostFrequentSymptom.hashCode ^
         mealsLoggedCount.hashCode ^
         glucoseReadingsCount.hashCode ^
+        mealsWithCoverageCount.hashCode ^
         workoutCount.hashCode ^
         totalVolume.hashCode ^
         volumeTrendVsPrevious.hashCode ^

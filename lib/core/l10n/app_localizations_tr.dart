@@ -1940,4 +1940,44 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get healthSourceTypeSleep => 'Uyku';
+
+  @override
+  String get mealCoverageCovered => 'Ölçüm verisi var';
+
+  @override
+  String get mealCoverageUncovered => 'Ölçüm verisi yok';
+
+  @override
+  String get mealCoverageReasonNoReadings => 'Yeterli ölçüm yok';
+
+  @override
+  String get mealCoverageReasonGapInData => 'Ölçümler arasında boşluk';
+
+  @override
+  String get mealCoverageReasonOverlappingMeal => 'Yakınında başka öğün';
+
+  @override
+  String get mealCoverageReasonActivityInWindow => 'Aktivite kaydı var';
+
+  @override
+  String weeklyMealCoverage(int covered, int total) {
+    return '$total öğünün $covered tanesinde ölçüm verisi vardı';
+  }
+
+  @override
+  String get calibrationMetrics => 'Kalibrasyon Metrikleri';
+
+  @override
+  String get calibrationMetricsSubtitle =>
+      'Sadece sayılar gönderilir, sağlık verin gönderilmez';
+
+  @override
+  String get calibrationMetricsConsentBody =>
+      'Uygulamayı geliştirmek için, sağlık verinin kendisini değil yalnızca sayıları (kaç öğün, kaç ölçüm) hesabına bağlı olarak gönderir. Öğün adları, notlar ve ölçüm değerleri gönderilmez. İstediğin zaman kapatabilirsin.';
+
+  @override
+  String get calibrationMetricsEnabled => 'Kalibrasyon metrikleri açıldı';
+
+  @override
+  String get calibrationMetricsDisabled => 'Kalibrasyon metrikleri kapatıldı';
 }
