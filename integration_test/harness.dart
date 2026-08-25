@@ -58,13 +58,14 @@ class RecordingNotificationsPlugin extends Fake
   }) async {
     scheduled.add((
       id: id,
-      // Compared against local wall-clock times in the assertions.
-      at: DateTime(
-        scheduledDate.year,
-        scheduledDate.month,
-        scheduledDate.day,
-        scheduledDate.hour,
-        scheduledDate.minute,
+      // Keep the instant, not the calendar fields. A TZDateTime renders its
+      // fields in its own location, and `tz.local` is only pointed at the
+      // device zone by NotificationService.initialize(), which these tests
+      // never call — so reading .hour here would shift the time by the
+      // device's UTC offset. The epoch value is what decides when the
+      // notification actually fires, and it survives either way.
+      at: DateTime.fromMillisecondsSinceEpoch(
+        scheduledDate.millisecondsSinceEpoch,
       ),
       body: body,
     ));
