@@ -96,7 +96,29 @@ class HealthSampleDao extends DatabaseAccessor<AppDatabase>
   }
 
   /// Inserts or updates a health sample from a remote payload.
+  ///
+  /// Mirrors [GlucoseDao.upsertFromRemote]: the incoming `externalId` may be
+  /// held by a different local row, which the unique index would reject, so the
+  /// losing duplicate is dropped inside the same transaction.
   Future<void> upsertFromRemote(int id, Map<String, dynamic> data) async {
+    await transaction(() async {
+      final externalId = data['externalId'] as String?;
+      if (externalId != null) {
+        await (delete(healthSamples)..where(
+              (tbl) =>
+                  tbl.externalId.equals(externalId) & tbl.id.equals(id).not(),
+            ))
+            .go();
+      }
+      await _insertFromRemote(id, data, externalId);
+    });
+  }
+
+  Future<void> _insertFromRemote(
+    int id,
+    Map<String, dynamic> data,
+    String? externalId,
+  ) async {
     await into(healthSamples).insertOnConflictUpdate(
       HealthSamplesCompanion(
         id: Value(id),
@@ -120,7 +142,7 @@ class HealthSampleDao extends DatabaseAccessor<AppDatabase>
             orElse: () => HealthDataSourceKind.healthKit,
           ),
         ),
-        externalId: Value(data['externalId'] as String?),
+        externalId: Value(externalId),
         metadata: Value(data['metadata'] as String?),
         lastModifiedAt: Value(DateTime.parse(data['lastModifiedAt'] as String)),
         createdAt: Value(DateTime.parse(data['createdAt'] as String)),

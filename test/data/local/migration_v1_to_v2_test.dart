@@ -39,13 +39,13 @@ void main() {
           .into(oldDb.symptoms)
           .insert(
             RawValuesInsertable({
-              'name': Variable<String>('Headache'),
-              'severity': Variable<int>(3),
+              'name': const Variable<String>('Headache'),
+              'severity': const Variable<int>(3),
               'date': Variable<int>(
                 DateTime.utc(2026, 8, 1).millisecondsSinceEpoch ~/ 1000,
               ),
-              'notes': Variable<String>('After a long day'),
-              'tags': Variable<String>('["chronic"]'),
+              'notes': const Variable<String>('After a long day'),
+              'tags': const Variable<String>('["chronic"]'),
             }),
           );
       await oldDb.close();

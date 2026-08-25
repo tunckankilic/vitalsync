@@ -80,7 +80,32 @@ class GlucoseDao extends DatabaseAccessor<AppDatabase> with _$GlucoseDaoMixin {
   /// Inserts or updates a glucose reading from cloud remote data.
   /// Sets [syncStatus] to [SyncStatus.synced] to prevent re-pushing.
   /// Does NOT trigger sync queue insertion.
+  ///
+  /// The incoming `externalId` may already be held by a *different* local row:
+  /// two devices importing the same HealthKit sample assign it different local
+  /// IDs, and the row that reaches the cloud first wins. `insertOnConflictUpdate`
+  /// only resolves conflicts on the primary key, so that case would raise a
+  /// UNIQUE constraint failure and abort the whole pull. Drop the losing
+  /// duplicate first, inside the same transaction, so the pull stays idempotent.
   Future<void> upsertFromRemote(int id, Map<String, dynamic> data) async {
+    await transaction(() async {
+      final externalId = data['externalId'] as String?;
+      if (externalId != null) {
+        await (delete(glucoseReadings)..where(
+              (tbl) =>
+                  tbl.externalId.equals(externalId) & tbl.id.equals(id).not(),
+            ))
+            .go();
+      }
+      await _insertFromRemote(id, data, externalId);
+    });
+  }
+
+  Future<void> _insertFromRemote(
+    int id,
+    Map<String, dynamic> data,
+    String? externalId,
+  ) async {
     await into(glucoseReadings).insertOnConflictUpdate(
       GlucoseReadingsCompanion(
         id: Value(id),
@@ -92,7 +117,7 @@ class GlucoseDao extends DatabaseAccessor<AppDatabase> with _$GlucoseDaoMixin {
             orElse: () => GlucoseSource.manual,
           ),
         ),
-        externalId: Value(data['externalId'] as String?),
+        externalId: Value(externalId),
         mealContext: Value(
           data['mealContext'] != null
               ? MealContext.values.firstWhere(
