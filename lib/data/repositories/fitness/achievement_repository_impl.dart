@@ -107,14 +107,14 @@ class AchievementRepositoryImpl implements AchievementRepository {
         case AchievementType.consistency:
           // Cross-module: both medication compliance and workout streak.
           //
-          // NOTE: the seeded descriptions of the three consistency
-          // achievements each describe a different measure — workouts in a
-          // week, streak days, and total workouts — which a single
-          // `requirement` integer cannot express. This check reads it as
-          // streak days for all three, so "Wellness Warrior" ("complete 50
-          // workouts") in practice asks for a 50-day streak. Left as-is
-          // deliberately: picking one meaning is a product decision, not a
-          // bug fix, and this is live behaviour.
+          // One rule covers all three consistency achievements — they differ
+          // only in `requirement`, read as the streak length in days. Their
+          // descriptions used to name three different measures (workouts in
+          // a week, streak days, total workouts), which this single integer
+          // cannot express; the descriptions were corrected to match this
+          // check rather than the behaviour changed, because the unlock
+          // rule is what shipped and users have progress against it. See
+          // the v2 → v3 migration.
           final complianceRate =
               await _medicationLogRepository.getOverallComplianceRate(days: 7);
           final currentStreak = await _streakRepository.getCurrentStreak();

@@ -49,8 +49,42 @@ Future<void> runMigrations(
         break;
 
       case 3:
-        // Future migration v2 → v3:
-        // await m.createTable(db.someNewTable);
+        // v2 → v3: correct the three cross-module achievement descriptions.
+        //
+        // Data-only; the schema is unchanged. The seeded descriptions each
+        // named a different measure (workouts in a week, streak days, total
+        // workouts) while AchievementRepositoryImpl checks one rule for all
+        // three — 90%+ compliance over the past week plus a streak of
+        // `requirement` days. Seeding only runs on an empty database, so
+        // fixing seed_data.dart alone would leave every existing install
+        // showing goals the app never evaluates.
+        //
+        // The literals below are frozen copies, deliberately not references
+        // to seed_data.dart: a migration has to keep describing the same
+        // v2 → v3 step even if the seed text changes again later.
+        await _rewriteAchievementDescription(
+          db,
+          iconName: 'cross_balance_master',
+          from: 'Achieve 100% medication compliance and 4 workouts in the '
+              'same week',
+          to: 'Keep 90%+ medication compliance this week and a 1-day '
+              'workout streak',
+        );
+        await _rewriteAchievementDescription(
+          db,
+          iconName: 'cross_synced_up',
+          from: 'Maintain both medication compliance and workout streak for '
+              '30 days',
+          to: 'Keep 90%+ medication compliance this week and a 30-day '
+              'workout streak',
+        );
+        await _rewriteAchievementDescription(
+          db,
+          iconName: 'cross_wellness_warrior',
+          from: 'Complete 50 workouts with 90%+ medication compliance',
+          to: 'Keep 90%+ medication compliance this week and a 50-day '
+              'workout streak',
+        );
         break;
 
       default:
@@ -64,4 +98,23 @@ Future<void> runMigrations(
   }
 
   log('All migrations completed (v$from → v$to)');
+}
+
+/// Replaces one seeded achievement description, matched on [iconName].
+///
+/// Guarded on the old text so the update is idempotent and so a row that
+/// already carries the corrected wording — or anything else — is left alone.
+/// Only the description column is written: `unlockedAt` and every other
+/// column stay untouched, so an achievement a user has already earned keeps
+/// its unlock.
+Future<void> _rewriteAchievementDescription(
+  AppDatabase db, {
+  required String iconName,
+  required String from,
+  required String to,
+}) async {
+  await (db.update(db.achievements)..where(
+        (a) => a.iconName.equals(iconName) & a.description.equals(from),
+      ))
+      .write(AchievementsCompanion(description: Value(to)));
 }

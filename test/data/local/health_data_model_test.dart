@@ -270,7 +270,9 @@ void main() {
     );
 
     final export = await db.exportAllData();
-    expect(export['database_version'], 2);
+    // What matters is that the export carries the schema version it was
+    // taken at, not the literal number — that moves with every migration.
+    expect(export['database_version'], db.schemaVersion);
     final health = export['health']! as Map<String, dynamic>;
     expect(health['glucose_readings'], hasLength(1));
     expect(health['meals'], hasLength(1));

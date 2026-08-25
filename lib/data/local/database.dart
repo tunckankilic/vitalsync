@@ -131,7 +131,7 @@ class AppDatabase extends _$AppDatabase {
   /// Database schema version.
   /// Increment this when making schema changes and provide migration logic.
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
 
   /// Database migration strategy.
   @override

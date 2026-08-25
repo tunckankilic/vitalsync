@@ -732,24 +732,32 @@ Future<void> _seedAchievements(AppDatabase db) async {
     ),
 
     //  CROSS-MODULE ACHIEVEMENTS
+    //
+    // All three are checked by the same rule in AchievementRepositoryImpl:
+    // 90%+ medication compliance over the past week AND a workout streak of
+    // at least `requirement` days. The descriptions below say exactly that,
+    // and differ only in the day count. Earlier wording described three
+    // different measures (workouts in a week, streak days, total workouts),
+    // which one `requirement` integer cannot express — see the v2 → v3
+    // migration, which rewrites them for users who already seeded the old text.
     _achievementData(
       AchievementType.consistency,
       'Balance Master',
-      'Achieve 100% medication compliance and 4 workouts in the same week',
+      'Keep 90%+ medication compliance this week and a 1-day workout streak',
       1,
       'cross_balance_master',
     ),
     _achievementData(
       AchievementType.consistency,
       'Synced Up',
-      'Maintain both medication compliance and workout streak for 30 days',
+      'Keep 90%+ medication compliance this week and a 30-day workout streak',
       30,
       'cross_synced_up',
     ),
     _achievementData(
       AchievementType.consistency,
       'Wellness Warrior',
-      'Complete 50 workouts with 90%+ medication compliance',
+      'Keep 90%+ medication compliance this week and a 50-day workout streak',
       50,
       'cross_wellness_warrior',
     ),

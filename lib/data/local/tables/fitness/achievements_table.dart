@@ -32,6 +32,8 @@ class Achievements extends Table {
   /// - workouts: number of workouts completed
   /// - pr: number of PRs achieved
   /// - medication_compliance: % compliance threshold
+  /// - consistency: number of consecutive workout streak days, on top of
+  ///   the 90% medication compliance the same check requires
   IntColumn get requirement => integer()();
 
   /// When this achievement was unlocked (nullable).
