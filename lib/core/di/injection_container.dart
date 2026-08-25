@@ -220,11 +220,14 @@ Future<void> initializeDependencies() async {
   );
 
   getIt.registerLazySingleton<GlucoseRepository>(
-    () => GlucoseRepositoryImpl(getIt<AppDatabase>().glucoseDao),
+    () => GlucoseRepositoryImpl(
+      getIt<AppDatabase>().glucoseDao,
+      getIt<AppDatabase>(),
+    ),
   );
 
   getIt.registerLazySingleton<MealRepository>(
-    () => MealRepositoryImpl(getIt<AppDatabase>().mealDao),
+    () => MealRepositoryImpl(getIt<AppDatabase>().mealDao, getIt<AppDatabase>()),
   );
 
   getIt.registerLazySingleton<HealthSampleRepository>(
@@ -234,6 +237,7 @@ Future<void> initializeDependencies() async {
   getIt.registerLazySingleton<CalibrationMetricRepository>(
     () => CalibrationMetricRepositoryImpl(
       getIt<AppDatabase>().calibrationMetricDao,
+      getIt<AppDatabase>(),
     ),
   );
 

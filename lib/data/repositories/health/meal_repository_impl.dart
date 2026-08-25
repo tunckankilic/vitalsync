@@ -1,13 +1,21 @@
 import 'dart:convert';
+import 'package:vitalsync/core/enums/sync_enums.dart';
 import 'package:vitalsync/data/local/daos/health/meal_dao.dart';
 import 'package:vitalsync/data/local/database.dart';
 import 'package:vitalsync/data/models/health/meal_model.dart';
 import 'package:vitalsync/domain/entities/health/meal.dart';
 import 'package:vitalsync/domain/repositories/health/meal_repository.dart';
 
+/// Meals are pushed to the cloud in full: a logged meal is the user's own
+/// input and cannot be re-derived from anywhere else.
 class MealRepositoryImpl implements MealRepository {
-  MealRepositoryImpl(this._dao);
+  MealRepositoryImpl(this._dao, this._database);
   final MealDao _dao;
+  final AppDatabase _database;
+
+  /// Cloud collection name. Must match the entry in
+  /// `SyncService.tablesToSync` and the Lambda's `COLLECTION_PREFIX`.
+  static const _collection = 'meals';
 
   @override
   Future<List<Meal>> getAll() async {
@@ -28,8 +36,16 @@ class MealRepositoryImpl implements MealRepository {
   }
 
   @override
-  Future<int> insert(Meal meal) {
-    return _dao.insert(MealModel.fromEntity(meal).toCompanion());
+  Future<int> insert(Meal meal) async {
+    final model = MealModel.fromEntity(meal);
+    final id = await _dao.insert(model.toCompanion());
+    await _database.addToSyncQueue(
+      _collection,
+      id,
+      SyncOperation.insert,
+      model.toJson(),
+    );
+    return id;
   }
 
   @override
@@ -48,11 +64,23 @@ class MealRepositoryImpl implements MealRepository {
       createdAt: model.createdAt,
     );
     await _dao.updateMeal(data);
+    await _database.addToSyncQueue(
+      _collection,
+      model.id,
+      SyncOperation.update,
+      model.toJson(),
+    );
   }
 
   @override
-  Future<void> delete(int id) {
-    return _dao.deleteMeal(id);
+  Future<void> delete(int id) async {
+    await _dao.deleteMeal(id);
+    await _database.addToSyncQueue(
+      _collection,
+      id,
+      SyncOperation.delete,
+      const {},
+    );
   }
 
   @override

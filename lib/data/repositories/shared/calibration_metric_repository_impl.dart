@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:vitalsync/core/enums/sync_enums.dart';
 import 'package:vitalsync/data/local/daos/shared/calibration_metric_dao.dart';
 import 'package:vitalsync/data/local/database.dart';
 import 'package:vitalsync/data/models/shared/calibration_metric_model.dart';
@@ -9,8 +10,14 @@ import 'package:vitalsync/domain/repositories/shared/calibration_metric_reposito
 /// between the DAO and the domain layer. Nothing here derives a rating,
 /// a score or a statement about what the counters mean.
 class CalibrationMetricRepositoryImpl implements CalibrationMetricRepository {
-  CalibrationMetricRepositoryImpl(this._dao);
+  CalibrationMetricRepositoryImpl(this._dao, this._database);
   final CalibrationMetricDao _dao;
+  final AppDatabase _database;
+
+  /// Cloud collection name. Must match the entry in
+  /// `SyncService.tablesToSync` and the Lambda's `COLLECTION_PREFIX`.
+  /// One row per week, so the write volume is negligible.
+  static const _collection = 'calibration_metrics';
 
   @override
   Future<List<CalibrationMetric>> getAll() async {
@@ -40,8 +47,16 @@ class CalibrationMetricRepositoryImpl implements CalibrationMetricRepository {
   }
 
   @override
-  Future<int> insert(CalibrationMetric metric) {
-    return _dao.insert(CalibrationMetricModel.fromEntity(metric).toCompanion());
+  Future<int> insert(CalibrationMetric metric) async {
+    final model = CalibrationMetricModel.fromEntity(metric);
+    final id = await _dao.insert(model.toCompanion());
+    await _database.addToSyncQueue(
+      _collection,
+      id,
+      SyncOperation.insert,
+      model.toJson(),
+    );
+    return id;
   }
 
   @override
@@ -63,11 +78,23 @@ class CalibrationMetricRepositoryImpl implements CalibrationMetricRepository {
       createdAt: model.createdAt,
     );
     await _dao.updateMetric(data);
+    await _database.addToSyncQueue(
+      _collection,
+      model.id,
+      SyncOperation.update,
+      model.toJson(),
+    );
   }
 
   @override
-  Future<void> delete(int id) {
-    return _dao.deleteMetric(id);
+  Future<void> delete(int id) async {
+    await _dao.deleteMetric(id);
+    await _database.addToSyncQueue(
+      _collection,
+      id,
+      SyncOperation.delete,
+      const {},
+    );
   }
 
   @override

@@ -12,5 +12,7 @@
 	<true/>
 	<key>com.apple.developer.healthkit.access</key>
 	<array/>
+	<key>com.apple.developer.healthkit.recalibrate-estimates</key>
+	<true/>
 </dict>
 </plist>

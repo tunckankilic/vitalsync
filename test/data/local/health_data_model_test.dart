@@ -30,7 +30,7 @@ void main() {
   tearDown(() async => db.close());
 
   test('glucose roundtrip, nullable enum, update, dedupe', () async {
-    final repo = GlucoseRepositoryImpl(db.glucoseDao);
+    final repo = GlucoseRepositoryImpl(db.glucoseDao, db);
     final id = await repo.insert(
       GlucoseReading(
         id: 0,
@@ -169,7 +169,7 @@ void main() {
   });
 
   test('meal tags json roundtrip', () async {
-    final repo = MealRepositoryImpl(db.mealDao);
+    final repo = MealRepositoryImpl(db.mealDao, db);
     final id = await repo.insert(
       Meal(
         id: 0,
@@ -215,7 +215,7 @@ void main() {
   });
 
   test('calibration metric map roundtrip', () async {
-    final repo = CalibrationMetricRepositoryImpl(db.calibrationMetricDao);
+    final repo = CalibrationMetricRepositoryImpl(db.calibrationMetricDao, db);
     final id = await repo.insert(
       CalibrationMetric(
         id: 0,

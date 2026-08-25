@@ -34,6 +34,12 @@ const COLLECTION_PREFIX = {
   personal_records: 'PR',
   achievements: 'ACH',
   insights: 'INSIGHT',
+  // 2.0 measurement layer. health_samples is deliberately absent: activity and
+  // sleep samples stay local and are re-imported from the platform health
+  // store on a new device, so paying to store them here buys nothing.
+  meals: 'MEAL',
+  glucose_readings: 'GLUCOSE',
+  calibration_metrics: 'CALMETRIC',
 };
 
 // Reverse mapping: prefix → collection name

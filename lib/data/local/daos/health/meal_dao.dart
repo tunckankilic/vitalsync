@@ -6,6 +6,7 @@ import 'package:vitalsync/core/enums/sync_status.dart';
 import 'package:vitalsync/data/local/database.dart';
 
 import '../../tables/health/meals_table.dart';
+import '../remote_payload.dart';
 
 part 'meal_dao.g.dart';
 
@@ -71,7 +72,7 @@ class MealDao extends DatabaseAccessor<AppDatabase> with _$MealDaoMixin {
         name: Value(data['name'] as String),
         eatenAt: Value(DateTime.parse(data['eatenAt'] as String)),
         notes: Value(data['notes'] as String?),
-        tags: Value(data['tags'] as String? ?? '[]'),
+        tags: Value(encodeJsonColumn(data['tags'], fallback: '[]')),
         syncStatus: const Value(SyncStatus.synced),
         lastModifiedAt: Value(DateTime.parse(data['lastModifiedAt'] as String)),
         createdAt: Value(DateTime.parse(data['createdAt'] as String)),

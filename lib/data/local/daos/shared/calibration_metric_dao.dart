@@ -6,6 +6,7 @@ import 'package:vitalsync/core/enums/sync_status.dart';
 import 'package:vitalsync/data/local/database.dart';
 
 import '../../tables/shared/calibration_metrics_table.dart';
+import '../remote_payload.dart';
 
 part 'calibration_metric_dao.g.dart';
 
@@ -90,7 +91,9 @@ class CalibrationMetricDao extends DatabaseAccessor<AppDatabase>
         glucoseReadings: Value(data['glucoseReadings'] as int? ?? 0),
         manualReadings: Value(data['manualReadings'] as int? ?? 0),
         coveredMeals: Value(data['coveredMeals'] as int? ?? 0),
-        uncoveredReasons: Value(data['uncoveredReasons'] as String? ?? '{}'),
+        uncoveredReasons: Value(
+          encodeJsonColumn(data['uncoveredReasons'], fallback: '{}'),
+        ),
         appVersion: Value(data['appVersion'] as String? ?? ''),
         syncStatus: const Value(SyncStatus.synced),
         lastModifiedAt: Value(DateTime.parse(data['lastModifiedAt'] as String)),

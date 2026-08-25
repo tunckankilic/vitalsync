@@ -65,6 +65,15 @@ class SyncService {
     'workout_sets',
     'personal_records',
     'achievements',
+    // 2.0 measurement layer.
+    // 'health_samples' is intentionally NOT here: steps, energy, workouts and
+    // sleep are re-derivable from the platform health store on a new device.
+    // Glucose readings are pushed selectively — see GlucoseRepositoryImpl,
+    // which queues manual entries only. HealthKit-sourced readings would add
+    // ~288 writes a day per CGM user for data the device can re-import.
+    'meals',
+    'glucose_readings',
+    'calibration_metrics',
   ];
 
   /// Checks if cloud backup consent has been granted (GDPR).
@@ -338,6 +347,15 @@ class SyncService {
       case 'achievements':
         final record = await _database.achievementDao.getById(recordId);
         return record?.unlockedAt;
+      case 'meals':
+        final record = await _database.mealDao.getById(recordId);
+        return record?.lastModifiedAt;
+      case 'glucose_readings':
+        final record = await _database.glucoseDao.getById(recordId);
+        return record?.lastModifiedAt;
+      case 'calibration_metrics':
+        final record = await _database.calibrationMetricDao.getById(recordId);
+        return record?.lastModifiedAt;
       default:
         log('Unknown table: $tableName');
         return null;
@@ -366,6 +384,12 @@ class SyncService {
         await _database.personalRecordDao.upsertFromRemote(recordId, data);
       case 'achievements':
         await _database.achievementDao.upsertFromRemote(recordId, data);
+      case 'meals':
+        await _database.mealDao.upsertFromRemote(recordId, data);
+      case 'glucose_readings':
+        await _database.glucoseDao.upsertFromRemote(recordId, data);
+      case 'calibration_metrics':
+        await _database.calibrationMetricDao.upsertFromRemote(recordId, data);
       default:
         log('Unknown table for upsert: $tableName');
     }
