@@ -115,3 +115,10 @@ userpool-backup-20260608.json
 userpool-update.json
 # Local-only notes
 docs/private/
+
+# Signing keys / private material — never commit
+*.p8
+*.pem
+*.key
+*.p12
+*.mobileprovision
