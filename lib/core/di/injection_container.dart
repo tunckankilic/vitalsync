@@ -178,9 +178,7 @@ Future<void> initializeDependencies() async {
   );
 
   getIt.registerLazySingleton<HealthLifecycleObserver>(
-    () => HealthLifecycleObserver(
-      importService: getIt<HealthImportService>(),
-    ),
+    () => HealthLifecycleObserver(importService: getIt<HealthImportService>()),
   );
 
   getIt.registerLazySingleton<SyncService>(
@@ -239,7 +237,8 @@ Future<void> initializeDependencies() async {
   );
 
   getIt.registerLazySingleton<MealRepository>(
-    () => MealRepositoryImpl(getIt<AppDatabase>().mealDao, getIt<AppDatabase>()),
+    () =>
+        MealRepositoryImpl(getIt<AppDatabase>().mealDao, getIt<AppDatabase>()),
   );
 
   getIt.registerLazySingleton<HealthSampleRepository>(
@@ -314,6 +313,10 @@ Future<void> initializeDependencies() async {
     () => AchievementRepositoryImpl(
       getIt<AppDatabase>().achievementDao,
       getIt<AppDatabase>(),
+      streakRepository: getIt<StreakRepository>(),
+      workoutRepository: getIt<WorkoutSessionRepository>(),
+      personalRecordRepository: getIt<PersonalRecordRepository>(),
+      medicationLogRepository: getIt<MedicationLogRepository>(),
     ),
   );
 
