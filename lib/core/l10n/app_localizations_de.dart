@@ -1744,4 +1744,224 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get emailVerifiedPleaseLogin =>
       'E-Mail bestätigt. Bitte melde dich an.';
+
+  @override
+  String get glucose => 'Blutzucker';
+
+  @override
+  String get glucoseReadings => 'Blutzuckerwerte';
+
+  @override
+  String get logGlucoseReading => 'Messung erfassen';
+
+  @override
+  String get noGlucoseReadings => 'Noch keine Messungen erfasst';
+
+  @override
+  String get glucoseValue => 'Wert';
+
+  @override
+  String get glucoseUnit => 'Einheit';
+
+  @override
+  String get glucoseUnitMgDl => 'mg/dL';
+
+  @override
+  String get glucoseUnitMmolL => 'mmol/L';
+
+  @override
+  String get glucoseMeasuredAt => 'Gemessen am';
+
+  @override
+  String get glucoseContext => 'Kontext';
+
+  @override
+  String get glucoseContextFasting => 'Nüchtern';
+
+  @override
+  String get glucoseContextPreMeal => 'Vor dem Essen';
+
+  @override
+  String get glucoseContextPostMeal => 'Nach dem Essen';
+
+  @override
+  String get glucoseContextOther => 'Sonstiges';
+
+  @override
+  String get glucoseContextNone => 'Nicht angegeben';
+
+  @override
+  String get glucoseSourceManual => 'Manuell eingegeben';
+
+  @override
+  String get glucoseSourceAppleHealth => 'Aus Apple Health';
+
+  @override
+  String get pleaseEnterGlucoseValue => 'Gib einen Wert ein';
+
+  @override
+  String get invalidGlucoseValue => 'Gib eine gültige Zahl ein';
+
+  @override
+  String get glucoseLoggedSuccess => 'Messung gespeichert';
+
+  @override
+  String errorLoggingGlucose(Object error) {
+    return 'Messung konnte nicht gespeichert werden: $error';
+  }
+
+  @override
+  String get glucoseToday => 'Letzte 24 Stunden';
+
+  @override
+  String get noGlucoseInWindow => 'Keine Messungen in den letzten 24 Stunden';
+
+  @override
+  String glucoseReadingCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Messungen',
+      one: 'Messung',
+    );
+    return '$count $_temp0';
+  }
+
+  @override
+  String get chartLegendReadings => 'Messungen';
+
+  @override
+  String get chartLegendMeals => 'Mahlzeiten';
+
+  @override
+  String get meals => 'Mahlzeiten';
+
+  @override
+  String get logMeal => 'Mahlzeit erfassen';
+
+  @override
+  String get noMealsLogged => 'Noch keine Mahlzeiten erfasst';
+
+  @override
+  String get mealName => 'Mahlzeit';
+
+  @override
+  String get mealEatenAt => 'Gegessen am';
+
+  @override
+  String get mealTags => 'Tags';
+
+  @override
+  String get pleaseEnterMealName => 'Gib einen Namen für die Mahlzeit ein';
+
+  @override
+  String get mealLoggedSuccess => 'Mahlzeit gespeichert';
+
+  @override
+  String errorLoggingMeal(Object error) {
+    return 'Mahlzeit konnte nicht gespeichert werden: $error';
+  }
+
+  @override
+  String mealCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Mahlzeiten',
+      one: 'Mahlzeit',
+    );
+    return '$count $_temp0';
+  }
+
+  @override
+  String get mealTagBreakfast => 'Frühstück';
+
+  @override
+  String get mealTagLunch => 'Mittagessen';
+
+  @override
+  String get mealTagDinner => 'Abendessen';
+
+  @override
+  String get mealTagSnack => 'Snack';
+
+  @override
+  String get mealTagDrink => 'Getränk';
+
+  @override
+  String get mealTagEatingOut => 'Auswärts';
+
+  @override
+  String get healthSources => 'Gesundheitsquellen';
+
+  @override
+  String get healthSourcesSubtitle => 'Apple-Health-Verbindung und Importe';
+
+  @override
+  String get appleHealth => 'Apple Health';
+
+  @override
+  String get healthSourceConnected => 'Verbunden';
+
+  @override
+  String get healthSourceNotConnected => 'Nicht verbunden';
+
+  @override
+  String get healthSourceConnect => 'Verbinden';
+
+  @override
+  String get healthSourceDisconnect => 'Verbindung trennen';
+
+  @override
+  String get healthSourceImportNow => 'Jetzt importieren';
+
+  @override
+  String get healthSourceLastImport => 'Letzter Import';
+
+  @override
+  String get healthSourceNeverImported => 'Nie';
+
+  @override
+  String get healthSourceReadOnlyNotice =>
+      'VitalSync liest nur aus Apple Health. Es schreibt niemals dorthin.';
+
+  @override
+  String healthSourceImported(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Aufzeichnungen',
+      one: 'Aufzeichnung',
+    );
+    return '$count neue $_temp0 importiert';
+  }
+
+  @override
+  String get healthSourceNothingNew => 'Keine neuen Aufzeichnungen';
+
+  @override
+  String healthSourceImportFailed(Object error) {
+    return 'Import fehlgeschlagen: $error';
+  }
+
+  @override
+  String get healthSourceDisconnected => 'Verbindung zu Apple Health getrennt';
+
+  @override
+  String get healthSourceTypesTitle => 'Gelesene Daten';
+
+  @override
+  String get healthSourceTypeGlucose => 'Blutzucker';
+
+  @override
+  String get healthSourceTypeSteps => 'Schritte';
+
+  @override
+  String get healthSourceTypeActiveEnergy => 'Aktive Energie';
+
+  @override
+  String get healthSourceTypeWorkouts => 'Workouts';
+
+  @override
+  String get healthSourceTypeSleep => 'Schlaf';
 }

@@ -1722,4 +1722,224 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get emailVerifiedPleaseLogin => 'Email verified. Please log in.';
+
+  @override
+  String get glucose => 'Glucose';
+
+  @override
+  String get glucoseReadings => 'Glucose Readings';
+
+  @override
+  String get logGlucoseReading => 'Log Reading';
+
+  @override
+  String get noGlucoseReadings => 'No readings logged yet';
+
+  @override
+  String get glucoseValue => 'Value';
+
+  @override
+  String get glucoseUnit => 'Unit';
+
+  @override
+  String get glucoseUnitMgDl => 'mg/dL';
+
+  @override
+  String get glucoseUnitMmolL => 'mmol/L';
+
+  @override
+  String get glucoseMeasuredAt => 'Measured at';
+
+  @override
+  String get glucoseContext => 'Context';
+
+  @override
+  String get glucoseContextFasting => 'Fasting';
+
+  @override
+  String get glucoseContextPreMeal => 'Before meal';
+
+  @override
+  String get glucoseContextPostMeal => 'After meal';
+
+  @override
+  String get glucoseContextOther => 'Other';
+
+  @override
+  String get glucoseContextNone => 'Not specified';
+
+  @override
+  String get glucoseSourceManual => 'Entered manually';
+
+  @override
+  String get glucoseSourceAppleHealth => 'From Apple Health';
+
+  @override
+  String get pleaseEnterGlucoseValue => 'Enter a value';
+
+  @override
+  String get invalidGlucoseValue => 'Enter a valid number';
+
+  @override
+  String get glucoseLoggedSuccess => 'Reading saved';
+
+  @override
+  String errorLoggingGlucose(Object error) {
+    return 'Could not save the reading: $error';
+  }
+
+  @override
+  String get glucoseToday => 'Last 24 Hours';
+
+  @override
+  String get noGlucoseInWindow => 'No readings in the last 24 hours';
+
+  @override
+  String glucoseReadingCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'readings',
+      one: 'reading',
+    );
+    return '$count $_temp0';
+  }
+
+  @override
+  String get chartLegendReadings => 'Readings';
+
+  @override
+  String get chartLegendMeals => 'Meals';
+
+  @override
+  String get meals => 'Meals';
+
+  @override
+  String get logMeal => 'Log Meal';
+
+  @override
+  String get noMealsLogged => 'No meals logged yet';
+
+  @override
+  String get mealName => 'Meal';
+
+  @override
+  String get mealEatenAt => 'Eaten at';
+
+  @override
+  String get mealTags => 'Tags';
+
+  @override
+  String get pleaseEnterMealName => 'Enter a meal name';
+
+  @override
+  String get mealLoggedSuccess => 'Meal saved';
+
+  @override
+  String errorLoggingMeal(Object error) {
+    return 'Could not save the meal: $error';
+  }
+
+  @override
+  String mealCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'meals',
+      one: 'meal',
+    );
+    return '$count $_temp0';
+  }
+
+  @override
+  String get mealTagBreakfast => 'Breakfast';
+
+  @override
+  String get mealTagLunch => 'Lunch';
+
+  @override
+  String get mealTagDinner => 'Dinner';
+
+  @override
+  String get mealTagSnack => 'Snack';
+
+  @override
+  String get mealTagDrink => 'Drink';
+
+  @override
+  String get mealTagEatingOut => 'Eating out';
+
+  @override
+  String get healthSources => 'Health Sources';
+
+  @override
+  String get healthSourcesSubtitle => 'Apple Health connection and imports';
+
+  @override
+  String get appleHealth => 'Apple Health';
+
+  @override
+  String get healthSourceConnected => 'Connected';
+
+  @override
+  String get healthSourceNotConnected => 'Not connected';
+
+  @override
+  String get healthSourceConnect => 'Connect';
+
+  @override
+  String get healthSourceDisconnect => 'Disconnect';
+
+  @override
+  String get healthSourceImportNow => 'Import now';
+
+  @override
+  String get healthSourceLastImport => 'Last import';
+
+  @override
+  String get healthSourceNeverImported => 'Never';
+
+  @override
+  String get healthSourceReadOnlyNotice =>
+      'VitalSync only reads from Apple Health. It never writes to it.';
+
+  @override
+  String healthSourceImported(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'records',
+      one: 'record',
+    );
+    return '$count new $_temp0 imported';
+  }
+
+  @override
+  String get healthSourceNothingNew => 'No new records';
+
+  @override
+  String healthSourceImportFailed(Object error) {
+    return 'Import failed: $error';
+  }
+
+  @override
+  String get healthSourceDisconnected => 'Disconnected from Apple Health';
+
+  @override
+  String get healthSourceTypesTitle => 'Data read';
+
+  @override
+  String get healthSourceTypeGlucose => 'Blood glucose';
+
+  @override
+  String get healthSourceTypeSteps => 'Steps';
+
+  @override
+  String get healthSourceTypeActiveEnergy => 'Active energy';
+
+  @override
+  String get healthSourceTypeWorkouts => 'Workouts';
+
+  @override
+  String get healthSourceTypeSleep => 'Sleep';
 }

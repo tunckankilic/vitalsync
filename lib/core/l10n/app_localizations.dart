@@ -3255,6 +3255,384 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Email verified. Please log in.'**
   String get emailVerifiedPleaseLogin;
+
+  /// Glucose section label
+  ///
+  /// In en, this message translates to:
+  /// **'Glucose'**
+  String get glucose;
+
+  /// Glucose list screen title
+  ///
+  /// In en, this message translates to:
+  /// **'Glucose Readings'**
+  String get glucoseReadings;
+
+  /// Add glucose reading button label
+  ///
+  /// In en, this message translates to:
+  /// **'Log Reading'**
+  String get logGlucoseReading;
+
+  /// Glucose list empty state
+  ///
+  /// In en, this message translates to:
+  /// **'No readings logged yet'**
+  String get noGlucoseReadings;
+
+  /// Glucose value input label
+  ///
+  /// In en, this message translates to:
+  /// **'Value'**
+  String get glucoseValue;
+
+  /// Glucose unit selector label
+  ///
+  /// In en, this message translates to:
+  /// **'Unit'**
+  String get glucoseUnit;
+
+  /// Milligrams per decilitre unit suffix
+  ///
+  /// In en, this message translates to:
+  /// **'mg/dL'**
+  String get glucoseUnitMgDl;
+
+  /// Millimoles per litre unit suffix
+  ///
+  /// In en, this message translates to:
+  /// **'mmol/L'**
+  String get glucoseUnitMmolL;
+
+  /// Glucose measurement time label
+  ///
+  /// In en, this message translates to:
+  /// **'Measured at'**
+  String get glucoseMeasuredAt;
+
+  /// Meal context selector label
+  ///
+  /// In en, this message translates to:
+  /// **'Context'**
+  String get glucoseContext;
+
+  /// Meal context: fasting
+  ///
+  /// In en, this message translates to:
+  /// **'Fasting'**
+  String get glucoseContextFasting;
+
+  /// Meal context: before a meal
+  ///
+  /// In en, this message translates to:
+  /// **'Before meal'**
+  String get glucoseContextPreMeal;
+
+  /// Meal context: after a meal
+  ///
+  /// In en, this message translates to:
+  /// **'After meal'**
+  String get glucoseContextPostMeal;
+
+  /// Meal context: other
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get glucoseContextOther;
+
+  /// No meal context recorded
+  ///
+  /// In en, this message translates to:
+  /// **'Not specified'**
+  String get glucoseContextNone;
+
+  /// Reading was typed in by the user
+  ///
+  /// In en, this message translates to:
+  /// **'Entered manually'**
+  String get glucoseSourceManual;
+
+  /// Reading was imported from Apple Health
+  ///
+  /// In en, this message translates to:
+  /// **'From Apple Health'**
+  String get glucoseSourceAppleHealth;
+
+  /// Validation: glucose value is empty
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a value'**
+  String get pleaseEnterGlucoseValue;
+
+  /// Validation: glucose value is not a number
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a valid number'**
+  String get invalidGlucoseValue;
+
+  /// Snackbar after saving a glucose reading
+  ///
+  /// In en, this message translates to:
+  /// **'Reading saved'**
+  String get glucoseLoggedSuccess;
+
+  /// Snackbar when saving a glucose reading fails
+  ///
+  /// In en, this message translates to:
+  /// **'Could not save the reading: {error}'**
+  String errorLoggingGlucose(Object error);
+
+  /// Glucose timeline screen title
+  ///
+  /// In en, this message translates to:
+  /// **'Last 24 Hours'**
+  String get glucoseToday;
+
+  /// Glucose timeline empty state
+  ///
+  /// In en, this message translates to:
+  /// **'No readings in the last 24 hours'**
+  String get noGlucoseInWindow;
+
+  /// Count of glucose readings
+  ///
+  /// In en, this message translates to:
+  /// **'{count} {count, plural, =1{reading} other{readings}}'**
+  String glucoseReadingCount(int count);
+
+  /// Glucose timeline chart legend: the measurement line
+  ///
+  /// In en, this message translates to:
+  /// **'Readings'**
+  String get chartLegendReadings;
+
+  /// Glucose timeline chart legend: the meal markers
+  ///
+  /// In en, this message translates to:
+  /// **'Meals'**
+  String get chartLegendMeals;
+
+  /// Meal list screen title
+  ///
+  /// In en, this message translates to:
+  /// **'Meals'**
+  String get meals;
+
+  /// Add meal button label
+  ///
+  /// In en, this message translates to:
+  /// **'Log Meal'**
+  String get logMeal;
+
+  /// Meal list empty state
+  ///
+  /// In en, this message translates to:
+  /// **'No meals logged yet'**
+  String get noMealsLogged;
+
+  /// Meal name input label
+  ///
+  /// In en, this message translates to:
+  /// **'Meal'**
+  String get mealName;
+
+  /// Meal time label
+  ///
+  /// In en, this message translates to:
+  /// **'Eaten at'**
+  String get mealEatenAt;
+
+  /// Meal tag selector label
+  ///
+  /// In en, this message translates to:
+  /// **'Tags'**
+  String get mealTags;
+
+  /// Validation: meal name is empty
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a meal name'**
+  String get pleaseEnterMealName;
+
+  /// Snackbar after saving a meal
+  ///
+  /// In en, this message translates to:
+  /// **'Meal saved'**
+  String get mealLoggedSuccess;
+
+  /// Snackbar when saving a meal fails
+  ///
+  /// In en, this message translates to:
+  /// **'Could not save the meal: {error}'**
+  String errorLoggingMeal(Object error);
+
+  /// Count of logged meals
+  ///
+  /// In en, this message translates to:
+  /// **'{count} {count, plural, =1{meal} other{meals}}'**
+  String mealCount(int count);
+
+  /// Meal tag suggestion
+  ///
+  /// In en, this message translates to:
+  /// **'Breakfast'**
+  String get mealTagBreakfast;
+
+  /// Meal tag suggestion
+  ///
+  /// In en, this message translates to:
+  /// **'Lunch'**
+  String get mealTagLunch;
+
+  /// Meal tag suggestion
+  ///
+  /// In en, this message translates to:
+  /// **'Dinner'**
+  String get mealTagDinner;
+
+  /// Meal tag suggestion
+  ///
+  /// In en, this message translates to:
+  /// **'Snack'**
+  String get mealTagSnack;
+
+  /// Meal tag suggestion
+  ///
+  /// In en, this message translates to:
+  /// **'Drink'**
+  String get mealTagDrink;
+
+  /// Meal tag suggestion
+  ///
+  /// In en, this message translates to:
+  /// **'Eating out'**
+  String get mealTagEatingOut;
+
+  /// Health sources settings screen title
+  ///
+  /// In en, this message translates to:
+  /// **'Health Sources'**
+  String get healthSources;
+
+  /// Health sources settings tile subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Apple Health connection and imports'**
+  String get healthSourcesSubtitle;
+
+  /// Name of the Apple Health data source
+  ///
+  /// In en, this message translates to:
+  /// **'Apple Health'**
+  String get appleHealth;
+
+  /// Apple Health read access is granted
+  ///
+  /// In en, this message translates to:
+  /// **'Connected'**
+  String get healthSourceConnected;
+
+  /// Apple Health read access is not granted
+  ///
+  /// In en, this message translates to:
+  /// **'Not connected'**
+  String get healthSourceNotConnected;
+
+  /// Request Apple Health read access
+  ///
+  /// In en, this message translates to:
+  /// **'Connect'**
+  String get healthSourceConnect;
+
+  /// Release Apple Health read access
+  ///
+  /// In en, this message translates to:
+  /// **'Disconnect'**
+  String get healthSourceDisconnect;
+
+  /// Run an Apple Health import immediately
+  ///
+  /// In en, this message translates to:
+  /// **'Import now'**
+  String get healthSourceImportNow;
+
+  /// Timestamp of the last successful import
+  ///
+  /// In en, this message translates to:
+  /// **'Last import'**
+  String get healthSourceLastImport;
+
+  /// No import has run yet
+  ///
+  /// In en, this message translates to:
+  /// **'Never'**
+  String get healthSourceNeverImported;
+
+  /// Read-only guarantee shown on the health sources screen
+  ///
+  /// In en, this message translates to:
+  /// **'VitalSync only reads from Apple Health. It never writes to it.'**
+  String get healthSourceReadOnlyNotice;
+
+  /// Result of an Apple Health import
+  ///
+  /// In en, this message translates to:
+  /// **'{count} new {count, plural, =1{record} other{records}} imported'**
+  String healthSourceImported(int count);
+
+  /// Import completed but found nothing new
+  ///
+  /// In en, this message translates to:
+  /// **'No new records'**
+  String get healthSourceNothingNew;
+
+  /// Snackbar when an Apple Health import fails
+  ///
+  /// In en, this message translates to:
+  /// **'Import failed: {error}'**
+  String healthSourceImportFailed(Object error);
+
+  /// Snackbar after disconnecting
+  ///
+  /// In en, this message translates to:
+  /// **'Disconnected from Apple Health'**
+  String get healthSourceDisconnected;
+
+  /// Header for the list of sample types read
+  ///
+  /// In en, this message translates to:
+  /// **'Data read'**
+  String get healthSourceTypesTitle;
+
+  /// Apple Health sample type read by VitalSync
+  ///
+  /// In en, this message translates to:
+  /// **'Blood glucose'**
+  String get healthSourceTypeGlucose;
+
+  /// Apple Health sample type read by VitalSync
+  ///
+  /// In en, this message translates to:
+  /// **'Steps'**
+  String get healthSourceTypeSteps;
+
+  /// Apple Health sample type read by VitalSync
+  ///
+  /// In en, this message translates to:
+  /// **'Active energy'**
+  String get healthSourceTypeActiveEnergy;
+
+  /// Apple Health sample type read by VitalSync
+  ///
+  /// In en, this message translates to:
+  /// **'Workouts'**
+  String get healthSourceTypeWorkouts;
+
+  /// Apple Health sample type read by VitalSync
+  ///
+  /// In en, this message translates to:
+  /// **'Sleep'**
+  String get healthSourceTypeSleep;
 }
 
 class _AppLocalizationsDelegate

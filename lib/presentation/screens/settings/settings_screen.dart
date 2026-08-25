@@ -182,6 +182,14 @@ class SettingsScreen extends ConsumerWidget {
                 onTap: () => _showHealthDisclaimer(context, l10n),
               ),
               _SettingsTile(
+                title: l10n.healthSources,
+                subtitle: l10n.healthSourcesSubtitle,
+                icon: Icons.favorite_outline_rounded,
+                onTap: () {
+                  context.pushNamed('health_sources');
+                },
+              ),
+              _SettingsTile(
                 title: l10n.manageConsents,
                 subtitle: l10n.manageConsentsSubtitle,
                 icon: Icons.shield_outlined,

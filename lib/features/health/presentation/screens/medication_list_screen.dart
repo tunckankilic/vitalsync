@@ -181,6 +181,20 @@ class _MedicationListScreenState extends ConsumerState<MedicationListScreen>
             tooltip: l10n.healthTimeline,
             style: tonalStyle,
           ),
+          const SizedBox(width: 8),
+          IconButton.filledTonal(
+            onPressed: () => context.push('/health/glucose'),
+            icon: const Icon(Icons.water_drop_outlined),
+            tooltip: l10n.glucose,
+            style: tonalStyle,
+          ),
+          const SizedBox(width: 8),
+          IconButton.filledTonal(
+            onPressed: () => context.push('/health/meals'),
+            icon: const Icon(Icons.restaurant_rounded),
+            tooltip: l10n.meals,
+            style: tonalStyle,
+          ),
           const Spacer(),
           IconButton.filledTonal(
             onPressed: () => setState(() => _isSearchVisible = true),

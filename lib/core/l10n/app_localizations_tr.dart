@@ -1737,4 +1737,207 @@ class AppLocalizationsTr extends AppLocalizations {
   @override
   String get emailVerifiedPleaseLogin =>
       'E-posta doğrulandı. Lütfen giriş yap.';
+
+  @override
+  String get glucose => 'Kan Şekeri';
+
+  @override
+  String get glucoseReadings => 'Kan Şekeri Ölçümleri';
+
+  @override
+  String get logGlucoseReading => 'Ölçüm Ekle';
+
+  @override
+  String get noGlucoseReadings => 'Henüz ölçüm kaydedilmedi';
+
+  @override
+  String get glucoseValue => 'Değer';
+
+  @override
+  String get glucoseUnit => 'Birim';
+
+  @override
+  String get glucoseUnitMgDl => 'mg/dL';
+
+  @override
+  String get glucoseUnitMmolL => 'mmol/L';
+
+  @override
+  String get glucoseMeasuredAt => 'Ölçüm zamanı';
+
+  @override
+  String get glucoseContext => 'Bağlam';
+
+  @override
+  String get glucoseContextFasting => 'Aç';
+
+  @override
+  String get glucoseContextPreMeal => 'Öğün öncesi';
+
+  @override
+  String get glucoseContextPostMeal => 'Öğün sonrası';
+
+  @override
+  String get glucoseContextOther => 'Diğer';
+
+  @override
+  String get glucoseContextNone => 'Belirtilmedi';
+
+  @override
+  String get glucoseSourceManual => 'Elle girildi';
+
+  @override
+  String get glucoseSourceAppleHealth => 'Apple Health\'ten';
+
+  @override
+  String get pleaseEnterGlucoseValue => 'Bir değer gir';
+
+  @override
+  String get invalidGlucoseValue => 'Geçerli bir sayı gir';
+
+  @override
+  String get glucoseLoggedSuccess => 'Ölçüm kaydedildi';
+
+  @override
+  String errorLoggingGlucose(Object error) {
+    return 'Ölçüm kaydedilemedi: $error';
+  }
+
+  @override
+  String get glucoseToday => 'Son 24 Saat';
+
+  @override
+  String get noGlucoseInWindow => 'Son 24 saatte ölçüm yok';
+
+  @override
+  String glucoseReadingCount(int count) {
+    return '$count ölçüm';
+  }
+
+  @override
+  String get chartLegendReadings => 'Ölçümler';
+
+  @override
+  String get chartLegendMeals => 'Öğünler';
+
+  @override
+  String get meals => 'Öğünler';
+
+  @override
+  String get logMeal => 'Öğün Ekle';
+
+  @override
+  String get noMealsLogged => 'Henüz öğün kaydedilmedi';
+
+  @override
+  String get mealName => 'Öğün';
+
+  @override
+  String get mealEatenAt => 'Yeme zamanı';
+
+  @override
+  String get mealTags => 'Etiketler';
+
+  @override
+  String get pleaseEnterMealName => 'Bir öğün adı gir';
+
+  @override
+  String get mealLoggedSuccess => 'Öğün kaydedildi';
+
+  @override
+  String errorLoggingMeal(Object error) {
+    return 'Öğün kaydedilemedi: $error';
+  }
+
+  @override
+  String mealCount(int count) {
+    return '$count öğün';
+  }
+
+  @override
+  String get mealTagBreakfast => 'Kahvaltı';
+
+  @override
+  String get mealTagLunch => 'Öğle yemeği';
+
+  @override
+  String get mealTagDinner => 'Akşam yemeği';
+
+  @override
+  String get mealTagSnack => 'Atıştırmalık';
+
+  @override
+  String get mealTagDrink => 'İçecek';
+
+  @override
+  String get mealTagEatingOut => 'Dışarıda';
+
+  @override
+  String get healthSources => 'Sağlık Kaynakları';
+
+  @override
+  String get healthSourcesSubtitle =>
+      'Apple Health bağlantısı ve içe aktarmalar';
+
+  @override
+  String get appleHealth => 'Apple Health';
+
+  @override
+  String get healthSourceConnected => 'Bağlı';
+
+  @override
+  String get healthSourceNotConnected => 'Bağlı değil';
+
+  @override
+  String get healthSourceConnect => 'Bağlan';
+
+  @override
+  String get healthSourceDisconnect => 'Bağlantıyı kes';
+
+  @override
+  String get healthSourceImportNow => 'Şimdi içe aktar';
+
+  @override
+  String get healthSourceLastImport => 'Son içe aktarma';
+
+  @override
+  String get healthSourceNeverImported => 'Hiç';
+
+  @override
+  String get healthSourceReadOnlyNotice =>
+      'VitalSync Apple Health\'ten yalnızca okur. Hiçbir zaman yazmaz.';
+
+  @override
+  String healthSourceImported(int count) {
+    return '$count yeni kayıt içe aktarıldı';
+  }
+
+  @override
+  String get healthSourceNothingNew => 'Yeni kayıt yok';
+
+  @override
+  String healthSourceImportFailed(Object error) {
+    return 'İçe aktarma başarısız: $error';
+  }
+
+  @override
+  String get healthSourceDisconnected => 'Apple Health bağlantısı kesildi';
+
+  @override
+  String get healthSourceTypesTitle => 'Okunan veriler';
+
+  @override
+  String get healthSourceTypeGlucose => 'Kan şekeri';
+
+  @override
+  String get healthSourceTypeSteps => 'Adım';
+
+  @override
+  String get healthSourceTypeActiveEnergy => 'Aktif enerji';
+
+  @override
+  String get healthSourceTypeWorkouts => 'Egzersizler';
+
+  @override
+  String get healthSourceTypeSleep => 'Uyku';
 }

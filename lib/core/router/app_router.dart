@@ -1,7 +1,7 @@
 /// VitalSync — go_router Navigation Configuration.
 ///
 /// Routes: splash, onboarding, auth, home (dashboard).
-/// Health routes: medications, symptoms, timeline, health-settings.
+/// Health routes: medications, symptoms, timeline, glucose, meals, health-settings.
 /// Fitness routes: workouts, exercises, progress, calendar, achievements.
 /// Insight routes: weekly-report, insight-detail.
 /// Shared routes: profile, settings, gdpr-settings, data-export.
@@ -29,8 +29,13 @@ import '../../features/fitness/presentation/screens/workout_home_screen.dart';
 import '../../features/fitness/presentation/screens/workout_summary_screen.dart';
 import '../../features/fitness/presentation/screens/workout_templates_screen.dart';
 import '../../features/health/presentation/screens/add_edit_medication_screen.dart';
+import '../../features/health/presentation/screens/add_glucose_reading_screen.dart';
+import '../../features/health/presentation/screens/add_meal_screen.dart';
 import '../../features/health/presentation/screens/add_symptom_screen.dart';
+import '../../features/health/presentation/screens/glucose_list_screen.dart';
+import '../../features/health/presentation/screens/glucose_today_screen.dart';
 import '../../features/health/presentation/screens/health_timeline_screen.dart';
+import '../../features/health/presentation/screens/meal_list_screen.dart';
 import '../../features/health/presentation/screens/medication_detail_screen.dart';
 import '../../features/health/presentation/screens/medication_list_screen.dart';
 import '../../features/health/presentation/screens/symptom_list_screen.dart';
@@ -45,6 +50,7 @@ import '../../presentation/screens/auth/register_screen.dart';
 import '../../presentation/screens/gdpr/consent_screen.dart';
 import '../../presentation/screens/profile/edit_profile_screen.dart';
 import '../../presentation/screens/profile/profile_screen.dart';
+import '../../presentation/screens/settings/health_sources_screen.dart';
 import '../../presentation/screens/settings/settings_screen.dart';
 import '../di/injection_container.dart';
 
@@ -256,6 +262,63 @@ final GoRouter appRouter = GoRouter(
                 const HealthTimelineScreen(),
               ),
             ),
+            GoRoute(
+              path: 'glucose',
+              name: 'glucose',
+              parentNavigatorKey: _rootNavigatorKey,
+              pageBuilder: (context, state) => _buildPageWithSlideTransition(
+                context,
+                state,
+                const GlucoseListScreen(),
+              ),
+              routes: [
+                GoRoute(
+                  path: 'add',
+                  name: 'add_glucose',
+                  parentNavigatorKey: _rootNavigatorKey,
+                  pageBuilder: (context, state) =>
+                      _buildPageWithSlideTransition(
+                        context,
+                        state,
+                        const AddGlucoseReadingScreen(),
+                      ),
+                ),
+                GoRoute(
+                  path: 'today',
+                  name: 'glucose_today',
+                  parentNavigatorKey: _rootNavigatorKey,
+                  pageBuilder: (context, state) =>
+                      _buildPageWithSlideTransition(
+                        context,
+                        state,
+                        const GlucoseTodayScreen(),
+                      ),
+                ),
+              ],
+            ),
+            GoRoute(
+              path: 'meals',
+              name: 'meals',
+              parentNavigatorKey: _rootNavigatorKey,
+              pageBuilder: (context, state) => _buildPageWithSlideTransition(
+                context,
+                state,
+                const MealListScreen(),
+              ),
+              routes: [
+                GoRoute(
+                  path: 'add',
+                  name: 'add_meal',
+                  parentNavigatorKey: _rootNavigatorKey,
+                  pageBuilder: (context, state) =>
+                      _buildPageWithSlideTransition(
+                        context,
+                        state,
+                        const AddMealScreen(),
+                      ),
+                ),
+              ],
+            ),
           ],
         ),
 
@@ -419,6 +482,18 @@ final GoRouter appRouter = GoRouter(
       parentNavigatorKey: _rootNavigatorKey,
       pageBuilder: (context, state) =>
           _buildPageWithSlideTransition(context, state, const SettingsScreen()),
+      routes: [
+        GoRoute(
+          path: 'health-sources',
+          name: 'health_sources',
+          parentNavigatorKey: _rootNavigatorKey,
+          pageBuilder: (context, state) => _buildPageWithSlideTransition(
+            context,
+            state,
+            const HealthSourcesScreen(),
+          ),
+        ),
+      ],
     ),
   ],
   redirect: (context, state) {
