@@ -38,9 +38,14 @@ Future<void> runMigrations(
 
     switch (target) {
       case 2:
-        // Example migration v1 → v2:
-        // await m.addColumn(db.medications, db.medications.someNewColumn);
-        // await m.addColumn(db.workoutSessions, db.workoutSessions.newField);
+        // v1 → v2: the 2.0 measurement layer.
+        // Additive only — no existing table is touched.
+        await m.createTable(db.glucoseReadings);
+        await m.createTable(db.meals);
+        await m.createTable(db.healthSamples);
+        await m.createTable(db.calibrationMetrics);
+        await m.create(db.idxGlucoseReadingsExternalId);
+        await m.create(db.idxHealthSamplesExternalId);
         break;
 
       case 3:

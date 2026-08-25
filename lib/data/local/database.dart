@@ -16,9 +16,13 @@ import 'package:vitalsync/core/enums/achievement_type.dart';
 import 'package:vitalsync/core/enums/equipment.dart';
 import 'package:vitalsync/core/enums/exercise_category.dart';
 import 'package:vitalsync/core/enums/gender.dart';
+import 'package:vitalsync/core/enums/glucose_source.dart';
+import 'package:vitalsync/core/enums/health_data_source_kind.dart';
+import 'package:vitalsync/core/enums/health_sample_type.dart';
 import 'package:vitalsync/core/enums/insight_category.dart';
 import 'package:vitalsync/core/enums/insight_priority.dart';
 import 'package:vitalsync/core/enums/insight_type.dart';
+import 'package:vitalsync/core/enums/meal_context.dart';
 import 'package:vitalsync/core/enums/medication_frequency.dart';
 import 'package:vitalsync/core/enums/medication_log_status.dart';
 import 'package:vitalsync/core/enums/sync_enums.dart';
@@ -27,8 +31,12 @@ import 'package:vitalsync/core/enums/workout_rating.dart';
 import 'package:vitalsync/data/local/daos/fitness/user_stats_dao.dart';
 // DAO imports
 import 'package:vitalsync/data/local/daos/fitness/workout_dao.dart';
+import 'package:vitalsync/data/local/daos/health/glucose_dao.dart';
+import 'package:vitalsync/data/local/daos/health/health_sample_dao.dart';
+import 'package:vitalsync/data/local/daos/health/meal_dao.dart';
 import 'package:vitalsync/data/local/daos/health/medication_dao.dart';
 import 'package:vitalsync/data/local/daos/insights/insight_dao.dart';
+import 'package:vitalsync/data/local/daos/shared/calibration_metric_dao.dart';
 import 'package:vitalsync/data/local/daos/shared/user_profile_dao.dart';
 import 'package:vitalsync/data/local/migrations.dart';
 // Table imports - Fitness
@@ -41,12 +49,16 @@ import 'package:vitalsync/data/local/tables/fitness/workout_sessions_table.dart'
 import 'package:vitalsync/data/local/tables/fitness/workout_sets_table.dart';
 import 'package:vitalsync/data/local/tables/fitness/workout_templates_table.dart';
 // Table imports - Health
+import 'package:vitalsync/data/local/tables/health/glucose_readings_table.dart';
+import 'package:vitalsync/data/local/tables/health/health_samples_table.dart';
+import 'package:vitalsync/data/local/tables/health/meals_table.dart';
 import 'package:vitalsync/data/local/tables/health/medication_logs_table.dart';
 import 'package:vitalsync/data/local/tables/health/medications_table.dart';
 import 'package:vitalsync/data/local/tables/health/symptoms_table.dart';
 // Table imports - Insights
 import 'package:vitalsync/data/local/tables/insights/generated_insights_table.dart';
 // Table imports - Shared
+import 'package:vitalsync/data/local/tables/shared/calibration_metrics_table.dart';
 import 'package:vitalsync/data/local/tables/shared/gdpr_consent_log_table.dart';
 import 'package:vitalsync/data/local/tables/shared/sync_queue_table.dart';
 import 'package:vitalsync/data/local/tables/shared/user_profile_table.dart';
@@ -63,10 +75,14 @@ part 'database.g.dart';
     UserProfiles,
     GdprConsentLogs,
     SyncQueue,
+    CalibrationMetrics,
     // Health module tables
     Medications,
     MedicationLogs,
     Symptoms,
+    GlucoseReadings,
+    Meals,
+    HealthSamples,
     // Fitness module tables
     Exercises,
     WorkoutTemplates,
@@ -84,10 +100,14 @@ part 'database.g.dart';
     UserDao,
     GdprDao,
     SyncDao,
+    CalibrationMetricDao,
     // Health DAOs
     MedicationDao,
     MedicationLogDao,
     SymptomDao,
+    GlucoseDao,
+    MealDao,
+    HealthSampleDao,
     // Fitness DAOs
     ExerciseDao,
     WorkoutTemplateDao,
@@ -111,7 +131,7 @@ class AppDatabase extends _$AppDatabase {
   /// Database schema version.
   /// Increment this when making schema changes and provide migration logic.
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
 
   /// Database migration strategy.
   @override
@@ -162,6 +182,12 @@ class AppDatabase extends _$AppDatabase {
       DateTime.now(),
     );
     final symptoms = await symptomDao.getAll();
+    final glucoseReadingRows = await glucoseDao.getAll();
+    final mealRows = await mealDao.getAll();
+    final healthSampleRows = await healthSampleDao.getAll();
+
+    // Export calibration counters
+    final calibrationMetricRows = await calibrationMetricDao.getAll();
 
     // Export fitness data
     final exercises = await exerciseDao.getAll();
@@ -189,7 +215,15 @@ class AppDatabase extends _$AppDatabase {
         'medications': medications.map(_medicationToJson).toList(),
         'medication_logs': medicationLogs.map(_medicationLogToJson).toList(),
         'symptoms': symptoms.map(_symptomToJson).toList(),
+        'glucose_readings': glucoseReadingRows
+            .map(_glucoseReadingToJson)
+            .toList(),
+        'meals': mealRows.map(_mealToJson).toList(),
+        'health_samples': healthSampleRows.map(_healthSampleToJson).toList(),
       },
+      'calibration_metrics': calibrationMetricRows
+          .map(_calibrationMetricToJson)
+          .toList(),
       'fitness': {
         'exercises': exercises.map(_exerciseToJson).toList(),
         'workout_templates': templates.map(_templateToJson).toList(),
@@ -224,8 +258,12 @@ class AppDatabase extends _$AppDatabase {
       await delete(medicationLogs).go();
       await delete(medications).go();
       await delete(symptoms).go();
+      await delete(glucoseReadings).go();
+      await delete(meals).go();
+      await delete(healthSamples).go();
 
       // Delete shared data
+      await delete(calibrationMetrics).go();
       await delete(syncQueue).go();
       await delete(gdprConsentLogs).go();
       await delete(userProfiles).go();
@@ -279,6 +317,51 @@ class AppDatabase extends _$AppDatabase {
     'date': data.date.toIso8601String(),
     'notes': data.notes,
     'tags': data.tags,
+    'created_at': data.createdAt.toIso8601String(),
+  };
+
+  Map<String, dynamic> _glucoseReadingToJson(GlucoseReadingData data) => {
+    'id': data.id,
+    'value_mg_dl': data.valueMgDl,
+    'measured_at': data.measuredAt.toIso8601String(),
+    'source': data.source.name,
+    'external_id': data.externalId,
+    'meal_context': data.mealContext?.name,
+    'notes': data.notes,
+    'created_at': data.createdAt.toIso8601String(),
+  };
+
+  Map<String, dynamic> _mealToJson(MealData data) => {
+    'id': data.id,
+    'name': data.name,
+    'eaten_at': data.eatenAt.toIso8601String(),
+    'notes': data.notes,
+    'tags': data.tags,
+    'created_at': data.createdAt.toIso8601String(),
+  };
+
+  Map<String, dynamic> _healthSampleToJson(HealthSampleData data) => {
+    'id': data.id,
+    'type': data.type.name,
+    'start_at': data.startAt.toIso8601String(),
+    'end_at': data.endAt?.toIso8601String(),
+    'value': data.value,
+    'unit': data.unit,
+    'source': data.source.name,
+    'external_id': data.externalId,
+    'metadata': data.metadata,
+    'created_at': data.createdAt.toIso8601String(),
+  };
+
+  Map<String, dynamic> _calibrationMetricToJson(CalibrationMetricData data) => {
+    'id': data.id,
+    'week_start': data.weekStart.toIso8601String(),
+    'meals_logged': data.mealsLogged,
+    'glucose_readings': data.glucoseReadings,
+    'manual_readings': data.manualReadings,
+    'covered_meals': data.coveredMeals,
+    'uncovered_reasons': data.uncoveredReasons,
+    'app_version': data.appVersion,
     'created_at': data.createdAt.toIso8601String(),
   };
 

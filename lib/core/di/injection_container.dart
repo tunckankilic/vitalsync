@@ -25,11 +25,15 @@ import '../../data/repositories/fitness/personal_record_repository_impl.dart';
 import '../../data/repositories/fitness/streak_repository_impl.dart';
 import '../../data/repositories/fitness/workout_session_repository_impl.dart';
 import '../../data/repositories/fitness/workout_template_repository_impl.dart';
+import '../../data/repositories/health/glucose_repository_impl.dart';
+import '../../data/repositories/health/health_sample_repository_impl.dart';
+import '../../data/repositories/health/meal_repository_impl.dart';
 import '../../data/repositories/health/medication_log_repository_impl.dart';
 // Repositories Implementations
 import '../../data/repositories/health/medication_repository_impl.dart';
 import '../../data/repositories/health/symptom_repository_impl.dart';
 import '../../data/repositories/insights/insight_repository_impl.dart';
+import '../../data/repositories/shared/calibration_metric_repository_impl.dart';
 import '../../data/repositories/shared/cognito_auth_repository_impl.dart';
 import '../../data/repositories/shared/sync_repository_impl.dart';
 import '../../data/repositories/shared/user_repository_impl.dart';
@@ -39,12 +43,16 @@ import '../../domain/repositories/fitness/personal_record_repository.dart';
 import '../../domain/repositories/fitness/streak_repository.dart';
 import '../../domain/repositories/fitness/workout_session_repository.dart';
 import '../../domain/repositories/fitness/workout_template_repository.dart';
+import '../../domain/repositories/health/glucose_repository.dart';
+import '../../domain/repositories/health/health_sample_repository.dart';
+import '../../domain/repositories/health/meal_repository.dart';
 import '../../domain/repositories/health/medication_log_repository.dart';
 // Repository Interfaces
 import '../../domain/repositories/health/medication_repository.dart';
 import '../../domain/repositories/health/symptom_repository.dart';
 import '../../domain/repositories/insights/insight_repository.dart';
 import '../../domain/repositories/shared/auth_repository.dart';
+import '../../domain/repositories/shared/calibration_metric_repository.dart';
 import '../../domain/repositories/shared/sync_repository.dart';
 import '../../domain/repositories/shared/user_repository.dart';
 // Services
@@ -187,6 +195,24 @@ Future<void> initializeDependencies() async {
 
   getIt.registerLazySingleton<SymptomRepository>(
     () => SymptomRepositoryImpl(getIt<AppDatabase>().symptomDao),
+  );
+
+  getIt.registerLazySingleton<GlucoseRepository>(
+    () => GlucoseRepositoryImpl(getIt<AppDatabase>().glucoseDao),
+  );
+
+  getIt.registerLazySingleton<MealRepository>(
+    () => MealRepositoryImpl(getIt<AppDatabase>().mealDao),
+  );
+
+  getIt.registerLazySingleton<HealthSampleRepository>(
+    () => HealthSampleRepositoryImpl(getIt<AppDatabase>().healthSampleDao),
+  );
+
+  getIt.registerLazySingleton<CalibrationMetricRepository>(
+    () => CalibrationMetricRepositoryImpl(
+      getIt<AppDatabase>().calibrationMetricDao,
+    ),
   );
 
   // FITNESS MODULE - Repositories
