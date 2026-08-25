@@ -1076,6 +1076,7 @@
     }
   },
   "bestWorkout": "En iyi antrenman: {name} — {volume}kg",
+  "bestDay": "En iyi gün: {day}",
   "@bestWorkout": {
     "placeholders": {
       "name": {

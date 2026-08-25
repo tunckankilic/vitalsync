@@ -2962,6 +2962,12 @@ abstract class AppLocalizations {
   /// **'Best workout: {name} — {volume}kg'**
   String bestWorkout(String name, String volume);
 
+  /// Weekly report: the weekday the service picked as the best of the week
+  ///
+  /// In en, this message translates to:
+  /// **'Best day: {day}'**
+  String bestDay(String day);
+
   /// No description provided for @newPersonalRecords.
   ///
   /// In en, this message translates to:

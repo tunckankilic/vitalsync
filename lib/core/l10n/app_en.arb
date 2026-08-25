@@ -1111,6 +1111,11 @@
   "@bestWorkout": {
     "placeholders": { "name": { "type": "String" }, "volume": { "type": "String" } }
   },
+  "bestDay": "Best day: {day}",
+  "@bestDay": {
+    "description": "Weekly report: the weekday the service picked as the best of the week",
+    "placeholders": { "day": { "type": "String" } }
+  },
   "newPersonalRecords": "New Personal Records",
   "validUntilDays": "Valid until {days} days",
   "@validUntilDays": {

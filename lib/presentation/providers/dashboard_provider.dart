@@ -120,9 +120,12 @@ Future<DashboardSummary> dashboardSummary(Ref ref) async {
   // Get health score from weekly report
   var healthScore = 0.0;
   try {
-    final weeklyReport = await ref.watch(weeklyReportProvider.future);
-    final crossModule = weeklyReport['cross_module'] as Map<String, dynamic>?;
-    healthScore = (crossModule?['health_score'] as num?)?.toDouble() ?? 0.0;
+    // Read off the entity. This used to dig into the export JSON under a
+    // 'cross_module' key that never existed (the export nests it under
+    // 'cross_module_highlights'), so the score silently read as 0 without
+    // ever reaching the fallback below.
+    final weeklyReport = await ref.watch(weeklyReportProvider().future);
+    healthScore = weeklyReport.healthScore;
   } catch (e) {
     // If weekly report fails, calculate basic health score
     // Formula: compliance 40% + workout consistency 30% + 30% baseline

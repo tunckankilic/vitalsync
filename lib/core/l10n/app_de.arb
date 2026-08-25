@@ -1076,6 +1076,7 @@
     }
   },
   "bestWorkout": "Bestes Training: {name} — {volume}kg",
+  "bestDay": "Bester Tag: {day}",
   "@bestWorkout": {
     "placeholders": {
       "name": {

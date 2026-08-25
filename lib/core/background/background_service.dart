@@ -834,6 +834,7 @@ Future<void> _handleWeeklyReport(_BackgroundDeps deps) async {
     mealRepository: mealRepo,
     glucoseRepository: glucoseRepo,
     coverageService: coverageService,
+    exerciseRepository: ExerciseRepositoryImpl(deps.db.exerciseDao),
   );
 
   await reportService.generateCurrentWeekReport();

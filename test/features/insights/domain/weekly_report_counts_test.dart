@@ -10,6 +10,7 @@ import 'package:vitalsync/core/enums/glucose_source.dart';
 import 'package:vitalsync/domain/entities/health/glucose_reading.dart';
 import 'package:vitalsync/domain/entities/health/meal.dart';
 import 'package:vitalsync/domain/entities/insights/weekly_report.dart';
+import 'package:vitalsync/domain/repositories/fitness/exercise_repository.dart';
 import 'package:vitalsync/domain/repositories/fitness/personal_record_repository.dart';
 import 'package:vitalsync/domain/repositories/fitness/streak_repository.dart';
 import 'package:vitalsync/domain/repositories/fitness/workout_session_repository.dart';
@@ -43,6 +44,8 @@ class _MockGlucoseRepository extends Mock implements GlucoseRepository {}
 
 class _MockHealthSampleRepository extends Mock
     implements HealthSampleRepository {}
+
+class _MockExerciseRepository extends Mock implements ExerciseRepository {}
 
 void main() {
   final weekStart = DateTime(2026, 8, 24);
@@ -120,6 +123,7 @@ void main() {
         glucoseRepository: glucoseRepository,
         healthSampleRepository: healthSampleRepository,
       ),
+      exerciseRepository: _MockExerciseRepository(),
     );
   });
 

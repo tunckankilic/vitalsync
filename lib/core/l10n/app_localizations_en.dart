@@ -1550,6 +1550,11 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String bestDay(String day) {
+    return 'Best day: $day';
+  }
+
+  @override
   String get newPersonalRecords => 'New Personal Records';
 
   @override

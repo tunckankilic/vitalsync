@@ -16,6 +16,7 @@ import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../../../../core/l10n/app_localizations.dart';
+import '../../../../domain/entities/insights/weekly_report.dart';
 import '../../../../presentation/widgets/glassmorphic_card.dart';
 import '../providers/weekly_report_provider.dart';
 import '../widgets/charts/activity_rings.dart';
@@ -58,7 +59,9 @@ class _WeeklyReportScreenState extends ConsumerState<WeeklyReportScreen> {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    final reportAsync = ref.watch(weeklyReportProvider);
+    final reportAsync = ref.watch(
+      weeklyReportProvider(weekStart: _selectedWeekStart),
+    );
 
     return Scaffold(
       appBar: AppBar(
@@ -133,7 +136,7 @@ class _WeeklyReportScreenState extends ConsumerState<WeeklyReportScreen> {
   }
 
   Widget _buildReportContent(
-    Map<String, dynamic> report,
+    WeeklyReport report,
     ThemeData theme,
     ColorScheme colorScheme,
   ) {
@@ -177,28 +180,23 @@ class _WeeklyReportScreenState extends ConsumerState<WeeklyReportScreen> {
   }
 
   Widget _buildHealthSummaryCard(
-    Map<String, dynamic> report,
+    WeeklyReport report,
     ThemeData theme,
     ColorScheme colorScheme,
   ) {
-    final complianceRate = (report['compliance_rate'] as num?)?.toDouble() ?? 0;
-    final takenCount = (report['taken_count'] as int?) ?? 0;
-    final missedCount = (report['missed_count'] as int?) ?? 0;
-    final skippedCount = (report['skipped_count'] as int?) ?? 0;
-    final previousComplianceRate =
-        (report['previous_compliance_rate'] as num?)?.toDouble() ?? 0;
-    final problematicTimeSlot = report['problematic_time_slot'] as String?;
+    final complianceRate = report.medicationCompliance;
+    final takenCount = report.takenMedicationsCount;
+    final missedCount = report.missedMedicationsCount;
+    final skippedCount = report.skippedMedicationsCount;
+    final problematicTimeSlot = report.mostProblematicTimeSlot;
 
-    // Measurement counts come from the nested health summary the service
-    // serializes; they are counts of rows in the week, nothing more.
-    final healthSummary = report['health_summary'] as Map<String, dynamic>?;
-    final mealsLogged = (healthSummary?['meals_logged_count'] as int?) ?? 0;
-    final glucoseReadings =
-        (healthSummary?['glucose_readings_count'] as int?) ?? 0;
-    final mealsWithCoverage =
-        (healthSummary?['meals_with_coverage_count'] as int?) ?? 0;
+    // Counts of rows in the week, nothing more.
+    final mealsLogged = report.mealsLoggedCount;
+    final glucoseReadings = report.glucoseReadingsCount;
+    final mealsWithCoverage = report.mealsWithCoverageCount;
 
-    final complianceChange = complianceRate - previousComplianceRate;
+    final complianceChange =
+        complianceRate - report.previousMedicationCompliance;
 
     final l10n = AppLocalizations.of(context);
 
@@ -345,18 +343,16 @@ class _WeeklyReportScreenState extends ConsumerState<WeeklyReportScreen> {
   }
 
   Widget _buildFitnessSummaryCard(
-    Map<String, dynamic> report,
+    WeeklyReport report,
     ThemeData theme,
     ColorScheme colorScheme,
   ) {
-    final workoutCount = (report['workout_count'] as int?) ?? 0;
-    final totalVolume = (report['total_volume'] as num?)?.toDouble() ?? 0;
-    final totalDuration = (report['total_duration'] as int?) ?? 0;
-    final newPRs = (report['new_prs'] as List<dynamic>?) ?? [];
-    final dailyVolumes = (report['daily_volumes'] as List<dynamic>?) ?? [];
-    final previousDailyVolumes =
-        (report['previous_daily_volumes'] as List<dynamic>?) ?? [];
-    final bestWorkout = report['best_workout'] as Map<String, dynamic>?;
+    final workoutCount = report.workoutCount;
+    final totalVolume = report.totalVolume;
+    final totalDuration = report.totalWorkoutDuration;
+    final newPRs = report.newPRs;
+    final dailyVolumes = report.dailyVolumes;
+    final previousDailyVolumes = report.previousDailyVolumes;
     final l10n = AppLocalizations.of(context);
 
     return GlassmorphicCard(
@@ -380,10 +376,10 @@ class _WeeklyReportScreenState extends ConsumerState<WeeklyReportScreen> {
                   (index) => VolumeDataPoint(
                     day: ['M', 'T', 'W', 'T', 'F', 'S', 'S'][index],
                     currentVolume: index < dailyVolumes.length
-                        ? (dailyVolumes[index] as num).toDouble()
+                        ? dailyVolumes[index]
                         : 0,
                     previousVolume: index < previousDailyVolumes.length
-                        ? (previousDailyVolumes[index] as num).toDouble()
+                        ? previousDailyVolumes[index]
                         : 0,
                   ),
                 ),
@@ -415,7 +411,7 @@ class _WeeklyReportScreenState extends ConsumerState<WeeklyReportScreen> {
               ],
             ),
             // Best workout highlight
-            if (bestWorkout != null) ...[
+            if (report.bestWorkoutName != null) ...[
               const SizedBox(height: 16),
               Container(
                 padding: const EdgeInsets.all(12),
@@ -433,8 +429,8 @@ class _WeeklyReportScreenState extends ConsumerState<WeeklyReportScreen> {
                     Expanded(
                       child: Text(
                         l10n.bestWorkout(
-                          bestWorkout['name'].toString(),
-                          bestWorkout['volume'].toString(),
+                          report.bestWorkoutName!,
+                          '${report.bestWorkoutVolume?.toInt() ?? 0}',
                         ),
                         style: theme.textTheme.bodyMedium?.copyWith(
                           fontWeight: FontWeight.bold,
@@ -458,10 +454,14 @@ class _WeeklyReportScreenState extends ConsumerState<WeeklyReportScreen> {
               ),
               const SizedBox(height: 8),
               ...newPRs.take(3).map((pr) {
+                // The name is resolved when the report is built; fall back to
+                // the bare figures if the exercise has since been removed.
+                final name = report.exerciseNames[pr.exerciseId];
                 return Padding(
                   padding: const EdgeInsets.symmetric(vertical: 4),
                   child: Text(
-                    '• ${pr['exercise']}: ${pr['weight']}kg × ${pr['reps']}',
+                    '• ${name == null ? '' : '$name: '}'
+                    '${pr.weight.toStringAsFixed(1)}kg × ${pr.reps}',
                     style: theme.textTheme.bodyMedium,
                   ),
                 );
@@ -474,20 +474,13 @@ class _WeeklyReportScreenState extends ConsumerState<WeeklyReportScreen> {
   }
 
   Widget _buildCrossModuleCard(
-    Map<String, dynamic> report,
+    WeeklyReport report,
     ThemeData theme,
     ColorScheme colorScheme,
   ) {
-    // Calculate health score: compliance 40% + workout consistency 30% + symptom inverse 30%
-    final complianceRate = (report['compliance_rate'] as num?)?.toDouble() ?? 0;
-    final workoutCount = (report['workout_count'] as int?) ?? 0;
-    final symptomCount = (report['symptom_count'] as int?) ?? 0;
-
-    final workoutConsistency = (workoutCount / 7).clamp(0.0, 1.0);
-    final symptomInverse = 1.0 - (symptomCount / 10).clamp(0.0, 1.0);
-
-    final healthScore =
-        complianceRate * 0.4 + workoutConsistency * 0.3 + symptomInverse * 0.3;
+    // The score is the service's, not a second formula living in the widget.
+    // The gauge takes 0..1, the entity stores 0..100.
+    final healthScore = (report.healthScore / 100).clamp(0.0, 1.0);
     final l10n = AppLocalizations.of(context);
 
     return GlassmorphicCard(
@@ -505,20 +498,18 @@ class _WeeklyReportScreenState extends ConsumerState<WeeklyReportScreen> {
             const SizedBox(height: 20),
             // Health Score gauge
             HealthScoreGauge(score: healthScore, size: 200),
-            const SizedBox(height: 16),
-            // Best day highlight
-            Text(
-              'Best Day: Wednesday',
-              style: theme.textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
+            // Best day highlight. Was a hardcoded "Best Day: Wednesday" with
+            // a fabricated detail line under it; now the day the service
+            // actually picked, and nothing when the week had none.
+            if (report.bestDay != null) ...[
+              const SizedBox(height: 16),
+              Text(
+                l10n.bestDay(DateFormat.EEEE().format(report.bestDay!)),
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-            Text(
-              '100% compliance + 1 workout + 0 symptoms',
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: colorScheme.onSurface.withValues(alpha: 0.7),
-              ),
-            ),
+            ],
           ],
         ),
       ),
@@ -526,46 +517,35 @@ class _WeeklyReportScreenState extends ConsumerState<WeeklyReportScreen> {
   }
 
   Widget _buildActivityRingsCard(
-    Map<String, dynamic> report,
+    WeeklyReport report,
     ThemeData theme,
     ColorScheme colorScheme,
   ) {
-    final complianceRate = (report['compliance_rate'] as num?)?.toDouble() ?? 0;
-    final workoutCount = (report['workout_count'] as int?) ?? 0;
-    final symptomCount = (report['symptom_count'] as int?) ?? 0;
-    final previousReport = report['previous_week'] as Map<String, dynamic>?;
-
-    final workoutConsistency = (workoutCount / 7).clamp(0.0, 1.0);
-    final symptomInverse = 1.0 - (symptomCount / 10).clamp(0.0, 1.0);
+    final complianceRate = report.medicationCompliance;
+    final workoutConsistency = _workoutConsistency(report.workoutCount);
+    final symptomInverse = _symptomInverse(report.symptomsLoggedCount);
     final l10n = AppLocalizations.of(context);
 
-    List<ActivityRingData>? previousRings;
-    if (previousReport != null) {
-      final prevCompliance =
-          (previousReport['compliance_rate'] as num?)?.toDouble() ?? 0;
-      final prevWorkouts = (previousReport['workout_count'] as int?) ?? 0;
-      final prevSymptoms = (previousReport['symptom_count'] as int?) ?? 0;
-      final prevWorkoutConsistency = (prevWorkouts / 7).clamp(0.0, 1.0);
-      final prevSymptomInverse = 1.0 - (prevSymptoms / 10).clamp(0.0, 1.0);
-
-      previousRings = [
-        ActivityRingData(
-          label: l10n.healthRing,
-          progress: prevCompliance,
-          color: Colors.green,
-        ),
-        ActivityRingData(
-          label: l10n.fitnessRing,
-          progress: prevWorkoutConsistency,
-          color: Colors.orange,
-        ),
-        ActivityRingData(
-          label: l10n.wellnessRing,
-          progress: prevSymptomInverse,
-          color: Colors.blue,
-        ),
-      ];
-    }
+    // Ghost rings for the previous week. These used to read a
+    // `previous_week` key that the report never carried, so the comparison
+    // never drew; the figures now travel on the report itself.
+    final previousRings = [
+      ActivityRingData(
+        label: l10n.healthRing,
+        progress: report.previousMedicationCompliance,
+        color: Colors.green,
+      ),
+      ActivityRingData(
+        label: l10n.fitnessRing,
+        progress: _workoutConsistency(report.previousWorkoutCount),
+        color: Colors.orange,
+      ),
+      ActivityRingData(
+        label: l10n.wellnessRing,
+        progress: _symptomInverse(report.previousSymptomsLoggedCount),
+        color: Colors.blue,
+      ),
+    ];
 
     return GlassmorphicCard(
       child: Padding(
@@ -599,7 +579,7 @@ class _WeeklyReportScreenState extends ConsumerState<WeeklyReportScreen> {
                 ),
               ],
               size: 200,
-              showComparison: previousRings != null,
+              showComparison: true,
               previousRings: previousRings,
             ),
           ],
@@ -608,12 +588,20 @@ class _WeeklyReportScreenState extends ConsumerState<WeeklyReportScreen> {
     );
   }
 
+  /// Sessions as a fraction of a 7-day week, capped at 1.
+  double _workoutConsistency(int workoutCount) =>
+      (workoutCount / 7).clamp(0.0, 1.0);
+
+  /// Inverse symptom load: 1 when nothing was logged, 0 at ten or more.
+  double _symptomInverse(int symptomCount) =>
+      1.0 - (symptomCount / 10).clamp(0.0, 1.0);
+
   Widget _buildSuggestionsCard(
-    Map<String, dynamic> report,
+    WeeklyReport report,
     ThemeData theme,
     ColorScheme colorScheme,
   ) {
-    final suggestions = (report['suggestions'] as List<dynamic>?) ?? [];
+    final suggestions = report.suggestions;
     final l10n = AppLocalizations.of(context);
 
     return GlassmorphicCard(
@@ -692,7 +680,11 @@ class _WeeklyReportScreenState extends ConsumerState<WeeklyReportScreen> {
   }
 
   void _showShareOptions(BuildContext context) {
-    final reportAsync = ref.read(weeklyReportProvider);
+    // Same week the screen is showing — the shared image must not silently
+    // fall back to the current week.
+    final reportAsync = ref.read(
+      weeklyReportProvider(weekStart: _selectedWeekStart),
+    );
     final weekEnd = _selectedWeekStart.add(const Duration(days: 6));
 
     showModalBottomSheet(
@@ -832,9 +824,11 @@ class _WeeklyReportScreenState extends ConsumerState<WeeklyReportScreen> {
     }
   }
 
-  Future<void> _exportAsJson(Map<String, dynamic> report) async {
+  Future<void> _exportAsJson(WeeklyReport report) async {
     try {
-      final json = jsonEncode(report);
+      // toJson() is the GDPR export shape — which is exactly what this
+      // button produces, and the only thing it is for.
+      final json = jsonEncode(report.toJson());
       final bytes = utf8.encode(json);
 
       await Share.shareXFiles([

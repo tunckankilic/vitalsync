@@ -6,6 +6,8 @@ library;
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../../../../../domain/entities/insights/weekly_report.dart';
+
 /// Compact weekly report share card.
 ///
 /// Dimensions: 1080x1080 (1:1 ratio)
@@ -22,24 +24,21 @@ class WeeklyReportCompactCard extends StatelessWidget {
     super.key,
   });
 
-  final Map<String, dynamic> report;
+  final WeeklyReport report;
   final DateTime weekStart;
   final DateTime weekEnd;
 
   @override
   Widget build(BuildContext context) {
     final dateFormat = DateFormat('MMM d');
-    final complianceRate = (report['compliance_rate'] as num?)?.toDouble() ?? 0;
-    final workoutCount = (report['workout_count'] as int?) ?? 0;
-    final totalVolume = (report['total_volume'] as num?)?.toDouble() ?? 0;
-    final streakDays = (report['streak_days'] as int?) ?? 0;
+    final complianceRate = report.medicationCompliance;
+    final workoutCount = report.workoutCount;
+    final totalVolume = report.totalVolume;
+    final streakDays = report.currentStreak;
 
-    // Calculate health score
-    final workoutConsistency = (workoutCount / 7).clamp(0.0, 1.0);
-    final symptomCount = (report['symptom_count'] as int?) ?? 0;
-    final symptomInverse = 1.0 - (symptomCount / 10).clamp(0.0, 1.0);
-    final healthScore =
-        complianceRate * 0.4 + workoutConsistency * 0.3 + symptomInverse * 0.3;
+    // The service's score, not a second formula in the widget. The badge
+    // takes 0..1, the entity stores 0..100.
+    final healthScore = (report.healthScore / 100).clamp(0.0, 1.0);
 
     return Container(
       width: 1080,

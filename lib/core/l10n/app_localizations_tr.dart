@@ -1562,6 +1562,11 @@ class AppLocalizationsTr extends AppLocalizations {
   }
 
   @override
+  String bestDay(String day) {
+    return 'En iyi gün: $day';
+  }
+
+  @override
   String get newPersonalRecords => 'Yeni Kişisel Rekorlar';
 
   @override

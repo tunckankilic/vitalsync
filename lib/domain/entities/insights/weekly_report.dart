@@ -22,6 +22,13 @@ class WeeklyReport {
     this.mostProblematicTimeSlot,
     required this.symptomsLoggedCount,
     this.mostFrequentSymptom,
+    // Dose outcome breakdown and previous-week figures. Default to zero so a
+    // report built before these existed - or restored from an older export -
+    // still constructs.
+    this.takenMedicationsCount = 0,
+    this.skippedMedicationsCount = 0,
+    this.previousMedicationCompliance = 0,
+    this.previousSymptomsLoggedCount = 0,
     // Measurement counts. Default to zero so a report built before these
     // existed - or restored from an older export - still constructs.
     this.mealsLoggedCount = 0,
@@ -34,6 +41,12 @@ class WeeklyReport {
     required this.totalWorkoutDuration,
     required this.newPRs,
     required this.currentStreak,
+    this.dailyVolumes = const [],
+    this.previousDailyVolumes = const [],
+    this.previousWorkoutCount = 0,
+    this.bestWorkoutName,
+    this.bestWorkoutVolume,
+    this.exerciseNames = const {},
     // Cross-Module Highlights
     this.bestDay,
     required this.healthScore,
@@ -61,6 +74,16 @@ class WeeklyReport {
           healthSummary['most_problematic_time_slot'] as String?,
       symptomsLoggedCount: healthSummary['symptoms_logged_count'] as int,
       mostFrequentSymptom: healthSummary['most_frequent_symptom'] as String?,
+      takenMedicationsCount:
+          healthSummary['taken_medications_count'] as int? ?? 0,
+      skippedMedicationsCount:
+          healthSummary['skipped_medications_count'] as int? ?? 0,
+      previousMedicationCompliance:
+          (healthSummary['previous_medication_compliance'] as num?)
+                  ?.toDouble() ??
+              0,
+      previousSymptomsLoggedCount:
+          healthSummary['previous_symptoms_logged_count'] as int? ?? 0,
       mealsLoggedCount: healthSummary['meals_logged_count'] as int? ?? 0,
       glucoseReadingsCount:
           healthSummary['glucose_readings_count'] as int? ?? 0,
@@ -86,6 +109,30 @@ class WeeklyReport {
           )
           .toList(),
       currentStreak: fitnessSummary['current_streak'] as int,
+      dailyVolumes:
+          (fitnessSummary['daily_volumes'] as List?)
+              ?.map((v) => (v as num).toDouble())
+              .toList() ??
+          const [],
+      previousDailyVolumes:
+          (fitnessSummary['previous_daily_volumes'] as List?)
+              ?.map((v) => (v as num).toDouble())
+              .toList() ??
+          const [],
+      previousWorkoutCount:
+          fitnessSummary['previous_workout_count'] as int? ?? 0,
+      bestWorkoutName:
+          (fitnessSummary['best_workout'] as Map<String, dynamic>?)?['name']
+              as String?,
+      bestWorkoutVolume:
+          ((fitnessSummary['best_workout']
+                  as Map<String, dynamic>?)?['volume_kg'] as num?)
+              ?.toDouble(),
+      exerciseNames: {
+        for (final pr in (fitnessSummary['new_prs'] as List))
+          if ((pr as Map<String, dynamic>)['exercise_name'] != null)
+            pr['exercise_id'] as int: pr['exercise_name'] as String,
+      },
       bestDay: crossModule['best_day'] != null
           ? DateTime.parse(crossModule['best_day'] as String)
           : null,
@@ -103,10 +150,27 @@ class WeeklyReport {
   // ── Health Summary ─────────────────────────────────────────────────
   final double medicationCompliance; // 0.0 to 1.0
   final TrendDirection complianceTrendVsPrevious;
+
+  /// Doses logged as missed. Strictly [MedicationLogStatus.missed] — skipped
+  /// and still-pending doses are counted in their own fields, so the four
+  /// outcomes partition the week's logs.
   final int missedMedicationsCount;
   final String? mostProblematicTimeSlot; // "morning", "afternoon", "evening"
   final int symptomsLoggedCount;
   final String? mostFrequentSymptom;
+
+  /// Doses logged as taken.
+  final int takenMedicationsCount;
+
+  /// Doses the user deliberately skipped, as opposed to missed.
+  final int skippedMedicationsCount;
+
+  /// Previous week's compliance, kept so the report can state the change
+  /// without the reader having to fetch a second report.
+  final double previousMedicationCompliance;
+
+  /// Previous week's symptom count, for the same reason.
+  final int previousSymptomsLoggedCount;
 
   /// How many meals were logged in the week. A count, not an assessment —
   /// nothing here says anything about what was eaten.
@@ -129,6 +193,25 @@ class WeeklyReport {
   final List<PersonalRecord> newPRs;
   final int currentStreak;
 
+  /// Volume per weekday, Monday first — seven entries, zero on rest days.
+  /// Empty only on a report built before this field existed.
+  final List<double> dailyVolumes;
+
+  /// The same series for the previous week, drawn as ghost bars.
+  final List<double> previousDailyVolumes;
+
+  /// Previous week's session count, for the comparison rings.
+  final int previousWorkoutCount;
+
+  /// Name and volume of the week's heaviest session, null when the week had
+  /// no sessions.
+  final String? bestWorkoutName;
+  final double? bestWorkoutVolume;
+
+  /// Exercise id → name, covering every exercise in [newPRs]. [PersonalRecord]
+  /// carries only the id, and the report is rendered without database access.
+  final Map<int, String> exerciseNames;
+
   // ── Cross-Module Highlights ────────────────────────────────────────
   final DateTime? bestDay; // Day with both compliance + workout
   final double healthScore; // 0-100
@@ -147,6 +230,10 @@ class WeeklyReport {
     String? mostProblematicTimeSlot,
     int? symptomsLoggedCount,
     String? mostFrequentSymptom,
+    int? takenMedicationsCount,
+    int? skippedMedicationsCount,
+    double? previousMedicationCompliance,
+    int? previousSymptomsLoggedCount,
     int? mealsLoggedCount,
     int? glucoseReadingsCount,
     int? mealsWithCoverageCount,
@@ -156,6 +243,12 @@ class WeeklyReport {
     int? totalWorkoutDuration,
     List<PersonalRecord>? newPRs,
     int? currentStreak,
+    List<double>? dailyVolumes,
+    List<double>? previousDailyVolumes,
+    int? previousWorkoutCount,
+    String? bestWorkoutName,
+    double? bestWorkoutVolume,
+    Map<int, String>? exerciseNames,
     DateTime? bestDay,
     double? healthScore,
     List<Insight>? topInsights,
@@ -174,6 +267,14 @@ class WeeklyReport {
           mostProblematicTimeSlot ?? this.mostProblematicTimeSlot,
       symptomsLoggedCount: symptomsLoggedCount ?? this.symptomsLoggedCount,
       mostFrequentSymptom: mostFrequentSymptom ?? this.mostFrequentSymptom,
+      takenMedicationsCount:
+          takenMedicationsCount ?? this.takenMedicationsCount,
+      skippedMedicationsCount:
+          skippedMedicationsCount ?? this.skippedMedicationsCount,
+      previousMedicationCompliance:
+          previousMedicationCompliance ?? this.previousMedicationCompliance,
+      previousSymptomsLoggedCount:
+          previousSymptomsLoggedCount ?? this.previousSymptomsLoggedCount,
       mealsLoggedCount: mealsLoggedCount ?? this.mealsLoggedCount,
       glucoseReadingsCount: glucoseReadingsCount ?? this.glucoseReadingsCount,
       mealsWithCoverageCount:
@@ -185,6 +286,12 @@ class WeeklyReport {
       totalWorkoutDuration: totalWorkoutDuration ?? this.totalWorkoutDuration,
       newPRs: newPRs ?? this.newPRs,
       currentStreak: currentStreak ?? this.currentStreak,
+      dailyVolumes: dailyVolumes ?? this.dailyVolumes,
+      previousDailyVolumes: previousDailyVolumes ?? this.previousDailyVolumes,
+      previousWorkoutCount: previousWorkoutCount ?? this.previousWorkoutCount,
+      bestWorkoutName: bestWorkoutName ?? this.bestWorkoutName,
+      bestWorkoutVolume: bestWorkoutVolume ?? this.bestWorkoutVolume,
+      exerciseNames: exerciseNames ?? this.exerciseNames,
       bestDay: bestDay ?? this.bestDay,
       healthScore: healthScore ?? this.healthScore,
       topInsights: topInsights ?? this.topInsights,
@@ -202,6 +309,10 @@ class WeeklyReport {
         'medication_compliance': medicationCompliance,
         'compliance_trend': complianceTrendVsPrevious.name,
         'missed_medications_count': missedMedicationsCount,
+        'taken_medications_count': takenMedicationsCount,
+        'skipped_medications_count': skippedMedicationsCount,
+        'previous_medication_compliance': previousMedicationCompliance,
+        'previous_symptoms_logged_count': previousSymptomsLoggedCount,
         'most_problematic_time_slot': mostProblematicTimeSlot,
         'symptoms_logged_count': symptomsLoggedCount,
         'most_frequent_symptom': mostFrequentSymptom,
@@ -214,10 +325,19 @@ class WeeklyReport {
         'total_volume_kg': totalVolume,
         'volume_trend': volumeTrendVsPrevious.name,
         'total_workout_duration_minutes': totalWorkoutDuration,
+        'daily_volumes': dailyVolumes,
+        'previous_daily_volumes': previousDailyVolumes,
+        'previous_workout_count': previousWorkoutCount,
+        'best_workout': bestWorkoutName == null
+            ? null
+            : {'name': bestWorkoutName, 'volume_kg': bestWorkoutVolume},
         'new_prs': newPRs
             .map(
               (pr) => {
                 'exercise_id': pr.exerciseId,
+                // Resolved name, so the report renders without touching the
+                // database. Null when the exercise no longer exists.
+                'exercise_name': exerciseNames[pr.exerciseId],
                 'weight': pr.weight,
                 'reps': pr.reps,
                 'estimated_1rm': pr.estimated1RM,
@@ -259,6 +379,10 @@ class WeeklyReport {
         other.mostProblematicTimeSlot == mostProblematicTimeSlot &&
         other.symptomsLoggedCount == symptomsLoggedCount &&
         other.mostFrequentSymptom == mostFrequentSymptom &&
+        other.takenMedicationsCount == takenMedicationsCount &&
+        other.skippedMedicationsCount == skippedMedicationsCount &&
+        other.previousMedicationCompliance == previousMedicationCompliance &&
+        other.previousSymptomsLoggedCount == previousSymptomsLoggedCount &&
         other.mealsLoggedCount == mealsLoggedCount &&
         other.glucoseReadingsCount == glucoseReadingsCount &&
         other.mealsWithCoverageCount == mealsWithCoverageCount &&
@@ -268,6 +392,12 @@ class WeeklyReport {
         other.totalWorkoutDuration == totalWorkoutDuration &&
         _listEquals(other.newPRs, newPRs) &&
         other.currentStreak == currentStreak &&
+        _listEquals(other.dailyVolumes, dailyVolumes) &&
+        _listEquals(other.previousDailyVolumes, previousDailyVolumes) &&
+        other.previousWorkoutCount == previousWorkoutCount &&
+        other.bestWorkoutName == bestWorkoutName &&
+        other.bestWorkoutVolume == bestWorkoutVolume &&
+        _mapEquals(other.exerciseNames, exerciseNames) &&
         other.bestDay == bestDay &&
         other.healthScore == healthScore &&
         _listEquals(other.topInsights, topInsights) &&
@@ -287,6 +417,17 @@ class WeeklyReport {
     return true;
   }
 
+  /// Entry-wise map comparison.
+  static bool _mapEquals<K, V>(Map<K, V> a, Map<K, V> b) {
+    if (a.length != b.length) return false;
+    for (final entry in a.entries) {
+      if (!b.containsKey(entry.key) || b[entry.key] != entry.value) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   /// Hashes the list fields by their contents, matching [operator ==].
   /// `List.hashCode` is identity-based, so hashing those directly would let
   /// two equal reports carry different hashes.
@@ -301,6 +442,10 @@ class WeeklyReport {
         mostProblematicTimeSlot.hashCode ^
         symptomsLoggedCount.hashCode ^
         mostFrequentSymptom.hashCode ^
+        takenMedicationsCount.hashCode ^
+        skippedMedicationsCount.hashCode ^
+        previousMedicationCompliance.hashCode ^
+        previousSymptomsLoggedCount.hashCode ^
         mealsLoggedCount.hashCode ^
         glucoseReadingsCount.hashCode ^
         mealsWithCoverageCount.hashCode ^
@@ -310,6 +455,14 @@ class WeeklyReport {
         totalWorkoutDuration.hashCode ^
         Object.hashAll(newPRs) ^
         currentStreak.hashCode ^
+        Object.hashAll(dailyVolumes) ^
+        Object.hashAll(previousDailyVolumes) ^
+        previousWorkoutCount.hashCode ^
+        bestWorkoutName.hashCode ^
+        bestWorkoutVolume.hashCode ^
+        Object.hashAllUnordered(
+          exerciseNames.entries.map((e) => Object.hash(e.key, e.value)),
+        ) ^
         bestDay.hashCode ^
         healthScore.hashCode ^
         Object.hashAll(topInsights) ^

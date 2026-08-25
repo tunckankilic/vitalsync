@@ -16,9 +16,11 @@ import 'package:vitalsync/core/enums/insight_category.dart';
 import 'package:vitalsync/core/enums/medication_log_status.dart';
 import 'package:vitalsync/core/enums/trend_direction.dart';
 import 'package:vitalsync/domain/entities/fitness/personal_record.dart';
+import 'package:vitalsync/domain/entities/fitness/workout_session.dart';
 import 'package:vitalsync/domain/entities/health/medication_log.dart';
 import 'package:vitalsync/domain/entities/insights/insight.dart';
 import 'package:vitalsync/domain/entities/insights/weekly_report.dart';
+import 'package:vitalsync/domain/repositories/fitness/exercise_repository.dart';
 import 'package:vitalsync/domain/repositories/fitness/personal_record_repository.dart';
 import 'package:vitalsync/domain/repositories/fitness/streak_repository.dart';
 import 'package:vitalsync/domain/repositories/fitness/workout_session_repository.dart';
@@ -40,7 +42,9 @@ class WeeklyReportService {
     required MealRepository mealRepository,
     required GlucoseRepository glucoseRepository,
     required MealDataCoverageService coverageService,
+    required ExerciseRepository exerciseRepository,
   }) : _medicationLogRepository = medicationLogRepository,
+       _exerciseRepository = exerciseRepository,
        _workoutRepository = workoutRepository,
        _symptomRepository = symptomRepository,
        _insightRepository = insightRepository,
@@ -56,6 +60,9 @@ class WeeklyReportService {
   final InsightRepository _insightRepository;
   final PersonalRecordRepository _personalRecordRepository;
   final StreakRepository _streakRepository;
+
+  /// Read only to resolve the exercise names shown next to the week's PRs.
+  final ExerciseRepository _exerciseRepository;
 
   /// Read only to count rows in the reported week — see
   /// [_calculateHealthSummary].
@@ -153,6 +160,10 @@ class WeeklyReportService {
         mostProblematicTimeSlot: healthData.problematicTimeSlot,
         symptomsLoggedCount: healthData.symptomCount,
         mostFrequentSymptom: healthData.mostFrequentSymptom,
+        takenMedicationsCount: healthData.takenCount,
+        skippedMedicationsCount: healthData.skippedCount,
+        previousMedicationCompliance: healthData.previousCompliance,
+        previousSymptomsLoggedCount: healthData.previousSymptomCount,
         mealsLoggedCount: healthData.mealCount,
         glucoseReadingsCount: healthData.glucoseReadingCount,
         mealsWithCoverageCount: healthData.coveredMealCount,
@@ -163,6 +174,12 @@ class WeeklyReportService {
         totalWorkoutDuration: fitnessData.totalDuration,
         newPRs: fitnessData.newPRs,
         currentStreak: fitnessData.currentStreak,
+        dailyVolumes: fitnessData.dailyVolumes,
+        previousDailyVolumes: fitnessData.previousDailyVolumes,
+        previousWorkoutCount: fitnessData.previousWorkoutCount,
+        bestWorkoutName: fitnessData.bestWorkoutName,
+        bestWorkoutVolume: fitnessData.bestWorkoutVolume,
+        exerciseNames: fitnessData.exerciseNames,
         // Cross-Module Highlights
         bestDay: crossData.bestDay,
         healthScore: crossData.healthScore,
@@ -209,10 +226,21 @@ class WeeklyReportService {
       previousCompliance,
     );
 
-    // Count missed medications
-    final missedCount = currentWeekLogs
-        .where((log) => log.status != MedicationLogStatus.taken)
-        .length;
+    // Dose outcomes. Counted per status rather than as "everything that is
+    // not taken", so taken/missed/skipped can be shown side by side without
+    // one of them swallowing the other two.
+    final takenCount = _countByStatus(
+      currentWeekLogs,
+      MedicationLogStatus.taken,
+    );
+    final missedCount = _countByStatus(
+      currentWeekLogs,
+      MedicationLogStatus.missed,
+    );
+    final skippedCount = _countByStatus(
+      currentWeekLogs,
+      MedicationLogStatus.skipped,
+    );
 
     // Find most problematic time slot
     final problematicTimeSlot = _getMostProblematicTimeSlot(currentWeekLogs);
@@ -224,6 +252,11 @@ class WeeklyReportService {
     );
     final symptomCount = symptoms.length;
     final mostFrequentSymptom = _getMostFrequentSymptom(symptoms);
+
+    final previousSymptoms = await _symptomRepository.getByDateRange(
+      previousWeekStart,
+      weekStart,
+    );
 
     // No comment, only measurement: the meal and glucose figures are counts
     // of rows in the week. Nothing is averaged, ranked or related here.
@@ -238,6 +271,10 @@ class WeeklyReportService {
       compliance: currentCompliance,
       complianceTrend: complianceTrend,
       missedCount: missedCount,
+      takenCount: takenCount,
+      skippedCount: skippedCount,
+      previousCompliance: previousCompliance,
+      previousSymptomCount: previousSymptoms.length,
       problematicTimeSlot: problematicTimeSlot,
       symptomCount: symptomCount,
       mostFrequentSymptom: mostFrequentSymptom,
@@ -298,6 +335,25 @@ class WeeklyReportService {
     // Get current streak
     final currentStreak = await _streakRepository.getCurrentStreak();
 
+    // Heaviest session of the week, if the week had any.
+    WorkoutSession? bestWorkout;
+    for (final session in currentWeekSessions) {
+      if (bestWorkout == null || session.totalVolume > bestWorkout.totalVolume) {
+        bestWorkout = session;
+      }
+    }
+
+    // Resolve the exercise names the PR list needs. The report is rendered
+    // without database access, so the names travel with it. One batched
+    // lookup rather than a query per PR.
+    final exerciseIds = newPRs.map((pr) => pr.exerciseId).toSet().toList();
+    final exerciseNames = <int, String>{};
+    if (exerciseIds.isNotEmpty) {
+      for (final exercise in await _exerciseRepository.getByIds(exerciseIds)) {
+        exerciseNames[exercise.id] = exercise.name;
+      }
+    }
+
     return _FitnessSummaryData(
       workoutCount: currentWeekSessions.length,
       totalVolume: currentVolume,
@@ -305,7 +361,45 @@ class WeeklyReportService {
       totalDuration: totalDuration,
       newPRs: newPRs,
       currentStreak: currentStreak,
+      dailyVolumes: _dailyVolumes(currentWeekSessions, weekStart),
+      previousDailyVolumes: _dailyVolumes(
+        previousWeekSessions,
+        previousWeekStart,
+      ),
+      previousWorkoutCount: previousWeekSessions.length,
+      bestWorkoutName: bestWorkout?.name,
+      bestWorkoutVolume: bestWorkout?.totalVolume,
+      exerciseNames: exerciseNames,
     );
+  }
+
+  /// Buckets session volume into the seven days of the week starting at
+  /// [weekStart], Monday first. Rest days come out as 0.
+  List<double> _dailyVolumes(
+    List<WorkoutSession> sessions,
+    DateTime weekStart,
+  ) {
+    final volumes = List<double>.filled(7, 0);
+    final startOfDay = DateTime(weekStart.year, weekStart.month, weekStart.day);
+
+    for (final session in sessions) {
+      final dayIndex = DateTime(
+        session.startTime.year,
+        session.startTime.month,
+        session.startTime.day,
+      ).difference(startOfDay).inDays;
+
+      if (dayIndex >= 0 && dayIndex < 7) {
+        volumes[dayIndex] += session.totalVolume;
+      }
+    }
+
+    return volumes;
+  }
+
+  /// Counts the logs in [logs] carrying [status].
+  int _countByStatus(List<MedicationLog> logs, MedicationLogStatus status) {
+    return logs.where((log) => log.status == status).length;
   }
 
   /// Calculates cross-module highlights.
@@ -587,6 +681,10 @@ class _HealthSummaryData {
     required this.compliance,
     required this.complianceTrend,
     required this.missedCount,
+    required this.takenCount,
+    required this.skippedCount,
+    required this.previousCompliance,
+    required this.previousSymptomCount,
     required this.problematicTimeSlot,
     required this.symptomCount,
     required this.mostFrequentSymptom,
@@ -597,7 +695,14 @@ class _HealthSummaryData {
 
   final double compliance;
   final TrendDirection complianceTrend;
+
+  /// Strictly [MedicationLogStatus.missed]; skipped doses have their own
+  /// count, so the outcomes partition the week's logs.
   final int missedCount;
+  final int takenCount;
+  final int skippedCount;
+  final double previousCompliance;
+  final int previousSymptomCount;
   final String? problematicTimeSlot;
   final int symptomCount;
   final String? mostFrequentSymptom;
@@ -614,6 +719,12 @@ class _FitnessSummaryData {
     required this.totalDuration,
     required this.newPRs,
     required this.currentStreak,
+    required this.dailyVolumes,
+    required this.previousDailyVolumes,
+    required this.previousWorkoutCount,
+    required this.bestWorkoutName,
+    required this.bestWorkoutVolume,
+    required this.exerciseNames,
   });
 
   final int workoutCount;
@@ -622,6 +733,14 @@ class _FitnessSummaryData {
   final int totalDuration;
   final List<PersonalRecord> newPRs;
   final int currentStreak;
+
+  /// Seven entries, Monday first.
+  final List<double> dailyVolumes;
+  final List<double> previousDailyVolumes;
+  final int previousWorkoutCount;
+  final String? bestWorkoutName;
+  final double? bestWorkoutVolume;
+  final Map<int, String> exerciseNames;
 }
 
 class _CrossModuleData {
