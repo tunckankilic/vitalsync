@@ -2019,4 +2019,148 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get mealDeleted => 'Öğün silindi';
+
+  @override
+  String get achievementUnlockedTitle => 'Başarım Açıldı!';
+
+  @override
+  String get achievementFitnessFirstStepTitle => 'İlk Adım';
+
+  @override
+  String get achievementFitnessFirstStepDesc => 'İlk antrenmanını tamamla';
+
+  @override
+  String get achievementFitnessWeekWarriorTitle => 'Hafta Savaşçısı';
+
+  @override
+  String get achievementFitnessWeekWarriorDesc =>
+      '7 günlük antrenman serisini sürdür';
+
+  @override
+  String get achievementFitnessMonthlyMasterTitle => 'Ayın Ustası';
+
+  @override
+  String get achievementFitnessMonthlyMasterDesc =>
+      '30 günlük antrenman serisini sürdür';
+
+  @override
+  String get achievementFitnessIronWillTitle => 'Çelik İrade';
+
+  @override
+  String get achievementFitnessIronWillDesc =>
+      '100 günlük antrenman serisini sürdür';
+
+  @override
+  String get achievementFitnessTonClubTitle => 'Ton Kulübü';
+
+  @override
+  String get achievementFitnessTonClubDesc => 'Toplam 1.000 kg kaldır';
+
+  @override
+  String get achievementFitnessHeavyLifterTitle => 'Ağır Kaldıran';
+
+  @override
+  String get achievementFitnessHeavyLifterDesc => 'Toplam 10.000 kg kaldır';
+
+  @override
+  String get achievementFitnessPowerhouseTitle => 'Güç Merkezi';
+
+  @override
+  String get achievementFitnessPowerhouseDesc => 'Toplam 100.000 kg kaldır';
+
+  @override
+  String get achievementFitnessMountainMoverTitle => 'Dağ Deviren';
+
+  @override
+  String get achievementFitnessMountainMoverDesc => 'Toplam 500.000 kg kaldır';
+
+  @override
+  String get achievementFitnessBeginnerTitle => 'Başlangıç';
+
+  @override
+  String get achievementFitnessBeginnerDesc => '1 antrenman tamamla';
+
+  @override
+  String get achievementFitnessConsistentTitle => 'İstikrarlı';
+
+  @override
+  String get achievementFitnessConsistentDesc => '10 antrenman tamamla';
+
+  @override
+  String get achievementFitnessDedicatedTitle => 'Azimli';
+
+  @override
+  String get achievementFitnessDedicatedDesc => '50 antrenman tamamla';
+
+  @override
+  String get achievementFitnessGymRatTitle => 'Salon Müdavimi';
+
+  @override
+  String get achievementFitnessGymRatDesc => '100 antrenman tamamla';
+
+  @override
+  String get achievementFitnessLegendTitle => 'Fitness Efsanesi';
+
+  @override
+  String get achievementFitnessLegendDesc => '500 antrenman tamamla';
+
+  @override
+  String get achievementFitnessFirstPrTitle => 'İlk Rekor';
+
+  @override
+  String get achievementFitnessFirstPrDesc => 'İlk kişisel rekorunu kır';
+
+  @override
+  String get achievementFitnessRecordBreakerTitle => 'Rekor Kıran';
+
+  @override
+  String get achievementFitnessRecordBreakerDesc => '10 kişisel rekor kır';
+
+  @override
+  String get achievementFitnessEliteTitle => 'Elit';
+
+  @override
+  String get achievementFitnessEliteDesc => '50 kişisel rekor kır';
+
+  @override
+  String get achievementHealthPerfectDayTitle => 'Kusursuz Gün';
+
+  @override
+  String get achievementHealthPerfectDayDesc =>
+      '1 gün boyunca tüm ilaçlarını zamanında al';
+
+  @override
+  String get achievementHealthWeekWellnessTitle => 'Sağlıklı Hafta';
+
+  @override
+  String get achievementHealthWeekWellnessDesc =>
+      '7 gün boyunca %100 ilaç uyumunu sürdür';
+
+  @override
+  String get achievementHealthHeroTitle => 'Sağlık Kahramanı';
+
+  @override
+  String get achievementHealthHeroDesc =>
+      '30 gün boyunca %100 ilaç uyumunu sürdür';
+
+  @override
+  String get achievementCrossBalanceMasterTitle => 'Denge Ustası';
+
+  @override
+  String get achievementCrossBalanceMasterDesc =>
+      'Bu hafta %90+ ilaç uyumu ve 1 günlük antrenman serisi tuttur';
+
+  @override
+  String get achievementCrossSyncedUpTitle => 'Uyum İçinde';
+
+  @override
+  String get achievementCrossSyncedUpDesc =>
+      'Bu hafta %90+ ilaç uyumu ve 30 günlük antrenman serisi tuttur';
+
+  @override
+  String get achievementCrossWellnessWarriorTitle => 'Sağlık Savaşçısı';
+
+  @override
+  String get achievementCrossWellnessWarriorDesc =>
+      'Bu hafta %90+ ilaç uyumu ve 50 günlük antrenman serisi tuttur';
 }

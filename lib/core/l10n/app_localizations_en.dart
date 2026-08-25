@@ -2021,4 +2021,149 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get mealDeleted => 'Meal deleted';
+
+  @override
+  String get achievementUnlockedTitle => 'Achievement Unlocked!';
+
+  @override
+  String get achievementFitnessFirstStepTitle => 'First Step';
+
+  @override
+  String get achievementFitnessFirstStepDesc => 'Complete your first workout';
+
+  @override
+  String get achievementFitnessWeekWarriorTitle => 'Week Warrior';
+
+  @override
+  String get achievementFitnessWeekWarriorDesc =>
+      'Maintain a 7-day workout streak';
+
+  @override
+  String get achievementFitnessMonthlyMasterTitle => 'Monthly Master';
+
+  @override
+  String get achievementFitnessMonthlyMasterDesc =>
+      'Maintain a 30-day workout streak';
+
+  @override
+  String get achievementFitnessIronWillTitle => 'Iron Will';
+
+  @override
+  String get achievementFitnessIronWillDesc =>
+      'Maintain a 100-day workout streak';
+
+  @override
+  String get achievementFitnessTonClubTitle => 'Ton Club';
+
+  @override
+  String get achievementFitnessTonClubDesc => 'Lift a total of 1,000 kg';
+
+  @override
+  String get achievementFitnessHeavyLifterTitle => 'Heavy Lifter';
+
+  @override
+  String get achievementFitnessHeavyLifterDesc => 'Lift a total of 10,000 kg';
+
+  @override
+  String get achievementFitnessPowerhouseTitle => 'Powerhouse';
+
+  @override
+  String get achievementFitnessPowerhouseDesc => 'Lift a total of 100,000 kg';
+
+  @override
+  String get achievementFitnessMountainMoverTitle => 'Mountain Mover';
+
+  @override
+  String get achievementFitnessMountainMoverDesc =>
+      'Lift a total of 500,000 kg';
+
+  @override
+  String get achievementFitnessBeginnerTitle => 'Beginner';
+
+  @override
+  String get achievementFitnessBeginnerDesc => 'Complete 1 workout';
+
+  @override
+  String get achievementFitnessConsistentTitle => 'Consistent';
+
+  @override
+  String get achievementFitnessConsistentDesc => 'Complete 10 workouts';
+
+  @override
+  String get achievementFitnessDedicatedTitle => 'Dedicated';
+
+  @override
+  String get achievementFitnessDedicatedDesc => 'Complete 50 workouts';
+
+  @override
+  String get achievementFitnessGymRatTitle => 'Gym Rat';
+
+  @override
+  String get achievementFitnessGymRatDesc => 'Complete 100 workouts';
+
+  @override
+  String get achievementFitnessLegendTitle => 'Fitness Legend';
+
+  @override
+  String get achievementFitnessLegendDesc => 'Complete 500 workouts';
+
+  @override
+  String get achievementFitnessFirstPrTitle => 'First PR';
+
+  @override
+  String get achievementFitnessFirstPrDesc => 'Set your first personal record';
+
+  @override
+  String get achievementFitnessRecordBreakerTitle => 'Record Breaker';
+
+  @override
+  String get achievementFitnessRecordBreakerDesc => 'Set 10 personal records';
+
+  @override
+  String get achievementFitnessEliteTitle => 'Elite';
+
+  @override
+  String get achievementFitnessEliteDesc => 'Set 50 personal records';
+
+  @override
+  String get achievementHealthPerfectDayTitle => 'Perfect Day';
+
+  @override
+  String get achievementHealthPerfectDayDesc =>
+      'Take all medications on schedule for 1 day';
+
+  @override
+  String get achievementHealthWeekWellnessTitle => 'Week of Wellness';
+
+  @override
+  String get achievementHealthWeekWellnessDesc =>
+      'Maintain 100% medication compliance for 7 days';
+
+  @override
+  String get achievementHealthHeroTitle => 'Health Hero';
+
+  @override
+  String get achievementHealthHeroDesc =>
+      'Maintain 100% medication compliance for 30 days';
+
+  @override
+  String get achievementCrossBalanceMasterTitle => 'Balance Master';
+
+  @override
+  String get achievementCrossBalanceMasterDesc =>
+      'Keep 90%+ medication compliance this week and a 1-day workout streak';
+
+  @override
+  String get achievementCrossSyncedUpTitle => 'Synced Up';
+
+  @override
+  String get achievementCrossSyncedUpDesc =>
+      'Keep 90%+ medication compliance this week and a 30-day workout streak';
+
+  @override
+  String get achievementCrossWellnessWarriorTitle => 'Wellness Warrior';
+
+  @override
+  String get achievementCrossWellnessWarriorDesc =>
+      'Keep 90%+ medication compliance this week and a 50-day workout streak';
 }

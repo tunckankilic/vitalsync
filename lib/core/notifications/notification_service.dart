@@ -22,12 +22,14 @@ import 'package:logger/logger.dart';
 import 'package:timezone/data/latest_all.dart' as tz_data;
 import 'package:timezone/timezone.dart' as tz;
 
+import '../../domain/entities/fitness/achievement.dart';
 import '../../domain/entities/health/medication.dart';
 import '../../domain/entities/insights/insight.dart';
 import '../analytics/analytics_service.dart';
 import '../constants/app_constants.dart';
 import '../enums/insight_priority.dart';
 import '../enums/medication_frequency.dart';
+import '../l10n/achievement_labels.dart';
 import '../l10n/app_localizations.dart';
 
 // Notification Action Identifiers
@@ -47,6 +49,12 @@ const int kMedicationFollowUpIdOffset = 100000;
 
 /// Base of the ID range used by post-meal measurement reminders.
 const int kPostMealReminderIdOffset = 150000;
+
+/// Base of the ID range used by achievement unlock notifications.
+///
+/// The achievement's row id is added to it, matching what AchievementService
+/// used inline before this moved into the service.
+const int kAchievementNotificationIdOffset = 72000;
 
 /// Payload type of the post-meal measurement reminder.
 ///
@@ -669,6 +677,28 @@ class NotificationService {
     );
 
     _logger.d('Showed important insight notification: ${insight.title}');
+  }
+
+  /// Announces a freshly unlocked [achievement].
+  ///
+  /// The text is resolved here rather than by the caller because unlocks are
+  /// detected in a service with no widget context — the same reason
+  /// [_scheduledLocalizations] exists. The achievement's own name and
+  /// requirement are the whole message; nothing about the user's health data
+  /// goes on the lock screen.
+  Future<void> showAchievementUnlocked(Achievement achievement) async {
+    final l10n = _scheduledLocalizations();
+
+    await showNotification(
+      id: kAchievementNotificationIdOffset + achievement.id,
+      title: l10n.achievementUnlockedTitle,
+      body:
+          '${achievement.localizedTitle(l10n)} — '
+          '${achievement.localizedDescription(l10n)}',
+      payload: 'achievement:${achievement.id}',
+    );
+
+    _logger.d('Showed achievement unlock: ${achievement.iconName}');
   }
 
   // GENERAL NOTIFICATIONS

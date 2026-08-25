@@ -3771,6 +3771,276 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Meal deleted'**
   String get mealDeleted;
+
+  /// Notification title shown when an achievement is unlocked
+  ///
+  /// In en, this message translates to:
+  /// **'Achievement Unlocked!'**
+  String get achievementUnlockedTitle;
+
+  /// Achievement name (fitness_first_step)
+  ///
+  /// In en, this message translates to:
+  /// **'First Step'**
+  String get achievementFitnessFirstStepTitle;
+
+  /// How to unlock the fitness_first_step achievement
+  ///
+  /// In en, this message translates to:
+  /// **'Complete your first workout'**
+  String get achievementFitnessFirstStepDesc;
+
+  /// Achievement name (fitness_week_warrior)
+  ///
+  /// In en, this message translates to:
+  /// **'Week Warrior'**
+  String get achievementFitnessWeekWarriorTitle;
+
+  /// How to unlock the fitness_week_warrior achievement
+  ///
+  /// In en, this message translates to:
+  /// **'Maintain a 7-day workout streak'**
+  String get achievementFitnessWeekWarriorDesc;
+
+  /// Achievement name (fitness_monthly_master)
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly Master'**
+  String get achievementFitnessMonthlyMasterTitle;
+
+  /// How to unlock the fitness_monthly_master achievement
+  ///
+  /// In en, this message translates to:
+  /// **'Maintain a 30-day workout streak'**
+  String get achievementFitnessMonthlyMasterDesc;
+
+  /// Achievement name (fitness_iron_will)
+  ///
+  /// In en, this message translates to:
+  /// **'Iron Will'**
+  String get achievementFitnessIronWillTitle;
+
+  /// How to unlock the fitness_iron_will achievement
+  ///
+  /// In en, this message translates to:
+  /// **'Maintain a 100-day workout streak'**
+  String get achievementFitnessIronWillDesc;
+
+  /// Achievement name (fitness_ton_club)
+  ///
+  /// In en, this message translates to:
+  /// **'Ton Club'**
+  String get achievementFitnessTonClubTitle;
+
+  /// How to unlock the fitness_ton_club achievement
+  ///
+  /// In en, this message translates to:
+  /// **'Lift a total of 1,000 kg'**
+  String get achievementFitnessTonClubDesc;
+
+  /// Achievement name (fitness_heavy_lifter)
+  ///
+  /// In en, this message translates to:
+  /// **'Heavy Lifter'**
+  String get achievementFitnessHeavyLifterTitle;
+
+  /// How to unlock the fitness_heavy_lifter achievement
+  ///
+  /// In en, this message translates to:
+  /// **'Lift a total of 10,000 kg'**
+  String get achievementFitnessHeavyLifterDesc;
+
+  /// Achievement name (fitness_powerhouse)
+  ///
+  /// In en, this message translates to:
+  /// **'Powerhouse'**
+  String get achievementFitnessPowerhouseTitle;
+
+  /// How to unlock the fitness_powerhouse achievement
+  ///
+  /// In en, this message translates to:
+  /// **'Lift a total of 100,000 kg'**
+  String get achievementFitnessPowerhouseDesc;
+
+  /// Achievement name (fitness_mountain_mover)
+  ///
+  /// In en, this message translates to:
+  /// **'Mountain Mover'**
+  String get achievementFitnessMountainMoverTitle;
+
+  /// How to unlock the fitness_mountain_mover achievement
+  ///
+  /// In en, this message translates to:
+  /// **'Lift a total of 500,000 kg'**
+  String get achievementFitnessMountainMoverDesc;
+
+  /// Achievement name (fitness_beginner)
+  ///
+  /// In en, this message translates to:
+  /// **'Beginner'**
+  String get achievementFitnessBeginnerTitle;
+
+  /// How to unlock the fitness_beginner achievement
+  ///
+  /// In en, this message translates to:
+  /// **'Complete 1 workout'**
+  String get achievementFitnessBeginnerDesc;
+
+  /// Achievement name (fitness_consistent)
+  ///
+  /// In en, this message translates to:
+  /// **'Consistent'**
+  String get achievementFitnessConsistentTitle;
+
+  /// How to unlock the fitness_consistent achievement
+  ///
+  /// In en, this message translates to:
+  /// **'Complete 10 workouts'**
+  String get achievementFitnessConsistentDesc;
+
+  /// Achievement name (fitness_dedicated)
+  ///
+  /// In en, this message translates to:
+  /// **'Dedicated'**
+  String get achievementFitnessDedicatedTitle;
+
+  /// How to unlock the fitness_dedicated achievement
+  ///
+  /// In en, this message translates to:
+  /// **'Complete 50 workouts'**
+  String get achievementFitnessDedicatedDesc;
+
+  /// Achievement name (fitness_gym_rat)
+  ///
+  /// In en, this message translates to:
+  /// **'Gym Rat'**
+  String get achievementFitnessGymRatTitle;
+
+  /// How to unlock the fitness_gym_rat achievement
+  ///
+  /// In en, this message translates to:
+  /// **'Complete 100 workouts'**
+  String get achievementFitnessGymRatDesc;
+
+  /// Achievement name (fitness_legend)
+  ///
+  /// In en, this message translates to:
+  /// **'Fitness Legend'**
+  String get achievementFitnessLegendTitle;
+
+  /// How to unlock the fitness_legend achievement
+  ///
+  /// In en, this message translates to:
+  /// **'Complete 500 workouts'**
+  String get achievementFitnessLegendDesc;
+
+  /// Achievement name (fitness_first_pr)
+  ///
+  /// In en, this message translates to:
+  /// **'First PR'**
+  String get achievementFitnessFirstPrTitle;
+
+  /// How to unlock the fitness_first_pr achievement
+  ///
+  /// In en, this message translates to:
+  /// **'Set your first personal record'**
+  String get achievementFitnessFirstPrDesc;
+
+  /// Achievement name (fitness_record_breaker)
+  ///
+  /// In en, this message translates to:
+  /// **'Record Breaker'**
+  String get achievementFitnessRecordBreakerTitle;
+
+  /// How to unlock the fitness_record_breaker achievement
+  ///
+  /// In en, this message translates to:
+  /// **'Set 10 personal records'**
+  String get achievementFitnessRecordBreakerDesc;
+
+  /// Achievement name (fitness_elite)
+  ///
+  /// In en, this message translates to:
+  /// **'Elite'**
+  String get achievementFitnessEliteTitle;
+
+  /// How to unlock the fitness_elite achievement
+  ///
+  /// In en, this message translates to:
+  /// **'Set 50 personal records'**
+  String get achievementFitnessEliteDesc;
+
+  /// Achievement name (health_perfect_day)
+  ///
+  /// In en, this message translates to:
+  /// **'Perfect Day'**
+  String get achievementHealthPerfectDayTitle;
+
+  /// How to unlock the health_perfect_day achievement
+  ///
+  /// In en, this message translates to:
+  /// **'Take all medications on schedule for 1 day'**
+  String get achievementHealthPerfectDayDesc;
+
+  /// Achievement name (health_week_wellness)
+  ///
+  /// In en, this message translates to:
+  /// **'Week of Wellness'**
+  String get achievementHealthWeekWellnessTitle;
+
+  /// How to unlock the health_week_wellness achievement
+  ///
+  /// In en, this message translates to:
+  /// **'Maintain 100% medication compliance for 7 days'**
+  String get achievementHealthWeekWellnessDesc;
+
+  /// Achievement name (health_hero)
+  ///
+  /// In en, this message translates to:
+  /// **'Health Hero'**
+  String get achievementHealthHeroTitle;
+
+  /// How to unlock the health_hero achievement
+  ///
+  /// In en, this message translates to:
+  /// **'Maintain 100% medication compliance for 30 days'**
+  String get achievementHealthHeroDesc;
+
+  /// Achievement name (cross_balance_master)
+  ///
+  /// In en, this message translates to:
+  /// **'Balance Master'**
+  String get achievementCrossBalanceMasterTitle;
+
+  /// How to unlock the cross_balance_master achievement
+  ///
+  /// In en, this message translates to:
+  /// **'Keep 90%+ medication compliance this week and a 1-day workout streak'**
+  String get achievementCrossBalanceMasterDesc;
+
+  /// Achievement name (cross_synced_up)
+  ///
+  /// In en, this message translates to:
+  /// **'Synced Up'**
+  String get achievementCrossSyncedUpTitle;
+
+  /// How to unlock the cross_synced_up achievement
+  ///
+  /// In en, this message translates to:
+  /// **'Keep 90%+ medication compliance this week and a 30-day workout streak'**
+  String get achievementCrossSyncedUpDesc;
+
+  /// Achievement name (cross_wellness_warrior)
+  ///
+  /// In en, this message translates to:
+  /// **'Wellness Warrior'**
+  String get achievementCrossWellnessWarriorTitle;
+
+  /// How to unlock the cross_wellness_warrior achievement
+  ///
+  /// In en, this message translates to:
+  /// **'Keep 90%+ medication compliance this week and a 50-day workout streak'**
+  String get achievementCrossWellnessWarriorDesc;
 }
 
 class _AppLocalizationsDelegate

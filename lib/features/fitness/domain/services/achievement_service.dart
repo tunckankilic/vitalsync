@@ -263,13 +263,9 @@ class AchievementService {
     // Update in repository
     await _achievementRepository.checkAndUnlock();
 
-    // Send notification using existing notification method
-    await _notificationService.showNotification(
-      id: 72000 + achievement.id,
-      title: 'Achievement Unlocked!',
-      body: '${achievement.title} - ${achievement.description}',
-      payload: 'achievement:${achievement.id}',
-    );
+    // The notification service owns the text: it can resolve the user's
+    // locale without a widget context, which this service cannot.
+    await _notificationService.showAchievementUnlocked(achievement);
 
     // Track analytics using existing method
     await _analyticsService.logAchievementUnlocked(

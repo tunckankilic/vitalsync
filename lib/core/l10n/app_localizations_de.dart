@@ -2044,4 +2044,151 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get mealDeleted => 'Mahlzeit gelöscht';
+
+  @override
+  String get achievementUnlockedTitle => 'Erfolg freigeschaltet!';
+
+  @override
+  String get achievementFitnessFirstStepTitle => 'Erster Schritt';
+
+  @override
+  String get achievementFitnessFirstStepDesc =>
+      'Schließe dein erstes Workout ab';
+
+  @override
+  String get achievementFitnessWeekWarriorTitle => 'Wochenkrieger';
+
+  @override
+  String get achievementFitnessWeekWarriorDesc =>
+      'Halte eine 7-tägige Workout-Serie';
+
+  @override
+  String get achievementFitnessMonthlyMasterTitle => 'Monatsmeister';
+
+  @override
+  String get achievementFitnessMonthlyMasterDesc =>
+      'Halte eine 30-tägige Workout-Serie';
+
+  @override
+  String get achievementFitnessIronWillTitle => 'Eiserner Wille';
+
+  @override
+  String get achievementFitnessIronWillDesc =>
+      'Halte eine 100-tägige Workout-Serie';
+
+  @override
+  String get achievementFitnessTonClubTitle => 'Tonnen-Club';
+
+  @override
+  String get achievementFitnessTonClubDesc => 'Hebe insgesamt 1.000 kg';
+
+  @override
+  String get achievementFitnessHeavyLifterTitle => 'Schwergewicht';
+
+  @override
+  String get achievementFitnessHeavyLifterDesc => 'Hebe insgesamt 10.000 kg';
+
+  @override
+  String get achievementFitnessPowerhouseTitle => 'Kraftpaket';
+
+  @override
+  String get achievementFitnessPowerhouseDesc => 'Hebe insgesamt 100.000 kg';
+
+  @override
+  String get achievementFitnessMountainMoverTitle => 'Bergeversetzer';
+
+  @override
+  String get achievementFitnessMountainMoverDesc => 'Hebe insgesamt 500.000 kg';
+
+  @override
+  String get achievementFitnessBeginnerTitle => 'Anfänger';
+
+  @override
+  String get achievementFitnessBeginnerDesc => 'Schließe 1 Workout ab';
+
+  @override
+  String get achievementFitnessConsistentTitle => 'Beständig';
+
+  @override
+  String get achievementFitnessConsistentDesc => 'Schließe 10 Workouts ab';
+
+  @override
+  String get achievementFitnessDedicatedTitle => 'Engagiert';
+
+  @override
+  String get achievementFitnessDedicatedDesc => 'Schließe 50 Workouts ab';
+
+  @override
+  String get achievementFitnessGymRatTitle => 'Stammgast';
+
+  @override
+  String get achievementFitnessGymRatDesc => 'Schließe 100 Workouts ab';
+
+  @override
+  String get achievementFitnessLegendTitle => 'Fitness-Legende';
+
+  @override
+  String get achievementFitnessLegendDesc => 'Schließe 500 Workouts ab';
+
+  @override
+  String get achievementFitnessFirstPrTitle => 'Erster Rekord';
+
+  @override
+  String get achievementFitnessFirstPrDesc =>
+      'Stelle deinen ersten persönlichen Rekord auf';
+
+  @override
+  String get achievementFitnessRecordBreakerTitle => 'Rekordbrecher';
+
+  @override
+  String get achievementFitnessRecordBreakerDesc =>
+      'Stelle 10 persönliche Rekorde auf';
+
+  @override
+  String get achievementFitnessEliteTitle => 'Elite';
+
+  @override
+  String get achievementFitnessEliteDesc => 'Stelle 50 persönliche Rekorde auf';
+
+  @override
+  String get achievementHealthPerfectDayTitle => 'Perfekter Tag';
+
+  @override
+  String get achievementHealthPerfectDayDesc =>
+      'Nimm 1 Tag lang alle Medikamente pünktlich ein';
+
+  @override
+  String get achievementHealthWeekWellnessTitle => 'Woche des Wohlbefindens';
+
+  @override
+  String get achievementHealthWeekWellnessDesc =>
+      'Halte 7 Tage lang 100% Medikamententreue';
+
+  @override
+  String get achievementHealthHeroTitle => 'Gesundheitsheld';
+
+  @override
+  String get achievementHealthHeroDesc =>
+      'Halte 30 Tage lang 100% Medikamententreue';
+
+  @override
+  String get achievementCrossBalanceMasterTitle => 'Balance-Meister';
+
+  @override
+  String get achievementCrossBalanceMasterDesc =>
+      'Erreiche diese Woche 90%+ Medikamententreue und eine 1-tägige Workout-Serie';
+
+  @override
+  String get achievementCrossSyncedUpTitle => 'Im Einklang';
+
+  @override
+  String get achievementCrossSyncedUpDesc =>
+      'Erreiche diese Woche 90%+ Medikamententreue und eine 30-tägige Workout-Serie';
+
+  @override
+  String get achievementCrossWellnessWarriorTitle => 'Wellness-Krieger';
+
+  @override
+  String get achievementCrossWellnessWarriorDesc =>
+      'Erreiche diese Woche 90%+ Medikamententreue und eine 50-tägige Workout-Serie';
 }

@@ -7,6 +7,7 @@ library;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vitalsync/core/enums/achievement_type.dart';
+import 'package:vitalsync/core/l10n/achievement_labels.dart';
 import 'package:vitalsync/core/l10n/app_localizations.dart';
 import 'package:vitalsync/core/theme/app_theme.dart';
 import 'package:vitalsync/domain/entities/fitness/achievement.dart';
@@ -334,7 +335,7 @@ class _UnlockedAchievementCard extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               Text(
-                achievement.title,
+                achievement.localizedTitle(AppLocalizations.of(context)),
                 style: theme.textTheme.titleSmall?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
@@ -344,7 +345,7 @@ class _UnlockedAchievementCard extends StatelessWidget {
               ),
               const SizedBox(height: 4),
               Text(
-                achievement.description,
+                achievement.localizedDescription(AppLocalizations.of(context)),
                 style: theme.textTheme.bodySmall?.copyWith(
                   color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
                 ),
@@ -417,7 +418,7 @@ class _LockedAchievementCard extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               Text(
-                achievement.title,
+                achievement.localizedTitle(AppLocalizations.of(context)),
                 style: theme.textTheme.titleSmall?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),

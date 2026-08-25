@@ -5,8 +5,10 @@ import 'package:timezone/data/latest.dart' as tzdata;
 import 'package:timezone/timezone.dart' as tz;
 import 'package:vitalsync/core/analytics/analytics_service.dart';
 import 'package:vitalsync/core/constants/app_constants.dart';
+import 'package:vitalsync/core/enums/achievement_type.dart';
 import 'package:vitalsync/core/enums/medication_frequency.dart';
 import 'package:vitalsync/core/notifications/notification_service.dart';
+import 'package:vitalsync/domain/entities/fitness/achievement.dart';
 import 'package:vitalsync/domain/entities/health/medication.dart';
 
 class MockFlutterLocalNotificationsPlugin extends Mock
@@ -22,11 +24,15 @@ typedef ScheduledNotification = ({
   String? body,
 });
 
+/// A notification shown immediately rather than scheduled.
+typedef ShownNotification = ({int id, String? title, String? body});
+
 void main() {
   late NotificationService service;
   late MockFlutterLocalNotificationsPlugin mockPlugin;
   late MockAnalyticsService mockAnalytics;
   late List<ScheduledNotification> schedules;
+  late List<ShownNotification> shown;
 
   setUpAll(() {
     tzdata.initializeTimeZones();
@@ -39,6 +45,7 @@ void main() {
     mockPlugin = MockFlutterLocalNotificationsPlugin();
     mockAnalytics = MockAnalyticsService();
     schedules = [];
+    shown = [];
     service = NotificationService(
       notifications: mockPlugin,
       analyticsService: mockAnalytics,
@@ -68,6 +75,22 @@ void main() {
     when(
       () => mockPlugin.cancel(id: any(named: 'id')),
     ).thenAnswer((_) async {});
+    when(
+      () => mockPlugin.show(
+        id: any(named: 'id'),
+        title: any(named: 'title'),
+        body: any(named: 'body'),
+        notificationDetails: any(named: 'notificationDetails'),
+        payload: any(named: 'payload'),
+      ),
+    ).thenAnswer((invocation) async {
+      final args = invocation.namedArguments;
+      shown.add((
+        id: args[#id] as int,
+        title: args[#title] as String?,
+        body: args[#body] as String?,
+      ));
+    });
   });
 
   final testMedication = Medication(
@@ -98,7 +121,6 @@ void main() {
           withFollowUps: true,
         );
 
-        
         expect(schedules, hasLength(2));
 
         final reminder = schedules.firstWhere((s) => s.id == reminderId);
@@ -106,9 +128,7 @@ void main() {
 
         expect(
           followUp.date.difference(reminder.date),
-          const Duration(
-            minutes: AppConstants.medicationFollowUpGraceMinutes,
-          ),
+          const Duration(minutes: AppConstants.medicationFollowUpGraceMinutes),
         );
         // Follow-up recurrence mirrors the daily reminder
         expect(followUp.match, DateTimeComponents.time);
@@ -118,13 +138,15 @@ void main() {
       },
     );
 
-    test('daily reminders without follow-ups schedule only the reminder', () async {
-      await service.scheduleDailyMedicationReminders(testMedication);
+    test(
+      'daily reminders without follow-ups schedule only the reminder',
+      () async {
+        await service.scheduleDailyMedicationReminders(testMedication);
 
-      
-      expect(schedules, hasLength(1));
-      expect(schedules.single.id, reminderId);
-    });
+        expect(schedules, hasLength(1));
+        expect(schedules.single.id, reminderId);
+      },
+    );
 
     test('weekly follow-ups repeat on day-of-week and time', () async {
       final weeklyMed = testMedication.copyWith(
@@ -136,9 +158,7 @@ void main() {
         withFollowUps: true,
       );
 
-      final followUp = schedules.firstWhere(
-        (s) => s.id == followUpId,
-      );
+      final followUp = schedules.firstWhere((s) => s.id == followUpId);
       expect(followUp.match, DateTimeComponents.dayOfWeekAndTime);
     });
 
@@ -153,43 +173,40 @@ void main() {
         withFollowUp: true,
       );
 
-      final followUp = schedules.firstWhere(
-        (s) => s.id == followUpId,
-      );
+      final followUp = schedules.firstWhere((s) => s.id == followUpId);
       expect(followUp.match, isNull);
     });
 
-    test('follow-up IDs stay in their reserved range for multi-slot meds', () async {
-      final multiDoseMed = testMedication.copyWith(
-        frequency: MedicationFrequency.threeTimesDaily,
-        times: ['08:00', '14:00', '20:00'],
-      );
-
-      await service.scheduleDailyMedicationReminders(
-        multiDoseMed,
-        withFollowUps: true,
-      );
-
-      
-      final reminderIds = schedules
-          .where((s) => s.id < kMedicationFollowUpIdOffset)
-          .map((s) => s.id)
-          .toList();
-      final followUpIds = schedules
-          .where((s) => s.id >= kMedicationFollowUpIdOffset)
-          .map((s) => s.id)
-          .toList();
-
-      expect(reminderIds, [100, 101, 102]);
-      expect(followUpIds, [100100, 100101, 100102]);
-      // Each follow-up ID is derived from its reminder ID
-      for (final id in followUpIds) {
-        expect(
-          reminderIds,
-          contains(id - kMedicationFollowUpIdOffset),
+    test(
+      'follow-up IDs stay in their reserved range for multi-slot meds',
+      () async {
+        final multiDoseMed = testMedication.copyWith(
+          frequency: MedicationFrequency.threeTimesDaily,
+          times: ['08:00', '14:00', '20:00'],
         );
-      }
-    });
+
+        await service.scheduleDailyMedicationReminders(
+          multiDoseMed,
+          withFollowUps: true,
+        );
+
+        final reminderIds = schedules
+            .where((s) => s.id < kMedicationFollowUpIdOffset)
+            .map((s) => s.id)
+            .toList();
+        final followUpIds = schedules
+            .where((s) => s.id >= kMedicationFollowUpIdOffset)
+            .map((s) => s.id)
+            .toList();
+
+        expect(reminderIds, [100, 101, 102]);
+        expect(followUpIds, [100100, 100101, 100102]);
+        // Each follow-up ID is derived from its reminder ID
+        for (final id in followUpIds) {
+          expect(reminderIds, contains(id - kMedicationFollowUpIdOffset));
+        }
+      },
+    );
   });
 
   group('follow-up cancellation', () {
@@ -222,10 +239,7 @@ void main() {
         () => mockPlugin.cancel(id: captureAny(named: 'id')),
       ).captured.cast<int>();
 
-      expect(
-        cancelled,
-        List.generate(10, (i) => followUpId + i),
-      );
+      expect(cancelled, List.generate(10, (i) => followUpId + i));
     });
   });
 
@@ -253,18 +267,22 @@ void main() {
         remindAt: remindAt,
       );
 
-      final payload = verify(
-        () => mockPlugin.zonedSchedule(
-          id: any(named: 'id'),
-          title: any(named: 'title'),
-          body: any(named: 'body'),
-          scheduledDate: any(named: 'scheduledDate'),
-          notificationDetails: any(named: 'notificationDetails'),
-          androidScheduleMode: any(named: 'androidScheduleMode'),
-          payload: captureAny(named: 'payload'),
-          matchDateTimeComponents: any(named: 'matchDateTimeComponents'),
-        ),
-      ).captured.single as String?;
+      final payload =
+          verify(
+                () => mockPlugin.zonedSchedule(
+                  id: any(named: 'id'),
+                  title: any(named: 'title'),
+                  body: any(named: 'body'),
+                  scheduledDate: any(named: 'scheduledDate'),
+                  notificationDetails: any(named: 'notificationDetails'),
+                  androidScheduleMode: any(named: 'androidScheduleMode'),
+                  payload: captureAny(named: 'payload'),
+                  matchDateTimeComponents: any(
+                    named: 'matchDateTimeComponents',
+                  ),
+                ),
+              ).captured.single
+              as String?;
 
       expect(
         payload,
@@ -322,6 +340,43 @@ void main() {
         expect(scheduled.id, greaterThanOrEqualTo(kPostMealReminderIdOffset));
         expect(scheduled.id, lessThan(kPostMealReminderIdOffset + 10000));
       }
+    });
+  });
+
+  group('achievement unlock notification', () {
+    const achievement = Achievement(
+      id: 4,
+      type: AchievementType.streak,
+      title: 'STORED TITLE',
+      description: 'STORED DESCRIPTION',
+      requirement: 7,
+      iconName: 'fitness_week_warrior',
+    );
+
+    test('announces the achievement in the resolved language', () async {
+      await service.showAchievementUnlocked(achievement);
+
+      expect(shown, hasLength(1));
+      // No resolver is configured here, so the service falls back to English.
+      expect(shown.single.title, 'Achievement Unlocked!');
+      expect(shown.single.body, contains('Week Warrior'));
+      expect(shown.single.body, contains('7-day workout streak'));
+    });
+
+    test(
+      'uses the localized copy, not the row stored in the database',
+      () async {
+        await service.showAchievementUnlocked(achievement);
+
+        expect(shown.single.body, isNot(contains('STORED TITLE')));
+        expect(shown.single.body, isNot(contains('STORED DESCRIPTION')));
+      },
+    );
+
+    test('derives its id from the achievement row', () async {
+      await service.showAchievementUnlocked(achievement);
+
+      expect(shown.single.id, kAchievementNotificationIdOffset + 4);
     });
   });
 }
