@@ -190,11 +190,25 @@ void main() {
               as CalibrationMetric;
 
       // Every value in the row is a count, a date or the app version.
-      final serialized = stored.toString();
+      //
+      // Timestamps are masked before the numeric check: `lastModifiedAt` and
+      // `createdAt` are wall-clock values carrying arbitrary digits, so a
+      // millisecond component of .137 made the '137' assertion below fail at
+      // random — roughly one run in a thousand. Masking keeps the guarantee
+      // (no measurement value in the row) without the false positive.
+      final serialized = stored.toString().replaceAll(
+        RegExp(r'\d{4}-\d{2}-\d{2}[ T][\d:.]+Z?'),
+        '<timestamp>',
+      );
       expect(serialized, isNot(contains('kahvaltı')));
       expect(serialized, isNot(contains('private note')));
       expect(serialized, isNot(contains('137')));
       expect(serialized, isNot(contains('breakfast')));
+
+      // The mask must not have swallowed the whole string and made the
+      // checks above vacuous.
+      expect(serialized, contains('CalibrationMetric('));
+      expect(serialized, contains('appVersion: 1.0.0'));
 
       // The reason map keys are enum names, never user text.
       for (final key in stored.uncoveredReasons.keys) {

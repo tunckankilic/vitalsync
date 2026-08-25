@@ -91,15 +91,30 @@ class AchievementRepositoryImpl implements AchievementRepository {
           shouldUnlock = prCount >= achievement.requirement;
 
         case AchievementType.medicationCompliance:
-          // Check 7-day compliance rate (100% for all days)
-          final complianceRate =
-              await _medicationLogRepository.getOverallComplianceRate(days: 7);
-          // Requirement is typically 7 days of 100% compliance
-          shouldUnlock = complianceRate >= 1.0 &&
-              achievement.requirement <= 7; // 7 consecutive days
+          // The requirement is the number of days that must be at 100%, as
+          // each achievement's own description says ("... for 1 day",
+          // "... for 7 days", "... for 30 days"), so the window is measured
+          // over exactly that many days.
+          //
+          // This used to read a fixed 7-day window and gate on
+          // `requirement <= 7`, which made the 30-day achievement
+          // permanently unobtainable and unlocked the 1-day one only after
+          // a full compliant week.
+          final complianceRate = await _medicationLogRepository
+              .getOverallComplianceRate(days: achievement.requirement);
+          shouldUnlock = complianceRate >= 1.0;
 
         case AchievementType.consistency:
-          // Cross-module: both medication compliance and workout streak
+          // Cross-module: both medication compliance and workout streak.
+          //
+          // NOTE: the seeded descriptions of the three consistency
+          // achievements each describe a different measure — workouts in a
+          // week, streak days, and total workouts — which a single
+          // `requirement` integer cannot express. This check reads it as
+          // streak days for all three, so "Wellness Warrior" ("complete 50
+          // workouts") in practice asks for a 50-day streak. Left as-is
+          // deliberately: picking one meaning is a product decision, not a
+          // bug fix, and this is live behaviour.
           final complianceRate =
               await _medicationLogRepository.getOverallComplianceRate(days: 7);
           final currentStreak = await _streakRepository.getCurrentStreak();
