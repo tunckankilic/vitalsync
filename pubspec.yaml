@@ -4,7 +4,7 @@ description: "VitalSync — Health & Fitness Companion. Medication reminders,
   insights."
 publish_to: 'none'
 
-version: 1.0.0+3
+version: 1.1.0+4
 
 environment:
   sdk: ^3.10.7

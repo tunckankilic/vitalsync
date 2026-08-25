@@ -17,11 +17,16 @@ abstract class AppConstants {
   /// Application name
   static const String appName = 'VitalSynch';
 
-  /// Application version (semantic versioning)
-  static const String appVersion = '1.0.0';
-
-  /// Build number
-  static const int buildNumber = 1;
+  /// Application version (semantic versioning).
+  ///
+  /// Must match the version name in pubspec.yaml — app_version_test.dart
+  /// fails the build if the two drift apart. It is stamped onto calibration
+  /// metrics, so a stale value here silently mislabels which build produced
+  /// a week of telemetry.
+  ///
+  /// The build number deliberately has no constant: Codemagic computes it
+  /// per upload (see codemagic.yaml) and any copy kept here would be wrong.
+  static const String appVersion = '1.1.0';
 
   // ═══════════════════════════════════════════════════════════════════════
   // SHARED PREFERENCES KEYS
