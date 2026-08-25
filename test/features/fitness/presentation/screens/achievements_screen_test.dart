@@ -38,6 +38,15 @@ void main() {
     iconName: 'health_hero',
   );
 
+  const crossModule = Achievement(
+    id: 3,
+    type: AchievementType.consistency,
+    title: 'STORED CROSS TITLE',
+    description: 'STORED CROSS DESCRIPTION',
+    requirement: 30,
+    iconName: 'cross_synced_up',
+  );
+
   Future<void> pumpScreen(WidgetTester tester, Locale locale) async {
     await tester.binding.setSurfaceSize(const Size(1200, 2400));
     addTearDown(() => tester.binding.setSurfaceSize(null));
@@ -46,7 +55,7 @@ void main() {
       ProviderScope(
         overrides: [
           achievementsProvider.overrideWith(
-            (ref) => Stream.value([unlocked, locked]),
+            (ref) => Stream.value([unlocked, locked, crossModule]),
           ),
         ],
         child: MaterialApp(
@@ -102,5 +111,67 @@ void main() {
     expect(find.text('Week Warrior'), findsOneWidget);
     expect(find.text('Maintain a 7-day workout streak'), findsOneWidget);
     expect(find.text(storedUnlockedTitle), findsNothing);
+  });
+
+  group('category filter', () {
+    /// Taps a chip by its label, scrolling the chip row if it sits off-screen.
+    Future<void> tapChip(WidgetTester tester, String label) async {
+      final chip = find.widgetWithText(ChoiceChip, label);
+      await tester.ensureVisible(chip);
+      await tester.pumpAndSettle();
+      await tester.tap(chip);
+      await tester.pumpAndSettle();
+    }
+
+    testWidgets('offers a chip for every achievement type', (tester) async {
+      await pumpScreen(tester, const Locale('en'));
+
+      // Six types plus "All". Medication and Consistency were missing, which
+      // left their achievements reachable only through "All".
+      for (final label in [
+        'All',
+        'Streak',
+        'Total Volume',
+        'Workouts',
+        'Personal Records',
+        'Medication',
+        'Consistency',
+      ]) {
+        expect(
+          find.widgetWithText(ChoiceChip, label),
+          findsOneWidget,
+          reason: label,
+        );
+      }
+    });
+
+    testWidgets('filtering to Medication hides the other categories', (
+      tester,
+    ) async {
+      await pumpScreen(tester, const Locale('en'));
+      await tapChip(tester, 'Medication');
+
+      expect(find.text('Health Hero'), findsOneWidget);
+      expect(find.text('Week Warrior'), findsNothing);
+      expect(find.text('Synced Up'), findsNothing);
+    });
+
+    testWidgets('filtering to Consistency reaches the cross-module set', (
+      tester,
+    ) async {
+      await pumpScreen(tester, const Locale('en'));
+      await tapChip(tester, 'Consistency');
+
+      expect(find.text('Synced Up'), findsOneWidget);
+      expect(find.text('Week Warrior'), findsNothing);
+      expect(find.text('Health Hero'), findsNothing);
+    });
+
+    testWidgets('the new chips are localized too', (tester) async {
+      await pumpScreen(tester, const Locale('tr'));
+
+      expect(find.widgetWithText(ChoiceChip, 'İlaç'), findsOneWidget);
+      expect(find.widgetWithText(ChoiceChip, 'Tutarlılık'), findsOneWidget);
+    });
   });
 }

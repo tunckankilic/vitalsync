@@ -236,6 +236,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get medicationCompliance => 'Medication';
 
   @override
+  String get consistency => 'Consistency';
+
+  @override
   String get workoutVolume => 'Workout';
 
   @override

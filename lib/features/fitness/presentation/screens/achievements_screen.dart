@@ -261,6 +261,20 @@ class _CategoryFilter extends StatelessWidget {
             () => onCategoryChanged(AchievementType.pr),
             theme,
           ),
+          const SizedBox(width: 8),
+          _buildChip(
+            l10n.medicationCompliance,
+            selectedCategory == AchievementType.medicationCompliance,
+            () => onCategoryChanged(AchievementType.medicationCompliance),
+            theme,
+          ),
+          const SizedBox(width: 8),
+          _buildChip(
+            l10n.consistency,
+            selectedCategory == AchievementType.consistency,
+            () => onCategoryChanged(AchievementType.consistency),
+            theme,
+          ),
         ],
       ),
     );

@@ -240,6 +240,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get medicationCompliance => 'Medikation';
 
   @override
+  String get consistency => 'Beständigkeit';
+
+  @override
   String get workoutVolume => 'Training';
 
   @override

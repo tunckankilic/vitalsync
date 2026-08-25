@@ -514,6 +514,12 @@ abstract class AppLocalizations {
   /// **'Medication'**
   String get medicationCompliance;
 
+  /// Achievement category covering both medication and workouts
+  ///
+  /// In en, this message translates to:
+  /// **'Consistency'**
+  String get consistency;
+
   /// Workout volume label
   ///
   /// In en, this message translates to:

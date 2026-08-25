@@ -177,6 +177,8 @@
   "@last30Days": { "description": "Last 30 days filter" },
   "medicationCompliance": "Medication",
   "@medicationCompliance": { "description": "Medication compliance label" },
+  "consistency": "Consistency",
+  "@consistency": { "description": "Achievement category covering both medication and workouts" },
   "workoutVolume": "Workout",
   "@workoutVolume": { "description": "Workout volume label" },
   

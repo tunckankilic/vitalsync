@@ -239,6 +239,9 @@ class AppLocalizationsTr extends AppLocalizations {
   String get medicationCompliance => 'İlaç';
 
   @override
+  String get consistency => 'Tutarlılık';
+
+  @override
   String get workoutVolume => 'Antrenman';
 
   @override

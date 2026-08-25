@@ -26,22 +26,8 @@ enum AchievementType {
     );
   }
 
-  /// Get localized display name.
-  /// Note: Actual localization will be implemented in l10n files.
-  String get displayName {
-    switch (this) {
-      case AchievementType.streak:
-        return 'Workout Streak';
-      case AchievementType.volume:
-        return 'Total Volume';
-      case AchievementType.workouts:
-        return 'Workout Count';
-      case AchievementType.pr:
-        return 'Personal Records';
-      case AchievementType.medicationCompliance:
-        return 'Medication Adherence';
-      case AchievementType.consistency:
-        return 'Consistency';
-    }
-  }
+  // Category names are not held here. They were, as a hardcoded English
+  // `displayName` that nothing ever called, which made the type look
+  // translated when it was not. The achievements screen labels its filter
+  // chips from AppLocalizations instead.
 }
