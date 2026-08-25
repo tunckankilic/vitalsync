@@ -3735,6 +3735,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Ask for a reading 2 hours after a logged meal'**
   String get postMealReminderSettingSubtitle;
+
+  /// Confirmation dialog title for deleting a single glucose reading
+  ///
+  /// In en, this message translates to:
+  /// **'Delete this reading?'**
+  String get deleteGlucoseReadingTitle;
+
+  /// Confirmation dialog body. States what is removed; makes no claim about the value itself.
+  ///
+  /// In en, this message translates to:
+  /// **'The measurement is removed from VitalSync. A reading that came from Apple Health stays in Apple Health — VitalSync never writes there.'**
+  String get deleteGlucoseReadingMessage;
+
+  /// Snackbar after a reading is deleted
+  ///
+  /// In en, this message translates to:
+  /// **'Reading deleted'**
+  String get glucoseReadingDeleted;
+
+  /// Confirmation dialog title for deleting a logged meal
+  ///
+  /// In en, this message translates to:
+  /// **'Delete this meal?'**
+  String get deleteMealTitle;
+
+  /// Confirmation dialog body for deleting a logged meal
+  ///
+  /// In en, this message translates to:
+  /// **'The meal and its measurement reminder are removed from VitalSync.'**
+  String get deleteMealMessage;
+
+  /// Snackbar after a meal is deleted
+  ///
+  /// In en, this message translates to:
+  /// **'Meal deleted'**
+  String get mealDeleted;
 }
 
 class _AppLocalizationsDelegate

@@ -2024,4 +2024,24 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get postMealReminderSettingSubtitle =>
       '2 Stunden nach einer eingetragenen Mahlzeit nach einer Messung fragen';
+
+  @override
+  String get deleteGlucoseReadingTitle => 'Diesen Messwert löschen?';
+
+  @override
+  String get deleteGlucoseReadingMessage =>
+      'Der Messwert wird aus VitalSync entfernt. Ein Wert aus Apple Health bleibt in Apple Health — VitalSync schreibt dort nie hinein.';
+
+  @override
+  String get glucoseReadingDeleted => 'Messwert gelöscht';
+
+  @override
+  String get deleteMealTitle => 'Diese Mahlzeit löschen?';
+
+  @override
+  String get deleteMealMessage =>
+      'Die Mahlzeit und ihre Mess-Erinnerung werden aus VitalSync entfernt.';
+
+  @override
+  String get mealDeleted => 'Mahlzeit gelöscht';
 }

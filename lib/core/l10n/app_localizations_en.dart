@@ -2001,4 +2001,24 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get postMealReminderSettingSubtitle =>
       'Ask for a reading 2 hours after a logged meal';
+
+  @override
+  String get deleteGlucoseReadingTitle => 'Delete this reading?';
+
+  @override
+  String get deleteGlucoseReadingMessage =>
+      'The measurement is removed from VitalSync. A reading that came from Apple Health stays in Apple Health — VitalSync never writes there.';
+
+  @override
+  String get glucoseReadingDeleted => 'Reading deleted';
+
+  @override
+  String get deleteMealTitle => 'Delete this meal?';
+
+  @override
+  String get deleteMealMessage =>
+      'The meal and its measurement reminder are removed from VitalSync.';
+
+  @override
+  String get mealDeleted => 'Meal deleted';
 }

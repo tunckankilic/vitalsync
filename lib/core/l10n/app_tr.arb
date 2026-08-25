@@ -1371,5 +1371,11 @@
   "postMealReminderTitle": "Ölçüm zamanı",
   "postMealReminderBody": "Öğününün üzerinden 2 saat geçti — ölçüm eklemek ister misin?",
   "postMealReminderSetting": "Öğün sonrası hatırlatıcı",
-  "postMealReminderSettingSubtitle": "Kaydedilen öğünden 2 saat sonra ölçüm iste"
+  "postMealReminderSettingSubtitle": "Kaydedilen öğünden 2 saat sonra ölçüm iste",
+  "deleteGlucoseReadingTitle": "Bu ölçüm silinsin mi?",
+  "deleteGlucoseReadingMessage": "Ölçüm VitalSync'ten kaldırılır. Apple Health'ten gelen bir ölçüm Apple Health'te kalır — VitalSync oraya hiçbir zaman yazmaz.",
+  "glucoseReadingDeleted": "Ölçüm silindi",
+  "deleteMealTitle": "Bu öğün silinsin mi?",
+  "deleteMealMessage": "Öğün ve ona ait ölçüm hatırlatıcısı VitalSync'ten kaldırılır.",
+  "mealDeleted": "Öğün silindi"
 }

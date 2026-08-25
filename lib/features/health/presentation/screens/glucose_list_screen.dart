@@ -16,6 +16,7 @@ import 'package:vitalsync/core/l10n/app_localizations.dart';
 import 'package:vitalsync/core/theme/app_theme.dart';
 import 'package:vitalsync/core/utils/extensions.dart';
 import 'package:vitalsync/domain/entities/health/glucose_reading.dart';
+import 'package:vitalsync/features/health/presentation/confirm_delete_dialog.dart';
 import 'package:vitalsync/features/health/presentation/health_labels.dart';
 import 'package:vitalsync/features/health/presentation/providers/glucose_provider.dart';
 import 'package:vitalsync/presentation/widgets/glassmorphic_card.dart';
@@ -111,10 +112,49 @@ class GlucoseListScreen extends ConsumerWidget {
                     return ListView.builder(
                       padding: const EdgeInsets.all(16),
                       itemCount: readings.length,
-                      itemBuilder: (context, index) => Padding(
-                        padding: const EdgeInsets.only(bottom: 8),
-                        child: _GlucoseCard(reading: readings[index]),
-                      ),
+                      itemBuilder: (context, index) {
+                        final reading = readings[index];
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 8),
+                          // Swipe to delete, mirroring the insight list.
+                          // A mistyped measurement was previously permanent:
+                          // `deleteReading` existed but nothing called it.
+                          child: Dismissible(
+                            key: Key('glucose_${reading.id}'),
+                            direction: DismissDirection.endToStart,
+                            background: Container(
+                              alignment: Alignment.centerRight,
+                              padding: const EdgeInsets.only(right: 20),
+                              decoration: BoxDecoration(
+                                color: Colors.red,
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: const Icon(
+                                Icons.delete,
+                                color: Colors.white,
+                              ),
+                            ),
+                            confirmDismiss: (_) => confirmDelete(
+                              context,
+                              title: l10n.deleteGlucoseReadingTitle,
+                              message: l10n.deleteGlucoseReadingMessage,
+                              confirmLabel: l10n.delete,
+                              cancelLabel: l10n.cancel,
+                            ),
+                            onDismissed: (_) {
+                              ref
+                                  .read(glucoseProvider.notifier)
+                                  .deleteReading(reading.id);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(l10n.glucoseReadingDeleted),
+                                ),
+                              );
+                            },
+                            child: _GlucoseCard(reading: reading),
+                          ),
+                        );
+                      },
                     );
                   },
                   loading: () =>

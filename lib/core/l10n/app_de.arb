@@ -1371,5 +1371,11 @@
   "postMealReminderTitle": "Zeit für eine Messung",
   "postMealReminderBody": "Deine Mahlzeit ist 2 Stunden her — möchtest du einen Messwert eintragen?",
   "postMealReminderSetting": "Erinnerung nach der Mahlzeit",
-  "postMealReminderSettingSubtitle": "2 Stunden nach einer eingetragenen Mahlzeit nach einer Messung fragen"
+  "postMealReminderSettingSubtitle": "2 Stunden nach einer eingetragenen Mahlzeit nach einer Messung fragen",
+  "deleteGlucoseReadingTitle": "Diesen Messwert löschen?",
+  "deleteGlucoseReadingMessage": "Der Messwert wird aus VitalSync entfernt. Ein Wert aus Apple Health bleibt in Apple Health — VitalSync schreibt dort nie hinein.",
+  "glucoseReadingDeleted": "Messwert gelöscht",
+  "deleteMealTitle": "Diese Mahlzeit löschen?",
+  "deleteMealMessage": "Die Mahlzeit und ihre Mess-Erinnerung werden aus VitalSync entfernt.",
+  "mealDeleted": "Mahlzeit gelöscht"
 }

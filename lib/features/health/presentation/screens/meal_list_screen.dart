@@ -16,6 +16,7 @@ import 'package:vitalsync/core/theme/app_theme.dart';
 import 'package:vitalsync/core/utils/extensions.dart';
 import 'package:vitalsync/domain/entities/health/meal.dart';
 import 'package:vitalsync/features/health/domain/services/meal_data_coverage_service.dart';
+import 'package:vitalsync/features/health/presentation/confirm_delete_dialog.dart';
 import 'package:vitalsync/features/health/presentation/health_labels.dart';
 import 'package:vitalsync/features/health/presentation/providers/meal_provider.dart';
 import 'package:vitalsync/presentation/widgets/glassmorphic_card.dart';
@@ -110,9 +111,45 @@ class MealListScreen extends ConsumerWidget {
                         final meal = meals[index];
                         return Padding(
                           padding: const EdgeInsets.only(bottom: 8),
-                          child: _MealCard(
-                            meal: meal,
-                            coverage: coverage?[meal.id],
+                          // Swipe to delete, mirroring the insight list.
+                          // `deleteMeal` existed but nothing called it, so a
+                          // mistyped meal was permanent — and it kept
+                          // counting against the coverage tally.
+                          child: Dismissible(
+                            key: Key('meal_${meal.id}'),
+                            direction: DismissDirection.endToStart,
+                            background: Container(
+                              alignment: Alignment.centerRight,
+                              padding: const EdgeInsets.only(right: 20),
+                              decoration: BoxDecoration(
+                                color: Colors.red,
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: const Icon(
+                                Icons.delete,
+                                color: Colors.white,
+                              ),
+                            ),
+                            confirmDismiss: (_) => confirmDelete(
+                              context,
+                              title: l10n.deleteMealTitle,
+                              message: l10n.deleteMealMessage,
+                              confirmLabel: l10n.delete,
+                              cancelLabel: l10n.cancel,
+                            ),
+                            onDismissed: (_) {
+                              // Also cancels the pending post-meal reminder.
+                              ref
+                                  .read(mealProvider.notifier)
+                                  .deleteMeal(meal.id);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text(l10n.mealDeleted)),
+                              );
+                            },
+                            child: _MealCard(
+                              meal: meal,
+                              coverage: coverage?[meal.id],
+                            ),
                           ),
                         );
                       },

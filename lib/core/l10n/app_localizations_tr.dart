@@ -1999,4 +1999,24 @@ class AppLocalizationsTr extends AppLocalizations {
   @override
   String get postMealReminderSettingSubtitle =>
       'Kaydedilen öğünden 2 saat sonra ölçüm iste';
+
+  @override
+  String get deleteGlucoseReadingTitle => 'Bu ölçüm silinsin mi?';
+
+  @override
+  String get deleteGlucoseReadingMessage =>
+      'Ölçüm VitalSync\'ten kaldırılır. Apple Health\'ten gelen bir ölçüm Apple Health\'te kalır — VitalSync oraya hiçbir zaman yazmaz.';
+
+  @override
+  String get glucoseReadingDeleted => 'Ölçüm silindi';
+
+  @override
+  String get deleteMealTitle => 'Bu öğün silinsin mi?';
+
+  @override
+  String get deleteMealMessage =>
+      'Öğün ve ona ait ölçüm hatırlatıcısı VitalSync\'ten kaldırılır.';
+
+  @override
+  String get mealDeleted => 'Öğün silindi';
 }

@@ -1424,5 +1424,17 @@
   "postMealReminderSetting": "Post-meal reminder",
   "@postMealReminderSetting": { "description": "Settings switch title for the post-meal measurement reminder" },
   "postMealReminderSettingSubtitle": "Ask for a reading 2 hours after a logged meal",
-  "@postMealReminderSettingSubtitle": { "description": "Settings switch subtitle. Describes the fixed time trigger, nothing about readings." }
+  "@postMealReminderSettingSubtitle": { "description": "Settings switch subtitle. Describes the fixed time trigger, nothing about readings." },
+  "deleteGlucoseReadingTitle": "Delete this reading?",
+  "@deleteGlucoseReadingTitle": { "description": "Confirmation dialog title for deleting a single glucose reading" },
+  "deleteGlucoseReadingMessage": "The measurement is removed from VitalSync. A reading that came from Apple Health stays in Apple Health — VitalSync never writes there.",
+  "@deleteGlucoseReadingMessage": { "description": "Confirmation dialog body. States what is removed; makes no claim about the value itself." },
+  "glucoseReadingDeleted": "Reading deleted",
+  "@glucoseReadingDeleted": { "description": "Snackbar after a reading is deleted" },
+  "deleteMealTitle": "Delete this meal?",
+  "@deleteMealTitle": { "description": "Confirmation dialog title for deleting a logged meal" },
+  "deleteMealMessage": "The meal and its measurement reminder are removed from VitalSync.",
+  "@deleteMealMessage": { "description": "Confirmation dialog body for deleting a logged meal" },
+  "mealDeleted": "Meal deleted",
+  "@mealDeleted": { "description": "Snackbar after a meal is deleted" }
 }
