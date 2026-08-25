@@ -328,6 +328,8 @@ Future<void> initializeDependencies() async {
       insightRepository: getIt<InsightRepository>(),
       personalRecordRepository: getIt<PersonalRecordRepository>(),
       streakRepository: getIt<StreakRepository>(),
+      mealRepository: getIt<MealRepository>(),
+      glucoseRepository: getIt<GlucoseRepository>(),
     ),
   );
 

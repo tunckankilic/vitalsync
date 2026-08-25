@@ -3,7 +3,7 @@
 /// Generates comprehensive weekly reports aggregating health and fitness data.
 ///
 /// Report includes:
-/// 1. Health Summary: Compliance, trends, symptoms
+/// 1. Health Summary: Compliance, trends, symptoms, meal and glucose counts
 /// 2. Fitness Summary: Workouts, volume, PRs, streaks
 /// 3. Cross-Module Highlights: Health score, best day, top insights
 /// 4. Next Week Suggestions: Actionable recommendations
@@ -21,6 +21,8 @@ import 'package:vitalsync/domain/entities/insights/weekly_report.dart';
 import 'package:vitalsync/domain/repositories/fitness/personal_record_repository.dart';
 import 'package:vitalsync/domain/repositories/fitness/streak_repository.dart';
 import 'package:vitalsync/domain/repositories/fitness/workout_session_repository.dart';
+import 'package:vitalsync/domain/repositories/health/glucose_repository.dart';
+import 'package:vitalsync/domain/repositories/health/meal_repository.dart';
 import 'package:vitalsync/domain/repositories/health/medication_log_repository.dart';
 import 'package:vitalsync/domain/repositories/health/symptom_repository.dart';
 import 'package:vitalsync/domain/repositories/insights/insight_repository.dart';
@@ -33,12 +35,16 @@ class WeeklyReportService {
     required InsightRepository insightRepository,
     required PersonalRecordRepository personalRecordRepository,
     required StreakRepository streakRepository,
+    required MealRepository mealRepository,
+    required GlucoseRepository glucoseRepository,
   }) : _medicationLogRepository = medicationLogRepository,
        _workoutRepository = workoutRepository,
        _symptomRepository = symptomRepository,
        _insightRepository = insightRepository,
        _personalRecordRepository = personalRecordRepository,
-       _streakRepository = streakRepository;
+       _streakRepository = streakRepository,
+       _mealRepository = mealRepository,
+       _glucoseRepository = glucoseRepository;
 
   final MedicationLogRepository _medicationLogRepository;
   final WorkoutSessionRepository _workoutRepository;
@@ -46,6 +52,11 @@ class WeeklyReportService {
   final InsightRepository _insightRepository;
   final PersonalRecordRepository _personalRecordRepository;
   final StreakRepository _streakRepository;
+
+  /// Read only to count rows in the reported week — see
+  /// [_calculateHealthSummary].
+  final MealRepository _mealRepository;
+  final GlucoseRepository _glucoseRepository;
 
   // ── Public API ──────────────────────────────────────────────────────
 
@@ -134,6 +145,8 @@ class WeeklyReportService {
         mostProblematicTimeSlot: healthData.problematicTimeSlot,
         symptomsLoggedCount: healthData.symptomCount,
         mostFrequentSymptom: healthData.mostFrequentSymptom,
+        mealsLoggedCount: healthData.mealCount,
+        glucoseReadingsCount: healthData.glucoseReadingCount,
         // Fitness Summary
         workoutCount: fitnessData.workoutCount,
         totalVolume: fitnessData.totalVolume,
@@ -203,6 +216,14 @@ class WeeklyReportService {
     final symptomCount = symptoms.length;
     final mostFrequentSymptom = _getMostFrequentSymptom(symptoms);
 
+    // No comment, only measurement: the meal and glucose figures are counts
+    // of rows in the week. Nothing is averaged, ranked or related here.
+    final meals = await _mealRepository.getByDateRange(weekStart, weekEnd);
+    final glucoseReadings = await _glucoseRepository.getByDateRange(
+      weekStart,
+      weekEnd,
+    );
+
     return _HealthSummaryData(
       compliance: currentCompliance,
       complianceTrend: complianceTrend,
@@ -210,6 +231,8 @@ class WeeklyReportService {
       problematicTimeSlot: problematicTimeSlot,
       symptomCount: symptomCount,
       mostFrequentSymptom: mostFrequentSymptom,
+      mealCount: meals.length,
+      glucoseReadingCount: glucoseReadings.length,
     );
   }
 
@@ -556,6 +579,8 @@ class _HealthSummaryData {
     required this.problematicTimeSlot,
     required this.symptomCount,
     required this.mostFrequentSymptom,
+    required this.mealCount,
+    required this.glucoseReadingCount,
   });
 
   final double compliance;
@@ -564,6 +589,8 @@ class _HealthSummaryData {
   final String? problematicTimeSlot;
   final int symptomCount;
   final String? mostFrequentSymptom;
+  final int mealCount;
+  final int glucoseReadingCount;
 }
 
 class _FitnessSummaryData {

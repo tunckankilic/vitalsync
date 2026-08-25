@@ -189,6 +189,13 @@ class _WeeklyReportScreenState extends ConsumerState<WeeklyReportScreen> {
         (report['previous_compliance_rate'] as num?)?.toDouble() ?? 0;
     final problematicTimeSlot = report['problematic_time_slot'] as String?;
 
+    // Measurement counts come from the nested health summary the service
+    // serializes; they are counts of rows in the week, nothing more.
+    final healthSummary = report['health_summary'] as Map<String, dynamic>?;
+    final mealsLogged = (healthSummary?['meals_logged_count'] as int?) ?? 0;
+    final glucoseReadings =
+        (healthSummary?['glucose_readings_count'] as int?) ?? 0;
+
     final complianceChange = complianceRate - previousComplianceRate;
 
     final l10n = AppLocalizations.of(context);
@@ -263,6 +270,27 @@ class _WeeklyReportScreenState extends ConsumerState<WeeklyReportScreen> {
                 ),
               ],
             ),
+            // Descriptive counts only — no average, no trend, no comment on
+            // what was measured or eaten.
+            if (mealsLogged > 0 || glucoseReadings > 0) ...[
+              const SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Chip(
+                    avatar: const Icon(Icons.restaurant_rounded, size: 16),
+                    label: Text(l10n.mealCount(mealsLogged)),
+                    visualDensity: VisualDensity.compact,
+                  ),
+                  const SizedBox(width: 8),
+                  Chip(
+                    avatar: const Icon(Icons.water_drop_outlined, size: 16),
+                    label: Text(l10n.glucoseReadingCount(glucoseReadings)),
+                    visualDensity: VisualDensity.compact,
+                  ),
+                ],
+              ),
+            ],
             // Most problematic time slot badge
             if (problematicTimeSlot != null && missedCount > 0) ...[
               const SizedBox(height: 16),

@@ -23,6 +23,8 @@ import '../../data/repositories/fitness/exercise_repository_impl.dart';
 import '../../data/repositories/fitness/personal_record_repository_impl.dart';
 import '../../data/repositories/fitness/streak_repository_impl.dart';
 import '../../data/repositories/fitness/workout_session_repository_impl.dart';
+import '../../data/repositories/health/glucose_repository_impl.dart';
+import '../../data/repositories/health/meal_repository_impl.dart';
 import '../../data/repositories/health/medication_log_repository_impl.dart';
 import '../../data/repositories/health/medication_repository_impl.dart';
 import '../../data/repositories/health/symptom_repository_impl.dart';
@@ -807,6 +809,9 @@ Future<void> _handleWeeklyReport(_BackgroundDeps deps) async {
     deps.db.workoutSessionDao,
   );
 
+  final mealRepo = MealRepositoryImpl(deps.db.mealDao, deps.db);
+  final glucoseRepo = GlucoseRepositoryImpl(deps.db.glucoseDao, deps.db);
+
   final reportService = WeeklyReportService(
     medicationLogRepository: medLogRepo,
     workoutRepository: workoutRepo,
@@ -814,6 +819,8 @@ Future<void> _handleWeeklyReport(_BackgroundDeps deps) async {
     insightRepository: insightRepo,
     personalRecordRepository: prRepo,
     streakRepository: streakRepo,
+    mealRepository: mealRepo,
+    glucoseRepository: glucoseRepo,
   );
 
   await reportService.generateCurrentWeekReport();

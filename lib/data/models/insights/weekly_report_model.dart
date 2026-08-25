@@ -13,6 +13,8 @@ class WeeklyReportModel extends WeeklyReport {
     super.mostProblematicTimeSlot,
     required super.symptomsLoggedCount,
     super.mostFrequentSymptom,
+    super.mealsLoggedCount,
+    super.glucoseReadingsCount,
     // Fitness Summary
     required super.workoutCount,
     required super.totalVolume,
@@ -39,6 +41,8 @@ class WeeklyReportModel extends WeeklyReport {
       mostProblematicTimeSlot: entity.mostProblematicTimeSlot,
       symptomsLoggedCount: entity.symptomsLoggedCount,
       mostFrequentSymptom: entity.mostFrequentSymptom,
+      mealsLoggedCount: entity.mealsLoggedCount,
+      glucoseReadingsCount: entity.glucoseReadingsCount,
       workoutCount: entity.workoutCount,
       totalVolume: entity.totalVolume,
       volumeTrendVsPrevious: entity.volumeTrendVsPrevious,
