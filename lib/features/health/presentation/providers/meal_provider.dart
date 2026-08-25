@@ -10,6 +10,7 @@ import '../../../../core/di/injection_container.dart';
 import '../../../../domain/entities/health/meal.dart';
 import '../../../../domain/repositories/health/meal_repository.dart';
 import '../../domain/services/meal_data_coverage_service.dart';
+import '../../domain/services/post_meal_reminder_service.dart';
 
 part 'meal_provider.g.dart';
 
@@ -23,6 +24,12 @@ MealRepository mealRepository(Ref ref) {
 @Riverpod(keepAlive: true)
 MealDataCoverageService mealDataCoverageService(Ref ref) {
   return getIt<MealDataCoverageService>();
+}
+
+/// Provider for the PostMealReminderService instance
+@Riverpod(keepAlive: true)
+PostMealReminderService postMealReminderService(Ref ref) {
+  return getIt<PostMealReminderService>();
 }
 
 /// Coverage verdicts for the meals the list is showing, keyed by meal id.
@@ -72,10 +79,17 @@ class MealNotifier extends _$MealNotifier {
   Future<void> addMeal(Meal meal) async {
     state = const AsyncValue.loading();
 
+    // Read ref-based dependencies up front: this notifier is autoDispose and
+    // the add screen pops right after triggering the op, so touching ref
+    // after the awaits below would throw on a disposed Ref.
     final repository = ref.read(mealRepositoryProvider);
+    final reminderService = ref.read(postMealReminderServiceProvider);
 
     final result = await AsyncValue.guard(() async {
-      await repository.insert(meal);
+      final id = await repository.insert(meal);
+
+      // Arm the post-meal measurement reminder (never throws)
+      await reminderService.syncReminderAfterChange(id);
     });
     // Guard the state write: this notifier is autoDispose and the add screen
     // pops once the action completes, so an unguarded write throws "Cannot use
@@ -92,9 +106,13 @@ class MealNotifier extends _$MealNotifier {
     state = const AsyncValue.loading();
 
     final repository = ref.read(mealRepositoryProvider);
+    final reminderService = ref.read(postMealReminderServiceProvider);
 
     final result = await AsyncValue.guard(() async {
       await repository.update(meal);
+
+      // Move the reminder to match the (possibly changed) meal time
+      await reminderService.syncReminderAfterChange(meal.id);
     });
     if (ref.mounted) state = result;
 
@@ -108,9 +126,13 @@ class MealNotifier extends _$MealNotifier {
     state = const AsyncValue.loading();
 
     final repository = ref.read(mealRepositoryProvider);
+    final reminderService = ref.read(postMealReminderServiceProvider);
 
     final result = await AsyncValue.guard(() async {
       await repository.delete(id);
+
+      // The meal is gone; its pending reminder must go with it
+      await reminderService.cancelReminder(id);
     });
     if (ref.mounted) state = result;
 

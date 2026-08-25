@@ -276,12 +276,24 @@ final GoRouter appRouter = GoRouter(
                   path: 'add',
                   name: 'add_glucose',
                   parentNavigatorKey: _rootNavigatorKey,
-                  pageBuilder: (context, state) =>
-                      _buildPageWithSlideTransition(
-                        context,
-                        state,
-                        const AddGlucoseReadingScreen(),
+                  pageBuilder: (context, state) {
+                    // Optional `at` (millisecondsSinceEpoch) pre-fills the
+                    // measurement time. Set by the post-meal reminder so the
+                    // form opens at the moment the reminder fired. Anything
+                    // unparseable falls back to "now".
+                    final at = int.tryParse(
+                      state.uri.queryParameters['at'] ?? '',
+                    );
+                    return _buildPageWithSlideTransition(
+                      context,
+                      state,
+                      AddGlucoseReadingScreen(
+                        initialMeasuredAt: at == null
+                            ? null
+                            : DateTime.fromMillisecondsSinceEpoch(at),
                       ),
+                    );
+                  },
                 ),
                 GoRoute(
                   path: 'today',

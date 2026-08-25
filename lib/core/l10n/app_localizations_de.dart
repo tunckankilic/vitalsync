@@ -2005,4 +2005,18 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get calibrationMetricsDisabled => 'Kalibrierungsdaten ausgeschaltet';
+
+  @override
+  String get postMealReminderTitle => 'Zeit für eine Messung';
+
+  @override
+  String get postMealReminderBody =>
+      'Deine Mahlzeit ist 2 Stunden her — möchtest du einen Messwert eintragen?';
+
+  @override
+  String get postMealReminderSetting => 'Erinnerung nach der Mahlzeit';
+
+  @override
+  String get postMealReminderSettingSubtitle =>
+      '2 Stunden nach einer eingetragenen Mahlzeit nach einer Messung fragen';
 }

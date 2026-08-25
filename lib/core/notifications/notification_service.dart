@@ -45,6 +45,17 @@ const String kCategoryMedication = 'medication_category';
 /// of its paired follow-up ("did you log it?") notification.
 const int kMedicationFollowUpIdOffset = 100000;
 
+/// Base of the ID range used by post-meal measurement reminders.
+const int kPostMealReminderIdOffset = 150000;
+
+/// Payload type of the post-meal measurement reminder.
+///
+/// Full payload shape: `glucose_reminder:<millisecondsSinceEpoch>`, where the
+/// timestamp is the moment the reminder fires — i.e. the meal time plus
+/// [AppConstants.postMealReminderDelayHours]. It is carried so the entry form
+/// can open pre-filled with that time; no meal or reading data travels in it.
+const String kPayloadTypeGlucoseReminder = 'glucose_reminder';
+
 // ─────────────────────────────────────────────────────────────────────────────
 // Callback typedefs
 // ─────────────────────────────────────────────────────────────────────────────
@@ -405,7 +416,7 @@ class NotificationService {
     int timeIndex = 0,
   }) async {
     final notifId = _medicationFollowUpNotifId(med.id, timeIndex);
-    final l10n = _followUpLocalizations();
+    final l10n = _scheduledLocalizations();
 
     await _notifications.zonedSchedule(
       id: notifId,
@@ -514,6 +525,45 @@ class NotificationService {
     }
 
     _logger.d('Cancelled all follow-ups for medication $medicationId');
+  }
+
+  /// Schedules the one-shot post-meal measurement reminder for [mealId].
+  ///
+  /// [remindAt] is the absolute fire time (meal time plus
+  /// [AppConstants.postMealReminderDelayHours]). One-shot on purpose: the
+  /// trigger is a single logged meal, never a recurrence and never a reading.
+  ///
+  /// The notification only asks for a measurement. It says nothing about what
+  /// a reading would mean, and nothing about the meal — not even its name,
+  /// which would put health data on the lock screen.
+  Future<void> schedulePostMealGlucoseReminder({
+    required int mealId,
+    required DateTime remindAt,
+  }) async {
+    final notifId = _postMealReminderNotifId(mealId);
+    final l10n = _scheduledLocalizations();
+
+    await _notifications.zonedSchedule(
+      id: notifId,
+      title: l10n.postMealReminderTitle,
+      body: l10n.postMealReminderBody,
+      scheduledDate: tz.TZDateTime.from(remindAt, tz.local),
+      notificationDetails: _glucoseReminderNotificationDetails(),
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      payload:
+          '$kPayloadTypeGlucoseReminder:'
+          '${remindAt.millisecondsSinceEpoch}',
+    );
+
+    // The meal id is safe to log; the meal itself is not.
+    _logger.d('Scheduled post-meal reminder for meal $mealId (id=$notifId)');
+  }
+
+  /// Cancels the post-meal measurement reminder for [mealId].
+  Future<void> cancelPostMealGlucoseReminder(int mealId) async {
+    await _notifications.cancel(id: _postMealReminderNotifId(mealId));
+
+    _logger.d('Cancelled post-meal reminder for meal $mealId');
   }
 
   // FITNESS MODULE NOTIFICATIONS
@@ -668,6 +718,8 @@ class NotificationService {
   /// - `90000–99999`: Summary/system notifications
   /// - `100000–149999`: Medication dose follow-ups
   ///   ([kMedicationFollowUpIdOffset] + reminder ID)
+  /// - `150000–159999`: Post-meal measurement reminders
+  ///   ([kPostMealReminderIdOffset] + meal ID)
   int _medicationNotifId(int medId, int timeIndex) {
     return (medId.abs() % 500) * 100 + (timeIndex.clamp(0, 99));
   }
@@ -675,6 +727,15 @@ class NotificationService {
   /// Derives the follow-up notification ID from the reminder ID scheme.
   int _medicationFollowUpNotifId(int medId, int timeIndex) {
     return kMedicationFollowUpIdOffset + _medicationNotifId(medId, timeIndex);
+  }
+
+  /// Derives the post-meal reminder notification ID from the meal ID.
+  ///
+  /// Wrapped into a 10 000-wide slot so the ID stays inside the range
+  /// documented above; a collision would need 10 000 meals between two
+  /// pending reminders, which cannot happen with a 2-hour lifetime.
+  int _postMealReminderNotifId(int mealId) {
+    return kPostMealReminderIdOffset + (mealId.abs() % 10000);
   }
 
   /// Returns the recurrence rule for a follow-up so it mirrors the
@@ -697,7 +758,7 @@ class NotificationService {
   /// Resolves localized strings for notifications scheduled without a
   /// widget context. Falls back to English if no resolver is configured
   /// or resolution fails (e.g. unsupported stored locale).
-  AppLocalizations _followUpLocalizations() {
+  AppLocalizations _scheduledLocalizations() {
     try {
       return _resolveLocalizations?.call() ??
           lookupAppLocalizations(const Locale('en'));
@@ -759,6 +820,18 @@ class NotificationService {
         AppConstants.notificationChannelInsightName,
         description: 'Notifications for insights and weekly reports',
         importance: Importance.defaultImportance,
+      ),
+    );
+
+    // Post-meal measurement reminder channel — its own channel so it can be
+    // silenced from the OS without touching medication reminders.
+    await androidPlugin.createNotificationChannel(
+      const AndroidNotificationChannel(
+        AppConstants.notificationChannelGlucoseReminder,
+        AppConstants.notificationChannelGlucoseReminderName,
+        description: 'Reminders to add a measurement after a logged meal',
+        importance: Importance.defaultImportance,
+        playSound: true,
       ),
     );
 
@@ -843,6 +916,30 @@ class NotificationService {
         priority: Priority.high,
         playSound: true,
         enableVibration: true,
+      ),
+      iOS: DarwinNotificationDetails(
+        presentAlert: true,
+        presentBadge: true,
+        presentSound: true,
+      ),
+    );
+  }
+
+  /// Returns notification details for post-meal measurement reminders.
+  ///
+  /// Deliberately plain: no action buttons and no category. The only thing
+  /// this notification can do is open the entry form.
+  NotificationDetails _glucoseReminderNotificationDetails() {
+    return const NotificationDetails(
+      android: AndroidNotificationDetails(
+        AppConstants.notificationChannelGlucoseReminder,
+        AppConstants.notificationChannelGlucoseReminderName,
+        channelDescription:
+            'Reminders to add a measurement after a logged meal',
+        importance: Importance.defaultImportance,
+        priority: Priority.defaultPriority,
+        playSound: true,
+        category: AndroidNotificationCategory.reminder,
       ),
       iOS: DarwinNotificationDetails(
         presentAlert: true,

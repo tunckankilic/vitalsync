@@ -1982,4 +1982,18 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get calibrationMetricsDisabled => 'Calibration metrics turned off';
+
+  @override
+  String get postMealReminderTitle => 'Time for a measurement';
+
+  @override
+  String get postMealReminderBody =>
+      'It\'s been 2 hours since your meal — would you like to add a reading?';
+
+  @override
+  String get postMealReminderSetting => 'Post-meal reminder';
+
+  @override
+  String get postMealReminderSettingSubtitle =>
+      'Ask for a reading 2 hours after a logged meal';
 }

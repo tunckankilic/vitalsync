@@ -3705,6 +3705,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Calibration metrics turned off'**
   String get calibrationMetricsDisabled;
+
+  /// Title of the post-meal reminder notification. Asks for a measurement only — it must not describe, predict or interpret a reading.
+  ///
+  /// In en, this message translates to:
+  /// **'Time for a measurement'**
+  String get postMealReminderTitle;
+
+  /// Body of the post-meal reminder notification. States the elapsed time and asks for an entry. No health comment, advice or prediction.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s been 2 hours since your meal — would you like to add a reading?'**
+  String get postMealReminderBody;
+
+  /// Settings switch title for the post-meal measurement reminder
+  ///
+  /// In en, this message translates to:
+  /// **'Post-meal reminder'**
+  String get postMealReminderSetting;
+
+  /// Settings switch subtitle. Describes the fixed time trigger, nothing about readings.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask for a reading 2 hours after a logged meal'**
+  String get postMealReminderSettingSubtitle;
 }
 
 class _AppLocalizationsDelegate

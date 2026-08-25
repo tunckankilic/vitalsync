@@ -228,4 +228,100 @@ void main() {
       );
     });
   });
+
+  group('post-meal measurement reminder', () {
+    final remindAt = DateTime(2026, 8, 25, 14, 30);
+
+    test('schedules a one-shot notification at the given time', () async {
+      await service.schedulePostMealGlucoseReminder(
+        mealId: 7,
+        remindAt: remindAt,
+      );
+
+      expect(schedules, hasLength(1));
+      final scheduled = schedules.single;
+
+      expect(scheduled.id, kPostMealReminderIdOffset + 7);
+      expect(scheduled.date, tz.TZDateTime.from(remindAt, tz.local));
+      // One-shot: the trigger is a single meal, never a recurrence.
+      expect(scheduled.match, isNull);
+    });
+
+    test('carries the fire time in the payload and no meal data', () async {
+      await service.schedulePostMealGlucoseReminder(
+        mealId: 7,
+        remindAt: remindAt,
+      );
+
+      final payload = verify(
+        () => mockPlugin.zonedSchedule(
+          id: any(named: 'id'),
+          title: any(named: 'title'),
+          body: any(named: 'body'),
+          scheduledDate: any(named: 'scheduledDate'),
+          notificationDetails: any(named: 'notificationDetails'),
+          androidScheduleMode: any(named: 'androidScheduleMode'),
+          payload: captureAny(named: 'payload'),
+          matchDateTimeComponents: any(named: 'matchDateTimeComponents'),
+        ),
+      ).captured.single as String?;
+
+      expect(
+        payload,
+        '$kPayloadTypeGlucoseReminder:${remindAt.millisecondsSinceEpoch}',
+      );
+    });
+
+    test('asks for a measurement without commenting on one', () async {
+      await service.schedulePostMealGlucoseReminder(
+        mealId: 7,
+        remindAt: remindAt,
+      );
+
+      final scheduled = schedules.single;
+
+      // English fallback localization
+      expect(scheduled.body, contains('2 hours'));
+      expect(scheduled.body, contains('add a reading'));
+
+      // No interpretation, prediction or advice, and no meal name — this text
+      // lands on a lock screen.
+      final text = '${scheduled.title} ${scheduled.body}'.toLowerCase();
+      for (final forbidden in const [
+        'high',
+        'low',
+        'spike',
+        'peak',
+        'normal',
+        'walk',
+        'exercise',
+        'should',
+      ]) {
+        expect(text, isNot(contains(forbidden)), reason: 'no health comment');
+      }
+    });
+
+    test('cancels by the id derived from the meal id', () async {
+      await service.cancelPostMealGlucoseReminder(7);
+
+      verify(
+        () => mockPlugin.cancel(id: kPostMealReminderIdOffset + 7),
+      ).called(1);
+      verifyNoMoreInteractions(mockPlugin);
+    });
+
+    test('reminder ids stay inside their reserved 10 000-wide range', () async {
+      for (final mealId in [0, 1, 9999, 10000, 123456]) {
+        await service.schedulePostMealGlucoseReminder(
+          mealId: mealId,
+          remindAt: remindAt,
+        );
+      }
+
+      for (final scheduled in schedules) {
+        expect(scheduled.id, greaterThanOrEqualTo(kPostMealReminderIdOffset));
+        expect(scheduled.id, lessThan(kPostMealReminderIdOffset + 10000));
+      }
+    });
+  });
 }

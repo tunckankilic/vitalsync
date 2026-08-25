@@ -48,7 +48,10 @@ void main() {
 
   /// Pumps the screen on a route that can be popped, with a tall surface so
   /// the whole form (including the save button) is laid out.
-  Future<void> pumpAddGlucose(WidgetTester tester) async {
+  Future<void> pumpAddGlucose(
+    WidgetTester tester, {
+    DateTime? initialMeasuredAt,
+  }) async {
     await tester.binding.setSurfaceSize(const Size(1000, 2400));
     addTearDown(() => tester.binding.setSurfaceSize(null));
 
@@ -56,7 +59,11 @@ void main() {
       initialLocation: '/add',
       routes: [
         GoRoute(path: '/', builder: (_, _) => const SizedBox.shrink()),
-        GoRoute(path: '/add', builder: (_, _) => const AddGlucoseReadingScreen()),
+        GoRoute(
+          path: '/add',
+          builder: (_, _) =>
+              AddGlucoseReadingScreen(initialMeasuredAt: initialMeasuredAt),
+        ),
       ],
     );
     addTearDown(router.dispose);
@@ -167,6 +174,22 @@ void main() {
     await enterValueAndSave(tester, '5,5');
 
     expect(capturedReading().valueMgDl, closeTo(5.5, 0.0001));
+  });
+
+  // The post-meal reminder opens this screen with the moment it fired, so the
+  // user only has to type the value. Only the time is pre-filled.
+  testWidgets('an initial measurement time is pre-filled and stored', (
+    tester,
+  ) async {
+    final remindedAt = DateTime(2026, 3, 14, 9, 45);
+
+    await pumpAddGlucose(tester, initialMeasuredAt: remindedAt);
+
+    expect(find.text('Mar 14, 2026'), findsOneWidget);
+
+    await enterValueAndSave(tester, '100');
+
+    expect(capturedReading().measuredAt, remindedAt);
   });
 
   testWidgets('the stored reading is manual and pending sync', (tester) async {

@@ -1980,4 +1980,18 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get calibrationMetricsDisabled => 'Kalibrasyon metrikleri kapatıldı';
+
+  @override
+  String get postMealReminderTitle => 'Ölçüm zamanı';
+
+  @override
+  String get postMealReminderBody =>
+      'Öğününün üzerinden 2 saat geçti — ölçüm eklemek ister misin?';
+
+  @override
+  String get postMealReminderSetting => 'Öğün sonrası hatırlatıcı';
+
+  @override
+  String get postMealReminderSettingSubtitle =>
+      'Kaydedilen öğünden 2 saat sonra ölçüm iste';
 }

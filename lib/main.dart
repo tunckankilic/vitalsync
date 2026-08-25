@@ -136,6 +136,7 @@ Future<void> _bootstrap() async {
       final notificationService = getIt<NotificationService>();
       await notificationService.initialize();
       await notificationService.requestPermissions();
+      notificationService.onNavigationCallback = _handleNotificationNavigation;
 
       final backgroundService = getIt<BackgroundService>();
       await backgroundService.initialize();
@@ -173,6 +174,25 @@ Future<void> _bootstrap() async {
 
   // Run the app wrapped in ProviderScope for Riverpod
   runApp(const ProviderScope(child: VitalSyncApp()));
+}
+
+/// Routes a notification tap to a screen.
+///
+/// Deliberately narrow: only the post-meal measurement reminder is handled.
+/// The other payload types (medication, workout, insight, …) have never had a
+/// destination wired — [NotificationService.onNavigationCallback] was unset
+/// until now — so ignoring them keeps their behaviour exactly as it was.
+/// Routing them is its own task.
+///
+/// [id] carries the reminder's fire time as millisecondsSinceEpoch; it is
+/// forwarded to the entry form so the measurement time opens pre-filled.
+void _handleNotificationNavigation(String type, String id) {
+  if (type != kPayloadTypeGlucoseReminder) return;
+
+  final at = int.tryParse(id);
+  appRouter.push(
+    at == null ? '/health/glucose/add' : '/health/glucose/add?at=$at',
+  );
 }
 
 /// VitalSync Application Widget.

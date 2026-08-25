@@ -1366,5 +1366,9 @@
   "calibrationMetricsSubtitle": "Sadece sayılar gönderilir, sağlık verin gönderilmez",
   "calibrationMetricsConsentBody": "Uygulamayı geliştirmek için, sağlık verinin kendisini değil yalnızca sayıları (kaç öğün, kaç ölçüm) hesabına bağlı olarak gönderir. Öğün adları, notlar ve ölçüm değerleri gönderilmez. İstediğin zaman kapatabilirsin.",
   "calibrationMetricsEnabled": "Kalibrasyon metrikleri açıldı",
-  "calibrationMetricsDisabled": "Kalibrasyon metrikleri kapatıldı"
+  "calibrationMetricsDisabled": "Kalibrasyon metrikleri kapatıldı",
+  "postMealReminderTitle": "Ölçüm zamanı",
+  "postMealReminderBody": "Öğününün üzerinden 2 saat geçti — ölçüm eklemek ister misin?",
+  "postMealReminderSetting": "Öğün sonrası hatırlatıcı",
+  "postMealReminderSettingSubtitle": "Kaydedilen öğünden 2 saat sonra ölçüm iste"
 }

@@ -51,6 +51,13 @@ abstract class AppConstants {
   static const String prefKeyNotificationsEnabled =
       '${prefKeyPrefix}notifications_enabled';
 
+  /// Post-meal measurement reminder enabled flag.
+  ///
+  /// On by default. Gated by [prefKeyNotificationsEnabled]: when notifications
+  /// are off as a whole nothing is scheduled regardless of this flag.
+  static const String prefKeyPostMealReminderEnabled =
+      '${prefKeyPrefix}post_meal_reminder_enabled';
+
   /// Unit system (metric/imperial)
   static const String prefKeyUnitSystem = '${prefKeyPrefix}unit_system';
 
@@ -134,6 +141,13 @@ abstract class AppConstants {
 
   /// Insight channel name
   static const String notificationChannelInsightName = 'Insights';
+
+  /// Post-meal glucose reminder notification channel ID
+  static const String notificationChannelGlucoseReminder = 'glucose_reminders';
+
+  /// Post-meal glucose reminder channel name
+  static const String notificationChannelGlucoseReminderName =
+      'Glucose Reminders';
 
   /// General notification channel ID
   static const String notificationChannelGeneral = 'general';
@@ -400,6 +414,14 @@ abstract class AppConstants {
   /// Grace period after a scheduled dose before the follow-up
   /// "did you log it?" notification fires (minutes)
   static const int medicationFollowUpGraceMinutes = 30;
+
+  /// Delay after a logged meal before the measurement reminder fires (hours).
+  ///
+  /// Matches `MealDataCoverageService.postMealWindow`, the window the coverage
+  /// check looks for readings in — the reminder exists to raise how often that
+  /// window has data in it. It is a fixed offset, not a prediction about the
+  /// user: nothing here depends on what was eaten or on any reading.
+  static const int postMealReminderDelayHours = 2;
 
   /// Daily summary notification hour (24h)
   static const int dailySummaryHour = 21;

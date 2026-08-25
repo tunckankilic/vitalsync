@@ -26,6 +26,7 @@ class SettingsScreen extends ConsumerWidget {
     final themeMode = ref.watch(themeSettingProvider);
     final locale = ref.watch(localeSettingProvider);
     final notificationsEnabled = ref.watch(notificationSettingProvider);
+    final postMealReminderEnabled = ref.watch(postMealReminderSettingProvider);
     final unitSystem = ref.watch(unitSystemSettingProvider);
 
     final calibrationMetricsConsent =
@@ -136,6 +137,26 @@ class SettingsScreen extends ConsumerWidget {
                       .read(notificationSettingProvider.notifier)
                       .setEnabled(val);
                 },
+                activeThumbColor: Theme.of(context).primaryColor,
+                activeTrackColor: Theme.of(
+                  context,
+                ).primaryColor.withValues(alpha: 0.5),
+              ),
+              // Time-triggered only: it asks for a measurement a fixed
+              // interval after a logged meal and says nothing about one.
+              // Disabled while notifications are off as a whole.
+              SwitchListTile(
+                title: Text(l10n.postMealReminderSetting),
+                subtitle: Text(l10n.postMealReminderSettingSubtitle),
+                secondary: const Icon(Icons.water_drop_outlined),
+                value: postMealReminderEnabled && notificationsEnabled,
+                onChanged: notificationsEnabled
+                    ? (val) {
+                        ref
+                            .read(postMealReminderSettingProvider.notifier)
+                            .setEnabled(val);
+                      }
+                    : null,
                 activeThumbColor: Theme.of(context).primaryColor,
                 activeTrackColor: Theme.of(
                   context,

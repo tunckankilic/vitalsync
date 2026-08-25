@@ -1411,5 +1411,13 @@
   "calibrationMetricsEnabled": "Calibration metrics turned on",
   "@calibrationMetricsEnabled": { "description": "Snackbar after enabling the opt-in counters" },
   "calibrationMetricsDisabled": "Calibration metrics turned off",
-  "@calibrationMetricsDisabled": { "description": "Snackbar after disabling the opt-in counters" }
+  "@calibrationMetricsDisabled": { "description": "Snackbar after disabling the opt-in counters" },
+  "postMealReminderTitle": "Time for a measurement",
+  "@postMealReminderTitle": { "description": "Title of the post-meal reminder notification. Asks for a measurement only — it must not describe, predict or interpret a reading." },
+  "postMealReminderBody": "It's been 2 hours since your meal — would you like to add a reading?",
+  "@postMealReminderBody": { "description": "Body of the post-meal reminder notification. States the elapsed time and asks for an entry. No health comment, advice or prediction." },
+  "postMealReminderSetting": "Post-meal reminder",
+  "@postMealReminderSetting": { "description": "Settings switch title for the post-meal measurement reminder" },
+  "postMealReminderSettingSubtitle": "Ask for a reading 2 hours after a logged meal",
+  "@postMealReminderSettingSubtitle": { "description": "Settings switch subtitle. Describes the fixed time trigger, nothing about readings." }
 }

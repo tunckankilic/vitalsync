@@ -152,6 +152,31 @@ class NotificationSetting extends _$NotificationSetting {
   }
 }
 
+/// Post-meal measurement reminder provider with SharedPreferences persistence.
+///
+/// On by default. Independent of [NotificationSetting], which gates it: with
+/// notifications off as a whole nothing is scheduled whatever this holds.
+@riverpod
+class PostMealReminderSetting extends _$PostMealReminderSetting {
+  @override
+  bool build() {
+    final prefs = ref.watch(sharedPreferencesProvider);
+    return prefs.getBool(AppConstants.prefKeyPostMealReminderEnabled) ?? true;
+  }
+
+  /// Toggle the post-meal measurement reminder.
+  ///
+  /// Only affects meals logged from here on: an already-scheduled reminder
+  /// is left alone, and the next meal write re-evaluates the switch.
+  Future<void> setEnabled(bool enabled) async {
+    final prefs = ref.read(sharedPreferencesProvider);
+
+    await prefs.setBool(AppConstants.prefKeyPostMealReminderEnabled, enabled);
+
+    state = enabled;
+  }
+}
+
 /// GDPR consent provider with SharedPreferences persistence
 @riverpod
 class GdprConsentSetting extends _$GdprConsentSetting {

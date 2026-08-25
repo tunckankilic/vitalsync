@@ -61,6 +61,7 @@ import '../../features/fitness/domain/services/streak_service.dart';
 import '../../features/health/domain/services/calibration_metrics_service.dart';
 import '../../features/health/domain/services/meal_data_coverage_service.dart';
 import '../../features/health/domain/services/medication_reminder_service.dart';
+import '../../features/health/domain/services/post_meal_reminder_service.dart';
 import '../../features/insights/domain/insight_engine.dart';
 import '../../features/insights/domain/weekly_report_service.dart';
 import '../analytics/analytics_service.dart';
@@ -313,6 +314,25 @@ Future<void> initializeDependencies() async {
       areNotificationsEnabled: () =>
           getIt<SharedPreferences>().getBool(
             AppConstants.prefKeyNotificationsEnabled,
+          ) ??
+          true,
+    ),
+  );
+
+  // Post-meal measurement reminder. Both switches are read at call time, not
+  // captured, so turning either off stops the next scheduling immediately.
+  getIt.registerLazySingleton<PostMealReminderService>(
+    () => PostMealReminderService(
+      notificationService: getIt<NotificationService>(),
+      mealRepository: getIt<MealRepository>(),
+      areNotificationsEnabled: () =>
+          getIt<SharedPreferences>().getBool(
+            AppConstants.prefKeyNotificationsEnabled,
+          ) ??
+          true,
+      isReminderEnabled: () =>
+          getIt<SharedPreferences>().getBool(
+            AppConstants.prefKeyPostMealReminderEnabled,
           ) ??
           true,
     ),

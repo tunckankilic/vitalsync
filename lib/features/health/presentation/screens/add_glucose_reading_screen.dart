@@ -26,7 +26,13 @@ import 'package:vitalsync/presentation/widgets/glassmorphic_app_bar.dart';
 import 'package:vitalsync/presentation/widgets/glassmorphic_card.dart';
 
 class AddGlucoseReadingScreen extends ConsumerStatefulWidget {
-  const AddGlucoseReadingScreen({super.key});
+  const AddGlucoseReadingScreen({super.key, this.initialMeasuredAt});
+
+  /// Pre-fills the measurement date and time. Supplied by the post-meal
+  /// reminder, which passes the moment it fired. Defaults to now.
+  ///
+  /// Only the time is pre-filled; the value is always the user's to enter.
+  final DateTime? initialMeasuredAt;
 
   @override
   ConsumerState<AddGlucoseReadingScreen> createState() =>
@@ -40,9 +46,19 @@ class _AddGlucoseReadingScreenState
 
   GlucoseUnit _unit = GlucoseUnit.mgPerDl;
   MealContext? _mealContext;
-  DateTime _selectedDate = DateTime.now();
-  TimeOfDay _selectedTime = TimeOfDay.now();
+  late DateTime _selectedDate;
+  late TimeOfDay _selectedTime;
   bool _isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // A reminder can be tapped later than it fired, so the pre-filled moment
+    // may be in the past — that is the point, and the picker allows it.
+    final initial = widget.initialMeasuredAt ?? DateTime.now();
+    _selectedDate = initial;
+    _selectedTime = TimeOfDay.fromDateTime(initial);
+  }
 
   @override
   void dispose() {
