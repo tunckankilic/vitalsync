@@ -76,6 +76,10 @@ class Insight {
         other.generatedAt == generatedAt;
   }
 
+  /// Hashes [data] by its contents, matching how [operator ==] compares it.
+  /// `Map.hashCode` is identity-based, so hashing it directly would let two
+  /// equal insights carry different hashes and break every `Set` and `Map`
+  /// they are put into.
   @override
   int get hashCode {
     return id.hashCode ^
@@ -83,12 +87,20 @@ class Insight {
         category.hashCode ^
         title.hashCode ^
         message.hashCode ^
-        data.hashCode ^
+        _dataHash ^
         priority.hashCode ^
         isRead.hashCode ^
         isDismissed.hashCode ^
         validUntil.hashCode ^
         generatedAt.hashCode;
+  }
+
+  /// Order-independent hash of [data]: two maps holding the same entries
+  /// hash alike whatever order they were built in.
+  int get _dataHash {
+    return Object.hashAllUnordered(
+      data.entries.map((e) => Object.hash(e.key, e.value)),
+    );
   }
 
   @override

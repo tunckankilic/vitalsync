@@ -61,13 +61,17 @@ class Meal {
         other.createdAt == createdAt;
   }
 
+  /// Hashes [tags] by its contents, matching how [operator ==] compares it.
+  /// `List.hashCode` is identity-based, so hashing it directly would let two
+  /// equal meals carry different hashes and break every `Set` and `Map` they
+  /// are put into.
   @override
   int get hashCode {
     return id.hashCode ^
         name.hashCode ^
         eatenAt.hashCode ^
         notes.hashCode ^
-        tags.hashCode ^
+        Object.hashAll(tags) ^
         syncStatus.hashCode ^
         lastModifiedAt.hashCode ^
         createdAt.hashCode;

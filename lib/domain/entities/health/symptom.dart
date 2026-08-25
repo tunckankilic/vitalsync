@@ -63,6 +63,10 @@ class Symptom {
         other.createdAt == createdAt;
   }
 
+  /// Hashes [tags] by its contents, matching how [operator ==] compares it.
+  /// `List.hashCode` is identity-based, so hashing it directly would let two
+  /// equal symptoms carry different hashes and break every `Set` and `Map`
+  /// they are put into.
   @override
   int get hashCode {
     return id.hashCode ^
@@ -70,7 +74,7 @@ class Symptom {
         severity.hashCode ^
         date.hashCode ^
         notes.hashCode ^
-        tags.hashCode ^
+        Object.hashAll(tags) ^
         syncStatus.hashCode ^
         lastModifiedAt.hashCode ^
         createdAt.hashCode;

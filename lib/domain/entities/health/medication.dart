@@ -90,13 +90,17 @@ class Medication {
         other.updatedAt == updatedAt;
   }
 
+  /// Hashes [times] by its contents, matching how [operator ==] compares it.
+  /// `List.hashCode` is identity-based, so hashing it directly would let two
+  /// equal medications carry different hashes and break every `Set` and `Map`
+  /// they are put into.
   @override
   int get hashCode {
     return id.hashCode ^
         name.hashCode ^
         dosage.hashCode ^
         frequency.hashCode ^
-        times.hashCode ^
+        Object.hashAll(times) ^
         startDate.hashCode ^
         endDate.hashCode ^
         notes.hashCode ^

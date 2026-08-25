@@ -83,6 +83,10 @@ class CalibrationMetric {
         other.createdAt == createdAt;
   }
 
+  /// Hashes [uncoveredReasons] by its contents, matching how [operator ==]
+  /// compares it. `Map.hashCode` is identity-based, so hashing it directly
+  /// would let two equal metrics carry different hashes and break every
+  /// `Set` and `Map` they are put into.
   @override
   int get hashCode {
     return id.hashCode ^
@@ -91,11 +95,19 @@ class CalibrationMetric {
         glucoseReadings.hashCode ^
         manualReadings.hashCode ^
         coveredMeals.hashCode ^
-        uncoveredReasons.hashCode ^
+        _uncoveredReasonsHash ^
         appVersion.hashCode ^
         syncStatus.hashCode ^
         lastModifiedAt.hashCode ^
         createdAt.hashCode;
+  }
+
+  /// Order-independent hash of the reason counts: two maps holding the same
+  /// entries hash alike whatever order they were built in.
+  int get _uncoveredReasonsHash {
+    return Object.hashAllUnordered(
+      uncoveredReasons.entries.map((e) => Object.hash(e.key, e.value)),
+    );
   }
 
   @override

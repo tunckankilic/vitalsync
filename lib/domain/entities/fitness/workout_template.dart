@@ -65,6 +65,10 @@ class WorkoutTemplate {
         );
   }
 
+  /// Hashes [exercises] by its contents, matching how [operator ==] compares
+  /// it. `List.hashCode` is identity-based, so hashing it directly would let
+  /// two equal templates carry different hashes and break every `Set` and
+  /// `Map` they are put into.
   @override
   int get hashCode {
     return id.hashCode ^
@@ -75,7 +79,7 @@ class WorkoutTemplate {
         isDefault.hashCode ^
         createdAt.hashCode ^
         updatedAt.hashCode ^
-        exercises.hashCode;
+        Object.hashAll(exercises);
   }
 
   @override

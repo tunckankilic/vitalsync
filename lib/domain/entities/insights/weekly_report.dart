@@ -266,14 +266,30 @@ class WeeklyReport {
         other.totalVolume == totalVolume &&
         other.volumeTrendVsPrevious == volumeTrendVsPrevious &&
         other.totalWorkoutDuration == totalWorkoutDuration &&
-        other.newPRs.length == newPRs.length &&
+        _listEquals(other.newPRs, newPRs) &&
         other.currentStreak == currentStreak &&
         other.bestDay == bestDay &&
         other.healthScore == healthScore &&
-        other.topInsights.length == topInsights.length &&
-        other.suggestions.length == suggestions.length;
+        _listEquals(other.topInsights, topInsights) &&
+        _listEquals(other.suggestions, suggestions);
   }
 
+  /// Element-wise list comparison.
+  ///
+  /// The three list fields used to be compared by length alone, which made
+  /// two reports with entirely different PRs, insights or suggestions come
+  /// out equal.
+  static bool _listEquals<T>(List<T> a, List<T> b) {
+    if (a.length != b.length) return false;
+    for (var i = 0; i < a.length; i++) {
+      if (a[i] != b[i]) return false;
+    }
+    return true;
+  }
+
+  /// Hashes the list fields by their contents, matching [operator ==].
+  /// `List.hashCode` is identity-based, so hashing those directly would let
+  /// two equal reports carry different hashes.
   @override
   int get hashCode {
     return startDate.hashCode ^
@@ -292,12 +308,12 @@ class WeeklyReport {
         totalVolume.hashCode ^
         volumeTrendVsPrevious.hashCode ^
         totalWorkoutDuration.hashCode ^
-        newPRs.hashCode ^
+        Object.hashAll(newPRs) ^
         currentStreak.hashCode ^
         bestDay.hashCode ^
         healthScore.hashCode ^
-        topInsights.hashCode ^
-        suggestions.hashCode;
+        Object.hashAll(topInsights) ^
+        Object.hashAll(suggestions);
   }
 
   @override
