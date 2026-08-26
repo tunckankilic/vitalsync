@@ -175,7 +175,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen>
           child: child,
         );
       },
-      onReorder: (oldIndex, newIndex) {
+      onReorderItem: (oldIndex, newIndex) {
         ref.read(dashboardLayoutProvider.notifier).reorder(oldIndex, newIndex);
       },
       itemCount: 7,

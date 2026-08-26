@@ -10,7 +10,11 @@ analyzer:
     only_throw_errors: ignore
     always_put_required_named_parameters_first: ignore
     use_build_context_synchronously: ignore
-    deprecated_member_use: ignore
+    # Was `ignore`, which hid every deprecated API in the codebase — after
+    # `pub upgrade --major-versions` that is precisely the class of breakage
+    # you want to see. The count is currently zero, so this costs nothing
+    # today and surfaces the next upgrade's debt immediately.
+    deprecated_member_use: info
   exclude:
     - "**/*.g.dart"
     - "**/*.freezed.dart"

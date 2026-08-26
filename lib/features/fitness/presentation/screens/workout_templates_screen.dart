@@ -127,16 +127,15 @@ class _TemplateListState extends ConsumerState<_TemplateList> {
           child: child,
         );
       },
-      onReorder: (oldIndex, newIndex) async {
-        if (oldIndex < newIndex) newIndex -= 1;
-        final templates = widget.templates.toList();
-        final item = templates.removeAt(oldIndex);
-        templates.insert(newIndex, item);
-
-        // Persist new order — we don't have a bulk reorder for templates,
-        // but we can update each template's order individually.
-        // For now the visual reorder is immediate via the list.
-      },
+      // A no-op, and deliberately an empty one. WorkoutTemplate has no order
+      // field and the templates table has no column for one, so there is
+      // nowhere to put a custom order; itemBuilder reads widget.templates,
+      // which this callback cannot change, so a drag snaps back on the next
+      // build. The previous body computed the reordered list and discarded it,
+      // under a comment claiming the reorder was "immediate" — it never was.
+      // Either give templates a persisted order or drop the drag affordance;
+      // both are bigger than this callback.
+      onReorderItem: (_, _) {},
       itemCount: widget.templates.length,
       itemBuilder: (context, index) {
         final template = widget.templates[index];

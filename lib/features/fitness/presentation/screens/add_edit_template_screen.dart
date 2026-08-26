@@ -382,9 +382,11 @@ class _AddEditTemplateScreenState extends ConsumerState<AddEditTemplateScreen> {
                     child: child,
                   );
                 },
-                onReorder: (oldIndex, newIndex) {
+                // onReorderItem hands over an index already corrected for
+                // the removal at oldIndex, so the usual `newIndex -= 1` that
+                // onReorder needed would now shift every downward drag by one.
+                onReorderItem: (oldIndex, newIndex) {
                   setState(() {
-                    if (oldIndex < newIndex) newIndex -= 1;
                     final item = _exercises.removeAt(oldIndex);
                     _exercises.insert(newIndex, item);
                   });

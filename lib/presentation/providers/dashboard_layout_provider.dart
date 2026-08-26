@@ -40,9 +40,14 @@ class DashboardLayout extends _$DashboardLayout {
     return true;
   }
 
+  /// Moves the card at [oldIndex] to [newIndex].
+  ///
+  /// [newIndex] is expected to be already corrected for the removal at
+  /// [oldIndex] — which is what `ReorderableListView.onReorderItem` passes.
+  /// The old `onReorder` callback did not, so this used to subtract one
+  /// itself; doing both would shift every downward drag by a slot.
   Future<void> reorder(int oldIndex, int newIndex) async {
     final newOrder = state.toList();
-    if (oldIndex < newIndex) newIndex -= 1;
     final item = newOrder.removeAt(oldIndex);
     newOrder.insert(newIndex, item);
     state = newOrder;

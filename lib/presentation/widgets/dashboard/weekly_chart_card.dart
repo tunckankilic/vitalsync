@@ -130,8 +130,6 @@ class _WeeklyChartCardState extends ConsumerState<WeeklyChartCard> {
           // Combined chart with bars + line overlay
           Expanded(
             child: BarChart(
-              swapAnimationDuration: const Duration(milliseconds: 300),
-              swapAnimationCurve: Curves.easeInOut,
               BarChartData(
                 alignment: BarChartAlignment.spaceAround,
                 maxY: 1.0,
