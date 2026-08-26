@@ -1,5 +1,3 @@
-// ignore_for_file: deprecated_member_use
-
 /// VitalSync — Weekly Report Screen.
 ///
 /// Comprehensive weekly health & fitness report with cross-module highlights.
@@ -812,9 +810,14 @@ class _WeeklyReportScreenState extends ConsumerState<WeeklyReportScreen> {
       if (byteData == null) return;
       final pngBytes = byteData.buffer.asUint8List();
 
-      await Share.shareXFiles([
-        XFile.fromData(pngBytes, name: filename, mimeType: 'image/png'),
-      ], text: l10n.myWeeklyReport);
+      await SharePlus.instance.share(
+        ShareParams(
+          files: [
+            XFile.fromData(pngBytes, name: filename, mimeType: 'image/png'),
+          ],
+          text: l10n.myWeeklyReport,
+        ),
+      );
 
       messenger.hideCurrentSnackBar();
     } catch (e) {
@@ -831,14 +834,19 @@ class _WeeklyReportScreenState extends ConsumerState<WeeklyReportScreen> {
       final json = jsonEncode(report.toJson());
       final bytes = utf8.encode(json);
 
-      await Share.shareXFiles([
-        XFile.fromData(
-          bytes,
-          name:
-              'vitalsync_report_${DateFormat('yyyy-MM-dd').format(_selectedWeekStart)}.json',
-          mimeType: 'application/json',
+      await SharePlus.instance.share(
+        ShareParams(
+          files: [
+            XFile.fromData(
+              bytes,
+              name:
+                  'vitalsync_report_${DateFormat('yyyy-MM-dd').format(_selectedWeekStart)}.json',
+              mimeType: 'application/json',
+            ),
+          ],
+          text: AppLocalizations.of(context).weeklyReportData,
         ),
-      ], text: AppLocalizations.of(context).weeklyReportData);
+      );
 
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
