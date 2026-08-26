@@ -105,37 +105,15 @@ class _TemplateListState extends ConsumerState<_TemplateList> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
 
-    return ReorderableListView.builder(
+    // A plain list on purpose. This was a ReorderableListView whose callback
+    // computed the new order and threw it away: WorkoutTemplate has no order
+    // field and the templates table has no column for one, so a drag animated
+    // and then snapped back on the next build. Offering a gesture the app
+    // cannot honour is worse than not offering it. Giving templates a real
+    // order means a schema column and a migration — a deliberate change, not
+    // a side effect of a lint pass.
+    return ListView.builder(
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 80),
-      proxyDecorator: (child, index, animation) {
-        return AnimatedBuilder(
-          animation: animation,
-          builder: (context, child) {
-            final animValue = Curves.easeInOut.transform(animation.value);
-            final elevation = 4.0 + animValue * 8.0;
-            final scale = 1.0 + animValue * 0.02;
-            return Transform.scale(
-              scale: scale,
-              child: Material(
-                elevation: elevation,
-                color: Colors.transparent,
-                borderRadius: BorderRadius.circular(16),
-                child: child,
-              ),
-            );
-          },
-          child: child,
-        );
-      },
-      // A no-op, and deliberately an empty one. WorkoutTemplate has no order
-      // field and the templates table has no column for one, so there is
-      // nowhere to put a custom order; itemBuilder reads widget.templates,
-      // which this callback cannot change, so a drag snaps back on the next
-      // build. The previous body computed the reordered list and discarded it,
-      // under a comment claiming the reorder was "immediate" — it never was.
-      // Either give templates a persisted order or drop the drag affordance;
-      // both are bigger than this callback.
-      onReorderItem: (_, _) {},
       itemCount: widget.templates.length,
       itemBuilder: (context, index) {
         final template = widget.templates[index];
