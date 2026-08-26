@@ -12,15 +12,19 @@ import 'package:vitalsync/core/l10n/app_localizations.dart';
 /// No router is installed — widget tests here exercise rendering, form
 /// validation and failure paths, none of which navigate. (Success paths call
 /// `context.go`, which these tests deliberately avoid triggering.)
+/// Pass [locale] to render the screen in a specific language; omit it to take
+/// the test environment's default (English).
 Future<void> pumpScreen(
   WidgetTester tester,
   Widget screen, {
   List<Override> overrides = const [],
+  Locale? locale,
 }) async {
   await tester.pumpWidget(
     ProviderScope(
       overrides: overrides,
       child: MaterialApp(
+        locale: locale,
         localizationsDelegates: const [
           AppLocalizations.delegate,
           GlobalMaterialLocalizations.delegate,

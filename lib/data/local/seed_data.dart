@@ -824,61 +824,6 @@ AchievementsCompanion _achievementData(
   );
 }
 
-//  COMMON SYMPTOMS
-
-/// Predefined common symptoms for quick logging.
-/// These should be localized in the UI layer.
-class CommonSymptoms {
-  static const Map<String, Map<String, String>> symptoms = {
-    'headache': {'en': 'Headache', 'tr': 'Baş Ağrısı', 'de': 'Kopfschmerzen'},
-    'nausea': {'en': 'Nausea', 'tr': 'Mide Bulantısı', 'de': 'Übelkeit'},
-    'fatigue': {'en': 'Fatigue', 'tr': 'Yorgunluk', 'de': 'Müdigkeit'},
-    'dizziness': {'en': 'Dizziness', 'tr': 'Baş Dönmesi', 'de': 'Schwindel'},
-    'stomach_pain': {
-      'en': 'Stomach Pain',
-      'tr': 'Karın Ağrısı',
-      'de': 'Bauchschmerzen',
-    },
-    'back_pain': {
-      'en': 'Back Pain',
-      'tr': 'Sırt Ağrısı',
-      'de': 'Rückenschmerzen',
-    },
-    'joint_pain': {
-      'en': 'Joint Pain',
-      'tr': 'Eklem Ağrısı',
-      'de': 'Gelenkschmerzen',
-    },
-    'insomnia': {'en': 'Insomnia', 'tr': 'Uykusuzluk', 'de': 'Schlaflosigkeit'},
-    'anxiety': {'en': 'Anxiety', 'tr': 'Anksiyete', 'de': 'Angst'},
-    'shortness_of_breath': {
-      'en': 'Shortness of Breath',
-      'tr': 'Nefes Darlığı',
-      'de': 'Atemnot',
-    },
-    'muscle_pain': {
-      'en': 'Muscle Pain',
-      'tr': 'Kas Ağrısı',
-      'de': 'Muskelschmerzen',
-    },
-    'chest_pain': {
-      'en': 'Chest Pain',
-      'tr': 'Göğüs Ağrısı',
-      'de': 'Brustschmerzen',
-    },
-  };
-
-  /// Get symptom name in specified locale.
-  static String getName(String symptomKey, String locale) {
-    return symptoms[symptomKey]?[locale] ??
-        symptoms[symptomKey]?['en'] ??
-        symptomKey;
-  }
-
-  /// Get all symptom keys.
-  static List<String> getAllKeys() => symptoms.keys.toList();
-}
-
 //  INSIGHT RULES
 
 /// Default insight rule definitions for the InsightEngine.
