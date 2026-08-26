@@ -8,6 +8,7 @@ import 'package:vitalsync/core/l10n/app_localizations.dart';
 import 'package:vitalsync/core/theme/app_theme.dart';
 import 'package:vitalsync/core/utils/extensions.dart';
 import 'package:vitalsync/domain/entities/health/medication.dart';
+import 'package:vitalsync/features/health/presentation/health_labels.dart';
 import 'package:vitalsync/features/health/presentation/providers/medication_provider.dart';
 import 'package:vitalsync/presentation/widgets/glassmorphic_app_bar.dart';
 import 'package:vitalsync/presentation/widgets/glassmorphic_card.dart';
@@ -253,7 +254,7 @@ class _AddEditMedicationScreenState
                         items: MedicationFrequency.values.map((f) {
                           return DropdownMenuItem(
                             value: f,
-                            child: Text(f.displayName),
+                            child: Text(f.label(l10n)),
                           );
                         }).toList(),
                         onChanged: _onFrequencyChanged,

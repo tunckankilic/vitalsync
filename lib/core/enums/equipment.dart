@@ -24,8 +24,11 @@ enum Equipment {
     );
   }
 
-  /// Get localized display name.
-  /// Note: Actual localization will be implemented in l10n files.
+  /// Canonical English name, for code that has no `AppLocalizations`.
+  ///
+  /// **Not for the UI.** Screens use `label(l10n)` from
+  /// `features/fitness/presentation/fitness_labels.dart`; this getter would
+  /// print English in a Turkish or German interface.
   String get displayName {
     switch (this) {
       case Equipment.barbell:

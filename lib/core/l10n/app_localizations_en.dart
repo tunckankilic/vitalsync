@@ -536,27 +536,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get allCategories => 'All';
 
   @override
-  String get chest => 'Chest';
-
-  @override
-  String get back => 'Back';
-
-  @override
-  String get shoulders => 'Shoulders';
-
-  @override
-  String get arms => 'Arms';
-
-  @override
-  String get legs => 'Legs';
-
-  @override
-  String get core => 'Core';
-
-  @override
-  String get cardio => 'Cardio';
-
-  @override
   String get exerciseDetails => 'Exercise Details';
 
   @override
@@ -946,6 +925,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get workouts => 'Workouts';
+
+  @override
+  String get back => 'Back';
 
   @override
   String get getStarted => 'Get Started';
@@ -2169,4 +2151,64 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get achievementCrossWellnessWarriorDesc =>
       'Keep 90%+ medication compliance this week and a 50-day workout streak';
+
+  @override
+  String get exerciseCategoryChest => 'Chest';
+
+  @override
+  String get exerciseCategoryBack => 'Back';
+
+  @override
+  String get exerciseCategoryShoulders => 'Shoulders';
+
+  @override
+  String get exerciseCategoryArms => 'Arms';
+
+  @override
+  String get exerciseCategoryLegs => 'Legs';
+
+  @override
+  String get exerciseCategoryCore => 'Core';
+
+  @override
+  String get exerciseCategoryCardio => 'Cardio';
+
+  @override
+  String get equipmentBarbell => 'Barbell';
+
+  @override
+  String get equipmentDumbbell => 'Dumbbell';
+
+  @override
+  String get equipmentMachine => 'Machine';
+
+  @override
+  String get equipmentCable => 'Cable';
+
+  @override
+  String get equipmentBodyweight => 'Bodyweight';
+
+  @override
+  String get equipmentKettlebell => 'Kettlebell';
+
+  @override
+  String get equipmentOther => 'Other';
+
+  @override
+  String get medicationFrequencyDaily => 'Daily';
+
+  @override
+  String get medicationFrequencyTwiceDaily => 'Twice Daily';
+
+  @override
+  String get medicationFrequencyThreeTimesDaily => 'Three Times Daily';
+
+  @override
+  String get medicationFrequencyWeekly => 'Weekly';
+
+  @override
+  String get medicationFrequencyMonthly => 'Monthly';
+
+  @override
+  String get medicationFrequencyAsNeeded => 'As Needed';
 }

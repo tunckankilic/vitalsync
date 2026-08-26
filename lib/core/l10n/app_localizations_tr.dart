@@ -539,27 +539,6 @@ class AppLocalizationsTr extends AppLocalizations {
   String get allCategories => 'Tümü';
 
   @override
-  String get chest => 'Göğüs';
-
-  @override
-  String get back => 'Geri';
-
-  @override
-  String get shoulders => 'Omuzlar';
-
-  @override
-  String get arms => 'Kollar';
-
-  @override
-  String get legs => 'Bacaklar';
-
-  @override
-  String get core => 'Karın';
-
-  @override
-  String get cardio => 'Kardio';
-
-  @override
   String get exerciseDetails => 'Egzersiz Detayları';
 
   @override
@@ -952,6 +931,9 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get workouts => 'Antrenmanlar';
+
+  @override
+  String get back => 'Geri';
 
   @override
   String get getStarted => 'Başla';
@@ -2166,4 +2148,64 @@ class AppLocalizationsTr extends AppLocalizations {
   @override
   String get achievementCrossWellnessWarriorDesc =>
       'Bu hafta %90+ ilaç uyumu ve 50 günlük antrenman serisi tuttur';
+
+  @override
+  String get exerciseCategoryChest => 'Göğüs';
+
+  @override
+  String get exerciseCategoryBack => 'Sırt';
+
+  @override
+  String get exerciseCategoryShoulders => 'Omuzlar';
+
+  @override
+  String get exerciseCategoryArms => 'Kollar';
+
+  @override
+  String get exerciseCategoryLegs => 'Bacaklar';
+
+  @override
+  String get exerciseCategoryCore => 'Karın';
+
+  @override
+  String get exerciseCategoryCardio => 'Kardiyo';
+
+  @override
+  String get equipmentBarbell => 'Halter';
+
+  @override
+  String get equipmentDumbbell => 'Dambıl';
+
+  @override
+  String get equipmentMachine => 'Makine';
+
+  @override
+  String get equipmentCable => 'Kablo';
+
+  @override
+  String get equipmentBodyweight => 'Vücut ağırlığı';
+
+  @override
+  String get equipmentKettlebell => 'Kettlebell';
+
+  @override
+  String get equipmentOther => 'Diğer';
+
+  @override
+  String get medicationFrequencyDaily => 'Günlük';
+
+  @override
+  String get medicationFrequencyTwiceDaily => 'Günde iki kez';
+
+  @override
+  String get medicationFrequencyThreeTimesDaily => 'Günde üç kez';
+
+  @override
+  String get medicationFrequencyWeekly => 'Haftalık';
+
+  @override
+  String get medicationFrequencyMonthly => 'Aylık';
+
+  @override
+  String get medicationFrequencyAsNeeded => 'Gerektiğinde';
 }

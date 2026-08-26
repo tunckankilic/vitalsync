@@ -9,6 +9,7 @@ import '../../../../core/utils/extensions.dart';
 import '../../../../domain/entities/health/medication.dart';
 import '../../../../domain/entities/health/medication_log.dart';
 import '../../../../presentation/widgets/glassmorphic_card.dart';
+import '../health_labels.dart';
 import '../providers/medication_log_provider.dart';
 
 /// Resolves a medication's effective status for *today* from the day's logs.
@@ -32,6 +33,7 @@ class MedicationCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
 
     // Watch compliance rate for this medication
@@ -83,7 +85,7 @@ class MedicationCard extends ConsumerWidget {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        '${medication.dosage} • ${medication.frequency.displayName}',
+                        '${medication.dosage} • ${medication.frequency.label(l10n)}',
                         style: theme.textTheme.bodyMedium?.copyWith(
                           color: theme.colorScheme.onSurface.withValues(
                             alpha: 0.7,

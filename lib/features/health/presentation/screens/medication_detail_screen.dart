@@ -9,6 +9,7 @@ import 'package:vitalsync/core/l10n/app_localizations.dart';
 import 'package:vitalsync/core/utils/extensions.dart';
 import 'package:vitalsync/domain/entities/health/medication.dart';
 import 'package:vitalsync/domain/entities/health/medication_log.dart';
+import 'package:vitalsync/features/health/presentation/health_labels.dart';
 import 'package:vitalsync/features/health/presentation/providers/medication_log_provider.dart';
 import 'package:vitalsync/features/health/presentation/providers/medication_provider.dart';
 import 'package:vitalsync/presentation/widgets/glassmorphic_app_bar.dart';
@@ -162,7 +163,7 @@ class _MedicationDetailContent extends ConsumerWidget {
               ),
               const SizedBox(height: 4),
               Text(
-                '${medication.dosage} • ${medication.frequency.displayName}',
+                '${medication.dosage} • ${medication.frequency.label(l10n)}',
                 style: theme.textTheme.bodyLarge?.copyWith(
                   color: theme.colorScheme.secondary,
                 ),

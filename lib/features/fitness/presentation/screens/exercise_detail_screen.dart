@@ -9,6 +9,8 @@ import 'package:vitalsync/core/l10n/app_localizations.dart';
 import 'package:vitalsync/domain/entities/fitness/exercise.dart';
 import 'package:vitalsync/presentation/widgets/fitness/glassmorphic_card.dart';
 
+import '../fitness_labels.dart';
+
 /// Screen showing full details for an [Exercise].
 class ExerciseDetailScreen extends ConsumerWidget {
   /// Creates an exercise detail screen.
@@ -59,9 +61,9 @@ class ExerciseDetailScreen extends ConsumerWidget {
                     spacing: 8,
                     alignment: WrapAlignment.center,
                     children: [
-                      _TagChip(label: exercise.category.displayName),
+                      _TagChip(label: exercise.category.label(l10n)),
                       _TagChip(label: exercise.muscleGroup),
-                      _TagChip(label: exercise.equipment.displayName),
+                      _TagChip(label: exercise.equipment.label(l10n)),
                     ],
                   ),
                 ],

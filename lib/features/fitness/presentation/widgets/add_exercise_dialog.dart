@@ -11,6 +11,7 @@ import 'package:vitalsync/core/enums/exercise_category.dart';
 import 'package:vitalsync/core/l10n/app_localizations.dart';
 import 'package:vitalsync/domain/entities/fitness/exercise.dart';
 
+import '../fitness_labels.dart';
 import '../providers/exercise_provider.dart';
 
 /// Dialog to add a custom exercise.
@@ -35,6 +36,11 @@ class _AddExerciseDialogState extends ConsumerState<AddExerciseDialog> {
   @override
   void initState() {
     super.initState();
+    // Prefilled with the canonical English name on purpose: this controller
+    // feeds Exercise.muscleGroup, a free-text column the user can edit. The
+    // seeded exercises store English there, so localizing the default would
+    // split one list between two languages. The dropdown beside it is
+    // translated; this field is the user's own text.
     _muscleGroupController = TextEditingController(
       text: _selectedCategory.displayName,
     );
@@ -134,14 +140,14 @@ class _AddExerciseDialogState extends ConsumerState<AddExerciseDialog> {
                   items: ExerciseCategory.values.map((category) {
                     return DropdownMenuItem(
                       value: category,
-                      child: Text(category.displayName),
+                      child: Text(category.label(l10n)),
                     );
                   }).toList(),
                   onChanged: (value) {
                     if (value != null) {
                       setState(() {
                         _selectedCategory = value;
-                        // Update muscle group to match category default
+                        // Stays English — see initState.
                         _muscleGroupController.text = value.displayName;
                       });
                     }
@@ -175,7 +181,7 @@ class _AddExerciseDialogState extends ConsumerState<AddExerciseDialog> {
                   items: Equipment.values.map((equipment) {
                     return DropdownMenuItem(
                       value: equipment,
-                      child: Text(equipment.displayName),
+                      child: Text(equipment.label(l10n)),
                     );
                   }).toList(),
                   onChanged: (value) {

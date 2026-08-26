@@ -1102,48 +1102,6 @@ abstract class AppLocalizations {
   /// **'All'**
   String get allCategories;
 
-  /// Chest muscle group
-  ///
-  /// In en, this message translates to:
-  /// **'Chest'**
-  String get chest;
-
-  /// Back button
-  ///
-  /// In en, this message translates to:
-  /// **'Back'**
-  String get back;
-
-  /// Shoulders muscle group
-  ///
-  /// In en, this message translates to:
-  /// **'Shoulders'**
-  String get shoulders;
-
-  /// Arms muscle group
-  ///
-  /// In en, this message translates to:
-  /// **'Arms'**
-  String get arms;
-
-  /// Legs muscle group
-  ///
-  /// In en, this message translates to:
-  /// **'Legs'**
-  String get legs;
-
-  /// Core muscle group
-  ///
-  /// In en, this message translates to:
-  /// **'Core'**
-  String get core;
-
-  /// Cardio category
-  ///
-  /// In en, this message translates to:
-  /// **'Cardio'**
-  String get cardio;
-
   /// Exercise details title
   ///
   /// In en, this message translates to:
@@ -1893,6 +1851,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Workouts'**
   String get workouts;
+
+  /// Back button
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get back;
 
   /// Get started button
   ///
@@ -4047,6 +4011,126 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Keep 90%+ medication compliance this week and a 50-day workout streak'**
   String get achievementCrossWellnessWarriorDesc;
+
+  /// Exercise category: chest
+  ///
+  /// In en, this message translates to:
+  /// **'Chest'**
+  String get exerciseCategoryChest;
+
+  /// Exercise category: back muscles (not the navigation 'Back')
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get exerciseCategoryBack;
+
+  /// Exercise category: shoulders
+  ///
+  /// In en, this message translates to:
+  /// **'Shoulders'**
+  String get exerciseCategoryShoulders;
+
+  /// Exercise category: arms
+  ///
+  /// In en, this message translates to:
+  /// **'Arms'**
+  String get exerciseCategoryArms;
+
+  /// Exercise category: legs
+  ///
+  /// In en, this message translates to:
+  /// **'Legs'**
+  String get exerciseCategoryLegs;
+
+  /// Exercise category: core
+  ///
+  /// In en, this message translates to:
+  /// **'Core'**
+  String get exerciseCategoryCore;
+
+  /// Exercise category: cardio
+  ///
+  /// In en, this message translates to:
+  /// **'Cardio'**
+  String get exerciseCategoryCardio;
+
+  /// Exercise equipment: barbell
+  ///
+  /// In en, this message translates to:
+  /// **'Barbell'**
+  String get equipmentBarbell;
+
+  /// Exercise equipment: dumbbell
+  ///
+  /// In en, this message translates to:
+  /// **'Dumbbell'**
+  String get equipmentDumbbell;
+
+  /// Exercise equipment: machine
+  ///
+  /// In en, this message translates to:
+  /// **'Machine'**
+  String get equipmentMachine;
+
+  /// Exercise equipment: cable
+  ///
+  /// In en, this message translates to:
+  /// **'Cable'**
+  String get equipmentCable;
+
+  /// Exercise equipment: bodyweight only
+  ///
+  /// In en, this message translates to:
+  /// **'Bodyweight'**
+  String get equipmentBodyweight;
+
+  /// Exercise equipment: kettlebell
+  ///
+  /// In en, this message translates to:
+  /// **'Kettlebell'**
+  String get equipmentKettlebell;
+
+  /// Exercise equipment: anything else
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get equipmentOther;
+
+  /// Medication frequency: once a day
+  ///
+  /// In en, this message translates to:
+  /// **'Daily'**
+  String get medicationFrequencyDaily;
+
+  /// Medication frequency: twice a day
+  ///
+  /// In en, this message translates to:
+  /// **'Twice Daily'**
+  String get medicationFrequencyTwiceDaily;
+
+  /// Medication frequency: three times a day
+  ///
+  /// In en, this message translates to:
+  /// **'Three Times Daily'**
+  String get medicationFrequencyThreeTimesDaily;
+
+  /// Medication frequency: once a week
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly'**
+  String get medicationFrequencyWeekly;
+
+  /// Medication frequency: once a month
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly'**
+  String get medicationFrequencyMonthly;
+
+  /// Medication frequency: taken only when needed
+  ///
+  /// In en, this message translates to:
+  /// **'As Needed'**
+  String get medicationFrequencyAsNeeded;
 }
 
 class _AppLocalizationsDelegate

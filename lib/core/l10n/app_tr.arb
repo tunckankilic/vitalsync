@@ -160,10 +160,6 @@
   "@allCategories": {
     "description": "All categories filter"
   },
-  "arms": "Kollar",
-  "@arms": {
-    "description": "Arms muscle group"
-  },
   "back": "Geri",
   "@back": {
     "description": "Back button"
@@ -171,14 +167,6 @@
   "calendar": "Takvim",
   "@calendar": {
     "description": "Calendar screen title"
-  },
-  "cardio": "Kardio",
-  "@cardio": {
-    "description": "Cardio category"
-  },
-  "chest": "Göğüs",
-  "@chest": {
-    "description": "Chest muscle group"
   },
   "compactCard": "Kompakt Kart",
   "@compactCard": {
@@ -191,10 +179,6 @@
   "consistencyIsKey": "Tutarlılık anahtardır! Serini sürdür",
   "@consistencyIsKey": {
     "description": "Consistency motivation message"
-  },
-  "core": "Karın",
-  "@core": {
-    "description": "Core muscle group"
   },
   "createCustomExercise": "Özel Egzersiz Oluştur",
   "@createCustomExercise": {
@@ -295,10 +279,6 @@
   "lbs": "lbs",
   "@lbs": {
     "description": "Pounds unit"
-  },
-  "legs": "Bacaklar",
-  "@legs": {
-    "description": "Legs muscle group"
   },
   "locked": "Kilitli",
   "@locked": {
@@ -436,10 +416,6 @@
   "shareYourStreak": "Serini paylaş?",
   "@shareYourStreak": {
     "description": "Share streak prompt"
-  },
-  "shoulders": "Omuzlar",
-  "@shoulders": {
-    "description": "Shoulders muscle group"
   },
   "sixMonths": "6A",
   "@sixMonths": {
@@ -1424,5 +1400,26 @@
   "achievementCrossSyncedUpTitle": "Uyum İçinde",
   "achievementCrossSyncedUpDesc": "Bu hafta %90+ ilaç uyumu ve 30 günlük antrenman serisi tuttur",
   "achievementCrossWellnessWarriorTitle": "Sağlık Savaşçısı",
-  "achievementCrossWellnessWarriorDesc": "Bu hafta %90+ ilaç uyumu ve 50 günlük antrenman serisi tuttur"
+  "achievementCrossWellnessWarriorDesc": "Bu hafta %90+ ilaç uyumu ve 50 günlük antrenman serisi tuttur",
+
+  "exerciseCategoryChest": "Göğüs",
+  "exerciseCategoryBack": "Sırt",
+  "exerciseCategoryShoulders": "Omuzlar",
+  "exerciseCategoryArms": "Kollar",
+  "exerciseCategoryLegs": "Bacaklar",
+  "exerciseCategoryCore": "Karın",
+  "exerciseCategoryCardio": "Kardiyo",
+  "equipmentBarbell": "Halter",
+  "equipmentDumbbell": "Dambıl",
+  "equipmentMachine": "Makine",
+  "equipmentCable": "Kablo",
+  "equipmentBodyweight": "Vücut ağırlığı",
+  "equipmentKettlebell": "Kettlebell",
+  "equipmentOther": "Diğer",
+  "medicationFrequencyDaily": "Günlük",
+  "medicationFrequencyTwiceDaily": "Günde iki kez",
+  "medicationFrequencyThreeTimesDaily": "Günde üç kez",
+  "medicationFrequencyWeekly": "Haftalık",
+  "medicationFrequencyMonthly": "Aylık",
+  "medicationFrequencyAsNeeded": "Gerektiğinde"
 }

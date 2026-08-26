@@ -24,8 +24,13 @@ enum ExerciseCategory {
     );
   }
 
-  /// Get localized display name.
-  /// Note: Actual localization will be implemented in l10n files.
+  /// Canonical English name, for code that has no `AppLocalizations` and
+  /// must not vary with the user's language — `InsightEngine` keys its
+  /// symptom/exercise correlation on this string and persists it.
+  ///
+  /// **Not for the UI.** Screens use `label(l10n)` from
+  /// `features/fitness/presentation/fitness_labels.dart`; this getter would
+  /// print English in a Turkish or German interface.
   String get displayName {
     switch (this) {
       case ExerciseCategory.chest:

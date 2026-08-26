@@ -160,10 +160,6 @@
   "@allCategories": {
     "description": "All categories filter"
   },
-  "arms": "Arme",
-  "@arms": {
-    "description": "Arms muscle group"
-  },
   "back": "Zurück",
   "@back": {
     "description": "Back button"
@@ -171,14 +167,6 @@
   "calendar": "Kalender",
   "@calendar": {
     "description": "Calendar screen title"
-  },
-  "cardio": "Kardio",
-  "@cardio": {
-    "description": "Cardio category"
-  },
-  "chest": "Brust",
-  "@chest": {
-    "description": "Chest muscle group"
   },
   "compactCard": "Kompakte Karte",
   "@compactCard": {
@@ -191,10 +179,6 @@
   "consistencyIsKey": "Beständigkeit ist der Schlüssel! Halte deine Serie aufrecht",
   "@consistencyIsKey": {
     "description": "Consistency motivation message"
-  },
-  "core": "Core",
-  "@core": {
-    "description": "Core muscle group"
   },
   "createCustomExercise": "Benutzerdefinierte Übung erstellen",
   "@createCustomExercise": {
@@ -295,10 +279,6 @@
   "lbs": "lbs",
   "@lbs": {
     "description": "Pounds unit"
-  },
-  "legs": "Beine",
-  "@legs": {
-    "description": "Legs muscle group"
   },
   "locked": "Gesperrt",
   "@locked": {
@@ -436,10 +416,6 @@
   "shareYourStreak": "Deine Serie teilen?",
   "@shareYourStreak": {
     "description": "Share streak prompt"
-  },
-  "shoulders": "Schultern",
-  "@shoulders": {
-    "description": "Shoulders muscle group"
   },
   "sixMonths": "6M",
   "@sixMonths": {
@@ -1424,5 +1400,26 @@
   "achievementCrossSyncedUpTitle": "Im Einklang",
   "achievementCrossSyncedUpDesc": "Erreiche diese Woche 90%+ Medikamententreue und eine 30-tägige Workout-Serie",
   "achievementCrossWellnessWarriorTitle": "Wellness-Krieger",
-  "achievementCrossWellnessWarriorDesc": "Erreiche diese Woche 90%+ Medikamententreue und eine 50-tägige Workout-Serie"
+  "achievementCrossWellnessWarriorDesc": "Erreiche diese Woche 90%+ Medikamententreue und eine 50-tägige Workout-Serie",
+
+  "exerciseCategoryChest": "Brust",
+  "exerciseCategoryBack": "Rücken",
+  "exerciseCategoryShoulders": "Schultern",
+  "exerciseCategoryArms": "Arme",
+  "exerciseCategoryLegs": "Beine",
+  "exerciseCategoryCore": "Rumpf",
+  "exerciseCategoryCardio": "Kardio",
+  "equipmentBarbell": "Langhantel",
+  "equipmentDumbbell": "Kurzhantel",
+  "equipmentMachine": "Maschine",
+  "equipmentCable": "Kabelzug",
+  "equipmentBodyweight": "Körpergewicht",
+  "equipmentKettlebell": "Kettlebell",
+  "equipmentOther": "Sonstiges",
+  "medicationFrequencyDaily": "Täglich",
+  "medicationFrequencyTwiceDaily": "Zweimal täglich",
+  "medicationFrequencyThreeTimesDaily": "Dreimal täglich",
+  "medicationFrequencyWeekly": "Wöchentlich",
+  "medicationFrequencyMonthly": "Monatlich",
+  "medicationFrequencyAsNeeded": "Bei Bedarf"
 }
