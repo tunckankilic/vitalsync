@@ -64,6 +64,61 @@ const int kAchievementNotificationIdOffset = 72000;
 /// can open pre-filled with that time; no meal or reading data travels in it.
 const String kPayloadTypeGlucoseReminder = 'glucose_reminder';
 
+/// Payload type of a medication reminder or its follow-up.
+/// Full shape: `medication:<medicationId>`.
+const String kPayloadTypeMedication = 'medication';
+
+/// Payload type of the evening daily summary. Carries no id.
+const String kPayloadTypeDailySummary = 'daily_summary';
+
+/// Payload type of the streak-at-risk warning.
+/// Full shape: `streak:<currentStreak>`; the count is informational only.
+const String kPayloadTypeStreak = 'streak';
+
+/// Payload type of the Monday weekly-report notification. Carries no id.
+const String kPayloadTypeWeeklyReport = 'weekly_report';
+
+/// Payload type of an achievement unlock.
+/// Full shape: `achievement:<achievementId>`.
+const String kPayloadTypeAchievement = 'achievement';
+
+/// Payload type of a workout reminder. Full shape: `workout:<templateName>`.
+///
+/// [NotificationService.showWorkoutReminder] currently has no caller; the type
+/// is routed anyway so the notification is not dead on arrival if one appears.
+const String kPayloadTypeWorkout = 'workout';
+
+/// Payload type of a personal-record celebration.
+/// Full shape: `pr:<exerciseName>`. Also has no caller yet — see
+/// [kPayloadTypeWorkout].
+const String kPayloadTypePersonalRecord = 'pr';
+
+/// Payload type of a high/critical insight alert.
+/// Full shape: `insight:<insightId>`.
+///
+/// Has no caller *and* no destination: `InsightDetailScreen` is not wired to a
+/// route. Declared so the type is named in one place when that changes.
+const String kPayloadTypeInsight = 'insight';
+
+/// Every payload type this service can emit.
+///
+/// Exported so `notification_routes_test.dart` can assert that each one has an
+/// explicit answer — a destination, or a place in
+/// `kUnroutedNotificationPayloadTypes`. A type nobody handled is a notification
+/// that opens nothing, and nothing about that failure is visible in a build.
+/// **Add new types here as well as above.**
+const List<String> kNotificationPayloadTypes = [
+  kPayloadTypeGlucoseReminder,
+  kPayloadTypeMedication,
+  kPayloadTypeDailySummary,
+  kPayloadTypeStreak,
+  kPayloadTypeWeeklyReport,
+  kPayloadTypeAchievement,
+  kPayloadTypeWorkout,
+  kPayloadTypePersonalRecord,
+  kPayloadTypeInsight,
+];
+
 // ─────────────────────────────────────────────────────────────────────────────
 // Callback typedefs
 // ─────────────────────────────────────────────────────────────────────────────
@@ -266,7 +321,7 @@ class NotificationService {
       scheduledDate: tz.TZDateTime.from(time, tz.local),
       notificationDetails: _medicationNotificationDetails(),
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-      payload: 'medication:${med.id}',
+      payload: '$kPayloadTypeMedication:${med.id}',
     );
 
     if (withFollowUp) {
@@ -326,7 +381,7 @@ class NotificationService {
         scheduledDate: scheduledDate,
         notificationDetails: _medicationNotificationDetails(),
         androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-        payload: 'medication:${med.id}',
+        payload: '$kPayloadTypeMedication:${med.id}',
         matchDateTimeComponents: DateTimeComponents.time,
       );
 
@@ -387,7 +442,7 @@ class NotificationService {
         scheduledDate: scheduledDate,
         notificationDetails: _medicationNotificationDetails(),
         androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-        payload: 'medication:${med.id}',
+        payload: '$kPayloadTypeMedication:${med.id}',
         matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime,
       );
 
@@ -433,7 +488,7 @@ class NotificationService {
       scheduledDate: tz.TZDateTime.from(followUpTime, tz.local),
       notificationDetails: _medicationNotificationDetails(),
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-      payload: 'medication:${med.id}',
+      payload: '$kPayloadTypeMedication:${med.id}',
       matchDateTimeComponents: _followUpRecurrence(med.frequency),
     );
 
@@ -459,7 +514,7 @@ class NotificationService {
       title: 'Missed Medication ⚠️',
       body: 'You missed $medicationName scheduled at $scheduledTime',
       notificationDetails: _medicationNotificationDetails(),
-      payload: 'medication:$medicationId',
+      payload: '$kPayloadTypeMedication:$medicationId',
     );
 
     _logger.d('Showed missed medication notification for $medicationName');
@@ -489,7 +544,7 @@ class NotificationService {
           'Medications: $taken/$total taken ($percentage%). '
           '${missed > 0 ? '$missed missed.' : 'Perfect compliance!'}',
       notificationDetails: _insightNotificationDetails(),
-      payload: 'daily_summary',
+      payload: kPayloadTypeDailySummary,
     );
 
     _logger.d('Showed daily summary: $taken/$total');
@@ -593,7 +648,7 @@ class NotificationService {
       scheduledDate: tz.TZDateTime.from(time, tz.local),
       notificationDetails: _workoutNotificationDetails(),
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-      payload: 'workout:$templateName',
+      payload: '$kPayloadTypeWorkout:$templateName',
     );
 
     _logger.d('Scheduled workout reminder: $templateName at $time');
@@ -613,7 +668,7 @@ class NotificationService {
           'Your $currentStreak-day streak is about to break. '
           'Log a workout today to keep it going!',
       notificationDetails: _workoutNotificationDetails(),
-      payload: 'streak:$currentStreak',
+      payload: '$kPayloadTypeStreak:$currentStreak',
     );
 
     _logger.d('Showed streak warning: $currentStreak days');
@@ -633,7 +688,7 @@ class NotificationService {
       title: 'New Personal Record! 🏆',
       body: 'You hit ${weight.toStringAsFixed(1)}kg on $exerciseName!',
       notificationDetails: _achievementNotificationDetails(),
-      payload: 'pr:$exerciseName',
+      payload: '$kPayloadTypePersonalRecord:$exerciseName',
     );
 
     _logger.d('Showed PR celebration: $exerciseName @ ${weight}kg');
@@ -652,7 +707,7 @@ class NotificationService {
           'Your health & fitness summary for last week is ready. '
           'Tap to view your progress!',
       notificationDetails: _insightNotificationDetails(),
-      payload: 'weekly_report',
+      payload: kPayloadTypeWeeklyReport,
     );
 
     _logger.d('Showed weekly report ready notification');
@@ -673,7 +728,7 @@ class NotificationService {
           '${insight.title}',
       body: insight.message,
       notificationDetails: _insightNotificationDetails(),
-      payload: 'insight:${insight.id}',
+      payload: '$kPayloadTypeInsight:${insight.id}',
     );
 
     _logger.d('Showed important insight notification: ${insight.title}');
@@ -695,7 +750,7 @@ class NotificationService {
       body:
           '${achievement.localizedTitle(l10n)} — '
           '${achievement.localizedDescription(l10n)}',
-      payload: 'achievement:${achievement.id}',
+      payload: '$kPayloadTypeAchievement:${achievement.id}',
     );
 
     _logger.d('Showed achievement unlock: ${achievement.iconName}');

@@ -3,7 +3,7 @@
 /// Routes: splash, onboarding, auth, home (dashboard).
 /// Health routes: medications, symptoms, timeline, glucose, meals, health-settings.
 /// Fitness routes: workouts, exercises, progress, calendar, achievements.
-/// Insight routes: weekly-report, insight-detail.
+/// Insight routes: weekly-report. (`InsightDetailScreen` has no route yet.)
 /// Shared routes: profile, settings, gdpr-settings, data-export.
 /// Auth redirect logic and nested navigation for bottom nav
 /// (3 tabs: Dashboard, Health, Fitness).
@@ -39,6 +39,7 @@ import '../../features/health/presentation/screens/meal_list_screen.dart';
 import '../../features/health/presentation/screens/medication_detail_screen.dart';
 import '../../features/health/presentation/screens/medication_list_screen.dart';
 import '../../features/health/presentation/screens/symptom_list_screen.dart';
+import '../../features/insights/presentation/screens/weekly_report_screen.dart';
 import '../../presentation/pages/dashboard_page.dart';
 import '../../presentation/pages/onboarding_page.dart';
 import '../../presentation/pages/splash_page.dart';
@@ -506,6 +507,22 @@ final GoRouter appRouter = GoRouter(
           ),
         ),
       ],
+    ),
+    // WEEKLY REPORT (Outside shell - full screen)
+    //
+    // The dashboard has pushed this path from two places since before 1.0.0
+    // (greeting card, quick actions) without the route existing, so both taps
+    // landed on go_router's "no routes for location" page. The weekly-report
+    // notification routes here too.
+    GoRoute(
+      path: '/insights/weekly-report',
+      name: 'weekly_report',
+      parentNavigatorKey: _rootNavigatorKey,
+      pageBuilder: (context, state) => _buildPageWithSlideTransition(
+        context,
+        state,
+        const WeeklyReportScreen(),
+      ),
     ),
   ],
   redirect: (context, state) {

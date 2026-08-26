@@ -196,6 +196,28 @@ Entry points: Health tab → the icon row at the top of the medication list
 | 5 | Export data (Settings → Privacy & Data → data export) and read the calibration section | **Counts only.** No glucose value, no meal name, no note anywhere in it |
 | 6 | Delete Account, then re-check the export/local DB | Calibration metrics, meals, glucose readings and imported health samples are all gone |
 
+### 1I. Notification deep links
+
+> Until 1.1.0 **no** notification tap navigated anywhere — the callback was
+> never assigned. The destinations are asserted against the route table by
+> `test/core/router/notification_routes_test.dart`, so what needs checking on a
+> device is the launch path, not the mapping.
+>
+> A tap that lands on a bare "no routes for location" page is the failure to
+> watch for.
+
+| # | Notification | Expected destination |
+|---|--------------|----------------------|
+| 1 | Medication reminder / its follow-up | Medication **detail** screen for that medication |
+| 2 | Post-meal measurement reminder | `/health/glucose/add`, time pre-filled (§1G step 4) |
+| 3 | Daily summary (evening) | Dashboard tab — **switches** to it, does not stack a second copy on top of the current screen |
+| 4 | Streak at risk (20:00) | Fitness tab — same: switches, no stacking |
+| 5 | Weekly report ready (Monday) | Weekly report screen |
+| 6 | Achievement unlocked | Achievements list |
+| 7 | Any of the above with the app **killed** | Same destination after cold start, not just the dashboard |
+| 8 | Any of the above while **logged out** | Redirected to login, no crash |
+| 9 | Dashboard → greeting card and quick-actions "weekly report" | Weekly report screen. Both pushed a non-existent route before 1.1.0 |
+
 ---
 
 ## 2. Offline-first validation matrix (most critical)

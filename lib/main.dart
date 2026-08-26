@@ -24,6 +24,7 @@ import 'core/health/health_lifecycle_observer.dart';
 import 'core/network/connectivity_service.dart';
 import 'core/notifications/notification_service.dart';
 import 'core/router/app_router.dart';
+import 'core/router/notification_routes.dart';
 import 'core/settings/settings_provider.dart';
 import 'core/sync/sync_lifecycle_observer.dart';
 import 'core/sync/sync_service.dart';
@@ -178,21 +179,19 @@ Future<void> _bootstrap() async {
 
 /// Routes a notification tap to a screen.
 ///
-/// Deliberately narrow: only the post-meal measurement reminder is handled.
-/// The other payload types (medication, workout, insight, …) have never had a
-/// destination wired — [NotificationService.onNavigationCallback] was unset
-/// until now — so ignoring them keeps their behaviour exactly as it was.
-/// Routing them is its own task.
-///
-/// [id] carries the reminder's fire time as millisecondsSinceEpoch; it is
-/// forwarded to the entry form so the measurement time opens pre-filled.
+/// [type] and [id] are the two halves of the payload, split on its first `:`.
+/// The mapping itself lives in `core/router/notification_routes.dart` so it can
+/// be tested against the real route table; this only performs the navigation.
 void _handleNotificationNavigation(String type, String id) {
-  if (type != kPayloadTypeGlucoseReminder) return;
+  final destination = notificationDestinationFor(type, id);
+  if (destination == null) return;
 
-  final at = int.tryParse(id);
-  appRouter.push(
-    at == null ? '/health/glucose/add' : '/health/glucose/add?at=$at',
-  );
+  switch (destination.navigation) {
+    case NotificationNavigation.push:
+      appRouter.push(destination.location);
+    case NotificationNavigation.go:
+      appRouter.go(destination.location);
+  }
 }
 
 /// VitalSync Application Widget.
