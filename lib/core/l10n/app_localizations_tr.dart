@@ -515,9 +515,6 @@ class AppLocalizationsTr extends AppLocalizations {
   String get workoutNotes => 'Antrenman Notları';
 
   @override
-  String get shareWorkout => 'Antrenmanı Paylaş';
-
-  @override
   String get storyFormat => 'Hikaye Formatı';
 
   @override
@@ -557,9 +554,6 @@ class AppLocalizationsTr extends AppLocalizations {
   String get createCustomExercise => 'Özel Egzersiz Oluştur';
 
   @override
-  String get progress => 'İlerleme';
-
-  @override
   String get oneWeek => '1H';
 
   @override
@@ -578,12 +572,6 @@ class AppLocalizationsTr extends AppLocalizations {
   String get volumeProgression => 'Hacim İlerlemesi';
 
   @override
-  String get workoutFrequency => 'Antrenman Sıklığı';
-
-  @override
-  String get personalRecords => 'Kişisel Rekorlar';
-
-  @override
   String get oneRepMax => '1TM';
 
   @override
@@ -594,9 +582,6 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get monthlyStats => 'Aylık İstatistikler';
-
-  @override
-  String get totalWorkouts => 'Toplam Antrenman';
 
   @override
   String get streak => 'Seri';
@@ -792,25 +777,10 @@ class AppLocalizationsTr extends AppLocalizations {
   String get appearance => 'Görünüm';
 
   @override
-  String get theme => 'Tema';
-
-  @override
-  String get themeSystem => 'Sistem';
-
-  @override
-  String get themeLight => 'Açık';
-
-  @override
-  String get themeDark => 'Koyu';
-
-  @override
   String get materialYou => 'Material You';
 
   @override
   String get materialYouSubtitle => 'Duvar kâğıdından dinamik renkleri kullan';
-
-  @override
-  String get language => 'Dil';
 
   @override
   String get languageEn => 'English';
@@ -931,15 +901,6 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get workouts => 'Antrenmanlar';
-
-  @override
-  String get back => 'Geri';
-
-  @override
-  String get getStarted => 'Başla';
-
-  @override
-  String get next => 'İleri';
 
   @override
   String get welcomeTitle => 'VitalSynch\'e Hoş Geldiniz';
@@ -1088,9 +1049,6 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get enterEmail => 'Lütfen e-postanızı girin';
-
-  @override
-  String get invalidEmail => 'Lütfen geçerli bir e-posta adresi girin';
 
   @override
   String get enterPassword => 'Lütfen şifrenizi girin';
@@ -1250,6 +1208,30 @@ class AppLocalizationsTr extends AppLocalizations {
       'Gerekli onaylar, temel uygulama işlevselliği için gereklidir. Onayları istediğiniz zaman Ayarlar\'dan yönetebilirsiniz.';
 
   @override
+  String get back => 'Geri';
+
+  @override
+  String get next => 'İleri';
+
+  @override
+  String get getStarted => 'Başla';
+
+  @override
+  String get language => 'Dil';
+
+  @override
+  String get theme => 'Tema';
+
+  @override
+  String get themeSystem => 'Sistem';
+
+  @override
+  String get themeLight => 'Açık';
+
+  @override
+  String get themeDark => 'Koyu';
+
+  @override
   String get workoutComplete => 'Antrenman Tamamlandı!';
 
   @override
@@ -1268,7 +1250,13 @@ class AppLocalizationsTr extends AppLocalizations {
   String get comingSoon => 'Yakında gelecek!';
 
   @override
+  String get progress => 'İlerleme';
+
+  @override
   String get volumeChart => 'Hacim Grafiği';
+
+  @override
+  String get workoutFrequency => 'Antrenman Sıklığı';
 
   @override
   String get chartComingSoon =>
@@ -1278,10 +1266,16 @@ class AppLocalizationsTr extends AppLocalizations {
   String get summary => 'Özet';
 
   @override
+  String get totalWorkouts => 'Toplam Antrenman';
+
+  @override
   String get avgDuration => 'Ort. Süre';
 
   @override
   String get prsAchieved => 'Kırılan Rekorlar';
+
+  @override
+  String get personalRecords => 'Kişisel Rekorlar';
 
   @override
   String get noPRsYet => 'Henüz kişisel rekor yok. Devam et!';
@@ -1644,6 +1638,9 @@ class AppLocalizationsTr extends AppLocalizations {
   String get exportAsJson => 'JSON Dışa Aktar';
 
   @override
+  String get shareWorkout => 'Antrenmanı Paylaş';
+
+  @override
   String get trackedWithVitalSync => 'VitalSync ile takip edildi';
 
   @override
@@ -1669,6 +1666,9 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get security => 'Güvenlik';
+
+  @override
+  String get invalidEmail => 'Lütfen geçerli bir e-posta adresi girin';
 
   @override
   String get enterValidWeightAndReps =>

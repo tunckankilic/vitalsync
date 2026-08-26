@@ -1054,12 +1054,6 @@ abstract class AppLocalizations {
   /// **'Workout Notes'**
   String get workoutNotes;
 
-  /// Share workout button
-  ///
-  /// In en, this message translates to:
-  /// **'Share Workout'**
-  String get shareWorkout;
-
   /// Story format share option
   ///
   /// In en, this message translates to:
@@ -1138,12 +1132,6 @@ abstract class AppLocalizations {
   /// **'Create Custom Exercise'**
   String get createCustomExercise;
 
-  /// Progress screen title
-  ///
-  /// In en, this message translates to:
-  /// **'Progress'**
-  String get progress;
-
   /// One week time range
   ///
   /// In en, this message translates to:
@@ -1180,18 +1168,6 @@ abstract class AppLocalizations {
   /// **'Volume Progression'**
   String get volumeProgression;
 
-  /// Workout frequency chart title
-  ///
-  /// In en, this message translates to:
-  /// **'Workout Frequency'**
-  String get workoutFrequency;
-
-  /// Personal records section title
-  ///
-  /// In en, this message translates to:
-  /// **'Personal Records'**
-  String get personalRecords;
-
   /// One rep max abbreviation
   ///
   /// In en, this message translates to:
@@ -1215,12 +1191,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Monthly Stats'**
   String get monthlyStats;
-
-  /// Total workouts label
-  ///
-  /// In en, this message translates to:
-  /// **'Total Workouts'**
-  String get totalWorkouts;
 
   /// Streak label
   ///
@@ -1588,30 +1558,6 @@ abstract class AppLocalizations {
   /// **'Appearance'**
   String get appearance;
 
-  /// Theme label
-  ///
-  /// In en, this message translates to:
-  /// **'Theme'**
-  String get theme;
-
-  /// System theme option
-  ///
-  /// In en, this message translates to:
-  /// **'System'**
-  String get themeSystem;
-
-  /// Light theme option
-  ///
-  /// In en, this message translates to:
-  /// **'Light'**
-  String get themeLight;
-
-  /// Dark theme option
-  ///
-  /// In en, this message translates to:
-  /// **'Dark'**
-  String get themeDark;
-
   /// Material You setting
   ///
   /// In en, this message translates to:
@@ -1623,12 +1569,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Use dynamic colors from wallpaper'**
   String get materialYouSubtitle;
-
-  /// Language label
-  ///
-  /// In en, this message translates to:
-  /// **'Language'**
-  String get language;
 
   /// English language option
   ///
@@ -1851,24 +1791,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Workouts'**
   String get workouts;
-
-  /// Back button
-  ///
-  /// In en, this message translates to:
-  /// **'Back'**
-  String get back;
-
-  /// Get started button
-  ///
-  /// In en, this message translates to:
-  /// **'Get Started'**
-  String get getStarted;
-
-  /// Next button
-  ///
-  /// In en, this message translates to:
-  /// **'Next'**
-  String get next;
 
   /// Welcome screen title
   ///
@@ -2140,12 +2062,6 @@ abstract class AppLocalizations {
   /// **'Please enter your email'**
   String get enterEmail;
 
-  /// Invalid email format error
-  ///
-  /// In en, this message translates to:
-  /// **'Please enter a valid email address'**
-  String get invalidEmail;
-
   /// Enter password error
   ///
   /// In en, this message translates to:
@@ -2404,6 +2320,54 @@ abstract class AppLocalizations {
   /// **'Required consents are necessary for core app functionality. You can manage consents anytime in Settings.'**
   String get gdprNote;
 
+  /// Back button
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get back;
+
+  /// Next button
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get next;
+
+  /// Get started button
+  ///
+  /// In en, this message translates to:
+  /// **'Get Started'**
+  String get getStarted;
+
+  /// Language label
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get language;
+
+  /// Theme label
+  ///
+  /// In en, this message translates to:
+  /// **'Theme'**
+  String get theme;
+
+  /// System theme option
+  ///
+  /// In en, this message translates to:
+  /// **'System'**
+  String get themeSystem;
+
+  /// Light theme option
+  ///
+  /// In en, this message translates to:
+  /// **'Light'**
+  String get themeLight;
+
+  /// Dark theme option
+  ///
+  /// In en, this message translates to:
+  /// **'Dark'**
+  String get themeDark;
+
   /// Workout complete message
   ///
   /// In en, this message translates to:
@@ -2440,11 +2404,23 @@ abstract class AppLocalizations {
   /// **'Coming soon!'**
   String get comingSoon;
 
+  /// Progress screen title
+  ///
+  /// In en, this message translates to:
+  /// **'Progress'**
+  String get progress;
+
   /// Volume chart title
   ///
   /// In en, this message translates to:
   /// **'Volume Chart'**
   String get volumeChart;
+
+  /// Workout frequency chart title
+  ///
+  /// In en, this message translates to:
+  /// **'Workout Frequency'**
+  String get workoutFrequency;
 
   /// Empty state shown when a chart has no data yet
   ///
@@ -2458,6 +2434,12 @@ abstract class AppLocalizations {
   /// **'Summary'**
   String get summary;
 
+  /// Total workouts label
+  ///
+  /// In en, this message translates to:
+  /// **'Total Workouts'**
+  String get totalWorkouts;
+
   /// Average duration label
   ///
   /// In en, this message translates to:
@@ -2469,6 +2451,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'PRs Achieved'**
   String get prsAchieved;
+
+  /// Personal records section title
+  ///
+  /// In en, this message translates to:
+  /// **'Personal Records'**
+  String get personalRecords;
 
   /// No PRs empty state message
   ///
@@ -3088,6 +3076,12 @@ abstract class AppLocalizations {
   /// **'Export JSON'**
   String get exportAsJson;
 
+  /// Share workout button
+  ///
+  /// In en, this message translates to:
+  /// **'Share Workout'**
+  String get shareWorkout;
+
   /// Branded watermark text
   ///
   /// In en, this message translates to:
@@ -3135,6 +3129,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Security'**
   String get security;
+
+  /// Invalid email format error
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid email address'**
+  String get invalidEmail;
 
   /// Weight/reps parse error
   ///

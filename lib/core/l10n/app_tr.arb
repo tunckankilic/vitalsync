@@ -583,7 +583,6 @@
     "description": "Sign up button"
   },
   "enterEmail": "Lütfen e-postanızı girin",
-  "invalidEmail": "Lütfen geçerli bir e-posta adresi girin",
   "@enterEmail": {
     "description": "Enter email error"
   },

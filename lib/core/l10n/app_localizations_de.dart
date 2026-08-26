@@ -517,9 +517,6 @@ class AppLocalizationsDe extends AppLocalizations {
   String get workoutNotes => 'Trainingsnotizen';
 
   @override
-  String get shareWorkout => 'Training teilen';
-
-  @override
   String get storyFormat => 'Story-Format';
 
   @override
@@ -559,9 +556,6 @@ class AppLocalizationsDe extends AppLocalizations {
   String get createCustomExercise => 'Benutzerdefinierte Übung erstellen';
 
   @override
-  String get progress => 'Fortschritt';
-
-  @override
   String get oneWeek => '1W';
 
   @override
@@ -580,12 +574,6 @@ class AppLocalizationsDe extends AppLocalizations {
   String get volumeProgression => 'Volumenprogression';
 
   @override
-  String get workoutFrequency => 'Trainingshäufigkeit';
-
-  @override
-  String get personalRecords => 'Persönliche Rekorde';
-
-  @override
   String get oneRepMax => '1RM';
 
   @override
@@ -596,9 +584,6 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get monthlyStats => 'Monatsstatistik';
-
-  @override
-  String get totalWorkouts => 'Gesamte Trainings';
 
   @override
   String get streak => 'Serie';
@@ -795,26 +780,11 @@ class AppLocalizationsDe extends AppLocalizations {
   String get appearance => 'Darstellung';
 
   @override
-  String get theme => 'Thema';
-
-  @override
-  String get themeSystem => 'System';
-
-  @override
-  String get themeLight => 'Hell';
-
-  @override
-  String get themeDark => 'Dunkel';
-
-  @override
   String get materialYou => 'Material You';
 
   @override
   String get materialYouSubtitle =>
       'Dynamische Farben vom Hintergrundbild verwenden';
-
-  @override
-  String get language => 'Sprache';
 
   @override
   String get languageEn => 'English';
@@ -935,15 +905,6 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get workouts => 'Workouts';
-
-  @override
-  String get back => 'Zurück';
-
-  @override
-  String get getStarted => 'Loslegen';
-
-  @override
-  String get next => 'Weiter';
 
   @override
   String get welcomeTitle => 'Willkommen bei VitalSynch';
@@ -1092,9 +1053,6 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get enterEmail => 'Bitte geben Sie Ihre E-Mail ein';
-
-  @override
-  String get invalidEmail => 'Bitte geben Sie eine gültige E-Mail-Adresse ein';
 
   @override
   String get enterPassword => 'Bitte geben Sie Ihr Passwort ein';
@@ -1255,6 +1213,30 @@ class AppLocalizationsDe extends AppLocalizations {
       'Erforderliche Zustimmungen sind für die Kernfunktionalität der App notwendig. Sie können Zustimmungen jederzeit in den Einstellungen verwalten.';
 
   @override
+  String get back => 'Zurück';
+
+  @override
+  String get next => 'Weiter';
+
+  @override
+  String get getStarted => 'Loslegen';
+
+  @override
+  String get language => 'Sprache';
+
+  @override
+  String get theme => 'Thema';
+
+  @override
+  String get themeSystem => 'System';
+
+  @override
+  String get themeLight => 'Hell';
+
+  @override
+  String get themeDark => 'Dunkel';
+
+  @override
   String get workoutComplete => 'Training Abgeschlossen!';
 
   @override
@@ -1273,7 +1255,13 @@ class AppLocalizationsDe extends AppLocalizations {
   String get comingSoon => 'Demnächst!';
 
   @override
+  String get progress => 'Fortschritt';
+
+  @override
   String get volumeChart => 'Volumen Diagramm';
+
+  @override
+  String get workoutFrequency => 'Trainingshäufigkeit';
 
   @override
   String get chartComingSoon =>
@@ -1283,10 +1271,16 @@ class AppLocalizationsDe extends AppLocalizations {
   String get summary => 'Zusammenfassung';
 
   @override
+  String get totalWorkouts => 'Gesamte Trainings';
+
+  @override
   String get avgDuration => 'Durchschn. Dauer';
 
   @override
   String get prsAchieved => 'PRs Erreicht';
+
+  @override
+  String get personalRecords => 'Persönliche Rekorde';
 
   @override
   String get noPRsYet => 'Noch keine persönlichen Rekorde. Weiter so!';
@@ -1649,6 +1643,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get exportAsJson => 'JSON exportieren';
 
   @override
+  String get shareWorkout => 'Training teilen';
+
+  @override
   String get trackedWithVitalSync => 'Verfolgt mit VitalSync';
 
   @override
@@ -1674,6 +1671,9 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get security => 'Sicherheit';
+
+  @override
+  String get invalidEmail => 'Bitte geben Sie eine gültige E-Mail-Adresse ein';
 
   @override
   String get enterValidWeightAndReps =>

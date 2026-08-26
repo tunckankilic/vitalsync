@@ -583,7 +583,6 @@
     "description": "Sign up button"
   },
   "enterEmail": "Bitte geben Sie Ihre E-Mail ein",
-  "invalidEmail": "Bitte geben Sie eine gültige E-Mail-Adresse ein",
   "@enterEmail": {
     "description": "Enter email error"
   },

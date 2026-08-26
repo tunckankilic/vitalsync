@@ -512,9 +512,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get workoutNotes => 'Workout Notes';
 
   @override
-  String get shareWorkout => 'Share Workout';
-
-  @override
   String get storyFormat => 'Story Format';
 
   @override
@@ -554,9 +551,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get createCustomExercise => 'Create Custom Exercise';
 
   @override
-  String get progress => 'Progress';
-
-  @override
   String get oneWeek => '1W';
 
   @override
@@ -575,12 +569,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get volumeProgression => 'Volume Progression';
 
   @override
-  String get workoutFrequency => 'Workout Frequency';
-
-  @override
-  String get personalRecords => 'Personal Records';
-
-  @override
   String get oneRepMax => '1RM';
 
   @override
@@ -591,9 +579,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get monthlyStats => 'Monthly Stats';
-
-  @override
-  String get totalWorkouts => 'Total Workouts';
 
   @override
   String get streak => 'Streak';
@@ -788,25 +773,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get appearance => 'Appearance';
 
   @override
-  String get theme => 'Theme';
-
-  @override
-  String get themeSystem => 'System';
-
-  @override
-  String get themeLight => 'Light';
-
-  @override
-  String get themeDark => 'Dark';
-
-  @override
   String get materialYou => 'Material You';
 
   @override
   String get materialYouSubtitle => 'Use dynamic colors from wallpaper';
-
-  @override
-  String get language => 'Language';
 
   @override
   String get languageEn => 'English';
@@ -925,15 +895,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get workouts => 'Workouts';
-
-  @override
-  String get back => 'Back';
-
-  @override
-  String get getStarted => 'Get Started';
-
-  @override
-  String get next => 'Next';
 
   @override
   String get welcomeTitle => 'Welcome to VitalSynch';
@@ -1079,9 +1040,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get enterEmail => 'Please enter your email';
-
-  @override
-  String get invalidEmail => 'Please enter a valid email address';
 
   @override
   String get enterPassword => 'Please enter your password';
@@ -1238,6 +1196,30 @@ class AppLocalizationsEn extends AppLocalizations {
       'Required consents are necessary for core app functionality. You can manage consents anytime in Settings.';
 
   @override
+  String get back => 'Back';
+
+  @override
+  String get next => 'Next';
+
+  @override
+  String get getStarted => 'Get Started';
+
+  @override
+  String get language => 'Language';
+
+  @override
+  String get theme => 'Theme';
+
+  @override
+  String get themeSystem => 'System';
+
+  @override
+  String get themeLight => 'Light';
+
+  @override
+  String get themeDark => 'Dark';
+
+  @override
   String get workoutComplete => 'Workout Complete!';
 
   @override
@@ -1256,7 +1238,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get comingSoon => 'Coming soon!';
 
   @override
+  String get progress => 'Progress';
+
+  @override
   String get volumeChart => 'Volume Chart';
+
+  @override
+  String get workoutFrequency => 'Workout Frequency';
 
   @override
   String get chartComingSoon =>
@@ -1266,10 +1254,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get summary => 'Summary';
 
   @override
+  String get totalWorkouts => 'Total Workouts';
+
+  @override
   String get avgDuration => 'Avg Duration';
 
   @override
   String get prsAchieved => 'PRs Achieved';
+
+  @override
+  String get personalRecords => 'Personal Records';
 
   @override
   String get noPRsYet => 'No personal records yet. Keep lifting!';
@@ -1632,6 +1626,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get exportAsJson => 'Export JSON';
 
   @override
+  String get shareWorkout => 'Share Workout';
+
+  @override
   String get trackedWithVitalSync => 'Tracked with VitalSync';
 
   @override
@@ -1656,6 +1653,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get security => 'Security';
+
+  @override
+  String get invalidEmail => 'Please enter a valid email address';
 
   @override
   String get enterValidWeightAndReps => 'Please enter valid weight and reps';
