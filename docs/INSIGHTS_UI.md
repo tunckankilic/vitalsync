@@ -106,33 +106,47 @@ needed — the weekly-report notification is live (`background_service.dart`
 fires `showWeeklyReportReady`) and now routes there — but no user-reachable
 button was broken.
 
-**2. There are two dashboards, and the one with all the features is dead.**
+**2. There were two dashboards. The superseded one has been removed.**
 
 `app_router.dart` routes `/dashboard` to `DashboardPage`
-(`lib/presentation/pages/dashboard_page.dart`). A second, richer implementation
-exists and is referenced by nothing:
+(`lib/presentation/pages/dashboard_page.dart`), which came later as a
+simplification. The older, richer `DashboardScreen` and its seven cards were
+referenced by nothing and were deleted in 1.1.0 — 1,898 lines across ten files,
+including two orphaned providers and a **second `DashboardSummary` class with
+its own `dashboardSummaryProvider`**, a duplicate of the one the live page uses.
 
-```
-lib/presentation/screens/dashboard/dashboard_screen.dart   309 lines
-lib/presentation/widgets/dashboard/activity_feed_card.dart 190
-lib/presentation/widgets/dashboard/greeting_card.dart      126
-lib/presentation/widgets/dashboard/insight_carousel_card.dart 282
-lib/presentation/widgets/dashboard/medications_mini_card.dart 128
-lib/presentation/widgets/dashboard/quick_actions_card.dart 117
-lib/presentation/widgets/dashboard/streak_workout_card.dart 179
-lib/presentation/widgets/dashboard/weekly_chart_card.dart  289
-                                                    ~1,620 lines
-```
+It had never been run in the app, and the code proves it:
 
-`DashboardScreen` has reorderable cards (`dashboard_layout_provider`), an
-activity feed, a weekly chart and the insight carousel. `DashboardPage` has none
-of that.
+- `QuickActionsCard` pushed `/health/medication/add`, `/health/symptom/add` and
+  `/fitness/workout/start`. The real routes are `/health/add-medication`,
+  `/health/add-symptom` and `/fitness/active-workout`. Three of its four
+  buttons could never have worked, and nobody noticed.
+- `InsightCarouselCard` pushed `/insights/<id>`, a route that never existed.
+- Its pull-to-refresh called `insightEngine.generateAllInsights()` directly,
+  moving the interpretive engine off its daily background task and onto a user
+  gesture — the wrong direction for the 2.0 boundary.
+- Edit mode was entered by long-pressing anywhere, and the banner explaining
+  that ("long press to reorder") only appeared *after* you had long-pressed.
 
-This was **left alone** in 1.1.0. It is either an unfinished replacement worth
-switching on, or ~1,620 lines to delete, and that is a decision about the
-product's direction rather than a cleanup. Deciding it needs someone to open
-both and say which one is the dashboard.
+## The dashboard ideas worth keeping
 
-Note if it is switched on: `insight_carousel_card.dart` pushes `/insights/<id>`,
-which does not exist, and `weekly_chart_card.dart` uses the deprecated fl_chart
-`swapAnimationDuration` / `swapAnimationCurve`.
+Deleting that code was about the code, not the design. `DashboardScreen`
+answered a real question that `DashboardPage` does not: what belongs on the home
+screen of a health app. Recover from git (`git log -- lib/presentation/screens/dashboard`)
+if the pixels are useful, but the ideas are these:
+
+- **A weekly chart.** Bars plus a line overlay, seven days.
+- **An activity feed.** One timeline merging medications, symptoms and
+  workouts, which is the only place the app ever showed them together.
+- **Quick actions.** Four shortcuts to the add-forms — with correct paths.
+- **A tablet layout.** A masonry grid at two columns on phones, four above
+  600pt. `DashboardPage` is a single column at every size.
+- **Reorderable cards**, persisted per user. Genuinely nice; genuinely optional.
+
+### The gap neither dashboard filled
+
+**Neither showed glucose or meals.** The measurement layer is 1.1.0's headline
+feature and it is invisible on the home screen — no reading, no meal, no
+coverage count, nothing. Whichever direction the dashboard goes, that is the
+user-facing gap to close first, and it is a better use of the effort than
+reviving 1,898 lines that never executed.
