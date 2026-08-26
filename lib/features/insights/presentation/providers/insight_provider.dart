@@ -48,13 +48,6 @@ Future<List<Insight>> insightsByCategory(
   return repository.getByCategory(category);
 }
 
-/// Provider for unread insight count (for badge display)
-@riverpod
-Future<int> unreadInsightCount(Ref ref) async {
-  final activeInsights = await ref.watch(activeInsightsProvider.future);
-  return activeInsights.where((insight) => !insight.isRead).length;
-}
-
 /// Notifier for insight operations
 @riverpod
 class InsightNotifier extends _$InsightNotifier {

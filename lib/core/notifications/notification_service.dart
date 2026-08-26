@@ -96,8 +96,9 @@ const String kPayloadTypePersonalRecord = 'pr';
 /// Payload type of a high/critical insight alert.
 /// Full shape: `insight:<insightId>`.
 ///
-/// Has no caller *and* no destination: `InsightDetailScreen` is not wired to a
-/// route. Declared so the type is named in one place when that changes.
+/// Has no caller *and* no destination: the insight UI was removed before 1.1.0
+/// and only the dashboard's latest-insight card remains. Declared so the type
+/// is named in one place if that changes -- see docs/INSIGHTS_UI.md.
 const String kPayloadTypeInsight = 'insight';
 
 /// Every payload type this service can emit.

@@ -1,0 +1,138 @@
+# Insights UI — what exists, what ships, what was removed
+
+Written 2026-08-26, while cutting 1.1.0. This is the record for anyone who
+comes back to the insight feature and wonders why half of it is missing from
+the repo and the other half never appears in the app.
+
+---
+
+## The short version
+
+The insight **engine** ships and runs. The insight **UI** was built three times
+and connected once.
+
+| Piece | State before 1.1.0 | State after |
+|---|---|---|
+| `InsightEngine` + daily background task | live | unchanged |
+| `_LatestInsightCard` on `DashboardPage` | live — one non-tappable card | unchanged |
+| `InsightBadge` in `GlassmorphicAppBar` | live, and **broken**: pushed `/insights`, which is not a route | removed |
+| `InsightsListScreen` (360 lines) | never reachable | removed |
+| `InsightDetailScreen` (507 lines) | never reachable | removed |
+| `InsightCarouselCard` (282 lines) | only used by `DashboardScreen`, itself dead | left in place — see below |
+
+Nothing a user can see changed, except that a badge which opened an error page
+no longer appears.
+
+---
+
+## What still ships
+
+`InsightEngine` runs as a WorkManager task every day at 06:00
+(`AppConstants.taskGenerateInsights`, built in `background_service.dart` and
+registered in `injection_container.dart`). It writes rows to
+`generated_insights`.
+
+Those rows surface in exactly one place: `_LatestInsightCard` in
+`lib/presentation/pages/dashboard_page.dart`. It renders the most recent
+insight's title and message. It is a plain `Card` — no tap target, no detail,
+no list, no dismiss.
+
+So the feature today is "one sentence on the dashboard", and that is the whole
+of it.
+
+### The engine's language is a live consideration
+
+`InsightStrings` is hardcoded English, so that dashboard card renders English in
+the Turkish and German builds. It is also interpretive by nature. The strongest
+example, `insight_strings.dart`:
+
+> Your `<symptom>` severity has increased from `<x>` to `<y>` over the past week
+> — you may want to discuss this with your doctor.
+
+That has shipped since 1.0.0. It is not new and it is not a regression, but it
+is the reason the removed screens were not simply wired up: see below.
+
+---
+
+## Why the unreachable screens were removed rather than connected
+
+`CONTEXT-2.0.md` draws the 2.0 boundary at **VitalSync measures and shows,
+Kalibra interprets**, and gives the reason plainly: a Guideline 1.4.1 health-claim
+rejection on a live app blocks *every* update, and a feature that has shipped
+cannot be taken back.
+
+Connecting `InsightsListScreen` and `InsightDetailScreen` would have turned the
+current one-sentence surface into a browsable feature built entirely out of that
+interpretive language — and done so as pre-release cleanup, days before a
+submission, with:
+
+- no screen tests on either file,
+- no tri-lingual pass (and `InsightStrings` English-only, so tr/de would show
+  English throughout),
+- two route shapes that disagree with each other, proving neither was ever
+  wired: the badge pushed `/insights`, the carousel pushed `/insights/<id>`, and
+  the list screen pushed `/insights/detail/<id>`.
+
+That is a product decision with review exposure, not a cleanup. It should be
+made deliberately, for a release that has room to validate it.
+
+### What it would take to bring them back
+
+`git revert` the removal commit, then:
+
+1. Add the routes. Pick **one** shape and make all callers agree —
+   `/insights` for the list and `/insights/<id>` for the detail is the obvious
+   pair; the list screen's `/insights/detail/<id>` needs changing either way.
+2. Restore `InsightBadge` and its `/insights` push.
+3. Localize `InsightStrings`. It is the message layer, not the rule layer, so
+   translating it does not touch `InsightEngine` itself — but read
+   `CONTEXT-2.0.md` first, because the strings are where health-claim language
+   lives and the boundary is about the wording, not the plumbing.
+4. Write screen tests for both. Neither has ever run.
+5. Re-read the 1.4.1 question with the actual final wording in front of you.
+
+---
+
+## Two corrections to earlier notes
+
+**1. The `/insights/weekly-report` route was added for the right reason, but the
+reason given in commit `c7e968f` was wrong.**
+
+That commit says the route was missing while "the dashboard greeting card and
+quick-actions card have pushed that exact path since before 1.0.0", implying two
+live broken taps. They are not live: `GreetingCard` and `QuickActionsCard` are
+used only by `DashboardScreen`, which has zero usages. The route is still
+needed — the weekly-report notification is live (`background_service.dart`
+fires `showWeeklyReportReady`) and now routes there — but no user-reachable
+button was broken.
+
+**2. There are two dashboards, and the one with all the features is dead.**
+
+`app_router.dart` routes `/dashboard` to `DashboardPage`
+(`lib/presentation/pages/dashboard_page.dart`). A second, richer implementation
+exists and is referenced by nothing:
+
+```
+lib/presentation/screens/dashboard/dashboard_screen.dart   309 lines
+lib/presentation/widgets/dashboard/activity_feed_card.dart 190
+lib/presentation/widgets/dashboard/greeting_card.dart      126
+lib/presentation/widgets/dashboard/insight_carousel_card.dart 282
+lib/presentation/widgets/dashboard/medications_mini_card.dart 128
+lib/presentation/widgets/dashboard/quick_actions_card.dart 117
+lib/presentation/widgets/dashboard/streak_workout_card.dart 179
+lib/presentation/widgets/dashboard/weekly_chart_card.dart  289
+                                                    ~1,620 lines
+```
+
+`DashboardScreen` has reorderable cards (`dashboard_layout_provider`), an
+activity feed, a weekly chart and the insight carousel. `DashboardPage` has none
+of that.
+
+This was **left alone** in 1.1.0. It is either an unfinished replacement worth
+switching on, or ~1,620 lines to delete, and that is a decision about the
+product's direction rather than a cleanup. Deciding it needs someone to open
+both and say which one is the dashboard.
+
+Note if it is switched on: `insight_carousel_card.dart` pushes `/insights/<id>`,
+which does not exist, and `weekly_chart_card.dart` uses the deprecated fl_chart
+`swapAnimationDuration` / `swapAnimationCurve`.

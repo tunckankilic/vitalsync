@@ -14,7 +14,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/l10n/app_localizations.dart';
 import '../../core/utils/accessibility_helper.dart';
-import '../widgets/insight_badge.dart';
 import '../widgets/sync_indicator.dart';
 
 /// Custom AppBar with glassmorphic effect.
@@ -112,12 +111,6 @@ class GlassmorphicAppBar extends ConsumerWidget implements PreferredSizeWidget {
               const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 4),
                 child: SyncIndicator(),
-              ),
-
-              // Insight Badge
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 4),
-                child: InsightBadge(),
               ),
 
               // Actions

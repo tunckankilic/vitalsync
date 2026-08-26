@@ -53,9 +53,9 @@ class NotificationDestination {
 /// nobody thought about shows up as a test failure instead of as a tap that
 /// does nothing.
 const Set<String> kUnroutedNotificationPayloadTypes = {
-  // `InsightDetailScreen` is not wired to a route, and
-  // NotificationService.showInsightNotification has no caller, so there is
-  // nothing to open. Route both together or neither.
+  // There is no insight screen to open: the unreachable insight UI was removed
+  // before 1.1.0 (docs/INSIGHTS_UI.md) and NotificationService's
+  // showInsightNotification has no caller either. Restore both together.
   kPayloadTypeInsight,
 };
 
