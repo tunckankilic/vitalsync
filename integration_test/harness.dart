@@ -22,15 +22,23 @@ import 'package:go_router/go_router.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:vitalsync/core/analytics/analytics_service.dart';
 import 'package:vitalsync/core/enums/glucose_source.dart';
+import 'package:vitalsync/core/enums/health_data_source_kind.dart';
+import 'package:vitalsync/core/enums/health_sample_type.dart';
 import 'package:vitalsync/core/l10n/app_localizations.dart';
 import 'package:vitalsync/core/notifications/notification_service.dart';
 import 'package:vitalsync/data/local/database.dart';
 import 'package:vitalsync/data/repositories/health/glucose_repository_impl.dart';
 import 'package:vitalsync/data/repositories/health/health_sample_repository_impl.dart';
 import 'package:vitalsync/data/repositories/health/meal_repository_impl.dart';
+import 'package:vitalsync/data/repositories/shared/calibration_metric_repository_impl.dart';
 import 'package:vitalsync/domain/entities/health/glucose_reading.dart';
+import 'package:vitalsync/domain/entities/health/health_sample.dart';
+import 'package:vitalsync/domain/entities/health/meal.dart';
+import 'package:vitalsync/domain/entities/shared/calibration_metric.dart';
 import 'package:vitalsync/domain/repositories/health/glucose_repository.dart';
+import 'package:vitalsync/domain/repositories/health/health_sample_repository.dart';
 import 'package:vitalsync/domain/repositories/health/meal_repository.dart';
+import 'package:vitalsync/domain/repositories/shared/calibration_metric_repository.dart';
 import 'package:vitalsync/features/health/domain/services/meal_data_coverage_service.dart';
 import 'package:vitalsync/features/health/domain/services/post_meal_reminder_service.dart';
 import 'package:vitalsync/features/health/presentation/providers/glucose_provider.dart';
@@ -92,6 +100,15 @@ class TestApp {
   GlucoseRepository get glucoseRepository =>
       container.read(glucoseRepositoryProvider);
 
+  /// Local-only by design: samples imported from the platform health store are
+  /// re-derivable on a new device, so they are never pushed. Exposed so a test
+  /// can prove the queue stays empty.
+  HealthSampleRepository get healthSampleRepository =>
+      HealthSampleRepositoryImpl(db.healthSampleDao);
+
+  CalibrationMetricRepository get calibrationMetricRepository =>
+      CalibrationMetricRepositoryImpl(db.calibrationMetricDao, db);
+
   Future<List<SyncQueueData>> pendingSyncItems() =>
       db.syncDao.getPendingItems();
 
@@ -105,7 +122,17 @@ class TestApp {
 ///
 /// [remindersEnabled] mirrors the two settings switches that gate the
 /// post-meal reminder, so a test can prove the off state schedules nothing.
-TestApp buildTestApp({bool remindersEnabled = true}) {
+///
+/// [notificationLocale] drives the seam notifications use to find their text.
+/// Reminders are composed with no widget in scope, so they cannot read the
+/// locale from a `BuildContext` — [NotificationService] resolves it through an
+/// injected function instead, and that function is the thing that decides
+/// whether a scheduled notification arrives translated. Left null, it behaves
+/// as the service's own fallback does: English.
+TestApp buildTestApp({
+  bool remindersEnabled = true,
+  Locale? notificationLocale,
+}) {
   final db = AppDatabase(NativeDatabase.memory());
   final notifications = RecordingNotificationsPlugin();
 
@@ -119,6 +146,9 @@ TestApp buildTestApp({bool remindersEnabled = true}) {
   final notificationService = NotificationService(
     notifications: notifications,
     analyticsService: _NoopAnalytics(),
+    resolveLocalizations: notificationLocale == null
+        ? null
+        : () => lookupAppLocalizations(notificationLocale),
   );
   final reminderService = PostMealReminderService(
     notificationService: notificationService,
@@ -141,11 +171,17 @@ TestApp buildTestApp({bool remindersEnabled = true}) {
 
 /// Pumps [screen] inside the app's real localization and theme setup, on a
 /// router that can be popped (the entry forms call `context.pop()`).
+///
+/// [locale] renders the screen in one of the three shipped languages. A key
+/// missing from an .arb does not fail the build — gen-l10n falls back to the
+/// English template — so "this screen is English in Turkish" is a runtime-only
+/// symptom, and the only way to catch it is to render it.
 Future<void> pumpScreen(
   WidgetTester tester,
   TestApp app,
-  Widget screen,
-) async {
+  Widget screen, {
+  Locale? locale,
+}) async {
   await tester.binding.setSurfaceSize(const Size(1000, 2400));
   addTearDown(() => tester.binding.setSurfaceSize(null));
 
@@ -163,6 +199,7 @@ Future<void> pumpScreen(
       container: app.container,
       child: MaterialApp.router(
         routerConfig: router,
+        locale: locale,
         localizationsDelegates: const [
           AppLocalizations.delegate,
           GlobalMaterialLocalizations.delegate,
@@ -192,5 +229,69 @@ GlucoseReading manualReadingAt(DateTime measuredAt, {required double value}) {
     source: GlucoseSource.manual,
     lastModifiedAt: measuredAt,
     createdAt: measuredAt,
+  );
+}
+
+/// A meal, for tests that need one without driving the form.
+Meal mealNamed(
+  String name, {
+  required DateTime at,
+  List<String> tags = const [],
+}) {
+  return Meal(
+    id: 0,
+    name: name,
+    eatenAt: at,
+    tags: tags,
+    lastModifiedAt: at,
+    createdAt: at,
+  );
+}
+
+/// A sample as the Apple Health import would write it.
+HealthSample importedSampleAt(
+  DateTime startAt, {
+  required HealthSampleType type,
+  required double value,
+  required String unit,
+  String? externalId,
+}) {
+  return HealthSample(
+    id: 0,
+    type: type,
+    startAt: startAt,
+    value: value,
+    unit: unit,
+    source: HealthDataSourceKind.healthKit,
+    externalId: externalId,
+    lastModifiedAt: startAt,
+    createdAt: startAt,
+  );
+}
+
+/// A weekly counter row, as the calibration service would write one.
+///
+/// Every field is a tally on purpose — the point of the tests that use this is
+/// that no measurement, meal name or note is anywhere in it.
+CalibrationMetric calibrationMetricFor(
+  DateTime weekStart, {
+  int mealsLogged = 4,
+  int glucoseReadings = 12,
+  int manualReadings = 5,
+  int coveredMeals = 3,
+  Map<String, int> uncoveredReasons = const {'noReadings': 1},
+  String appVersion = '1.1.0',
+}) {
+  return CalibrationMetric(
+    id: 0,
+    weekStart: weekStart,
+    mealsLogged: mealsLogged,
+    glucoseReadings: glucoseReadings,
+    manualReadings: manualReadings,
+    coveredMeals: coveredMeals,
+    uncoveredReasons: uncoveredReasons,
+    appVersion: appVersion,
+    lastModifiedAt: weekStart,
+    createdAt: weekStart,
   );
 }

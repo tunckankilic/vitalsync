@@ -14,6 +14,7 @@ import 'package:integration_test/integration_test.dart';
 import 'package:timezone/data/latest_all.dart' as tz_data;
 import 'package:vitalsync/core/constants/app_constants.dart';
 import 'package:vitalsync/core/enums/glucose_source.dart';
+import 'package:vitalsync/core/enums/health_sample_type.dart';
 import 'package:vitalsync/core/enums/sync_enums.dart';
 import 'package:vitalsync/core/notifications/notification_service.dart';
 import 'package:vitalsync/features/health/presentation/screens/add_glucose_reading_screen.dart';
@@ -289,12 +290,153 @@ void main() {
       // A CGM writes hundreds of readings a day and every one is
       // re-importable, so pushing them would multiply write cost for nothing.
       expect(
-        (await app.pendingSyncItems())
-            .where((i) => i.targetTable == 'glucose_readings'),
+        (await app.pendingSyncItems()).where(
+          (i) => i.targetTable == 'glucose_readings',
+        ),
         isEmpty,
       );
       // It is still stored and listed locally.
       expect(await app.glucoseRepository.getAll(), hasLength(1));
+    });
+
+    testWidgets('imported activity and sleep samples never enter the queue', (
+      tester,
+    ) async {
+      app = buildTestApp();
+      final now = DateTime.now();
+
+      // Every type the Apple Health import can write, other than glucose.
+      await app.healthSampleRepository.insert(
+        importedSampleAt(
+          now,
+          type: HealthSampleType.steps,
+          value: 4200,
+          unit: 'count',
+          externalId: 'hk-steps-1',
+        ),
+      );
+      await app.healthSampleRepository.insert(
+        importedSampleAt(
+          now,
+          type: HealthSampleType.activeEnergy,
+          value: 310,
+          unit: 'kcal',
+          externalId: 'hk-energy-1',
+        ),
+      );
+      await app.healthSampleRepository.insert(
+        importedSampleAt(
+          now,
+          type: HealthSampleType.sleep,
+          value: 7.5,
+          unit: 'hr',
+          externalId: 'hk-sleep-1',
+        ),
+      );
+
+      // health_samples is deliberately absent from SyncService.tablesToSync:
+      // the platform health store can re-supply all of it on a new device, and
+      // uploading it would put the Health app's contents in the cloud without
+      // a consent that covers it.
+      expect(await app.pendingSyncItems(), isEmpty);
+      expect(await app.healthSampleRepository.getAll(), hasLength(3));
+    });
+  });
+
+  group('the measurement screens in Turkish', () {
+    // Section 1B of the RC runbook says these five screens have never had a
+    // tri-lingual pass. A missing .arb key falls back to English rather than
+    // failing the build, so rendering them is the only way to see it.
+
+    Future<void> saveInTurkish(WidgetTester tester) async {
+      await tester.tap(find.widgetWithText(FilledButton, 'Kaydet'));
+      await tester.pumpAndSettle();
+    }
+
+    testWidgets('the meal form saves the same row it does in English', (
+      tester,
+    ) async {
+      app = buildTestApp();
+      await pumpScreen(
+        tester,
+        app,
+        const AddMealScreen(),
+        locale: const Locale('tr'),
+      );
+
+      expect(find.text('Öğün Ekle'), findsOneWidget);
+      expect(find.text('Save'), findsNothing);
+
+      await enterText(tester, find.byType(TextFormField).first, 'Mercimek');
+      await saveInTurkish(tester);
+
+      // Language changes the labels, never the data.
+      final meals = await app.mealRepository.getAll();
+      expect(meals, hasLength(1));
+      expect(meals.single.name, 'Mercimek');
+      expect(
+        (await app.pendingSyncItems()).where((i) => i.targetTable == 'meals'),
+        hasLength(1),
+      );
+    });
+
+    testWidgets('the coverage badge is translated and still states a fact', (
+      tester,
+    ) async {
+      app = buildTestApp();
+      await pumpScreen(
+        tester,
+        app,
+        const AddMealScreen(),
+        locale: const Locale('tr'),
+      );
+      await enterText(tester, find.byType(TextFormField).first, 'Menemen');
+      await saveInTurkish(tester);
+
+      await pumpScreen(
+        tester,
+        app,
+        const MealListScreen(),
+        locale: const Locale('tr'),
+      );
+
+      expect(find.text('Menemen'), findsOneWidget);
+      expect(find.textContaining('Ölçüm verisi yok'), findsOneWidget);
+      expect(find.textContaining('No measurement data'), findsNothing);
+    });
+
+    testWidgets('the reminder body is Turkish and still says nothing about '
+        'the reading', (tester) async {
+      // The reminder text is composed with no widget in scope, so it comes
+      // from the injected localization seam rather than a BuildContext. That
+      // seam is the whole reason a scheduled notification can arrive in
+      // English while the app is in Turkish.
+      app = buildTestApp(notificationLocale: const Locale('tr'));
+      await pumpScreen(
+        tester,
+        app,
+        const AddMealScreen(),
+        locale: const Locale('tr'),
+      );
+      await enterText(tester, find.byType(TextFormField).first, 'Pilav');
+      await saveInTurkish(tester);
+
+      final body = app.notifications.scheduled.single.body!;
+      expect(body, contains('ölçüm'));
+      expect(body, isNot(contains('reading')));
+
+      // The boundary is a property of the text in every language, not of the
+      // English wording.
+      expect(body, isNot(contains('Pilav')));
+      for (final forbidden in const [
+        'yüksek',
+        'düşük',
+        'normal',
+        'yürüyüş',
+        'egzersiz',
+      ]) {
+        expect(body.toLowerCase(), isNot(contains(forbidden)));
+      }
     });
   });
 }
